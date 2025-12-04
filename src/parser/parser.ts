@@ -72,6 +72,26 @@ export class Parser {
     // Parse the rest of the command after the verb
     const remainingTokens = tokens.slice(verbIndex + 1);
     
+    // Special handling for GO + DIRECTION (e.g., "GO EAST")
+    if (verb === 'GO' && remainingTokens.length > 0 && remainingTokens[0].type === 'DIRECTION') {
+      // Create a fake object to represent the direction
+      const direction = remainingTokens[0].word.toUpperCase();
+      return {
+        verb,
+        directObject: {
+          id: direction,
+          name: direction,
+          synonyms: [],
+          adjectives: [],
+          description: '',
+          location: null,
+          properties: new Map(),
+          flags: new Set(),
+        } as GameObject,
+        directObjectName: direction
+      };
+    }
+    
     // Find preposition if any
     let prepIndex = -1;
     let preposition: string | undefined;
