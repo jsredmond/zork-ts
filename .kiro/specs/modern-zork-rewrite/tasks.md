@@ -117,33 +117,33 @@
     - Test error handling for invalid syntax
     - _Requirements: 2.1, 2.3_
 
-- [ ] 7. Implement object system and inventory management
-  - [ ] 7.1 Implement object location tracking
+- [x] 7. Implement object system and inventory management
+  - [x] 7.1 Implement object location tracking
     - Track object parent-child relationships
     - Implement IN, ON, HELD relationships
     - _Requirements: 3.5_
   
-  - [ ] 7.2 Implement TAKE action
+  - [x] 7.2 Implement TAKE action
     - Check if object is takeable (TAKEBIT flag)
     - Check weight/capacity constraints
     - Move object to player inventory
     - _Requirements: 3.3_
   
-  - [ ] 7.3 Implement DROP action
+  - [x] 7.3 Implement DROP action
     - Remove object from inventory
     - Place object in current room
     - _Requirements: 3.4_
   
-  - [ ] 7.4 Write property test for object location round-trip
+  - [x] 7.4 Write property test for object location round-trip
     - **Property 8: Object location round-trip**
     - **Validates: Requirements 3.3, 3.4**
   
-  - [ ] 7.5 Implement INVENTORY command
+  - [x] 7.5 Implement INVENTORY command
     - List all objects in player inventory
     - Display "empty-handed" message if inventory is empty
     - _Requirements: 7.5_
   
-  - [ ] 7.6 Write unit tests for inventory management
+  - [x] 7.6 Write unit tests for inventory management
     - Test taking and dropping objects
     - Test weight limits
     - Test inventory display

@@ -3,7 +3,7 @@
  * Manages all game state including objects, rooms, and variables
  */
 
-import { GameObject } from './objects.js';
+import { GameObject, LocationRelation } from './objects.js';
 import { Room } from './rooms.js';
 import { GlobalFlags, INITIAL_GLOBAL_FLAGS } from './data/flags.js';
 
@@ -144,7 +144,7 @@ export class GameState {
   /**
    * Move object to a new location
    */
-  moveObject(objectId: string, newLocation: string | null): void {
+  moveObject(objectId: string, newLocation: string | null, relation?: 'IN' | 'ON' | 'HELD'): void {
     const obj = this.objects.get(objectId);
     if (!obj) {
       return;
@@ -159,19 +159,58 @@ export class GameState {
         if (oldRoom) {
           oldRoom.removeObject(objectId);
         }
+        // Also check if it was in another object
+        const oldParent = this.objects.get(obj.location);
+        if (oldParent) {
+          // Object was in a container or on a surface
+          // No additional tracking needed for now
+        }
       }
     }
 
     // Add to new location
     obj.location = newLocation;
+    if (relation) {
+      obj.locationRelation = relation as any;
+    }
+    
     if (newLocation === 'PLAYER') {
       this.addToInventory(objectId);
+      obj.locationRelation = 'HELD' as any;
     } else if (newLocation) {
       const newRoom = this.rooms.get(newLocation);
       if (newRoom) {
         newRoom.addObject(objectId);
       }
+      // If it's being placed in another object, the relation should be set
     }
+  }
+
+  /**
+   * Get all objects that are children of a given parent (in or on it)
+   */
+  getObjectsInContainer(containerId: string): GameObject[] {
+    return Array.from(this.objects.values()).filter(
+      obj => obj.location === containerId
+    );
+  }
+
+  /**
+   * Check if an object can fit in a container
+   */
+  canFitInContainer(objectId: string, containerId: string): boolean {
+    const obj = this.objects.get(objectId);
+    const container = this.objects.get(containerId);
+    
+    if (!obj || !container || !container.capacity) {
+      return false;
+    }
+
+    const currentContents = this.getObjectsInContainer(containerId);
+    const currentSize = currentContents.reduce((sum, o) => sum + (o.size || 0), 0);
+    const objectSize = obj.size || 0;
+
+    return currentSize + objectSize <= container.capacity;
   }
 
   /**

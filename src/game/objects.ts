@@ -6,6 +6,15 @@
 import { ObjectFlag } from './data/flags.js';
 
 /**
+ * Location relationship types for objects
+ */
+export enum LocationRelation {
+  IN = 'IN',      // Object is inside a container
+  ON = 'ON',      // Object is on a surface
+  HELD = 'HELD'   // Object is held by an actor
+}
+
+/**
  * GameObject interface defines the structure of all game objects
  * Based on ZIL object definitions from 1dungeon.zil
  */
@@ -16,6 +25,7 @@ export interface GameObject {
   adjectives: string[];
   description: string;
   location: string | null;
+  locationRelation?: LocationRelation;
   properties: Map<string, any>;
   flags: Set<ObjectFlag>;
   capacity?: number;
@@ -34,6 +44,7 @@ export class GameObjectImpl implements GameObject {
   adjectives: string[];
   description: string;
   location: string | null;
+  locationRelation?: LocationRelation;
   properties: Map<string, any>;
   flags: Set<ObjectFlag>;
   capacity?: number;
@@ -47,6 +58,7 @@ export class GameObjectImpl implements GameObject {
     adjectives?: string[];
     description: string;
     location?: string | null;
+    locationRelation?: LocationRelation;
     flags?: ObjectFlag[];
     capacity?: number;
     size?: number;
@@ -59,6 +71,7 @@ export class GameObjectImpl implements GameObject {
     this.adjectives = data.adjectives || [];
     this.description = data.description;
     this.location = data.location || null;
+    this.locationRelation = data.locationRelation;
     this.flags = new Set(data.flags || []);
     this.capacity = data.capacity;
     this.size = data.size;
@@ -138,5 +151,34 @@ export class GameObjectImpl implements GameObject {
    */
   providesLight(): boolean {
     return this.hasFlag(ObjectFlag.LIGHTBIT) && this.hasFlag(ObjectFlag.ONBIT);
+  }
+
+  /**
+   * Set the location of this object
+   */
+  setLocation(location: string | null, relation?: LocationRelation): void {
+    this.location = location;
+    this.locationRelation = relation;
+  }
+
+  /**
+   * Check if object is in a specific location
+   */
+  isInLocation(locationId: string): boolean {
+    return this.location === locationId;
+  }
+
+  /**
+   * Check if object is held by player
+   */
+  isHeldByPlayer(): boolean {
+    return this.location === 'PLAYER' || this.locationRelation === LocationRelation.HELD;
+  }
+
+  /**
+   * Get the parent object/room ID
+   */
+  getParent(): string | null {
+    return this.location;
   }
 }
