@@ -242,7 +242,7 @@ export class CommandExecutor {
    * Apply state changes from an action result
    * This is a placeholder for future state change tracking
    */
-  private applyStateChanges(stateChanges: any[], state: GameState): void {
+  private applyStateChanges(_stateChanges: any[], _state: GameState): void {
     // State changes are already applied by the action handlers
     // This method is here for future enhancements like undo/redo
     // or state change logging

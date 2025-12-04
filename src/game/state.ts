@@ -3,7 +3,7 @@
  * Manages all game state including objects, rooms, and variables
  */
 
-import { GameObject, LocationRelation } from './objects.js';
+import { GameObject } from './objects.js';
 import { Room } from './rooms.js';
 import { GlobalFlags, INITIAL_GLOBAL_FLAGS } from './data/flags.js';
 

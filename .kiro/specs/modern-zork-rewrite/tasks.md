@@ -281,14 +281,14 @@
     - Test error handling for corrupted files
     - _Requirements: 4.1, 4.2, 4.4_
 
-- [ ] 12. Implement terminal I/O
-  - [ ] 12.1 Create Terminal class
+- [x] 12. Implement terminal I/O
+  - [x] 12.1 Create Terminal class
     - Implement readline-based input
     - Implement formatted output
     - Handle CTRL+C gracefully
     - _Requirements: 1.4_
   
-  - [ ] 12.2 Implement main game loop
+  - [x] 12.2 Implement main game loop
     - Display prompt
     - Read user input
     - Pass to parser and executor
@@ -296,7 +296,7 @@
     - Repeat until QUIT
     - _Requirements: 1.1, 1.2, 2.1_
   
-  - [ ] 12.3 Write integration tests for I/O
+  - [x] 12.3 Write integration tests for I/O
     - Test complete input/output cycle
     - Test game loop
     - _Requirements: 1.4, 2.1_
