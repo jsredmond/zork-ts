@@ -3,13 +3,23 @@
   "version": "1.0.0",
   "description": "Modern TypeScript rewrite of Zork I",
   "main": "dist/main.js",
+  "bin": "dist/main.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
     "dev": "tsx src/main.ts",
     "test": "vitest --run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "package": "npm run build && pkg dist/main.js --targets node20-macos-x64,node20-macos-arm64,node20-win-x64 --output releases/zork"
+  },
+  "pkg": {
+    "targets": [
+      "node20-macos-x64",
+      "node20-macos-arm64",
+      "node20-win-x64"
+    ],
+    "outputPath": "releases"
   },
   "keywords": ["zork", "interactive-fiction", "text-adventure"],
   "author": "",

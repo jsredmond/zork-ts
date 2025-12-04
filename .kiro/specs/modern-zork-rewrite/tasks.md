@@ -565,22 +565,22 @@
     - Verify score reaches 350 points
     - _Requirements: All_
 
-- [ ] 23. Cross-platform testing and packaging
-  - [ ] 23.1 Test on macOS
+- [x] 23. Cross-platform testing and packaging
+  - [x] 23.1 Test on macOS
     - Run full test suite on macOS
     - Test game functionality end-to-end
     - Verify save/restore works correctly
     - Test terminal compatibility
     - _Requirements: 1.1_
   
-  - [ ] 23.2 Test on Windows
+  - [x] 23.2 Test on Windows
     - Run full test suite on Windows
     - Test game functionality end-to-end
     - Verify save/restore works correctly
     - Test terminal compatibility (cmd, PowerShell)
     - _Requirements: 1.2_
   
-  - [ ] 23.3 Package for distribution
+  - [x] 23.3 Package for distribution
     - Create standalone executables for Mac and Windows
     - Test packaged versions on clean systems
     - Create installation instructions
