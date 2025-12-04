@@ -66,7 +66,7 @@ async function gameLoop(): Promise<void> {
   // Display initial room
   const startRoom = state.getCurrentRoom();
   if (startRoom) {
-    terminal.writeLine(display.formatRoom(startRoom, true));
+    terminal.writeLine(display.formatRoom(startRoom, state, true));
     
     // Show objects in room
     const roomObjects = state.getObjectsInCurrentRoom();
@@ -125,7 +125,7 @@ async function gameLoop(): Promise<void> {
         const currentRoom = state.getCurrentRoom();
         if (currentRoom) {
           terminal.writeLine('');
-          terminal.writeLine(display.formatRoom(currentRoom, true));
+          terminal.writeLine(display.formatRoom(currentRoom, state, true));
           
           // Show objects in room
           const roomObjects = state.getObjectsInCurrentRoom();
@@ -140,7 +140,7 @@ async function gameLoop(): Promise<void> {
         const currentRoom = state.getCurrentRoom();
         if (currentRoom) {
           terminal.writeLine('');
-          terminal.writeLine(display.formatRoom(currentRoom, true));
+          terminal.writeLine(display.formatRoom(currentRoom, state, true));
           
           // Show objects in room
           const roomObjects = state.getObjectsInCurrentRoom();

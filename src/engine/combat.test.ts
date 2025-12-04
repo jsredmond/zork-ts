@@ -6,6 +6,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { GameState } from '../game/state.js';
 import { GameObjectImpl } from '../game/objects.js';
+import { RoomImpl } from '../game/rooms.js';
 import { ObjectFlag } from '../game/data/flags.js';
 import {
   calculateFightStrength,
@@ -38,17 +39,17 @@ describe('Combat System', () => {
     });
 
     // Create test room
-    const room = {
+    const room = new RoomImpl({
       id: 'TEST-ROOM',
       name: 'Test Room',
       description: 'A test room',
       exits: new Map(),
       objects: [],
       visited: false,
-      flags: new Set()
-    };
+      flags: []
+    });
 
-    state.rooms.set('TEST-ROOM', room as any);
+    state.rooms.set('TEST-ROOM', room);
 
     // Create troll
     troll = new GameObjectImpl({

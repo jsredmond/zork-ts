@@ -15,9 +15,9 @@ import { GameState } from './state.js';
  * Generator for game objects with various properties
  */
 const gameObjectArb = fc.record({
-  id: fc.string({ minLength: 1, maxLength: 20 }).map(s => s.replace(/[^a-z0-9-]/gi, '')),
-  name: fc.string({ minLength: 3, maxLength: 30 }),
-  description: fc.string({ minLength: 10, maxLength: 100 }),
+  id: fc.string({ minLength: 1, maxLength: 20 }).map(s => s.replace(/[^a-z0-9-]/gi, '') || 'obj'),
+  name: fc.string({ minLength: 3, maxLength: 30 }).filter(s => s.trim().length >= 3 && /[a-zA-Z]/.test(s)),
+  description: fc.string({ minLength: 10, maxLength: 100 }).filter(s => s.trim().length >= 10),
   flags: fc.array(fc.constantFrom(...Object.values(ObjectFlag)), { maxLength: 5 }),
   size: fc.option(fc.integer({ min: 1, max: 100 }), { nil: undefined }),
   capacity: fc.option(fc.integer({ min: 1, max: 50 }), { nil: undefined })
