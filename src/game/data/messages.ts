@@ -321,7 +321,9 @@ export const STANDARD_RESPONSES = {
 export function formatMessage(template: string, replacements: Record<string, string> = {}): string {
   let result = template;
   for (const [key, value] of Object.entries(replacements)) {
-    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+    // Escape special characters in the replacement value to prevent issues with $ and other special chars
+    const escapedValue = value.replace(/\$/g, '$$$$');
+    result = result.replace(new RegExp(`\\{${key}\\}`, 'g'), escapedValue);
   }
   return result;
 }

@@ -535,30 +535,30 @@
     - Test grue mechanics
     - _Requirements: 5.3_
 
-- [ ] 22. Final verification and regression testing
-  - [ ] 22.1 Run complete test suite
+- [x] 22. Final verification and regression testing
+  - [x] 22.1 Run complete test suite
     - Ensure all unit tests pass
     - Ensure all property tests pass
     - Ensure all integration tests pass
     - _Requirements: All_
   
-  - [ ] 22.2 Write property test for output correctness
+  - [x] 22.2 Write property test for output correctness
     - **Property 3: Output correctness**
     - **Validates: Requirements 2.2**
   
-  - [ ] 22.3 Perform transcript comparison testing
+  - [x] 22.3 Perform transcript comparison testing
     - Run known command sequences from walkthroughs
     - Compare output with original Zork I
     - Fix any discrepancies in text or behavior
     - _Requirements: 5.4, 9.4_
   
-  - [ ] 22.4 Verify all puzzles are solvable
+  - [x] 22.4 Verify all puzzles are solvable
     - Test each major puzzle solution
     - Ensure game is completable from start to finish
     - Verify all 19 treasures are obtainable
     - _Requirements: 5.3, 9.5_
   
-  - [ ] 22.5 Complete full game playthrough
+  - [x] 22.5 Complete full game playthrough
     - Play through entire game manually
     - Verify all content is accessible
     - Check for any remaining bugs or inconsistencies
