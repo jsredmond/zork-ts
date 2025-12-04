@@ -53,19 +53,19 @@
     - Test case insensitivity
     - _Requirements: 2.1_
 
-- [ ] 5. Implement vocabulary and word lookup
-  - [ ] 5.1 Create Vocabulary class
+- [x] 5. Implement vocabulary and word lookup
+  - [x] 5.1 Create Vocabulary class
     - Load verb definitions from ZIL source (gverbs.zil)
     - Load noun synonyms and adjectives from object definitions
     - Load prepositions from ZIL source (gsyntax.zil)
     - Implement word lookup by type
     - _Requirements: 2.4, 6.5_
   
-  - [ ] 5.2 Implement abbreviation expansion
+  - [x] 5.2 Implement abbreviation expansion
     - Map common abbreviations (N→NORTH, I→INVENTORY, X→EXAMINE)
     - _Requirements: 6.5_
   
-  - [ ] 5.3 Write unit tests for vocabulary
+  - [x] 5.3 Write unit tests for vocabulary
     - Test word lookup for verbs, nouns, adjectives
     - Test abbreviation expansion
     - Test unknown word handling
