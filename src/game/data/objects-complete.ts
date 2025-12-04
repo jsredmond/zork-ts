@@ -321,6 +321,43 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     size: 15
   },
 
+  'TROPHY-CASE': {
+    id: 'TROPHY-CASE',
+    name: 'trophy case',
+    synonyms: ['CASE'],
+    adjectives: ['TROPHY'],
+    description: 'trophy case',
+    initialLocation: 'LIVING-ROOM',
+    flags: ['TRANSBIT', 'CONTBIT', 'NDESCBIT', 'TRYTAKEBIT', 'SEARCHBIT'],
+    action: 'TROPHY-CASE-FCN',
+    capacity: 10000
+  },
+
+  'BOTTLE': {
+    id: 'BOTTLE',
+    name: 'glass bottle',
+    synonyms: ['BOTTLE', 'CONTAINER'],
+    adjectives: ['CLEAR', 'GLASS'],
+    description: 'glass bottle',
+    firstDescription: 'A bottle is sitting on the table.',
+    initialLocation: 'KITCHEN-TABLE',
+    flags: ['TAKEBIT', 'TRANSBIT', 'CONTBIT'],
+    action: 'BOTTLE-FUNCTION',
+    capacity: 4
+  },
+
+  'WATER': {
+    id: 'WATER',
+    name: 'quantity of water',
+    synonyms: ['WATER', 'QUANTITY', 'LIQUID', 'H2O'],
+    adjectives: [],
+    description: 'quantity of water',
+    initialLocation: 'BOTTLE',
+    flags: ['TRYTAKEBIT', 'TAKEBIT', 'DRINKBIT'],
+    action: 'WATER-F',
+    size: 4
+  },
+
   'SWORD': {
     id: 'SWORD',
     name: 'sword',
@@ -413,8 +450,418 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     size: 10
   },
 
-  // Note: This is a representative sample showing the structure.
-  // The complete file would include all 100+ objects from the ZIL source.
+  'ROPE': {
+    id: 'ROPE',
+    name: 'rope',
+    synonyms: ['ROPE', 'HEMP', 'COIL'],
+    adjectives: ['LARGE'],
+    description: 'rope',
+    firstDescription: 'A large coil of rope is lying in the corner.',
+    initialLocation: 'ATTIC',
+    flags: ['TAKEBIT', 'SACREDBIT', 'TRYTAKEBIT'],
+    action: 'ROPE-FUNCTION',
+    size: 10
+  },
+
+  'KNIFE': {
+    id: 'KNIFE',
+    name: 'nasty knife',
+    synonyms: ['KNIVES', 'KNIFE', 'BLADE'],
+    adjectives: ['NASTY', 'UNRUSTY'],
+    description: 'nasty knife',
+    firstDescription: 'On a table is a nasty-looking knife.',
+    initialLocation: 'ATTIC',
+    flags: ['TAKEBIT', 'WEAPONBIT', 'TRYTAKEBIT'],
+    action: 'KNIFE-F'
+  },
+
+  'SHOVEL': {
+    id: 'SHOVEL',
+    name: 'shovel',
+    synonyms: ['SHOVEL', 'TOOL', 'TOOLS'],
+    adjectives: [],
+    description: 'shovel',
+    initialLocation: 'SANDY-BEACH',
+    flags: ['TAKEBIT', 'TOOLBIT'],
+    size: 15
+  },
+
+  'SCREWDRIVER': {
+    id: 'SCREWDRIVER',
+    name: 'screwdriver',
+    synonyms: ['SCREWDRIVER', 'TOOL', 'TOOLS', 'DRIVER'],
+    adjectives: ['SCREW'],
+    description: 'screwdriver',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['TAKEBIT', 'TOOLBIT']
+  },
+
+  'WRENCH': {
+    id: 'WRENCH',
+    name: 'wrench',
+    synonyms: ['WRENCH', 'TOOL', 'TOOLS'],
+    adjectives: [],
+    description: 'wrench',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['TAKEBIT', 'TOOLBIT'],
+    size: 10
+  },
+
+  'PUMP': {
+    id: 'PUMP',
+    name: 'hand-held air pump',
+    synonyms: ['PUMP', 'AIR-PUMP', 'TOOL', 'TOOLS'],
+    adjectives: ['SMALL', 'HAND-HELD'],
+    description: 'hand-held air pump',
+    initialLocation: 'RESERVOIR-NORTH',
+    flags: ['TAKEBIT', 'TOOLBIT']
+  },
+
+  'KEYS': {
+    id: 'KEYS',
+    name: 'skeleton key',
+    synonyms: ['KEY', 'KEYS'],
+    adjectives: ['SKELETON'],
+    description: 'skeleton key',
+    initialLocation: 'MAZE-5',
+    flags: ['TAKEBIT', 'TOOLBIT'],
+    size: 10
+  },
+
+  'AXE': {
+    id: 'AXE',
+    name: 'bloody axe',
+    synonyms: ['AXE', 'BLADE'],
+    adjectives: ['BLOODY', 'RUSTY'],
+    description: 'bloody axe',
+    initialLocation: 'TROLL-ROOM',
+    flags: ['TAKEBIT', 'WEAPONBIT'],
+    size: 20
+  },
+
+  // CONTAINERS
+  'MAILBOX': {
+    id: 'MAILBOX',
+    name: 'small mailbox',
+    synonyms: ['MAILBOX', 'BOX'],
+    adjectives: ['SMALL'],
+    description: 'small mailbox',
+    initialLocation: 'WEST-OF-HOUSE',
+    flags: ['CONTBIT', 'TRYTAKEBIT'],
+    capacity: 10
+  },
+
+  'NEST': {
+    id: 'NEST',
+    name: 'bird\'s nest',
+    synonyms: ['NEST'],
+    adjectives: ['BIRDS', 'BIRD'],
+    description: 'bird\'s nest',
+    initialLocation: 'UP-A-TREE',
+    flags: ['TAKEBIT', 'CONTBIT'],
+    capacity: 20,
+    size: 10
+  },
+
+  'BUOY': {
+    id: 'BUOY',
+    name: 'red buoy',
+    synonyms: ['BUOY'],
+    adjectives: ['RED'],
+    description: 'red buoy',
+    initialLocation: 'RESERVOIR',
+    flags: ['CONTBIT', 'INVISIBLE'],
+    capacity: 20
+  },
+
+  // READABLE ITEMS
+  'ADVERTISEMENT': {
+    id: 'ADVERTISEMENT',
+    name: 'leaflet',
+    synonyms: ['LEAFLET', 'ADVERTISEMENT', 'BOOKLET', 'MAIL'],
+    adjectives: [],
+    description: 'leaflet',
+    longDescription: 'A leaflet is here.',
+    initialLocation: 'MAILBOX',
+    flags: ['TAKEBIT', 'READBIT', 'BURNBIT'],
+    text: 'WELCOME TO ZORK!\n\nZORK is a game of adventure, danger, and low cunning.',
+    size: 2
+  },
+
+  'MATCH': {
+    id: 'MATCH',
+    name: 'matchbook',
+    synonyms: ['MATCH', 'MATCHES', 'MATCHBOOK', 'BOOK'],
+    adjectives: [],
+    description: 'matchbook',
+    initialLocation: 'LIVING-ROOM',
+    flags: ['TAKEBIT', 'READBIT', 'BURNBIT'],
+    text: '(Close cover before striking)\n\nYOU too can make BIG MONEY in the exciting field of PAPER SHUFFLING!',
+    size: 2
+  },
+
+  'GUIDE': {
+    id: 'GUIDE',
+    name: 'tour guidebook',
+    synonyms: ['GUIDEBOOK', 'GUIDE', 'BOOK'],
+    adjectives: ['TOUR'],
+    description: 'tour guidebook',
+    initialLocation: 'DAM-LOBBY',
+    flags: ['TAKEBIT', 'READBIT', 'BURNBIT'],
+    text: 'Flood Control Dam #3\n\nFCD#3 was constructed in year 783 of the Great Underground Empire to harness the mighty Frigid River.',
+    size: 3
+  },
+
+  'PRAYER': {
+    id: 'PRAYER',
+    name: 'prayer',
+    synonyms: ['PRAYER', 'BOOK', 'SCROLL'],
+    adjectives: ['ANCIENT'],
+    description: 'prayer',
+    initialLocation: 'TEMPLE',
+    flags: ['TAKEBIT', 'READBIT'],
+    text: 'The prayer is inscribed in an ancient script, rarely used today.',
+    size: 2
+  },
+
+  'MAP': {
+    id: 'MAP',
+    name: 'map',
+    synonyms: ['MAP'],
+    adjectives: [],
+    description: 'map',
+    initialLocation: 'MAZE-5',
+    flags: ['TAKEBIT', 'READBIT', 'INVISIBLE'],
+    text: 'The map shows a forest with three clearings.',
+    size: 2
+  },
+
+  // SCENERY
+  'FOREST': {
+    id: 'FOREST',
+    name: 'forest',
+    synonyms: ['FOREST', 'TREES', 'PINES', 'HEMLOCKS'],
+    adjectives: [],
+    description: 'forest',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT'],
+    action: 'FOREST-F'
+  },
+
+  'TREE': {
+    id: 'TREE',
+    name: 'tree',
+    synonyms: ['TREE', 'BRANCH'],
+    adjectives: ['LARGE', 'STORM'],
+    description: 'tree',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT', 'CLIMBBIT']
+  },
+
+  'BOARDED-WINDOW': {
+    id: 'BOARDED-WINDOW',
+    name: 'boarded window',
+    synonyms: ['WINDOW', 'WINDOWS'],
+    adjectives: ['BOARDED'],
+    description: 'boarded window',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT']
+  },
+
+  'GRATE': {
+    id: 'GRATE',
+    name: 'grating',
+    synonyms: ['GRATE', 'GRATING'],
+    adjectives: ['METAL'],
+    description: 'grating',
+    initialLocation: 'GRATING-CLEARING',
+    flags: ['DOORBIT', 'NDESCBIT'],
+    action: 'GRATE-F'
+  },
+
+  'TRAP-DOOR': {
+    id: 'TRAP-DOOR',
+    name: 'trap door',
+    synonyms: ['DOOR', 'TRAP'],
+    adjectives: ['TRAP'],
+    description: 'trap door',
+    initialLocation: 'LIVING-ROOM',
+    flags: ['DOORBIT', 'NDESCBIT'],
+    action: 'TRAP-DOOR-F'
+  },
+
+  'RUG': {
+    id: 'RUG',
+    name: 'large oriental rug',
+    synonyms: ['RUG', 'CARPET'],
+    adjectives: ['LARGE', 'ORIENTAL'],
+    description: 'large oriental rug',
+    initialLocation: 'LIVING-ROOM',
+    flags: ['TAKEBIT', 'TRYTAKEBIT', 'BURNBIT'],
+    action: 'RUG-FUNCTION',
+    size: 50
+  },
+
+  'CHIMNEY': {
+    id: 'CHIMNEY',
+    name: 'chimney',
+    synonyms: ['CHIMNEY'],
+    adjectives: ['DARK', 'NARROW'],
+    description: 'chimney',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT']
+  },
+
+  'STAIRS': {
+    id: 'STAIRS',
+    name: 'stairs',
+    synonyms: ['STAIRS', 'STAIRCASE', 'STAIRWAY'],
+    adjectives: [],
+    description: 'stairs',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT']
+  },
+
+  'SLIDE': {
+    id: 'SLIDE',
+    name: 'slide',
+    synonyms: ['SLIDE', 'RAMP'],
+    adjectives: ['METAL', 'STEEP'],
+    description: 'slide',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT']
+  },
+
+  // NPCS
+  'THIEF': {
+    id: 'THIEF',
+    name: 'thief',
+    synonyms: ['THIEF', 'ROBBER', 'BANDIT'],
+    adjectives: ['SHADY'],
+    description: 'thief',
+    initialLocation: '',
+    flags: ['ACTORBIT', 'TRYTAKEBIT'],
+    action: 'THIEF-F',
+    strength: 5
+  },
+
+  'TROLL': {
+    id: 'TROLL',
+    name: 'troll',
+    synonyms: ['TROLL'],
+    adjectives: ['NASTY'],
+    description: 'troll',
+    initialLocation: 'TROLL-ROOM',
+    flags: ['ACTORBIT', 'TRYTAKEBIT'],
+    action: 'TROLL-F',
+    strength: 2
+  },
+
+  'CYCLOPS': {
+    id: 'CYCLOPS',
+    name: 'cyclops',
+    synonyms: ['CYCLOPS', 'GIANT'],
+    adjectives: [],
+    description: 'cyclops',
+    initialLocation: 'CYCLOPS-ROOM',
+    flags: ['ACTORBIT', 'TRYTAKEBIT'],
+    action: 'CYCLOPS-F',
+    strength: 10000
+  },
+
+  // CONSUMABLES
+  'LUNCH': {
+    id: 'LUNCH',
+    name: 'lunch',
+    synonyms: ['LUNCH', 'SANDWICH', 'FOOD'],
+    adjectives: ['HOT', 'PEPPER'],
+    description: 'lunch',
+    longDescription: 'A hot pepper sandwich is here.',
+    initialLocation: 'SANDWICH-BAG',
+    flags: ['TAKEBIT', 'FOODBIT'],
+    size: 5
+  },
+
+  'GARLIC': {
+    id: 'GARLIC',
+    name: 'clove of garlic',
+    synonyms: ['GARLIC', 'CLOVE'],
+    adjectives: [],
+    description: 'clove of garlic',
+    initialLocation: 'KITCHEN',
+    flags: ['TAKEBIT', 'FOODBIT'],
+    size: 3
+  },
+
+  'COAL': {
+    id: 'COAL',
+    name: 'pile of coal',
+    synonyms: ['COAL', 'PILE'],
+    adjectives: [],
+    description: 'pile of coal',
+    initialLocation: 'COAL-MINE',
+    flags: ['TAKEBIT', 'BURNBIT'],
+    size: 10
+  },
+
+  'SANDWICH-BAG': {
+    id: 'SANDWICH-BAG',
+    name: 'brown sack',
+    synonyms: ['SACK', 'BAG'],
+    adjectives: ['BROWN', 'PAPER'],
+    description: 'brown sack',
+    longDescription: 'A brown sack, smelling of hot peppers, is here.',
+    initialLocation: 'KITCHEN',
+    flags: ['TAKEBIT', 'CONTBIT', 'OPENBIT'],
+    capacity: 9,
+    size: 5
+  },
+
+  // Additional key objects for game functionality
+  'FRONT-DOOR': {
+    id: 'FRONT-DOOR',
+    name: 'front door',
+    synonyms: ['DOOR'],
+    adjectives: ['FRONT', 'BOARDED'],
+    description: 'front door',
+    initialLocation: 'WEST-OF-HOUSE',
+    flags: ['DOORBIT', 'NDESCBIT']
+  },
+
+  'KITCHEN-TABLE': {
+    id: 'KITCHEN-TABLE',
+    name: 'kitchen table',
+    synonyms: ['TABLE'],
+    adjectives: ['KITCHEN'],
+    description: 'kitchen table',
+    initialLocation: 'KITCHEN',
+    flags: ['SURFACEBIT', 'NDESCBIT']
+  },
+
+  'ATTIC-TABLE': {
+    id: 'ATTIC-TABLE',
+    name: 'table',
+    synonyms: ['TABLE'],
+    adjectives: [],
+    description: 'table',
+    initialLocation: 'ATTIC',
+    flags: ['SURFACEBIT', 'NDESCBIT']
+  },
+
+  // More treasures to complete the set
+  'CANDLES': {
+    id: 'CANDLES',
+    name: 'pair of candles',
+    synonyms: ['CANDLES', 'CANDLE'],
+    adjectives: [],
+    description: 'pair of candles',
+    initialLocation: 'LIVING-ROOM',
+    flags: ['TAKEBIT', 'LIGHTBIT', 'BURNBIT'],
+    size: 5
+  },
+
+  // Placeholder for remaining objects
+  // In a complete implementation, all 100+ objects would be defined here
 };
 
 /**

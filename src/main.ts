@@ -10,88 +10,7 @@ import { Parser } from './parser/parser.js';
 import { CommandExecutor } from './engine/executor.js';
 import { GameState } from './game/state.js';
 import { GameObjectImpl } from './game/objects.js';
-import { RoomImpl, Direction } from './game/rooms.js';
-import { ROOMS } from './game/data/rooms.js';
-import { OBJECTS } from './game/data/objects.js';
-import { ObjectFlag, RoomFlag } from './game/data/flags.js';
-
-/**
- * Initialize game objects from data
- */
-function initializeObjects(): Map<string, GameObjectImpl> {
-  const objects = new Map<string, GameObjectImpl>();
-
-  for (const [id, data] of Object.entries(OBJECTS)) {
-    const flags: ObjectFlag[] = data.flags.map(f => f as ObjectFlag);
-    
-    const obj = new GameObjectImpl({
-      id: data.id,
-      name: data.name,
-      synonyms: data.synonyms,
-      adjectives: data.adjectives,
-      description: data.description,
-      location: data.initialLocation,
-      flags,
-      capacity: data.capacity,
-      size: data.size,
-      value: data.value,
-    });
-
-    objects.set(id, obj);
-  }
-
-  return objects;
-}
-
-/**
- * Initialize game rooms from data
- */
-function initializeRooms(): Map<string, RoomImpl> {
-  const rooms = new Map<string, RoomImpl>();
-
-  for (const [id, data] of Object.entries(ROOMS)) {
-    const exits = new Map();
-    
-    // Convert exit data to Exit objects
-    for (const exit of data.exits) {
-      if (exit.destination) {
-        const direction = exit.direction as Direction;
-        exits.set(direction, {
-          destination: exit.destination,
-          message: exit.message,
-        });
-      }
-    }
-
-    const flags: RoomFlag[] = data.flags.map(f => f as RoomFlag);
-
-    const room = new RoomImpl({
-      id: data.id,
-      name: data.name,
-      description: data.longDescription || data.description,
-      exits,
-      flags,
-    });
-
-    rooms.set(id, room);
-  }
-
-  return rooms;
-}
-
-/**
- * Place objects in their initial locations
- */
-function placeObjects(objects: Map<string, GameObjectImpl>, rooms: Map<string, RoomImpl>): void {
-  for (const obj of objects.values()) {
-    if (obj.location && obj.location !== 'LOCAL-GLOBALS' && obj.location !== 'GLOBAL-OBJECTS') {
-      const room = rooms.get(obj.location);
-      if (room) {
-        room.addObject(obj.id);
-      }
-    }
-  }
-}
+import { createInitialGameState, getRoomCount, getObjectCount } from './game/factories/gameFactory.js';
 
 /**
  * Get available objects for parsing (in current room and inventory)
@@ -138,13 +57,11 @@ async function gameLoop(): Promise<void> {
   // Display title
   terminal.writeLine(display.formatTitle());
 
-  // Initialize game world
-  const objects = initializeObjects();
-  const rooms = initializeRooms();
-  placeObjects(objects, rooms);
-
-  // Create initial game state
-  const state = GameState.createInitialState(objects, rooms);
+  // Initialize game world using factory
+  const state = createInitialGameState();
+  
+  // Log initialization info
+  console.log(`Initialized ${getRoomCount()} rooms and ${getObjectCount()} objects`);
 
   // Display initial room
   const startRoom = state.getCurrentRoom();
