@@ -318,6 +318,22 @@ export class ExamineAction implements ActionHandler {
       };
     }
 
+    // Special handling for mirror
+    if (objectId === 'MIRROR-1' || objectId === 'MIRROR-2') {
+      const { MirrorPuzzle } = require('./puzzles.js');
+      return MirrorPuzzle.examineMirror(state);
+    }
+
+    // Special handling for control panel
+    if (objectId === 'CONTROL-PANEL') {
+      const { DamPuzzle } = require('./puzzles.js');
+      return {
+        success: true,
+        message: DamPuzzle.getControlPanelDescription(state),
+        stateChanges: []
+      };
+    }
+
     // Return the object's description
     const description = obj.description || `You see nothing special about the ${obj.name.toLowerCase()}.`;
 
@@ -710,6 +726,12 @@ export class PutAction implements ActionHandler {
       };
     }
 
+    // Special handling for putty on leak (dam puzzle)
+    if (objectId === 'PUTTY' && containerId === 'LEAK') {
+      const { DamPuzzle } = require('./puzzles.js');
+      return DamPuzzle.fixLeak(state, objectId);
+    }
+
     // Check if trying to put object into itself
     if (objectId === containerId) {
       return {
@@ -1033,6 +1055,12 @@ export class AttackAction implements ActionHandler {
       };
     }
 
+    // Special handling for mirror
+    if (targetId === 'MIRROR-1' || targetId === 'MIRROR-2') {
+      const { MirrorPuzzle } = require('./puzzles.js');
+      return MirrorPuzzle.breakMirror(state);
+    }
+
     // Check if target is an actor
     if (!target.hasFlag(ObjectFlag.ACTORBIT)) {
       return {
@@ -1329,12 +1357,33 @@ export class ClimbAction implements ActionHandler {
       };
     }
 
-    const obj = state.getObject(objectId);
+    const obj = state.getObject(objectId) as GameObjectImpl;
     
     if (!obj) {
       return {
         success: false,
         message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for rainbow
+    if (objectId === 'RAINBOW') {
+      const { RainbowPuzzle } = require('./puzzles.js');
+      return RainbowPuzzle.climbRainbow(state);
+    }
+
+    // Special handling for rope
+    if (objectId === 'ROPE') {
+      const { RopeBasketPuzzle } = require('./puzzles.js');
+      return RopeBasketPuzzle.climbRope(state);
+    }
+
+    // Check if object has CLIMBBIT flag
+    if (!obj.hasFlag(ObjectFlag.CLIMBBIT)) {
+      return {
+        success: false,
+        message: "You can't climb that!",
         stateChanges: []
       };
     }
@@ -1361,6 +1410,12 @@ export class PushAction implements ActionHandler {
         message: "You can't see that here.",
         stateChanges: []
       };
+    }
+
+    // Special handling for coffin
+    if (objectId === 'COFFIN') {
+      const { CoffinPuzzle } = require('./puzzles.js');
+      return CoffinPuzzle.pushCoffin(state);
     }
 
     return {
@@ -1400,8 +1455,8 @@ export class PullAction implements ActionHandler {
  * Player turns something
  */
 export class TurnAction implements ActionHandler {
-  execute(state: GameState, objectId: string): ActionResult {
-    const obj = state.getObject(objectId);
+  execute(state: GameState, objectId: string, toolId?: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
     
     if (!obj) {
       return {
@@ -1409,6 +1464,21 @@ export class TurnAction implements ActionHandler {
         message: "You can't see that here.",
         stateChanges: []
       };
+    }
+
+    // Check if object has TURNBIT flag
+    if (!obj.hasFlag(ObjectFlag.TURNBIT)) {
+      return {
+        success: false,
+        message: "This has no effect.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for bolt (dam puzzle)
+    if (objectId === 'BOLT') {
+      const { DamPuzzle } = require('./puzzles.js');
+      return DamPuzzle.turnBolt(state, toolId || '');
     }
 
     return {
@@ -1623,6 +1693,36 @@ export class TouchAction implements ActionHandler {
  * Player rubs something
  */
 export class RubAction implements ActionHandler {
+  execute(state: GameState, objectId: string, toolId?: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for mirror
+    if (objectId === 'MIRROR-1' || objectId === 'MIRROR-2') {
+      const { MirrorPuzzle } = require('./puzzles.js');
+      return MirrorPuzzle.rubMirror(state, objectId, toolId);
+    }
+
+    return {
+      success: false,
+      message: `Fiddling with the ${obj.name.toLowerCase()} has no effect.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * WAVE action handler
+ * Player waves something (used for sceptre/rainbow puzzle)
+ */
+export class WaveAction implements ActionHandler {
   execute(state: GameState, objectId: string): ActionResult {
     const obj = state.getObject(objectId);
     
@@ -1634,10 +1734,322 @@ export class RubAction implements ActionHandler {
       };
     }
 
+    // Check if player is holding the object
+    if (!state.isInInventory(objectId)) {
+      return {
+        success: false,
+        message: `You're not carrying the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Special handling for sceptre (rainbow puzzle)
+    if (objectId === 'SCEPTRE') {
+      const { RainbowPuzzle } = require('./puzzles.js');
+      return RainbowPuzzle.waveSceptre(state, objectId);
+    }
+
     return {
-      success: false,
-      message: `Fiddling with the ${obj.name.toLowerCase()} has no effect.`,
+      success: true,
+      message: `Waving the ${obj.name.toLowerCase()} has no effect.`,
       stateChanges: []
     };
+  }
+}
+
+/**
+ * TIE action handler
+ * Player ties something (used for rope puzzle)
+ */
+export class TieAction implements ActionHandler {
+  execute(state: GameState, objectId: string, targetId?: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    if (!targetId) {
+      return {
+        success: false,
+        message: "What do you want to tie it to?",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for rope
+    if (objectId === 'ROPE') {
+      const { RopeBasketPuzzle } = require('./puzzles.js');
+      return RopeBasketPuzzle.tieRope(state, objectId, targetId);
+    }
+
+    return {
+      success: false,
+      message: "You can't tie that.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * RAISE action handler
+ * Player raises something (used for basket puzzle)
+ */
+export class RaiseAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for basket
+    if (objectId === 'BASKET' || objectId === 'RAISED-BASKET' || objectId === 'LOWERED-BASKET') {
+      const { RopeBasketPuzzle } = require('./puzzles.js');
+      return RopeBasketPuzzle.raiseBasket(state);
+    }
+
+    return {
+      success: false,
+      message: `Playing in this way with the ${obj.name.toLowerCase()} is unlikely to have any effect.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * LOWER action handler
+ * Player lowers something (used for basket puzzle)
+ */
+export class LowerAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for basket
+    if (objectId === 'BASKET' || objectId === 'RAISED-BASKET' || objectId === 'LOWERED-BASKET') {
+      const { RopeBasketPuzzle } = require('./puzzles.js');
+      return RopeBasketPuzzle.lowerBasket(state);
+    }
+
+    return {
+      success: false,
+      message: `Playing in this way with the ${obj.name.toLowerCase()} is unlikely to have any effect.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * PUSH action handler (enhanced for buttons)
+ * Player pushes something
+ */
+export class PushButtonAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for maintenance room buttons
+    if (objectId === 'BLUE-BUTTON' || objectId === 'BROWN-BUTTON' || objectId === 'YELLOW-BUTTON') {
+      const { DamPuzzle } = require('./puzzles.js');
+      return DamPuzzle.pushButton(state, objectId);
+    }
+
+    return {
+      success: false,
+      message: `Pushing the ${obj.name.toLowerCase()} has no effect.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * UNLOCK action handler
+ * Player unlocks something with a key
+ */
+export class UnlockAction implements ActionHandler {
+  execute(state: GameState, objectId: string, keyId?: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    if (!keyId) {
+      return {
+        success: false,
+        message: "What do you want to unlock it with?",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for grating
+    if (objectId === 'GRATE' || objectId === 'GRATING') {
+      const { GratingPuzzle } = require('./puzzles.js');
+      return GratingPuzzle.unlockGrating(state, keyId);
+    }
+
+    // Check if object is a door or container
+    if (!obj.hasFlag(ObjectFlag.DOORBIT) && !obj.hasFlag(ObjectFlag.CONTBIT)) {
+      return {
+        success: false,
+        message: "You can't unlock that.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: false,
+      message: "You don't have the right key.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * MOVE action handler (for objects, not directions)
+ * Player moves something
+ */
+export class MoveObjectAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for rug (trap door puzzle)
+    if (objectId === 'RUG' || objectId === 'CARPET') {
+      const { TrapDoorPuzzle } = require('./puzzles.js');
+      return TrapDoorPuzzle.moveRug(state);
+    }
+
+    // Special handling for leaves (grating puzzle)
+    if (objectId === 'LEAVES' || objectId === 'PILE') {
+      const { GratingPuzzle } = require('./puzzles.js');
+      return GratingPuzzle.revealGrating(state);
+    }
+
+    // Special handling for coffin
+    if (objectId === 'COFFIN') {
+      const { CoffinPuzzle } = require('./puzzles.js');
+      return CoffinPuzzle.pushCoffin(state);
+    }
+
+    return {
+      success: false,
+      message: `You can't move the ${obj.name.toLowerCase()}.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * INFLATE action handler
+ * Player inflates something
+ */
+export class InflateAction implements ActionHandler {
+  execute(state: GameState, objectId: string, toolId?: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for boat
+    if (objectId === 'BOAT' || objectId === 'INFLATABLE-BOAT') {
+      const { BoatPuzzle } = require('./puzzles.js');
+      return BoatPuzzle.inflateBoat(state, objectId, toolId || '');
+    }
+
+    return {
+      success: false,
+      message: "How can you inflate that?",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * DEFLATE action handler
+ * Player deflates something
+ */
+export class DeflateAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for boat
+    if (objectId === 'BOAT' || objectId === 'INFLATED-BOAT') {
+      const { BoatPuzzle } = require('./puzzles.js');
+      return BoatPuzzle.deflateBoat(state);
+    }
+
+    return {
+      success: false,
+      message: "Come on, now!",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * SAY action handler
+ * Player says a word or phrase
+ */
+export class SayAction implements ActionHandler {
+  execute(state: GameState, word: string): ActionResult {
+    if (!word) {
+      return {
+        success: false,
+        message: "What do you want to say?",
+        stateChanges: []
+      };
+    }
+
+    // Special handling for magic word
+    const { MagicWordPuzzle } = require('./puzzles.js');
+    return MagicWordPuzzle.sayMagicWord(state, word);
   }
 }

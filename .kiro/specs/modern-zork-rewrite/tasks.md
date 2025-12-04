@@ -439,8 +439,8 @@
     - Test NPC interactions with player
     - _Requirements: 5.2, 5.3_
 
-- [ ] 18. Implement special puzzles and mechanics
-  - [ ] 18.1 Implement dam and flood control
+- [x] 18. Implement special puzzles and mechanics
+  - [x] 18.1 Implement dam and flood control
     - Port dam puzzle logic from ZIL
     - Implement bolt turning mechanism
     - Handle water level changes in reservoir
@@ -448,31 +448,31 @@
     - Implement bubble and leak mechanics
     - _Requirements: 5.3_
   
-  - [ ] 18.2 Implement mirror room puzzle
+  - [x] 18.2 Implement mirror room puzzle
     - Port mirror room logic from ZIL
     - Handle mirror breaking
     - Implement mirror room connections
     - _Requirements: 5.3_
   
-  - [ ] 18.3 Implement rainbow and pot of gold
+  - [x] 18.3 Implement rainbow and pot of gold
     - Port rainbow appearance logic
     - Handle rainbow as climbable object
     - Implement pot of gold visibility
     - _Requirements: 5.3_
   
-  - [ ] 18.4 Implement rope and basket mechanics
+  - [x] 18.4 Implement rope and basket mechanics
     - Port rope and basket logic from ZIL
     - Handle raising/lowering basket
     - Implement rope tying and climbing
     - _Requirements: 5.3_
   
-  - [ ] 18.5 Implement remaining puzzles
+  - [x] 18.5 Implement remaining puzzles
     - Port all other puzzle logic from ZIL
     - Ensure all puzzles are solvable
     - Test puzzle solutions
     - _Requirements: 5.3_
   
-  - [ ] 18.6 Write integration tests for puzzles
+  - [x] 18.6 Write integration tests for puzzles
     - Test each puzzle solution path
     - Verify puzzle behavior matches original
     - Test puzzle edge cases
