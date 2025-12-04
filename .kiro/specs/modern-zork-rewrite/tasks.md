@@ -334,129 +334,260 @@
     - Test error cases
     - _Requirements: 2.4_
 
-- [ ] 14. Implement special game mechanics
-  - [ ] 14.1 Implement thief behavior
-    - Port thief AI from ZIL
-    - Handle thief stealing items
-    - Handle thief combat
-    - _Requirements: 5.2, 5.3_
+- [ ] 14. Implement all rooms and objects
+  - [ ] 14.1 Create all room instances
+    - Instantiate all rooms from extracted data (110+ rooms)
+    - Set up all exits and connections
+    - Implement conditional exits based on game flags
+    - _Requirements: 5.1_
   
-  - [ ] 14.2 Implement troll behavior
-    - Port troll logic from ZIL
-    - Handle troll blocking passages
-    - _Requirements: 5.2, 5.3_
+  - [ ] 14.2 Create all object instances
+    - Instantiate all objects from extracted data (100+ objects)
+    - Set initial locations and properties
+    - Configure object flags, sizes, capacities, and values
+    - _Requirements: 5.2_
   
-  - [ ] 14.3 Implement dam and flood control
-    - Port dam puzzle logic
-    - Handle water level changes
-    - _Requirements: 5.3_
+  - [ ] 14.3 Verify content completeness
+    - Check all rooms are present and connected
+    - Check all objects are present with correct properties
+    - Verify all text matches original
+    - _Requirements: 5.1, 5.2, 9.4_
   
-  - [ ] 14.4 Implement other special puzzles
-    - Port remaining puzzle logic from ZIL
-    - Ensure all puzzles are solvable
-    - _Requirements: 5.3_
-  
-  - [ ] 14.5 Write integration tests for puzzles
-    - Test each puzzle solution
-    - Verify puzzle behavior matches original
-    - _Requirements: 5.3, 9.5_
+  - [ ] 14.4 Checkpoint - Test basic navigation and object interaction
+    - Ensure player can navigate between rooms
+    - Ensure objects can be taken and dropped
+    - Verify room descriptions display correctly
 
 - [ ] 15. Implement scoring system
   - [ ] 15.1 Port scoring logic from ZIL
-    - Assign point values to treasures
-    - Track score changes
+    - Assign point values to all 19 treasures
+    - Track score changes when treasures are placed in trophy case
+    - Implement rank calculation based on score
     - _Requirements: 5.5_
   
-  - [ ] 15.2 Implement treasure scoring
+  - [ ] 15.2 Implement treasure scoring mechanism
     - Award points when treasures are placed in trophy case
-    - Track which treasures have been scored
+    - Track which treasures have been scored (prevent double-scoring)
+    - Update score display
     - _Requirements: 5.5_
   
-  - [ ] 15.3 Implement SCORE command
-    - Display current score and rank
+  - [ ] 15.3 Enhance SCORE command
+    - Display current score out of 350 points
+    - Display move count
+    - Display rank (Beginner to Master Adventurer)
     - _Requirements: 5.5_
   
   - [ ] 15.4 Write property test for scoring correctness
     - **Property 11: Action sequence equivalence** (includes scoring)
     - **Validates: Requirements 5.4, 5.5**
 
-- [ ] 16. Implement all rooms and objects
-  - [ ] 16.1 Create all room instances
-    - Instantiate all rooms from extracted data
-    - Set up all exits and connections
-    - _Requirements: 5.1_
+- [ ] 16. Implement event and daemon system
+  - [ ] 16.1 Create event queue system
+    - Implement time-based event scheduling
+    - Port I-CLOCK daemon from gclock.zil
+    - Handle event priorities and timing
+    - _Requirements: 5.2, 5.3_
   
-  - [ ] 16.2 Create all object instances
-    - Instantiate all objects from extracted data
-    - Set initial locations and properties
+  - [ ] 16.2 Implement lamp timer daemon
+    - Track lamp battery life
+    - Warn player when lamp is dying
+    - Handle lamp running out
+    - _Requirements: 2.4_
+  
+  - [ ] 16.3 Implement candle timer daemon
+    - Track candle burn time
+    - Handle candles burning out
+    - _Requirements: 2.4_
+  
+  - [ ] 16.4 Write unit tests for event system
+    - Test event scheduling and execution
+    - Test daemon behaviors
     - _Requirements: 5.2_
-  
-  - [ ] 16.3 Verify content completeness
-    - Check all rooms are present
-    - Check all objects are present
-    - Check all text matches original
-    - _Requirements: 5.1, 5.2, 9.4_
 
-- [ ] 17. Implement error messages and feedback
-  - [ ] 17.1 Port all error messages from ZIL
+- [ ] 17. Implement NPC behavior system
+  - [ ] 17.1 Create NPC behavior framework
+    - Implement actor action system
+    - Create behavior state machine
+    - Handle NPC movement and actions
+    - _Requirements: 5.2, 5.3_
+  
+  - [ ] 17.2 Implement thief behavior
+    - Port thief AI from ZIL (I-THIEF daemon)
+    - Handle thief appearing/disappearing
+    - Implement thief stealing items
+    - Handle thief combat and death
+    - Implement treasure room deposit behavior
+    - _Requirements: 5.2, 5.3_
+  
+  - [ ] 17.3 Implement troll behavior
+    - Port troll logic from ZIL
+    - Handle troll blocking passages
+    - Implement troll combat (disarming, unconscious, death states)
+    - Handle axe recovery behavior
+    - Update room exits when troll is defeated
+    - _Requirements: 5.2, 5.3_
+  
+  - [ ] 17.4 Implement cyclops behavior
+    - Port cyclops logic from ZIL
+    - Handle cyclops hunger and feeding
+    - Implement cyclops leaving when fed
+    - Update room exits when cyclops leaves
+    - _Requirements: 5.2, 5.3_
+  
+  - [ ] 17.5 Write unit tests for NPC behaviors
+    - Test each NPC's state transitions
+    - Test NPC interactions with player
+    - _Requirements: 5.2, 5.3_
+
+- [ ] 18. Implement special puzzles and mechanics
+  - [ ] 18.1 Implement dam and flood control
+    - Port dam puzzle logic from ZIL
+    - Implement bolt turning mechanism
+    - Handle water level changes in reservoir
+    - Update room accessibility based on water level
+    - Implement bubble and leak mechanics
+    - _Requirements: 5.3_
+  
+  - [ ] 18.2 Implement mirror room puzzle
+    - Port mirror room logic from ZIL
+    - Handle mirror breaking
+    - Implement mirror room connections
+    - _Requirements: 5.3_
+  
+  - [ ] 18.3 Implement rainbow and pot of gold
+    - Port rainbow appearance logic
+    - Handle rainbow as climbable object
+    - Implement pot of gold visibility
+    - _Requirements: 5.3_
+  
+  - [ ] 18.4 Implement rope and basket mechanics
+    - Port rope and basket logic from ZIL
+    - Handle raising/lowering basket
+    - Implement rope tying and climbing
+    - _Requirements: 5.3_
+  
+  - [ ] 18.5 Implement remaining puzzles
+    - Port all other puzzle logic from ZIL
+    - Ensure all puzzles are solvable
+    - Test puzzle solutions
+    - _Requirements: 5.3_
+  
+  - [ ] 18.6 Write integration tests for puzzles
+    - Test each puzzle solution path
+    - Verify puzzle behavior matches original
+    - Test puzzle edge cases
+    - _Requirements: 5.3, 9.5_
+
+- [ ] 19. Implement error messages and feedback
+  - [ ] 19.1 Port all error messages from ZIL
     - Extract error messages from ZIL source
     - Implement context-appropriate error messages
+    - Match original Zork I tone and style
     - _Requirements: 2.3, 7.3_
   
-  - [ ] 17.2 Implement informative error messages
+  - [ ] 19.2 Implement informative error messages
     - Provide specific reasons for action failures
-    - Match original Zork I tone and style
+    - Add contextual hints where appropriate
+    - Maintain consistency with original game
     - _Requirements: 7.3_
   
-  - [ ] 17.3 Write property test for error message informativeness
+  - [ ] 19.3 Write property test for error message informativeness
     - **Property 16: Error message informativeness**
     - **Validates: Requirements 7.3**
 
-- [ ] 18. Cross-platform testing and packaging
-  - [ ] 18.1 Test on macOS
-    - Run full test suite on macOS
-    - Test game functionality
-    - Verify save/restore works
-    - _Requirements: 1.1_
+- [ ] 20. Implement combat system
+  - [ ] 20.1 Port combat mechanics from ZIL
+    - Implement fight daemon (I-FIGHT)
+    - Handle weapon effectiveness
+    - Implement hit/miss calculations
+    - Handle actor health and death
+    - _Requirements: 5.2, 5.3_
   
-  - [ ] 18.2 Test on Windows
-    - Run full test suite on Windows
-    - Test game functionality
-    - Verify save/restore works
-    - _Requirements: 1.2_
+  - [ ] 20.2 Implement weapon interactions
+    - Handle sword glowing near enemies
+    - Implement weapon-specific behaviors
+    - Handle disarming mechanics
+    - _Requirements: 5.2_
   
-  - [ ] 18.3 Package for distribution
-    - Create standalone executables for Mac and Windows
-    - Test packaged versions
-    - _Requirements: 1.1, 1.2, 1.3_
+  - [ ] 20.3 Write unit tests for combat
+    - Test combat calculations
+    - Test weapon behaviors
+    - Test actor state transitions
+    - _Requirements: 5.2, 5.3_
 
-- [ ] 19. Final verification and regression testing
-  - [ ] 19.1 Run complete test suite
+- [ ] 21. Implement lighting system
+  - [ ] 21.1 Port lighting logic from ZIL
+    - Implement room darkness detection
+    - Handle light source effects
+    - Implement "pitch black" messages
+    - Handle grue encounters in darkness
+    - _Requirements: 2.4, 5.3_
+  
+  - [ ] 21.2 Implement light source interactions
+    - Handle lamp on/off states
+    - Handle torch and candle behaviors
+    - Implement light propagation rules
+    - _Requirements: 2.4_
+  
+  - [ ] 21.3 Write unit tests for lighting
+    - Test darkness detection
+    - Test light source behaviors
+    - Test grue mechanics
+    - _Requirements: 5.3_
+
+- [ ] 22. Final verification and regression testing
+  - [ ] 22.1 Run complete test suite
     - Ensure all unit tests pass
     - Ensure all property tests pass
     - Ensure all integration tests pass
     - _Requirements: All_
   
-  - [ ] 19.2 Write property test for output correctness
+  - [ ] 22.2 Write property test for output correctness
     - **Property 3: Output correctness**
     - **Validates: Requirements 2.2**
   
-  - [ ] 19.3 Perform transcript comparison testing
-    - Run known command sequences
+  - [ ] 22.3 Perform transcript comparison testing
+    - Run known command sequences from walkthroughs
     - Compare output with original Zork I
-    - Fix any discrepancies
+    - Fix any discrepancies in text or behavior
     - _Requirements: 5.4, 9.4_
   
-  - [ ] 19.4 Verify all puzzles are solvable
-    - Test each puzzle solution
-    - Ensure game is completable
+  - [ ] 22.4 Verify all puzzles are solvable
+    - Test each major puzzle solution
+    - Ensure game is completable from start to finish
+    - Verify all 19 treasures are obtainable
     - _Requirements: 5.3, 9.5_
   
-  - [ ] 19.5 Final playthrough
-    - Complete full game playthrough
+  - [ ] 22.5 Complete full game playthrough
+    - Play through entire game manually
     - Verify all content is accessible
-    - Check for any remaining bugs
+    - Check for any remaining bugs or inconsistencies
+    - Verify score reaches 350 points
     - _Requirements: All_
 
-- [ ] 20. Checkpoint - Ensure all tests pass
-  - Ensure all tests pass, ask the user if questions arise.
+- [ ] 23. Cross-platform testing and packaging
+  - [ ] 23.1 Test on macOS
+    - Run full test suite on macOS
+    - Test game functionality end-to-end
+    - Verify save/restore works correctly
+    - Test terminal compatibility
+    - _Requirements: 1.1_
+  
+  - [ ] 23.2 Test on Windows
+    - Run full test suite on Windows
+    - Test game functionality end-to-end
+    - Verify save/restore works correctly
+    - Test terminal compatibility (cmd, PowerShell)
+    - _Requirements: 1.2_
+  
+  - [ ] 23.3 Package for distribution
+    - Create standalone executables for Mac and Windows
+    - Test packaged versions on clean systems
+    - Create installation instructions
+    - _Requirements: 1.1, 1.2, 1.3_
+
+- [ ] 24. Final checkpoint - Ensure all tests pass
+  - Run complete test suite one final time
+  - Verify no regressions
+  - Confirm game is fully playable
+  - Ask the user if questions arise
