@@ -11,6 +11,7 @@ import { CommandExecutor } from './engine/executor.js';
 import { GameState } from './game/state.js';
 import { GameObjectImpl } from './game/objects.js';
 import { createInitialGameState, getRoomCount, getObjectCount } from './game/factories/gameFactory.js';
+import { ALL_ROOMS } from './game/data/rooms-complete.js';
 
 /**
  * Get available objects for parsing (in current room and inventory)
@@ -33,6 +34,17 @@ function getAvailableObjects(state: GameState): GameObjectImpl[] {
       const obj = state.getObject(objId);
       if (obj) {
         available.push(obj as GameObjectImpl);
+      }
+    }
+    
+    // Add global objects for this room (like TREE, FOREST, etc.)
+    const roomData = ALL_ROOMS[room.id];
+    if (roomData && roomData.globalObjects) {
+      for (const objId of roomData.globalObjects) {
+        const obj = state.getObject(objId);
+        if (obj) {
+          available.push(obj as GameObjectImpl);
+        }
       }
     }
   }
