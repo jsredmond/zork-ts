@@ -4,7 +4,7 @@
  */
 
 import { GameState } from './state.js';
-import { GameObject } from './objects.js';
+import { GameObjectImpl } from './objects.js';
 import { ObjectFlag } from './data/flags.js';
 
 export interface StateChange {
@@ -35,7 +35,7 @@ const MAX_INVENTORY_WEIGHT = 100;
  */
 export class TakeAction implements ActionHandler {
   execute(state: GameState, objectId: string): ActionResult {
-    const obj = state.getObject(objectId);
+    const obj = state.getObject(objectId) as GameObjectImpl;
     
     if (!obj) {
       return {
@@ -263,6 +263,250 @@ export class MoveAction implements ActionHandler {
         oldValue: oldRoom,
         newValue: exit.destination
       }]
+    };
+  }
+}
+
+/**
+ * EXAMINE action handler
+ * Displays detailed description of an object or room
+ */
+export class ExamineAction implements ActionHandler {
+  execute(state: GameState, objectId?: string): ActionResult {
+    // If no object specified, examine the current room
+    if (!objectId) {
+      const currentRoom = state.getCurrentRoom();
+      if (!currentRoom) {
+        return {
+          success: false,
+          message: "You are nowhere!",
+          stateChanges: []
+        };
+      }
+      
+      return {
+        success: true,
+        message: currentRoom.description,
+        stateChanges: []
+      };
+    }
+
+    // Get the object
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is visible (in current room or inventory)
+    const currentRoom = state.getCurrentRoom();
+    const isInInventory = state.isInInventory(objectId);
+    const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
+    const isInVisibleContainer = obj.location && state.isInInventory(obj.location);
+    
+    if (!isInInventory && !isInCurrentRoom && !isInVisibleContainer) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Return the object's description
+    const description = obj.description || `You see nothing special about the ${obj.name.toLowerCase()}.`;
+
+    return {
+      success: true,
+      message: description,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * OPEN action handler
+ * Opens containers and doors
+ */
+export class OpenAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is visible
+    const currentRoom = state.getCurrentRoom();
+    const isInInventory = state.isInInventory(objectId);
+    const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
+    
+    if (!isInInventory && !isInCurrentRoom) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is a container or door
+    if (!obj.hasFlag(ObjectFlag.CONTBIT) && !obj.hasFlag(ObjectFlag.DOORBIT)) {
+      return {
+        success: false,
+        message: `You can't open the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Check if already open
+    if (obj.hasFlag(ObjectFlag.OPENBIT)) {
+      return {
+        success: false,
+        message: "It's already open.",
+        stateChanges: []
+      };
+    }
+
+    // Open the object
+    obj.addFlag(ObjectFlag.OPENBIT);
+
+    return {
+      success: true,
+      message: "Opened.",
+      stateChanges: [{
+        type: 'FLAG_CHANGED',
+        objectId: objectId,
+        oldValue: false,
+        newValue: true
+      }]
+    };
+  }
+}
+
+/**
+ * CLOSE action handler
+ * Closes containers and doors
+ */
+export class CloseAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is visible
+    const currentRoom = state.getCurrentRoom();
+    const isInInventory = state.isInInventory(objectId);
+    const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
+    
+    if (!isInInventory && !isInCurrentRoom) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is a container or door
+    if (!obj.hasFlag(ObjectFlag.CONTBIT) && !obj.hasFlag(ObjectFlag.DOORBIT)) {
+      return {
+        success: false,
+        message: `You can't close the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Check if already closed
+    if (!obj.hasFlag(ObjectFlag.OPENBIT)) {
+      return {
+        success: false,
+        message: "It's already closed.",
+        stateChanges: []
+      };
+    }
+
+    // Close the object
+    obj.removeFlag(ObjectFlag.OPENBIT);
+
+    return {
+      success: true,
+      message: "Closed.",
+      stateChanges: [{
+        type: 'FLAG_CHANGED',
+        objectId: objectId,
+        oldValue: true,
+        newValue: false
+      }]
+    };
+  }
+}
+
+/**
+ * READ action handler
+ * Displays text property of readable objects
+ */
+export class ReadAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is visible
+    const currentRoom = state.getCurrentRoom();
+    const isInInventory = state.isInInventory(objectId);
+    const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
+    const isInVisibleContainer = obj.location && state.isInInventory(obj.location);
+    
+    if (!isInInventory && !isInCurrentRoom && !isInVisibleContainer) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is readable
+    if (!obj.hasFlag(ObjectFlag.READBIT)) {
+      return {
+        success: false,
+        message: `You can't read the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Get the text property
+    const text = obj.getProperty('text');
+    
+    if (!text) {
+      return {
+        success: false,
+        message: `There is nothing written on the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: true,
+      message: text,
+      stateChanges: []
     };
   }
 }

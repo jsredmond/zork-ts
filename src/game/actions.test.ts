@@ -8,7 +8,7 @@ import * as fc from 'fast-check';
 import { GameState } from './state.js';
 import { GameObjectImpl } from './objects.js';
 import { RoomImpl, Direction } from './rooms.js';
-import { TakeAction, DropAction, InventoryAction, MoveAction, LookAction } from './actions.js';
+import { TakeAction, DropAction, InventoryAction, MoveAction, LookAction, ExamineAction, OpenAction, CloseAction, ReadAction } from './actions.js';
 import { ObjectFlag } from './data/flags.js';
 
 describe('TakeAction', () => {
@@ -597,6 +597,463 @@ describe('LookAction', () => {
     expect(result.success).toBe(true);
     // Should not mention sword since it's in inventory, not in room
     expect(result.message).not.toContain('sword');
+  });
+});
+
+// Feature: modern-zork-rewrite, Property 15: Display consistency
+describe('Property Test: Display consistency', () => {
+  it('should display associated description text for any game object or room', () => {
+    fc.assert(
+      fc.property(
+        // Generate random objects and rooms with descriptions
+        fc.record({
+          objectId: fc.string({ minLength: 1, maxLength: 20 }).map(s => s.toUpperCase().replace(/[^A-Z0-9]/g, '')),
+          objectName: fc.string({ minLength: 1, maxLength: 30 }),
+          objectDescription: fc.string({ minLength: 1, maxLength: 200 }),
+          roomId: fc.string({ minLength: 1, maxLength: 20 }).map(s => s.toUpperCase().replace(/[^A-Z0-9]/g, '')),
+          roomName: fc.string({ minLength: 1, maxLength: 30 }),
+          roomDescription: fc.string({ minLength: 1, maxLength: 200 })
+        }),
+        (data) => {
+          // Skip invalid IDs
+          if (!data.objectId || data.objectId.length === 0 || !data.roomId || data.roomId.length === 0) {
+            return true;
+          }
+
+          // Create room
+          const room = new RoomImpl({
+            id: data.roomId,
+            name: data.roomName,
+            description: data.roomDescription,
+            exits: new Map()
+          });
+
+          // Create object in room
+          const obj = new GameObjectImpl({
+            id: data.objectId,
+            name: data.objectName,
+            description: data.objectDescription,
+            location: data.roomId,
+            flags: [ObjectFlag.TAKEBIT],
+            size: 10
+          });
+
+          const rooms = new Map([[data.roomId, room]]);
+          const objects = new Map([[data.objectId, obj]]);
+          
+          const state = new GameState({
+            currentRoom: data.roomId,
+            objects,
+            rooms,
+            inventory: [],
+            score: 0,
+            moves: 0
+          });
+
+          room.addObject(data.objectId);
+
+          // Test 1: LOOK should display room description
+          const lookAction = new LookAction();
+          const lookResult = lookAction.execute(state);
+          
+          expect(lookResult.success).toBe(true);
+          expect(lookResult.message).toContain(data.roomDescription);
+
+          // Test 2: EXAMINE should display object description
+          const examineAction = new ExamineAction();
+          const examineResult = examineAction.execute(state, data.objectId);
+          
+          expect(examineResult.success).toBe(true);
+          expect(examineResult.message).toContain(data.objectDescription);
+
+          return true;
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+});
+
+describe('ExamineAction', () => {
+  let state: GameState;
+  let examineAction: ExamineAction;
+
+  beforeEach(() => {
+    const room = new RoomImpl({
+      id: 'TEST-ROOM',
+      name: 'Test Room',
+      description: 'A simple test room.',
+      exits: new Map()
+    });
+
+    const rooms = new Map([['TEST-ROOM', room]]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    examineAction = new ExamineAction();
+  });
+
+  it('should display object description when examining an object in the room', () => {
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A finely crafted elvish blade with intricate engravings.',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('SWORD', sword);
+    state.rooms.get('TEST-ROOM')!.addObject('SWORD');
+
+    const result = examineAction.execute(state, 'SWORD');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('finely crafted elvish blade');
+  });
+
+  it('should display object description when examining an object in inventory', () => {
+    const lamp = new GameObjectImpl({
+      id: 'LAMP',
+      name: 'Brass Lantern',
+      description: 'A battery-powered brass lantern.',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.LIGHTBIT],
+      size: 5
+    });
+
+    state.objects.set('LAMP', lamp);
+    state.addToInventory('LAMP');
+
+    const result = examineAction.execute(state, 'LAMP');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('battery-powered brass lantern');
+  });
+
+  it('should display room description when examining without an object', () => {
+    const result = examineAction.execute(state);
+
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('A simple test room.');
+  });
+
+  it('should return error when examining object not visible', () => {
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'OTHER-ROOM',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('SWORD', sword);
+
+    const result = examineAction.execute(state, 'SWORD');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("can't see");
+  });
+
+  it('should return error when examining non-existent object', () => {
+    const result = examineAction.execute(state, 'DRAGON');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("can't see");
+  });
+});
+
+describe('OpenAction', () => {
+  let state: GameState;
+  let openAction: OpenAction;
+
+  beforeEach(() => {
+    const room = new RoomImpl({
+      id: 'TEST-ROOM',
+      name: 'Test Room',
+      description: 'A test room',
+      exits: new Map()
+    });
+
+    const rooms = new Map([['TEST-ROOM', room]]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    openAction = new OpenAction();
+  });
+
+  it('should open a closed container', () => {
+    const chest = new GameObjectImpl({
+      id: 'CHEST',
+      name: 'Wooden Chest',
+      description: 'A sturdy wooden chest',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.CONTBIT],
+      capacity: 50
+    });
+
+    state.objects.set('CHEST', chest);
+    state.rooms.get('TEST-ROOM')!.addObject('CHEST');
+
+    const result = openAction.execute(state, 'CHEST');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toBe('Opened.');
+    expect(chest.hasFlag(ObjectFlag.OPENBIT)).toBe(true);
+  });
+
+  it('should not open an already open container', () => {
+    const chest = new GameObjectImpl({
+      id: 'CHEST',
+      name: 'Wooden Chest',
+      description: 'A sturdy wooden chest',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.CONTBIT, ObjectFlag.OPENBIT],
+      capacity: 50
+    });
+
+    state.objects.set('CHEST', chest);
+    state.rooms.get('TEST-ROOM')!.addObject('CHEST');
+
+    const result = openAction.execute(state, 'CHEST');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain('already open');
+  });
+
+  it('should not open non-container objects', () => {
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('SWORD', sword);
+    state.rooms.get('TEST-ROOM')!.addObject('SWORD');
+
+    const result = openAction.execute(state, 'SWORD');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("can't open");
+  });
+
+  it('should return error when opening non-existent object', () => {
+    const result = openAction.execute(state, 'DOOR');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("can't see");
+  });
+});
+
+describe('CloseAction', () => {
+  let state: GameState;
+  let closeAction: CloseAction;
+
+  beforeEach(() => {
+    const room = new RoomImpl({
+      id: 'TEST-ROOM',
+      name: 'Test Room',
+      description: 'A test room',
+      exits: new Map()
+    });
+
+    const rooms = new Map([['TEST-ROOM', room]]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    closeAction = new CloseAction();
+  });
+
+  it('should close an open container', () => {
+    const chest = new GameObjectImpl({
+      id: 'CHEST',
+      name: 'Wooden Chest',
+      description: 'A sturdy wooden chest',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.CONTBIT, ObjectFlag.OPENBIT],
+      capacity: 50
+    });
+
+    state.objects.set('CHEST', chest);
+    state.rooms.get('TEST-ROOM')!.addObject('CHEST');
+
+    const result = closeAction.execute(state, 'CHEST');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toBe('Closed.');
+    expect(chest.hasFlag(ObjectFlag.OPENBIT)).toBe(false);
+  });
+
+  it('should not close an already closed container', () => {
+    const chest = new GameObjectImpl({
+      id: 'CHEST',
+      name: 'Wooden Chest',
+      description: 'A sturdy wooden chest',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.CONTBIT],
+      capacity: 50
+    });
+
+    state.objects.set('CHEST', chest);
+    state.rooms.get('TEST-ROOM')!.addObject('CHEST');
+
+    const result = closeAction.execute(state, 'CHEST');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain('already closed');
+  });
+
+  it('should not close non-container objects', () => {
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('SWORD', sword);
+    state.rooms.get('TEST-ROOM')!.addObject('SWORD');
+
+    const result = closeAction.execute(state, 'SWORD');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("can't close");
+  });
+});
+
+describe('ReadAction', () => {
+  let state: GameState;
+  let readAction: ReadAction;
+
+  beforeEach(() => {
+    const room = new RoomImpl({
+      id: 'TEST-ROOM',
+      name: 'Test Room',
+      description: 'A test room',
+      exits: new Map()
+    });
+
+    const rooms = new Map([['TEST-ROOM', room]]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    readAction = new ReadAction();
+  });
+
+  it('should display text from readable object', () => {
+    const book = new GameObjectImpl({
+      id: 'BOOK',
+      name: 'Ancient Book',
+      description: 'An old leather-bound book',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.READBIT]
+    });
+    book.setProperty('text', 'The ancient text speaks of great treasures hidden below.');
+
+    state.objects.set('BOOK', book);
+    state.rooms.get('TEST-ROOM')!.addObject('BOOK');
+
+    const result = readAction.execute(state, 'BOOK');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('ancient text speaks of great treasures');
+  });
+
+  it('should not read non-readable objects', () => {
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('SWORD', sword);
+    state.rooms.get('TEST-ROOM')!.addObject('SWORD');
+
+    const result = readAction.execute(state, 'SWORD');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("can't read");
+  });
+
+  it('should handle readable object with no text', () => {
+    const paper = new GameObjectImpl({
+      id: 'PAPER',
+      name: 'Blank Paper',
+      description: 'A blank piece of paper',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.READBIT]
+    });
+
+    state.objects.set('PAPER', paper);
+    state.rooms.get('TEST-ROOM')!.addObject('PAPER');
+
+    const result = readAction.execute(state, 'PAPER');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain('nothing written');
+  });
+
+  it('should read object in inventory', () => {
+    const note = new GameObjectImpl({
+      id: 'NOTE',
+      name: 'Note',
+      description: 'A small note',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.READBIT]
+    });
+    note.setProperty('text', 'Meet me at midnight.');
+
+    state.objects.set('NOTE', note);
+    state.addToInventory('NOTE');
+
+    const result = readAction.execute(state, 'NOTE');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('Meet me at midnight');
+  });
+
+  it('should return error when reading non-existent object', () => {
+    const result = readAction.execute(state, 'SCROLL');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("can't see");
   });
 });
 

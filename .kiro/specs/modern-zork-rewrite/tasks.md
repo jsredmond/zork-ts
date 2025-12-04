@@ -177,31 +177,31 @@
     - Test conditional exits
     - _Requirements: 3.2, 7.1_
 
-- [ ] 9. Implement basic verb actions
-  - [ ] 9.1 Implement EXAMINE verb
+- [x] 9. Implement basic verb actions
+  - [x] 9.1 Implement EXAMINE verb
     - Display object detailed descriptions
     - Handle examining rooms and objects
     - _Requirements: 2.4, 7.2_
   
-  - [ ] 9.2 Implement OPEN/CLOSE verbs
+  - [x] 9.2 Implement OPEN/CLOSE verbs
     - Check if object is a container or door
     - Toggle OPENBIT flag
     - Display appropriate messages
     - _Requirements: 2.4_
   
-  - [ ] 9.3 Implement READ verb
+  - [x] 9.3 Implement READ verb
     - Display text property of readable objects
     - _Requirements: 2.4_
   
-  - [ ] 9.4 Implement LOOK verb
+  - [x] 9.4 Implement LOOK verb
     - Redisplay current room description
     - _Requirements: 2.4, 7.1_
   
-  - [ ] 9.5 Write property test for display consistency
+  - [x] 9.5 Write property test for display consistency
     - **Property 15: Display consistency**
     - **Validates: Requirements 7.1, 7.2**
   
-  - [ ] 9.6 Write unit tests for basic verbs
+  - [x] 9.6 Write unit tests for basic verbs
     - Test each verb with valid and invalid objects
     - Test error messages
     - _Requirements: 2.4_
