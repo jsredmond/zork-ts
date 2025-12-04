@@ -1,5 +1,10 @@
 # Implementation Plan
 
+**IMPORTANT - Running Tests:**
+- The package.json already includes `--run` in the test script
+- Use: `npm test` or `npx vitest run <file-path>`
+- **NEVER use:** `npm test -- --run` (causes duplicate flag error)
+
 - [x] 1. Set up project structure and development environment
   - Create TypeScript project with Node.js
   - Configure tsconfig.json for strict type checking
@@ -149,24 +154,24 @@
     - Test inventory display
     - _Requirements: 3.3, 3.4, 7.5_
 
-- [ ] 8. Implement room navigation
-  - [ ] 8.1 Implement movement commands
+- [x] 8. Implement room navigation
+  - [x] 8.1 Implement movement commands
     - Handle directional commands (NORTH, SOUTH, EAST, WEST, UP, DOWN, IN, OUT)
     - Check exit validity and conditions
     - Update player location
     - _Requirements: 3.2_
   
-  - [ ] 8.2 Implement room description display
+  - [x] 8.2 Implement room description display
     - Display room name and description on entry
     - Handle visited/unvisited room descriptions
     - List visible objects in room
     - _Requirements: 7.1_
   
-  - [ ] 8.3 Write property test for movement state updates
+  - [x] 8.3 Write property test for movement state updates
     - **Property 7: Movement state updates**
     - **Validates: Requirements 3.2**
   
-  - [ ] 8.4 Write unit tests for navigation
+  - [x] 8.4 Write unit tests for navigation
     - Test valid movements
     - Test blocked exits
     - Test conditional exits

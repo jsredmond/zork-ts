@@ -317,6 +317,12 @@ Unit tests should cover:
 - Edge cases (empty inventory, full containers, locked doors)
 - Error conditions (invalid objects, impossible actions)
 
+**Running Tests:**
+- The `package.json` test script already includes `--run` flag: `"test": "vitest --run"`
+- To run tests, use: `npm test` or `npx vitest run`
+- **NEVER use:** `npm test -- --run` (this duplicates the --run flag and causes errors)
+- To run specific test files: `npx vitest run <file-path>`
+
 ### Property-Based Testing
 
 Property-based tests will verify the correctness properties defined above using a property-based testing library (fast-check for TypeScript).
@@ -331,6 +337,11 @@ Property-based tests will verify the correctness properties defined above using 
 ```
 
 **Property Implementation**: Each correctness property listed above must be implemented by a single property-based test. Multiple properties should not be combined into one test, and one property should not be split across multiple tests.
+
+**Running Property Tests:**
+- Use: `npm test` or `npx vitest run`
+- For specific files: `npx vitest run <file-path>`
+- **NEVER use:** `npm test -- --run` (causes duplicate flag error)
 
 **Generators**: Custom generators will be needed for:
 - Valid command strings

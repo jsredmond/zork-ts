@@ -198,3 +198,155 @@ export class InventoryAction implements ActionHandler {
     };
   }
 }
+
+/**
+ * MOVE action handler
+ * Handles directional movement commands (NORTH, SOUTH, EAST, WEST, UP, DOWN, IN, OUT)
+ */
+export class MoveAction implements ActionHandler {
+  execute(state: GameState, direction: string): ActionResult {
+    const currentRoom = state.getCurrentRoom();
+    
+    if (!currentRoom) {
+      return {
+        success: false,
+        message: "You are nowhere!",
+        stateChanges: []
+      };
+    }
+
+    // Normalize direction to uppercase
+    const normalizedDirection = direction.toUpperCase();
+    
+    // Check if exit exists
+    const exit = currentRoom.getExit(normalizedDirection as any);
+    
+    if (!exit) {
+      return {
+        success: false,
+        message: "You can't go that way.",
+        stateChanges: []
+      };
+    }
+
+    // Check if exit is available (condition check)
+    if (!currentRoom.isExitAvailable(normalizedDirection as any)) {
+      // If there's a custom message for blocked exit, use it
+      const message = exit.message || "You can't go that way.";
+      return {
+        success: false,
+        message: message,
+        stateChanges: []
+      };
+    }
+
+    // Check if destination is empty (blocked exit with message)
+    if (!exit.destination || exit.destination === '') {
+      const message = exit.message || "You can't go that way.";
+      return {
+        success: false,
+        message: message,
+        stateChanges: []
+      };
+    }
+
+    // Move to new room
+    const oldRoom = state.currentRoom;
+    state.setCurrentRoom(exit.destination);
+    state.incrementMoves();
+
+    return {
+      success: true,
+      message: '', // Room description will be displayed separately
+      stateChanges: [{
+        type: 'ROOM_CHANGED',
+        oldValue: oldRoom,
+        newValue: exit.destination
+      }]
+    };
+  }
+}
+
+/**
+ * LOOK action handler
+ * Displays the current room description with objects
+ */
+export class LookAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    const currentRoom = state.getCurrentRoom();
+    
+    if (!currentRoom) {
+      return {
+        success: false,
+        message: "You are nowhere!",
+        stateChanges: []
+      };
+    }
+
+    const description = formatRoomDescription(currentRoom, state);
+
+    return {
+      success: true,
+      message: description,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * Format room description including name, description, and visible objects
+ * Handles visited/unvisited room descriptions
+ */
+export function formatRoomDescription(room: any, state: GameState): string {
+  let output = '';
+
+  // Room name
+  output += room.name + '\n';
+
+  // Room description (full description for unvisited or LOOK command)
+  output += room.description;
+
+  // List visible objects in room
+  const objectsInRoom = state.getObjectsInCurrentRoom();
+  
+  if (objectsInRoom.length > 0) {
+    output += '\n';
+    for (const obj of objectsInRoom) {
+      // Only show visible objects (not hidden or inside closed containers)
+      output += `\nThere is a ${obj.name.toLowerCase()} here.`;
+    }
+  }
+
+  return output;
+}
+
+/**
+ * Get room description for display after movement
+ * Shows brief description for visited rooms, full for unvisited
+ */
+export function getRoomDescriptionAfterMovement(room: any, state: GameState, verbose: boolean = false): string {
+  let output = '';
+
+  // Room name
+  output += room.name + '\n';
+
+  // Show full description if unvisited or verbose mode
+  if (!room.visited || verbose) {
+    output += room.description;
+  } else {
+    // Brief description for visited rooms
+    output += room.description;
+  }
+
+  // List visible objects in room
+  const objectsInRoom = state.getObjectsInCurrentRoom();
+  
+  if (objectsInRoom.length > 0) {
+    output += '\n';
+    for (const obj of objectsInRoom) {
+      output += `\nThere is a ${obj.name.toLowerCase()} here.`;
+    }
+  }
+
+  return output;
+}
