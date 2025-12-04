@@ -8,7 +8,12 @@ import * as fc from 'fast-check';
 import { GameState } from './state.js';
 import { GameObjectImpl } from './objects.js';
 import { RoomImpl, Direction } from './rooms.js';
-import { TakeAction, DropAction, InventoryAction, MoveAction, LookAction, ExamineAction, OpenAction, CloseAction, ReadAction } from './actions.js';
+import { 
+  TakeAction, DropAction, InventoryAction, MoveAction, LookAction, ExamineAction, 
+  OpenAction, CloseAction, ReadAction, PutAction, RemoveAction, TurnOnAction, TurnOffAction,
+  AttackAction, KillAction, ScoreAction, QuitAction, RestartAction, VerboseAction, BriefAction,
+  WaitAction
+} from './actions.js';
 import { ObjectFlag } from './data/flags.js';
 
 describe('TakeAction', () => {
@@ -1200,5 +1205,431 @@ describe('Inventory Management Integration Tests', () => {
     // Drop lamp
     dropAction.execute(state, 'LAMP');
     expect(state.getInventoryWeight()).toBe(0);
+  });
+});
+
+describe('PutAction', () => {
+  let state: GameState;
+  let putAction: PutAction;
+
+  beforeEach(() => {
+    const rooms = new Map([
+      ['TEST-ROOM', new RoomImpl({
+        id: 'TEST-ROOM',
+        name: 'Test Room',
+        description: 'A test room',
+        exits: new Map()
+      })]
+    ]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    putAction = new PutAction();
+  });
+
+  it('should put object into open container', () => {
+    const chest = new GameObjectImpl({
+      id: 'CHEST',
+      name: 'Wooden Chest',
+      description: 'A sturdy wooden chest',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.CONTBIT, ObjectFlag.OPENBIT],
+      capacity: 50
+    });
+
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('CHEST', chest);
+    state.objects.set('SWORD', sword);
+    state.addToInventory('SWORD');
+
+    const result = putAction.execute(state, 'SWORD', 'CHEST');
+
+    expect(result.success).toBe(true);
+    expect(sword.location).toBe('CHEST');
+  });
+
+  it('should not put object into closed container', () => {
+    const chest = new GameObjectImpl({
+      id: 'CHEST',
+      name: 'Wooden Chest',
+      description: 'A sturdy wooden chest',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.CONTBIT],
+      capacity: 50
+    });
+
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('CHEST', chest);
+    state.objects.set('SWORD', sword);
+    state.addToInventory('SWORD');
+
+    const result = putAction.execute(state, 'SWORD', 'CHEST');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("isn't open");
+  });
+
+  it('should respect capacity constraints', () => {
+    const chest = new GameObjectImpl({
+      id: 'CHEST',
+      name: 'Small Chest',
+      description: 'A small chest',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.CONTBIT, ObjectFlag.OPENBIT],
+      capacity: 5
+    });
+
+    const boulder = new GameObjectImpl({
+      id: 'BOULDER',
+      name: 'Boulder',
+      description: 'A huge boulder',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 60
+    });
+
+    state.objects.set('CHEST', chest);
+    state.objects.set('BOULDER', boulder);
+    state.addToInventory('BOULDER');
+
+    const result = putAction.execute(state, 'BOULDER', 'CHEST');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("no room");
+  });
+});
+
+describe('TurnOnAction and TurnOffAction', () => {
+  let state: GameState;
+  let turnOnAction: TurnOnAction;
+  let turnOffAction: TurnOffAction;
+
+  beforeEach(() => {
+    const rooms = new Map([
+      ['TEST-ROOM', new RoomImpl({
+        id: 'TEST-ROOM',
+        name: 'Test Room',
+        description: 'A test room',
+        exits: new Map()
+      })]
+    ]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    turnOnAction = new TurnOnAction();
+    turnOffAction = new TurnOffAction();
+  });
+
+  it('should turn on a light source', () => {
+    const lamp = new GameObjectImpl({
+      id: 'LAMP',
+      name: 'Brass Lantern',
+      description: 'A brass lantern',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.LIGHTBIT],
+      size: 5
+    });
+
+    state.objects.set('LAMP', lamp);
+    state.addToInventory('LAMP');
+
+    const result = turnOnAction.execute(state, 'LAMP');
+
+    expect(result.success).toBe(true);
+    expect(lamp.hasFlag(ObjectFlag.ONBIT)).toBe(true);
+  });
+
+  it('should turn off a light source', () => {
+    const lamp = new GameObjectImpl({
+      id: 'LAMP',
+      name: 'Brass Lantern',
+      description: 'A brass lantern',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.LIGHTBIT, ObjectFlag.ONBIT],
+      size: 5
+    });
+
+    state.objects.set('LAMP', lamp);
+    state.addToInventory('LAMP');
+
+    const result = turnOffAction.execute(state, 'LAMP');
+
+    expect(result.success).toBe(true);
+    expect(lamp.hasFlag(ObjectFlag.ONBIT)).toBe(false);
+  });
+
+  it('should not turn on non-light objects', () => {
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('SWORD', sword);
+    state.addToInventory('SWORD');
+
+    const result = turnOnAction.execute(state, 'SWORD');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("can't turn that on");
+  });
+});
+
+describe('AttackAction', () => {
+  let state: GameState;
+  let attackAction: AttackAction;
+
+  beforeEach(() => {
+    const rooms = new Map([
+      ['TEST-ROOM', new RoomImpl({
+        id: 'TEST-ROOM',
+        name: 'Test Room',
+        description: 'A test room',
+        exits: new Map()
+      })]
+    ]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    attackAction = new AttackAction();
+  });
+
+  it('should require a weapon to attack', () => {
+    const troll = new GameObjectImpl({
+      id: 'TROLL',
+      name: 'Troll',
+      description: 'A nasty troll',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.ACTORBIT]
+    });
+
+    state.objects.set('TROLL', troll);
+
+    const result = attackAction.execute(state, 'TROLL');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain('bare hands');
+  });
+
+  it('should not attack non-actors', () => {
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.WEAPONBIT],
+      size: 10
+    });
+
+    state.objects.set('SWORD', sword);
+
+    const result = attackAction.execute(state, 'SWORD', 'SWORD');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain('strange people');
+  });
+
+  it('should require holding the weapon', () => {
+    const troll = new GameObjectImpl({
+      id: 'TROLL',
+      name: 'Troll',
+      description: 'A nasty troll',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.ACTORBIT]
+    });
+
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'Sword',
+      description: 'A sharp sword',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.WEAPONBIT],
+      size: 10
+    });
+
+    state.objects.set('TROLL', troll);
+    state.objects.set('SWORD', sword);
+
+    const result = attackAction.execute(state, 'TROLL', 'SWORD');
+
+    expect(result.success).toBe(false);
+    expect(result.message).toContain("aren't even holding");
+  });
+});
+
+describe('ScoreAction', () => {
+  let state: GameState;
+  let scoreAction: ScoreAction;
+
+  beforeEach(() => {
+    const rooms = new Map([
+      ['TEST-ROOM', new RoomImpl({
+        id: 'TEST-ROOM',
+        name: 'Test Room',
+        description: 'A test room',
+        exits: new Map()
+      })]
+    ]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    scoreAction = new ScoreAction();
+  });
+
+  it('should display current score and rank', () => {
+    state.score = 100;
+    state.moves = 50;
+
+    const result = scoreAction.execute(state);
+
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('100');
+    expect(result.message).toContain('50');
+    expect(result.message).toContain('Junior Adventurer');
+  });
+
+  it('should show correct rank for different scores', () => {
+    // Test Beginner rank
+    state.score = 0;
+    let result = scoreAction.execute(state);
+    expect(result.message).toContain('Beginner');
+
+    // Test Amateur Adventurer rank
+    state.score = 50;
+    result = scoreAction.execute(state);
+    expect(result.message).toContain('Amateur Adventurer');
+
+    // Test Master Adventurer rank
+    state.score = 350;
+    result = scoreAction.execute(state);
+    expect(result.message).toContain('Master Adventurer');
+  });
+});
+
+describe('VerboseAction and BriefAction', () => {
+  let state: GameState;
+  let verboseAction: VerboseAction;
+  let briefAction: BriefAction;
+
+  beforeEach(() => {
+    const rooms = new Map([
+      ['TEST-ROOM', new RoomImpl({
+        id: 'TEST-ROOM',
+        name: 'Test Room',
+        description: 'A test room',
+        exits: new Map()
+      })]
+    ]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    verboseAction = new VerboseAction();
+    briefAction = new BriefAction();
+  });
+
+  it('should set verbose mode', () => {
+    const result = verboseAction.execute(state);
+
+    expect(result.success).toBe(true);
+    expect(state.getGlobalVariable('VERBOSE')).toBe(true);
+    expect(state.getGlobalVariable('SUPER_BRIEF')).toBe(false);
+  });
+
+  it('should set brief mode', () => {
+    const result = briefAction.execute(state);
+
+    expect(result.success).toBe(true);
+    expect(state.getGlobalVariable('VERBOSE')).toBe(false);
+    expect(state.getGlobalVariable('SUPER_BRIEF')).toBe(false);
+  });
+});
+
+describe('WaitAction', () => {
+  let state: GameState;
+  let waitAction: WaitAction;
+
+  beforeEach(() => {
+    const rooms = new Map([
+      ['TEST-ROOM', new RoomImpl({
+        id: 'TEST-ROOM',
+        name: 'Test Room',
+        description: 'A test room',
+        exits: new Map()
+      })]
+    ]);
+
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects: new Map(),
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    waitAction = new WaitAction();
+  });
+
+  it('should increment moves counter', () => {
+    const initialMoves = state.moves;
+    
+    const result = waitAction.execute(state);
+
+    expect(result.success).toBe(true);
+    expect(state.moves).toBe(initialMoves + 1);
   });
 });

@@ -683,3 +683,959 @@ export class RestoreAction implements ActionHandler {
     }
   }
 }
+
+/**
+ * PUT action handler
+ * Puts an object into a container or onto a surface
+ */
+export class PutAction implements ActionHandler {
+  execute(state: GameState, objectId: string, containerId: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    const container = state.getObject(containerId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    if (!container) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if trying to put object into itself
+    if (objectId === containerId) {
+      return {
+        success: false,
+        message: "How can you do that?",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is already in the container
+    if (obj.location === containerId) {
+      return {
+        success: false,
+        message: `The ${obj.name.toLowerCase()} is already in the ${container.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Check if container is a container or surface
+    if (!container.hasFlag(ObjectFlag.CONTBIT) && !container.hasFlag(ObjectFlag.SURFACEBIT)) {
+      return {
+        success: false,
+        message: "You can't do that.",
+        stateChanges: []
+      };
+    }
+
+    // Check if container is open (if it's a container, not a surface)
+    if (container.hasFlag(ObjectFlag.CONTBIT) && !container.hasFlag(ObjectFlag.OPENBIT)) {
+      return {
+        success: false,
+        message: `The ${container.name.toLowerCase()} isn't open.`,
+        stateChanges: []
+      };
+    }
+
+    // Check if player is holding the object
+    if (!state.isInInventory(objectId)) {
+      return {
+        success: false,
+        message: `You don't have the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Check capacity constraints
+    const containerCapacity = container.capacity || 0;
+    const containerCurrentWeight = getContainerWeight(container, state);
+    const objectWeight = obj.size || 0;
+    
+    if (containerCurrentWeight + objectWeight > containerCapacity) {
+      return {
+        success: false,
+        message: "There's no room.",
+        stateChanges: []
+      };
+    }
+
+    // Put the object in the container
+    const oldLocation = obj.location;
+    state.moveObject(objectId, containerId);
+
+    return {
+      success: true,
+      message: "Done.",
+      stateChanges: [{
+        type: 'OBJECT_MOVED',
+        objectId: objectId,
+        oldValue: oldLocation,
+        newValue: containerId
+      }]
+    };
+  }
+}
+
+/**
+ * Helper function to calculate total weight of objects in a container
+ */
+function getContainerWeight(container: GameObjectImpl, state: GameState): number {
+  let totalWeight = 0;
+  
+  // Iterate through all objects to find those in this container
+  for (const [objId, obj] of state.objects.entries()) {
+    if (obj.location === container.id) {
+      totalWeight += (obj as GameObjectImpl).size || 0;
+    }
+  }
+  
+  return totalWeight;
+}
+
+/**
+ * REMOVE action handler
+ * Removes an object from a container (synonym for TAKE FROM)
+ */
+export class RemoveAction implements ActionHandler {
+  execute(state: GameState, objectId: string, containerId: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    const container = state.getObject(containerId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    if (!container) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is in the container
+    if (obj.location !== containerId) {
+      return {
+        success: false,
+        message: `The ${obj.name.toLowerCase()} isn't in the ${container.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Check if container is open (if it's a container)
+    if (container.hasFlag(ObjectFlag.CONTBIT) && !container.hasFlag(ObjectFlag.OPENBIT)) {
+      return {
+        success: false,
+        message: `The ${container.name.toLowerCase()} isn't open.`,
+        stateChanges: []
+      };
+    }
+
+    // Check if object is takeable
+    if (!obj.isTakeable()) {
+      return {
+        success: false,
+        message: `You can't take the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Check weight constraints
+    const currentWeight = state.getInventoryWeight();
+    const objectWeight = obj.size || 0;
+    
+    if (currentWeight + objectWeight > MAX_INVENTORY_WEIGHT) {
+      return {
+        success: false,
+        message: "You're carrying too much already.",
+        stateChanges: []
+      };
+    }
+
+    // Remove the object from container and add to inventory
+    const oldLocation = obj.location;
+    state.moveObject(objectId, 'PLAYER', 'HELD');
+
+    return {
+      success: true,
+      message: "Taken.",
+      stateChanges: [{
+        type: 'OBJECT_MOVED',
+        objectId: objectId,
+        oldValue: oldLocation,
+        newValue: 'PLAYER'
+      }]
+    };
+  }
+}
+
+/**
+ * TURN ON action handler
+ * Turns on light sources
+ */
+export class TurnOnAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is visible
+    const currentRoom = state.getCurrentRoom();
+    const isInInventory = state.isInInventory(objectId);
+    const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
+    
+    if (!isInInventory && !isInCurrentRoom) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is a light source
+    if (!obj.hasFlag(ObjectFlag.LIGHTBIT)) {
+      return {
+        success: false,
+        message: "You can't turn that on.",
+        stateChanges: []
+      };
+    }
+
+    // Check if already on
+    if (obj.hasFlag(ObjectFlag.ONBIT)) {
+      return {
+        success: false,
+        message: "It is already on.",
+        stateChanges: []
+      };
+    }
+
+    // Turn on the light source
+    obj.addFlag(ObjectFlag.ONBIT);
+
+    return {
+      success: true,
+      message: `The ${obj.name.toLowerCase()} is now on.`,
+      stateChanges: [{
+        type: 'FLAG_CHANGED',
+        objectId: objectId,
+        oldValue: false,
+        newValue: true
+      }]
+    };
+  }
+}
+
+/**
+ * TURN OFF action handler
+ * Turns off light sources
+ */
+export class TurnOffAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is visible
+    const currentRoom = state.getCurrentRoom();
+    const isInInventory = state.isInInventory(objectId);
+    const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
+    
+    if (!isInInventory && !isInCurrentRoom) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is a light source
+    if (!obj.hasFlag(ObjectFlag.LIGHTBIT)) {
+      return {
+        success: false,
+        message: "You can't turn that off.",
+        stateChanges: []
+      };
+    }
+
+    // Check if already off
+    if (!obj.hasFlag(ObjectFlag.ONBIT)) {
+      return {
+        success: false,
+        message: "It is already off.",
+        stateChanges: []
+      };
+    }
+
+    // Turn off the light source
+    obj.removeFlag(ObjectFlag.ONBIT);
+
+    return {
+      success: true,
+      message: `The ${obj.name.toLowerCase()} is now off.`,
+      stateChanges: [{
+        type: 'FLAG_CHANGED',
+        objectId: objectId,
+        oldValue: true,
+        newValue: false
+      }]
+    };
+  }
+}
+
+/**
+ * ATTACK action handler
+ * Handles combat with NPCs and objects
+ */
+export class AttackAction implements ActionHandler {
+  execute(state: GameState, targetId: string, weaponId?: string): ActionResult {
+    const target = state.getObject(targetId) as GameObjectImpl;
+    
+    if (!target) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if target is an actor
+    if (!target.hasFlag(ObjectFlag.ACTORBIT)) {
+      return {
+        success: false,
+        message: `I've known strange people, but fighting a ${target.name.toLowerCase()}?`,
+        stateChanges: []
+      };
+    }
+
+    // Check if weapon is specified
+    if (!weaponId) {
+      return {
+        success: false,
+        message: `Trying to attack a ${target.name.toLowerCase()} with your bare hands is suicidal.`,
+        stateChanges: []
+      };
+    }
+
+    const weapon = state.getObject(weaponId) as GameObjectImpl;
+    
+    if (!weapon) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if player is holding the weapon
+    if (!state.isInInventory(weaponId)) {
+      return {
+        success: false,
+        message: `You aren't even holding the ${weapon.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Check if weapon is actually a weapon
+    if (!weapon.hasFlag(ObjectFlag.WEAPONBIT)) {
+      return {
+        success: false,
+        message: `Trying to attack the ${target.name.toLowerCase()} with a ${weapon.name.toLowerCase()} is suicidal.`,
+        stateChanges: []
+      };
+    }
+
+    // Basic combat logic - this is simplified
+    // In the full game, this would involve complex combat mechanics
+    return {
+      success: true,
+      message: `You attack the ${target.name.toLowerCase()} with the ${weapon.name.toLowerCase()}.\nThe ${target.name.toLowerCase()} appears unharmed.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * KILL action handler
+ * Synonym for ATTACK
+ */
+export class KillAction implements ActionHandler {
+  private attackAction: AttackAction;
+
+  constructor() {
+    this.attackAction = new AttackAction();
+  }
+
+  execute(state: GameState, targetId: string, weaponId?: string): ActionResult {
+    return this.attackAction.execute(state, targetId, weaponId);
+  }
+}
+
+/**
+ * SCORE action handler
+ * Displays the player's current score
+ */
+export class ScoreAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    const score = state.score;
+    const moves = state.moves;
+    
+    // Calculate rank based on score
+    let rank = 'Beginner';
+    if (score >= 350) {
+      rank = 'Master Adventurer';
+    } else if (score >= 300) {
+      rank = 'Wizard';
+    } else if (score >= 200) {
+      rank = 'Adventurer';
+    } else if (score >= 100) {
+      rank = 'Junior Adventurer';
+    } else if (score >= 50) {
+      rank = 'Amateur Adventurer';
+    }
+    
+    const message = `Your score is ${score} (total of 350 points), in ${moves} moves.\nThis gives you the rank of ${rank}.`;
+    
+    return {
+      success: true,
+      message: message,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * QUIT action handler
+ * Exits the game
+ */
+export class QuitAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "Do you wish to leave the game? (Y is affirmative): ",
+      stateChanges: [{
+        type: 'QUIT_REQUESTED',
+        oldValue: null,
+        newValue: true
+      }]
+    };
+  }
+}
+
+/**
+ * RESTART action handler
+ * Restarts the game from the beginning
+ */
+export class RestartAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "Do you wish to restart? (Y is affirmative): ",
+      stateChanges: [{
+        type: 'RESTART_REQUESTED',
+        oldValue: null,
+        newValue: true
+      }]
+    };
+  }
+}
+
+/**
+ * VERBOSE action handler
+ * Sets verbose mode (always show full room descriptions)
+ */
+export class VerboseAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    state.setGlobalVariable('VERBOSE', true);
+    state.setGlobalVariable('SUPER_BRIEF', false);
+    
+    return {
+      success: true,
+      message: "Maximum verbosity.",
+      stateChanges: [{
+        type: 'VERBOSITY_CHANGED',
+        oldValue: null,
+        newValue: 'VERBOSE'
+      }]
+    };
+  }
+}
+
+/**
+ * BRIEF action handler
+ * Sets brief mode (show full descriptions only on first visit)
+ */
+export class BriefAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    state.setGlobalVariable('VERBOSE', false);
+    state.setGlobalVariable('SUPER_BRIEF', false);
+    
+    return {
+      success: true,
+      message: "Brief descriptions.",
+      stateChanges: [{
+        type: 'VERBOSITY_CHANGED',
+        oldValue: null,
+        newValue: 'BRIEF'
+      }]
+    };
+  }
+}
+
+/**
+ * SUPERBRIEF action handler
+ * Sets superbrief mode (never show full descriptions)
+ */
+export class SuperBriefAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    state.setGlobalVariable('SUPER_BRIEF', true);
+    state.setGlobalVariable('VERBOSE', false);
+    
+    return {
+      success: true,
+      message: "Superbrief descriptions.",
+      stateChanges: [{
+        type: 'VERBOSITY_CHANGED',
+        oldValue: null,
+        newValue: 'SUPERBRIEF'
+      }]
+    };
+  }
+}
+
+/**
+ * WAIT action handler
+ * Passes time in the game
+ */
+export class WaitAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    // Increment moves counter
+    state.incrementMoves();
+    
+    return {
+      success: true,
+      message: "Time passes...",
+      stateChanges: [{
+        type: 'TIME_PASSED',
+        oldValue: null,
+        newValue: 1
+      }]
+    };
+  }
+}
+
+/**
+ * YELL action handler
+ * Player yells
+ */
+export class YellAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "Aaaarrrrgggghhhh!",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * JUMP action handler
+ * Player jumps
+ */
+export class JumpAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "Wheeeeeeeeee!!!!",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * PRAY action handler
+ * Player prays
+ */
+export class PrayAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "If you pray enough, your prayers may be answered.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * HELLO action handler
+ * Player says hello
+ */
+export class HelloAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    const greetings = [
+      "Hello.",
+      "Good day.",
+      "Nice weather we've been having lately.",
+      "Goodbye."
+    ];
+    
+    const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+    
+    return {
+      success: true,
+      message: greeting,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * CLIMB action handler
+ * Player attempts to climb something
+ */
+export class ClimbAction implements ActionHandler {
+  execute(state: GameState, objectId?: string): ActionResult {
+    if (!objectId) {
+      return {
+        success: false,
+        message: "You can't go that way.",
+        stateChanges: []
+      };
+    }
+
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: false,
+      message: "You can't do that!",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * PUSH action handler
+ * Player pushes something
+ */
+export class PushAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: false,
+      message: `Pushing the ${obj.name.toLowerCase()} has no effect.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * PULL action handler
+ * Player pulls something
+ */
+export class PullAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: false,
+      message: `Pulling the ${obj.name.toLowerCase()} has no effect.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * TURN action handler
+ * Player turns something
+ */
+export class TurnAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: false,
+      message: "This has no effect.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * SHAKE action handler
+ * Player shakes something
+ */
+export class ShakeAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is takeable
+    if (!obj.hasFlag(ObjectFlag.TAKEBIT)) {
+      return {
+        success: false,
+        message: "You can't take it; thus, you can't shake it!",
+        stateChanges: []
+      };
+    }
+
+    // Check if it's a container
+    if (obj.hasFlag(ObjectFlag.CONTBIT)) {
+      // Check if it's open
+      if (obj.hasFlag(ObjectFlag.OPENBIT)) {
+        // Check if it has contents
+        const hasContents = Array.from(state.objects.values()).some(
+          o => o.location === objectId
+        );
+        
+        if (hasContents) {
+          return {
+            success: true,
+            message: `The contents of the ${obj.name.toLowerCase()} spill to the ground.`,
+            stateChanges: []
+          };
+        }
+      } else {
+        // Closed container
+        const hasContents = Array.from(state.objects.values()).some(
+          o => o.location === objectId
+        );
+        
+        if (hasContents) {
+          return {
+            success: true,
+            message: `It sounds like there is something inside the ${obj.name.toLowerCase()}.`,
+            stateChanges: []
+          };
+        } else {
+          return {
+            success: true,
+            message: `The ${obj.name.toLowerCase()} sounds empty.`,
+            stateChanges: []
+          };
+        }
+      }
+    }
+
+    return {
+      success: true,
+      message: "Shaken.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * THROW action handler
+ * Player throws something
+ */
+export class ThrowAction implements ActionHandler {
+  execute(state: GameState, objectId: string, targetId?: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if player is holding the object
+    if (!state.isInInventory(objectId)) {
+      return {
+        success: false,
+        message: `You're not carrying the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Drop the object in the current room
+    const currentRoom = state.getCurrentRoom();
+    if (currentRoom) {
+      state.moveObject(objectId, currentRoom.id);
+    }
+
+    return {
+      success: true,
+      message: "Thrown.",
+      stateChanges: [{
+        type: 'OBJECT_MOVED',
+        objectId: objectId,
+        oldValue: 'PLAYER',
+        newValue: currentRoom?.id || ''
+      }]
+    };
+  }
+}
+
+/**
+ * LISTEN action handler
+ * Player listens
+ */
+export class ListenAction implements ActionHandler {
+  execute(state: GameState, objectId?: string): ActionResult {
+    if (objectId) {
+      const obj = state.getObject(objectId);
+      if (!obj) {
+        return {
+          success: false,
+          message: "You can't see that here.",
+          stateChanges: []
+        };
+      }
+      return {
+        success: true,
+        message: `The ${obj.name.toLowerCase()} makes no sound.`,
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: true,
+      message: "You hear nothing unusual.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * SMELL action handler
+ * Player smells something
+ */
+export class SmellAction implements ActionHandler {
+  execute(state: GameState, objectId?: string): ActionResult {
+    if (objectId) {
+      const obj = state.getObject(objectId);
+      if (!obj) {
+        return {
+          success: false,
+          message: "You can't see that here.",
+          stateChanges: []
+        };
+      }
+      return {
+        success: true,
+        message: `It smells like a ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: true,
+      message: "You smell nothing unusual.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * TOUCH action handler
+ * Player touches something
+ */
+export class TouchAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: true,
+      message: `You feel nothing unexpected.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * RUB action handler
+ * Player rubs something
+ */
+export class RubAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: false,
+      message: `Fiddling with the ${obj.name.toLowerCase()} has no effect.`,
+      stateChanges: []
+    };
+  }
+}

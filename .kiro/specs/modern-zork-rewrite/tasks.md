@@ -301,35 +301,35 @@
     - Test game loop
     - _Requirements: 1.4, 2.1_
 
-- [ ] 13. Port all remaining verbs from gverbs.zil
-  - [ ] 13.1 Implement container verbs (PUT, REMOVE)
+- [x] 13. Port all remaining verbs from gverbs.zil
+  - [x] 13.1 Implement container verbs (PUT, REMOVE)
     - Handle putting objects in containers
     - Check capacity constraints
     - _Requirements: 2.4, 2.5_
   
-  - [ ] 13.2 Implement light source verbs (TURN ON, TURN OFF)
+  - [x] 13.2 Implement light source verbs (TURN ON, TURN OFF)
     - Toggle ONBIT flag for light sources
     - Update room lighting state
     - _Requirements: 2.4_
   
-  - [ ] 13.3 Implement combat verbs (ATTACK, KILL)
+  - [x] 13.3 Implement combat verbs (ATTACK, KILL)
     - Handle combat with NPCs
     - Port combat logic from ZIL
     - _Requirements: 2.4_
   
-  - [ ] 13.4 Implement utility verbs (SCORE, QUIT, RESTART, VERBOSE, BRIEF)
+  - [x] 13.4 Implement utility verbs (SCORE, QUIT, RESTART, VERBOSE, BRIEF)
     - Display score
     - Handle game exit
     - Handle game restart
     - Toggle verbosity modes
     - _Requirements: 2.4_
   
-  - [ ] 13.5 Implement remaining verbs
+  - [x] 13.5 Implement remaining verbs
     - Port all other verbs from gverbs.zil
     - Ensure complete verb coverage
     - _Requirements: 2.4_
   
-  - [ ] 13.6 Write unit tests for all verbs
+  - [x] 13.6 Write unit tests for all verbs
     - Test each verb implementation
     - Test error cases
     - _Requirements: 2.4_
