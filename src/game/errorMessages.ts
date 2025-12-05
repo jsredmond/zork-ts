@@ -284,15 +284,15 @@ function getTurnOnError(object?: GameObject): string {
   
   // Check if it's a light source
   if (!object.hasFlag(ObjectFlag.LIGHTBIT)) {
-    return ERROR_MESSAGES.CANT_TURN_ON;
+    return `You can't turn on the ${object.name}.`;
   }
   
   // Check if already on
   if (object.hasFlag(ObjectFlag.ONBIT)) {
-    return ERROR_MESSAGES.ALREADY_ON;
+    return `The ${object.name} is already on.`;
   }
   
-  return ERROR_MESSAGES.CANT_TURN_ON;
+  return `You can't turn on the ${object.name}.`;
 }
 
 /**
@@ -305,15 +305,15 @@ function getTurnOffError(object?: GameObject): string {
   
   // Check if it's a light source
   if (!object.hasFlag(ObjectFlag.LIGHTBIT)) {
-    return ERROR_MESSAGES.CANT_TURN_OFF;
+    return `You can't turn off the ${object.name}.`;
   }
   
   // Check if already off
   if (!object.hasFlag(ObjectFlag.ONBIT)) {
-    return ERROR_MESSAGES.ALREADY_OFF;
+    return `The ${object.name} is already off.`;
   }
   
-  return ERROR_MESSAGES.CANT_TURN_OFF;
+  return `You can't turn off the ${object.name}.`;
 }
 
 /**

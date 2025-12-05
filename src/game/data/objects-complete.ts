@@ -165,6 +165,78 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     treasureValue: 6
   },
 
+  'BELL': {
+    id: 'BELL',
+    name: 'brass bell',
+    synonyms: ['BELL'],
+    adjectives: ['SMALL', 'BRASS'],
+    description: 'brass bell',
+    initialLocation: 'NORTH-TEMPLE',
+    flags: ['TAKEBIT'],
+    action: 'BELL-F'
+  },
+
+  'HOT-BELL': {
+    id: 'HOT-BELL',
+    name: 'red hot brass bell',
+    synonyms: ['BELL'],
+    adjectives: ['BRASS', 'HOT', 'RED', 'SMALL'],
+    description: 'red hot brass bell',
+    longDescription: 'On the ground is a red hot bell.',
+    initialLocation: '',
+    flags: ['TRYTAKEBIT'],
+    action: 'HOT-BELL-F'
+  },
+
+  'BURNED-OUT-LANTERN': {
+    id: 'BURNED-OUT-LANTERN',
+    name: 'burned-out lantern',
+    synonyms: ['LANTERN', 'LAMP'],
+    adjectives: ['RUSTY', 'BURNED', 'DEAD', 'USELESS'],
+    description: 'burned-out lantern',
+    firstDescription: 'The deceased adventurer\'s useless lantern is here.',
+    initialLocation: 'MAZE-5',
+    flags: ['TAKEBIT'],
+    size: 20
+  },
+
+  'BONES': {
+    id: 'BONES',
+    name: 'skeleton',
+    synonyms: ['BONES', 'SKELETON', 'BODY'],
+    adjectives: [],
+    description: 'skeleton',
+    initialLocation: 'MAZE-5',
+    flags: ['TRYTAKEBIT', 'NDESCBIT'],
+    action: 'SKELETON'
+  },
+
+  'BROKEN-EGG': {
+    id: 'BROKEN-EGG',
+    name: 'broken jewel-encrusted egg',
+    synonyms: ['EGG', 'TREASURE'],
+    adjectives: ['BROKEN', 'BIRDS', 'ENCRUSTED', 'JEWEL'],
+    description: 'broken jewel-encrusted egg',
+    longDescription: 'There is a somewhat ruined egg here.',
+    initialLocation: '',
+    flags: ['TAKEBIT', 'CONTBIT', 'OPENBIT'],
+    capacity: 6,
+    treasureValue: 2
+  },
+
+  'BROKEN-CANARY': {
+    id: 'BROKEN-CANARY',
+    name: 'broken clockwork canary',
+    synonyms: ['CANARY', 'TREASURE'],
+    adjectives: ['BROKEN', 'CLOCKWORK', 'GOLD', 'GOLDEN'],
+    description: 'broken clockwork canary',
+    firstDescription: 'There is a golden clockwork canary nestled in the egg. It seems to have recently had a bad experience. The mountings for its jewel-like eyes are empty, and its silver beak is crumpled. Through a cracked crystal window below its left wing you can see the remains of intricate machinery. It is not clear what result winding it would have, as the mainspring seems sprung.',
+    initialLocation: 'BROKEN-EGG',
+    flags: ['TAKEBIT'],
+    action: 'CANARY-OBJECT',
+    treasureValue: 1
+  },
+
   'COFFIN': {
     id: 'COFFIN',
     name: 'gold coffin',
@@ -450,93 +522,70 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     size: 10
   },
 
-  'ROPE': {
-    id: 'ROPE',
-    name: 'rope',
-    synonyms: ['ROPE', 'HEMP', 'COIL'],
-    adjectives: ['LARGE'],
-    description: 'rope',
-    firstDescription: 'A large coil of rope is lying in the corner.',
-    initialLocation: 'ATTIC',
-    flags: ['TAKEBIT', 'SACREDBIT', 'TRYTAKEBIT'],
-    action: 'ROPE-FUNCTION',
-    size: 10
-  },
 
-  'KNIFE': {
-    id: 'KNIFE',
-    name: 'nasty knife',
-    synonyms: ['KNIVES', 'KNIFE', 'BLADE'],
-    adjectives: ['NASTY', 'UNRUSTY'],
-    description: 'nasty knife',
-    firstDescription: 'On a table is a nasty-looking knife.',
-    initialLocation: 'ATTIC',
-    flags: ['TAKEBIT', 'WEAPONBIT', 'TRYTAKEBIT'],
-    action: 'KNIFE-F'
-  },
 
-  'SHOVEL': {
-    id: 'SHOVEL',
-    name: 'shovel',
-    synonyms: ['SHOVEL', 'TOOL', 'TOOLS'],
-    adjectives: [],
-    description: 'shovel',
-    initialLocation: 'SANDY-BEACH',
-    flags: ['TAKEBIT', 'TOOLBIT'],
-    size: 15
-  },
-
-  'SCREWDRIVER': {
-    id: 'SCREWDRIVER',
-    name: 'screwdriver',
-    synonyms: ['SCREWDRIVER', 'TOOL', 'TOOLS', 'DRIVER'],
-    adjectives: ['SCREW'],
-    description: 'screwdriver',
-    initialLocation: 'MAINTENANCE-ROOM',
-    flags: ['TAKEBIT', 'TOOLBIT']
-  },
-
-  'WRENCH': {
-    id: 'WRENCH',
-    name: 'wrench',
-    synonyms: ['WRENCH', 'TOOL', 'TOOLS'],
-    adjectives: [],
-    description: 'wrench',
-    initialLocation: 'MAINTENANCE-ROOM',
-    flags: ['TAKEBIT', 'TOOLBIT'],
-    size: 10
-  },
-
-  'PUMP': {
-    id: 'PUMP',
-    name: 'hand-held air pump',
-    synonyms: ['PUMP', 'AIR-PUMP', 'TOOL', 'TOOLS'],
-    adjectives: ['SMALL', 'HAND-HELD'],
-    description: 'hand-held air pump',
-    initialLocation: 'RESERVOIR-NORTH',
-    flags: ['TAKEBIT', 'TOOLBIT']
-  },
-
-  'KEYS': {
-    id: 'KEYS',
-    name: 'skeleton key',
-    synonyms: ['KEY', 'KEYS'],
-    adjectives: ['SKELETON'],
-    description: 'skeleton key',
+  'RUSTY-KNIFE': {
+    id: 'RUSTY-KNIFE',
+    name: 'rusty knife',
+    synonyms: ['KNIVES', 'KNIFE'],
+    adjectives: ['RUSTY'],
+    description: 'rusty knife',
+    firstDescription: 'Beside the skeleton is a rusty knife.',
     initialLocation: 'MAZE-5',
-    flags: ['TAKEBIT', 'TOOLBIT'],
-    size: 10
+    flags: ['TAKEBIT', 'TRYTAKEBIT', 'WEAPONBIT', 'TOOLBIT'],
+    action: 'RUSTY-KNIFE-FCN',
+    size: 20
   },
 
   'AXE': {
     id: 'AXE',
     name: 'bloody axe',
-    synonyms: ['AXE', 'BLADE'],
-    adjectives: ['BLOODY', 'RUSTY'],
+    synonyms: ['AXE', 'AX'],
+    adjectives: ['BLOODY'],
     description: 'bloody axe',
-    initialLocation: 'TROLL-ROOM',
-    flags: ['TAKEBIT', 'WEAPONBIT'],
-    size: 20
+    initialLocation: 'TROLL',
+    flags: ['WEAPONBIT', 'TRYTAKEBIT', 'TAKEBIT', 'NDESCBIT'],
+    action: 'AXE-F',
+    size: 25
+  },
+
+  'STILETTO': {
+    id: 'STILETTO',
+    name: 'stiletto',
+    synonyms: ['STILETTO'],
+    adjectives: ['VICIOUS'],
+    description: 'stiletto',
+    initialLocation: 'THIEF',
+    flags: ['WEAPONBIT', 'TRYTAKEBIT', 'TAKEBIT', 'NDESCBIT'],
+    action: 'STILETTO-FUNCTION',
+    size: 10
+  },
+
+  'TUBE': {
+    id: 'TUBE',
+    name: 'tube',
+    synonyms: ['TUBE', 'TOOTH', 'PASTE'],
+    adjectives: [],
+    description: 'tube',
+    longDescription: 'There is an object which looks like a tube of toothpaste here.',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['TAKEBIT', 'CONTBIT', 'READBIT'],
+    action: 'TUBE-FUNCTION',
+    capacity: 7,
+    size: 5,
+    text: '---> Frobozz Magic Gunk Company <---|\n\t  All-Purpose Gunk'
+  },
+
+  'PUTTY': {
+    id: 'PUTTY',
+    name: 'viscous material',
+    synonyms: ['MATERIAL', 'GUNK'],
+    adjectives: ['VISCOUS'],
+    description: 'viscous material',
+    initialLocation: 'TUBE',
+    flags: ['TAKEBIT', 'TOOLBIT'],
+    action: 'PUTTY-FCN',
+    size: 6
   },
 
   // CONTAINERS
@@ -569,9 +618,87 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     synonyms: ['BUOY'],
     adjectives: ['RED'],
     description: 'red buoy',
-    initialLocation: 'RESERVOIR',
-    flags: ['CONTBIT', 'INVISIBLE'],
-    capacity: 20
+    firstDescription: 'There is a red buoy here (probably a warning).',
+    initialLocation: 'RIVER-4',
+    flags: ['TAKEBIT', 'CONTBIT'],
+    action: 'TREASURE-INSIDE',
+    capacity: 20,
+    size: 10
+  },
+
+  'LOWERED-BASKET': {
+    id: 'LOWERED-BASKET',
+    name: 'basket',
+    synonyms: ['CAGE', 'DUMBWAITER', 'BASKET'],
+    adjectives: ['LOWERED'],
+    description: 'basket',
+    longDescription: 'From the chain is suspended a basket.',
+    initialLocation: 'LOWER-SHAFT',
+    flags: ['TRYTAKEBIT'],
+    action: 'BASKET-F'
+  },
+
+  'RAISED-BASKET': {
+    id: 'RAISED-BASKET',
+    name: 'basket',
+    synonyms: ['CAGE', 'DUMBWAITER', 'BASKET'],
+    adjectives: [],
+    description: 'basket',
+    longDescription: 'At the end of the chain is a basket.',
+    initialLocation: 'SHAFT-ROOM',
+    flags: ['TRANSBIT', 'TRYTAKEBIT', 'CONTBIT', 'OPENBIT'],
+    action: 'BASKET-F',
+    capacity: 50
+  },
+
+  'MACHINE': {
+    id: 'MACHINE',
+    name: 'machine',
+    synonyms: ['MACHINE', 'PDP10', 'DRYER', 'LID'],
+    adjectives: [],
+    description: 'machine',
+    initialLocation: 'MACHINE-ROOM',
+    flags: ['CONTBIT', 'NDESCBIT', 'TRYTAKEBIT'],
+    action: 'MACHINE-F',
+    capacity: 50
+  },
+
+  'INFLATABLE-BOAT': {
+    id: 'INFLATABLE-BOAT',
+    name: 'pile of plastic',
+    synonyms: ['BOAT', 'PILE', 'PLASTIC', 'VALVE'],
+    adjectives: ['PLASTIC', 'INFLAT'],
+    description: 'pile of plastic',
+    longDescription: 'There is a folded pile of plastic here which has a small valve attached.',
+    initialLocation: 'DAM-BASE',
+    flags: ['TAKEBIT', 'BURNBIT'],
+    action: 'IBOAT-FUNCTION',
+    size: 20
+  },
+
+  'INFLATED-BOAT': {
+    id: 'INFLATED-BOAT',
+    name: 'magic boat',
+    synonyms: ['BOAT', 'RAFT'],
+    adjectives: ['INFLAT', 'MAGIC', 'PLASTIC', 'SEAWORTHY'],
+    description: 'magic boat',
+    initialLocation: '',
+    flags: ['TAKEBIT', 'BURNBIT', 'VEHBIT', 'OPENBIT', 'SEARCHBIT'],
+    action: 'RBOAT-FUNCTION',
+    capacity: 100,
+    size: 20
+  },
+
+  'PUNCTURED-BOAT': {
+    id: 'PUNCTURED-BOAT',
+    name: 'punctured boat',
+    synonyms: ['BOAT', 'PILE', 'PLASTIC'],
+    adjectives: ['PLASTIC', 'PUNCTURE', 'LARGE'],
+    description: 'punctured boat',
+    initialLocation: '',
+    flags: ['TAKEBIT', 'BURNBIT'],
+    action: 'DBOAT-FUNCTION',
+    size: 20
   },
 
   // READABLE ITEMS
@@ -603,40 +730,133 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
   'GUIDE': {
     id: 'GUIDE',
     name: 'tour guidebook',
-    synonyms: ['GUIDEBOOK', 'GUIDE', 'BOOK'],
-    adjectives: ['TOUR'],
+    synonyms: ['GUIDE', 'BOOK', 'BOOKS', 'GUIDEBOOKS'],
+    adjectives: ['TOUR', 'GUIDE'],
     description: 'tour guidebook',
+    firstDescription: 'Some guidebooks entitled "Flood Control Dam #3" are on the reception desk.',
     initialLocation: 'DAM-LOBBY',
-    flags: ['TAKEBIT', 'READBIT', 'BURNBIT'],
-    text: 'Flood Control Dam #3\n\nFCD#3 was constructed in year 783 of the Great Underground Empire to harness the mighty Frigid River.',
-    size: 3
+    flags: ['READBIT', 'TAKEBIT', 'BURNBIT'],
+    text: '"Flood Control Dam #3"\n\nFCD#3 was constructed in year 783 of the Great Underground Empire to harness the mighty Frigid River. This work was supported by a grant of 37 million zorkmids from your omnipotent local tyrant Lord Dimwit Flathead the Excessive.'
   },
 
   'PRAYER': {
     id: 'PRAYER',
     name: 'prayer',
-    synonyms: ['PRAYER', 'BOOK', 'SCROLL'],
-    adjectives: ['ANCIENT'],
+    synonyms: ['PRAYER', 'INSCRIPTION'],
+    adjectives: ['ANCIENT', 'OLD'],
     description: 'prayer',
-    initialLocation: 'TEMPLE',
-    flags: ['TAKEBIT', 'READBIT'],
-    text: 'The prayer is inscribed in an ancient script, rarely used today.',
-    size: 2
+    initialLocation: 'NORTH-TEMPLE',
+    flags: ['READBIT', 'SACREDBIT', 'NDESCBIT'],
+    text: 'The prayer is inscribed in an ancient script, rarely used today. It seems to be a philippic against small insects, absent-mindedness, and the picking up and dropping of small objects. The final verse consigns trespassers to the land of the dead. All evidence indicates that the beliefs of the ancient Zorkers were obscure.'
   },
 
   'MAP': {
     id: 'MAP',
-    name: 'map',
-    synonyms: ['MAP'],
-    adjectives: [],
-    description: 'map',
-    initialLocation: 'MAZE-5',
-    flags: ['TAKEBIT', 'READBIT', 'INVISIBLE'],
-    text: 'The map shows a forest with three clearings.',
-    size: 2
+    name: 'ancient map',
+    synonyms: ['PARCHMENT', 'MAP'],
+    adjectives: ['ANTIQUE', 'OLD', 'ANCIENT'],
+    description: 'ancient map',
+    firstDescription: 'In the trophy case is an ancient parchment which appears to be a map.',
+    initialLocation: 'TROPHY-CASE',
+    flags: ['INVISIBLE', 'READBIT', 'TAKEBIT'],
+    size: 2,
+    text: 'The map shows a forest with three clearings. The largest clearing contains a house. Three paths leave the large clearing. One of these paths, leading southwest, is marked "To Stone Barrow".'
+  },
+
+  'BOOK': {
+    id: 'BOOK',
+    name: 'black book',
+    synonyms: ['BOOK', 'PRAYER', 'PAGE', 'BOOKS'],
+    adjectives: ['LARGE', 'BLACK'],
+    description: 'black book',
+    firstDescription: 'On the altar is a large black book, open to page 569.',
+    initialLocation: 'ALTAR',
+    flags: ['READBIT', 'TAKEBIT', 'CONTBIT', 'BURNBIT', 'TURNBIT'],
+    action: 'BLACK-BOOK',
+    size: 10,
+    text: 'Commandment #12592\n\nOh ye who go about saying unto each: "Hello sailor":\nDost thou know the magnitude of thy sin before the gods?\nYea, verily, thou shalt be ground between two stones.\nShall the angry gods cast thy body into the whirlpool?\nSurely, thy eye shall be put out with a sharp stick!\nEven unto the ends of the earth shalt thou wander and\nUnto the land of the dead shalt thou be sent at last.\nSurely thou shalt repent of thy cunning.'
+  },
+
+  'OWNERS-MANUAL': {
+    id: 'OWNERS-MANUAL',
+    name: 'ZORK owner\'s manual',
+    synonyms: ['MANUAL', 'PIECE', 'PAPER'],
+    adjectives: ['ZORK', 'OWNERS', 'SMALL'],
+    description: 'ZORK owner\'s manual',
+    firstDescription: 'Loosely attached to a wall is a small piece of paper.',
+    initialLocation: 'STUDIO',
+    flags: ['READBIT', 'TAKEBIT'],
+    text: 'Congratulations!\n\nYou are the privileged owner of ZORK I: The Great Underground Empire, a self-contained and self-maintaining universe. If used and maintained in accordance with normal operating practices for small universes, ZORK will provide many months of trouble-free operation.'
+  },
+
+  'BOAT-LABEL': {
+    id: 'BOAT-LABEL',
+    name: 'tan label',
+    synonyms: ['LABEL', 'FINEPRINT', 'PRINT'],
+    adjectives: ['TAN', 'FINE'],
+    description: 'tan label',
+    initialLocation: 'INFLATED-BOAT',
+    flags: ['READBIT', 'TAKEBIT', 'BURNBIT'],
+    size: 2,
+    text: '!!!!FROBOZZ MAGIC BOAT COMPANY!!!!\n\nHello, Sailor!\n\nInstructions for use:\n\n   To get into a body of water, say "Launch".\n   To get to shore, say "Land" or the direction in which you want to maneuver the boat.\n\nWarranty:\n\n  This boat is guaranteed against all defects for a period of 76 milliseconds from date of purchase or until first used, whichever comes first.\n\nWarning:\n   This boat is made of thin plastic.\n   Good Luck!'
+  },
+
+  'ENGRAVINGS': {
+    id: 'ENGRAVINGS',
+    name: 'wall with engravings',
+    synonyms: ['WALL', 'ENGRAVINGS', 'INSCRIPTION'],
+    adjectives: ['OLD', 'ANCIENT'],
+    description: 'wall with engravings',
+    longDescription: 'There are old engravings on the walls here.',
+    initialLocation: 'ENGRAVINGS-CAVE',
+    flags: ['READBIT', 'SACREDBIT'],
+    text: 'The engravings were incised in the living rock of the cave wall by an unknown hand. They depict, in symbolic form, the beliefs of the ancient Zorkers. Skillfully interwoven with the bas reliefs are excerpts illustrating the major religious tenets of that time. Unfortunately, a later age seems to have considered them blasphemous and just as skillfully excised them.'
   },
 
   // SCENERY
+  'WALL': {
+    id: 'WALL',
+    name: 'surrounding wall',
+    synonyms: ['WALL', 'WALLS'],
+    adjectives: ['SURROUNDING'],
+    description: 'surrounding wall',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'GRANITE-WALL': {
+    id: 'GRANITE-WALL',
+    name: 'granite wall',
+    synonyms: ['WALL'],
+    adjectives: ['GRANITE'],
+    description: 'granite wall',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT'],
+    action: 'GRANITE-WALL-F'
+  },
+
+  'SONGBIRD': {
+    id: 'SONGBIRD',
+    name: 'songbird',
+    synonyms: ['BIRD', 'SONGBIRD'],
+    adjectives: ['SONG'],
+    description: 'songbird',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT'],
+    action: 'SONGBIRD-F'
+  },
+
+  'WHITE-HOUSE': {
+    id: 'WHITE-HOUSE',
+    name: 'white house',
+    synonyms: ['HOUSE'],
+    adjectives: ['WHITE', 'BEAUTI', 'COLONI'],
+    description: 'white house',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT'],
+    action: 'WHITE-HOUSE-F'
+  },
+
   'FOREST': {
     id: 'FOREST',
     name: 'forest',
@@ -658,48 +878,81 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     flags: ['NDESCBIT', 'CLIMBBIT']
   },
 
+  'MOUNTAIN-RANGE': {
+    id: 'MOUNTAIN-RANGE',
+    name: 'mountain range',
+    synonyms: ['MOUNTAIN', 'RANGE'],
+    adjectives: ['IMPASSABLE', 'FLATHEAD'],
+    description: 'mountain range',
+    initialLocation: 'MOUNTAINS',
+    flags: ['NDESCBIT', 'CLIMBBIT'],
+    action: 'MOUNTAIN-RANGE-F'
+  },
+
+  'GLOBAL-WATER': {
+    id: 'GLOBAL-WATER',
+    name: 'water',
+    synonyms: ['WATER', 'QUANTITY'],
+    adjectives: [],
+    description: 'water',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['DRINKBIT'],
+    action: 'WATER-F'
+  },
+
+  'KITCHEN-WINDOW': {
+    id: 'KITCHEN-WINDOW',
+    name: 'kitchen window',
+    synonyms: ['WINDOW'],
+    adjectives: ['KITCHEN', 'SMALL'],
+    description: 'kitchen window',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['DOORBIT', 'NDESCBIT'],
+    action: 'KITCHEN-WINDOW-F'
+  },
+
   'BOARDED-WINDOW': {
     id: 'BOARDED-WINDOW',
     name: 'boarded window',
-    synonyms: ['WINDOW', 'WINDOWS'],
+    synonyms: ['WINDOW'],
     adjectives: ['BOARDED'],
     description: 'boarded window',
     initialLocation: 'LOCAL-GLOBALS',
-    flags: ['NDESCBIT']
+    flags: ['NDESCBIT'],
+    action: 'BOARDED-WINDOW-FCN'
   },
 
   'GRATE': {
     id: 'GRATE',
     name: 'grating',
     synonyms: ['GRATE', 'GRATING'],
-    adjectives: ['METAL'],
+    adjectives: [],
     description: 'grating',
-    initialLocation: 'GRATING-CLEARING',
-    flags: ['DOORBIT', 'NDESCBIT'],
-    action: 'GRATE-F'
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['DOORBIT', 'NDESCBIT', 'INVISIBLE'],
+    action: 'GRATE-FUNCTION'
   },
 
   'TRAP-DOOR': {
     id: 'TRAP-DOOR',
     name: 'trap door',
-    synonyms: ['DOOR', 'TRAP'],
-    adjectives: ['TRAP'],
+    synonyms: ['DOOR', 'TRAPDOOR', 'TRAP-DOOR', 'COVER'],
+    adjectives: ['TRAP', 'DUSTY'],
     description: 'trap door',
     initialLocation: 'LIVING-ROOM',
-    flags: ['DOORBIT', 'NDESCBIT'],
-    action: 'TRAP-DOOR-F'
+    flags: ['DOORBIT', 'NDESCBIT', 'INVISIBLE'],
+    action: 'TRAP-DOOR-FCN'
   },
 
   'RUG': {
     id: 'RUG',
-    name: 'large oriental rug',
+    name: 'carpet',
     synonyms: ['RUG', 'CARPET'],
     adjectives: ['LARGE', 'ORIENTAL'],
-    description: 'large oriental rug',
+    description: 'carpet',
     initialLocation: 'LIVING-ROOM',
-    flags: ['TAKEBIT', 'TRYTAKEBIT', 'BURNBIT'],
-    action: 'RUG-FUNCTION',
-    size: 50
+    flags: ['NDESCBIT', 'TRYTAKEBIT'],
+    action: 'RUG-FCN'
   },
 
   'CHIMNEY': {
@@ -709,39 +962,176 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     adjectives: ['DARK', 'NARROW'],
     description: 'chimney',
     initialLocation: 'LOCAL-GLOBALS',
-    flags: ['NDESCBIT']
+    flags: ['CLIMBBIT', 'NDESCBIT'],
+    action: 'CHIMNEY-F'
   },
 
-  'STAIRS': {
-    id: 'STAIRS',
-    name: 'stairs',
-    synonyms: ['STAIRS', 'STAIRCASE', 'STAIRWAY'],
-    adjectives: [],
-    description: 'stairs',
+  'CRACK': {
+    id: 'CRACK',
+    name: 'crack',
+    synonyms: ['CRACK'],
+    adjectives: ['NARROW'],
+    description: 'crack',
     initialLocation: 'LOCAL-GLOBALS',
-    flags: ['NDESCBIT']
+    flags: ['NDESCBIT'],
+    action: 'CRACK-FCN'
   },
 
   'SLIDE': {
     id: 'SLIDE',
-    name: 'slide',
-    synonyms: ['SLIDE', 'RAMP'],
-    adjectives: ['METAL', 'STEEP'],
-    description: 'slide',
+    name: 'chute',
+    synonyms: ['CHUTE', 'RAMP', 'SLIDE'],
+    adjectives: ['STEEP', 'METAL', 'TWISTING'],
+    description: 'chute',
     initialLocation: 'LOCAL-GLOBALS',
+    flags: ['CLIMBBIT'],
+    action: 'SLIDE-FUNCTION'
+  },
+
+  'ALTAR': {
+    id: 'ALTAR',
+    name: 'altar',
+    synonyms: ['ALTAR'],
+    adjectives: [],
+    description: 'altar',
+    initialLocation: 'SOUTH-TEMPLE',
+    flags: ['NDESCBIT', 'SURFACEBIT', 'CONTBIT', 'OPENBIT'],
+    capacity: 50
+  },
+
+  'PEDESTAL': {
+    id: 'PEDESTAL',
+    name: 'pedestal',
+    synonyms: ['PEDESTAL'],
+    adjectives: ['WHITE', 'MARBLE'],
+    description: 'pedestal',
+    initialLocation: 'TORCH-ROOM',
+    flags: ['NDESCBIT', 'CONTBIT', 'OPENBIT', 'SURFACEBIT'],
+    action: 'DUMB-CONTAINER',
+    capacity: 30
+  },
+
+  'RIVER': {
+    id: 'RIVER',
+    name: 'river',
+    synonyms: ['RIVER'],
+    adjectives: ['FRIGID'],
+    description: 'river',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT'],
+    action: 'RIVER-FUNCTION'
+  },
+
+  'RAINBOW': {
+    id: 'RAINBOW',
+    name: 'rainbow',
+    synonyms: ['RAINBOW'],
+    adjectives: [],
+    description: 'rainbow',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT', 'CLIMBBIT'],
+    action: 'RAINBOW-FCN'
+  },
+
+  'LADDER': {
+    id: 'LADDER',
+    name: 'wooden ladder',
+    synonyms: ['LADDER'],
+    adjectives: ['WOODEN', 'RICKETY', 'NARROW'],
+    description: 'wooden ladder',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT', 'CLIMBBIT']
+  },
+
+  'RAILING': {
+    id: 'RAILING',
+    name: 'wooden railing',
+    synonyms: ['RAILING', 'RAIL'],
+    adjectives: ['WOODEN'],
+    description: 'wooden railing',
+    initialLocation: 'DOME-ROOM',
     flags: ['NDESCBIT']
+  },
+
+  'SAND': {
+    id: 'SAND',
+    name: 'sand',
+    synonyms: ['SAND'],
+    adjectives: [],
+    description: 'sand',
+    initialLocation: 'SANDY-CAVE',
+    flags: ['NDESCBIT'],
+    action: 'SAND-FUNCTION'
+  },
+
+  'CLIMBABLE-CLIFF': {
+    id: 'CLIMBABLE-CLIFF',
+    name: 'cliff',
+    synonyms: ['WALL', 'CLIFF', 'WALLS', 'LEDGE'],
+    adjectives: ['ROCKY', 'SHEER'],
+    description: 'cliff',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT', 'CLIMBBIT'],
+    action: 'CLIFF-OBJECT'
+  },
+
+  'WHITE-CLIFF': {
+    id: 'WHITE-CLIFF',
+    name: 'white cliffs',
+    synonyms: ['CLIFF', 'CLIFFS'],
+    adjectives: ['WHITE'],
+    description: 'white cliffs',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT', 'CLIMBBIT'],
+    action: 'WCLIF-OBJECT'
+  },
+
+  'BODIES': {
+    id: 'BODIES',
+    name: 'pile of bodies',
+    synonyms: ['BODIES', 'BODY', 'REMAINS', 'PILE'],
+    adjectives: ['MANGLED'],
+    description: 'pile of bodies',
+    initialLocation: 'LOCAL-GLOBALS',
+    flags: ['NDESCBIT', 'TRYTAKEBIT'],
+    action: 'BODY-FUNCTION'
+  },
+
+  'LEAVES': {
+    id: 'LEAVES',
+    name: 'pile of leaves',
+    synonyms: ['LEAVES', 'LEAF', 'PILE'],
+    adjectives: [],
+    description: 'pile of leaves',
+    longDescription: 'On the ground is a pile of leaves.',
+    initialLocation: 'GRATING-CLEARING',
+    flags: ['TAKEBIT', 'BURNBIT', 'TRYTAKEBIT'],
+    action: 'LEAF-PILE',
+    size: 25
+  },
+
+  'TIMBERS': {
+    id: 'TIMBERS',
+    name: 'broken timber',
+    synonyms: ['TIMBERS', 'PILE'],
+    adjectives: ['WOODEN', 'BROKEN'],
+    description: 'broken timber',
+    initialLocation: 'TIMBER-ROOM',
+    flags: ['TAKEBIT'],
+    size: 50
   },
 
   // NPCS
   'THIEF': {
     id: 'THIEF',
     name: 'thief',
-    synonyms: ['THIEF', 'ROBBER', 'BANDIT'],
-    adjectives: ['SHADY'],
+    synonyms: ['THIEF', 'ROBBER', 'MAN', 'PERSON'],
+    adjectives: ['SHADY', 'SUSPICIOUS', 'SEEDY'],
     description: 'thief',
-    initialLocation: '',
-    flags: ['ACTORBIT', 'TRYTAKEBIT'],
-    action: 'THIEF-F',
+    longDescription: 'There is a suspicious-looking individual, holding a large bag, leaning against one wall. He is armed with a deadly stiletto.',
+    initialLocation: 'ROUND-ROOM',
+    flags: ['ACTORBIT', 'INVISIBLE', 'CONTBIT', 'OPENBIT', 'TRYTAKEBIT'],
+    action: 'ROBBER-FUNCTION',
     strength: 5
   },
 
@@ -751,35 +1141,68 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     synonyms: ['TROLL'],
     adjectives: ['NASTY'],
     description: 'troll',
+    longDescription: 'A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.',
     initialLocation: 'TROLL-ROOM',
-    flags: ['ACTORBIT', 'TRYTAKEBIT'],
-    action: 'TROLL-F',
+    flags: ['ACTORBIT', 'OPENBIT', 'TRYTAKEBIT'],
+    action: 'TROLL-FCN',
     strength: 2
   },
 
   'CYCLOPS': {
     id: 'CYCLOPS',
     name: 'cyclops',
-    synonyms: ['CYCLOPS', 'GIANT'],
-    adjectives: [],
+    synonyms: ['CYCLOPS', 'MONSTER', 'EYE'],
+    adjectives: ['HUNGRY', 'GIANT'],
     description: 'cyclops',
     initialLocation: 'CYCLOPS-ROOM',
-    flags: ['ACTORBIT', 'TRYTAKEBIT'],
-    action: 'CYCLOPS-F',
+    flags: ['ACTORBIT', 'NDESCBIT', 'TRYTAKEBIT'],
+    action: 'CYCLOPS-FCN',
     strength: 10000
+  },
+
+  'GHOSTS': {
+    id: 'GHOSTS',
+    name: 'number of ghosts',
+    synonyms: ['GHOSTS', 'SPIRITS', 'FIENDS', 'FORCE'],
+    adjectives: ['INVISIBLE', 'EVIL'],
+    description: 'number of ghosts',
+    initialLocation: 'ENTRANCE-TO-HADES',
+    flags: ['ACTORBIT', 'NDESCBIT'],
+    action: 'GHOSTS-F'
+  },
+
+  'BAT': {
+    id: 'BAT',
+    name: 'bat',
+    synonyms: ['BAT', 'VAMPIRE'],
+    adjectives: ['VAMPIRE', 'DERANGED'],
+    description: 'bat',
+    initialLocation: 'BAT-ROOM',
+    flags: ['ACTORBIT', 'TRYTAKEBIT'],
+    action: 'BAT-F'
+  },
+
+  'LARGE-BAG': {
+    id: 'LARGE-BAG',
+    name: 'large bag',
+    synonyms: ['BAG'],
+    adjectives: ['LARGE', 'THIEFS'],
+    description: 'large bag',
+    initialLocation: 'THIEF',
+    flags: ['TRYTAKEBIT', 'NDESCBIT'],
+    action: 'LARGE-BAG-F'
   },
 
   // CONSUMABLES
   'LUNCH': {
     id: 'LUNCH',
     name: 'lunch',
-    synonyms: ['LUNCH', 'SANDWICH', 'FOOD'],
+    synonyms: ['FOOD', 'SANDWICH', 'LUNCH', 'DINNER'],
     adjectives: ['HOT', 'PEPPER'],
     description: 'lunch',
     longDescription: 'A hot pepper sandwich is here.',
     initialLocation: 'SANDWICH-BAG',
-    flags: ['TAKEBIT', 'FOODBIT'],
-    size: 5
+    flags: ['TAKEBIT', 'FOODBIT']
   },
 
   'GARLIC': {
@@ -788,44 +1211,93 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     synonyms: ['GARLIC', 'CLOVE'],
     adjectives: [],
     description: 'clove of garlic',
-    initialLocation: 'KITCHEN',
+    initialLocation: 'SANDWICH-BAG',
     flags: ['TAKEBIT', 'FOODBIT'],
-    size: 3
+    action: 'GARLIC-F',
+    size: 4
   },
 
   'COAL': {
     id: 'COAL',
-    name: 'pile of coal',
-    synonyms: ['COAL', 'PILE'],
-    adjectives: [],
-    description: 'pile of coal',
-    initialLocation: 'COAL-MINE',
+    name: 'small pile of coal',
+    synonyms: ['COAL', 'PILE', 'HEAP'],
+    adjectives: ['SMALL'],
+    description: 'small pile of coal',
+    initialLocation: 'DEAD-END-5',
     flags: ['TAKEBIT', 'BURNBIT'],
-    size: 10
+    size: 20
   },
 
   'SANDWICH-BAG': {
     id: 'SANDWICH-BAG',
     name: 'brown sack',
-    synonyms: ['SACK', 'BAG'],
-    adjectives: ['BROWN', 'PAPER'],
+    synonyms: ['BAG', 'SACK'],
+    adjectives: ['BROWN', 'ELONGATED', 'SMELLY'],
     description: 'brown sack',
-    longDescription: 'A brown sack, smelling of hot peppers, is here.',
-    initialLocation: 'KITCHEN',
-    flags: ['TAKEBIT', 'CONTBIT', 'OPENBIT'],
+    firstDescription: 'On the table is an elongated brown sack, smelling of hot peppers.',
+    initialLocation: 'KITCHEN-TABLE',
+    flags: ['TAKEBIT', 'CONTBIT', 'BURNBIT'],
+    action: 'SANDWICH-BAG-FCN',
     capacity: 9,
-    size: 5
+    size: 9
   },
 
-  // Additional key objects for game functionality
+  'GUNK': {
+    id: 'GUNK',
+    name: 'small piece of vitreous slag',
+    synonyms: ['GUNK', 'PIECE', 'SLAG'],
+    adjectives: ['SMALL', 'VITREOUS'],
+    description: 'small piece of vitreous slag',
+    initialLocation: '',
+    flags: ['TAKEBIT', 'TRYTAKEBIT'],
+    action: 'GUNK-FUNCTION',
+    size: 10
+  },
+
+  // DOORS AND ENTRANCES
   'FRONT-DOOR': {
     id: 'FRONT-DOOR',
-    name: 'front door',
+    name: 'door',
     synonyms: ['DOOR'],
     adjectives: ['FRONT', 'BOARDED'],
-    description: 'front door',
+    description: 'door',
     initialLocation: 'WEST-OF-HOUSE',
-    flags: ['DOORBIT', 'NDESCBIT']
+    flags: ['DOORBIT', 'NDESCBIT'],
+    action: 'FRONT-DOOR-FCN'
+  },
+
+  'WOODEN-DOOR': {
+    id: 'WOODEN-DOOR',
+    name: 'wooden door',
+    synonyms: ['DOOR', 'LETTERING', 'WRITING'],
+    adjectives: ['WOODEN', 'GOTHIC', 'STRANGE', 'WEST'],
+    description: 'wooden door',
+    initialLocation: 'LIVING-ROOM',
+    flags: ['READBIT', 'DOORBIT', 'NDESCBIT', 'TRANSBIT'],
+    action: 'FRONT-DOOR-FCN',
+    text: 'The engravings translate to "This space intentionally left blank."'
+  },
+
+  'BARROW-DOOR': {
+    id: 'BARROW-DOOR',
+    name: 'stone door',
+    synonyms: ['DOOR'],
+    adjectives: ['HUGE', 'STONE'],
+    description: 'stone door',
+    initialLocation: 'STONE-BARROW',
+    flags: ['DOORBIT', 'NDESCBIT', 'OPENBIT'],
+    action: 'BARROW-DOOR-FCN'
+  },
+
+  'BARROW': {
+    id: 'BARROW',
+    name: 'stone barrow',
+    synonyms: ['BARROW', 'TOMB'],
+    adjectives: ['MASSIVE', 'STONE'],
+    description: 'stone barrow',
+    initialLocation: 'STONE-BARROW',
+    flags: ['NDESCBIT'],
+    action: 'BARROW-FCN'
   },
 
   'KITCHEN-TABLE': {
@@ -835,7 +1307,8 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     adjectives: ['KITCHEN'],
     description: 'kitchen table',
     initialLocation: 'KITCHEN',
-    flags: ['SURFACEBIT', 'NDESCBIT']
+    flags: ['NDESCBIT', 'CONTBIT', 'OPENBIT', 'SURFACEBIT'],
+    capacity: 50
   },
 
   'ATTIC-TABLE': {
@@ -845,19 +1318,163 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     adjectives: [],
     description: 'table',
     initialLocation: 'ATTIC',
-    flags: ['SURFACEBIT', 'NDESCBIT']
+    flags: ['NDESCBIT', 'CONTBIT', 'OPENBIT', 'SURFACEBIT'],
+    capacity: 40
   },
 
-  // More treasures to complete the set
+  'DAM': {
+    id: 'DAM',
+    name: 'dam',
+    synonyms: ['DAM', 'GATE', 'GATES', 'FCD#3'],
+    adjectives: [],
+    description: 'dam',
+    initialLocation: 'DAM-ROOM',
+    flags: ['NDESCBIT', 'TRYTAKEBIT'],
+    action: 'DAM-FUNCTION'
+  },
+
+  'BOLT': {
+    id: 'BOLT',
+    name: 'bolt',
+    synonyms: ['BOLT', 'NUT'],
+    adjectives: ['METAL', 'LARGE'],
+    description: 'bolt',
+    initialLocation: 'DAM-ROOM',
+    flags: ['NDESCBIT', 'TURNBIT', 'TRYTAKEBIT'],
+    action: 'BOLT-F'
+  },
+
+  'BUBBLE': {
+    id: 'BUBBLE',
+    name: 'green bubble',
+    synonyms: ['BUBBLE'],
+    adjectives: ['SMALL', 'GREEN', 'PLASTIC'],
+    description: 'green bubble',
+    initialLocation: 'DAM-ROOM',
+    flags: ['NDESCBIT', 'TRYTAKEBIT'],
+    action: 'BUBBLE-F'
+  },
+
+  'CONTROL-PANEL': {
+    id: 'CONTROL-PANEL',
+    name: 'control panel',
+    synonyms: ['PANEL'],
+    adjectives: ['CONTROL'],
+    description: 'control panel',
+    initialLocation: 'DAM-ROOM',
+    flags: ['NDESCBIT']
+  },
+
+  'YELLOW-BUTTON': {
+    id: 'YELLOW-BUTTON',
+    name: 'yellow button',
+    synonyms: ['BUTTON', 'SWITCH'],
+    adjectives: ['YELLOW'],
+    description: 'yellow button',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['NDESCBIT'],
+    action: 'BUTTON-F'
+  },
+
+  'BROWN-BUTTON': {
+    id: 'BROWN-BUTTON',
+    name: 'brown button',
+    synonyms: ['BUTTON', 'SWITCH'],
+    adjectives: ['BROWN'],
+    description: 'brown button',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['NDESCBIT'],
+    action: 'BUTTON-F'
+  },
+
+  'RED-BUTTON': {
+    id: 'RED-BUTTON',
+    name: 'red button',
+    synonyms: ['BUTTON', 'SWITCH'],
+    adjectives: ['RED'],
+    description: 'red button',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['NDESCBIT'],
+    action: 'BUTTON-F'
+  },
+
+  'BLUE-BUTTON': {
+    id: 'BLUE-BUTTON',
+    name: 'blue button',
+    synonyms: ['BUTTON', 'SWITCH'],
+    adjectives: ['BLUE'],
+    description: 'blue button',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['NDESCBIT'],
+    action: 'BUTTON-F'
+  },
+
+  'LEAK': {
+    id: 'LEAK',
+    name: 'leak',
+    synonyms: ['LEAK', 'DRIP', 'PIPE'],
+    adjectives: [],
+    description: 'leak',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['NDESCBIT', 'INVISIBLE'],
+    action: 'LEAK-FUNCTION'
+  },
+
+  'MACHINE-SWITCH': {
+    id: 'MACHINE-SWITCH',
+    name: 'switch',
+    synonyms: ['SWITCH'],
+    adjectives: [],
+    description: 'switch',
+    initialLocation: 'MACHINE-ROOM',
+    flags: ['NDESCBIT', 'TURNBIT'],
+    action: 'MSWITCH-FUNCTION'
+  },
+
+  'MIRROR-1': {
+    id: 'MIRROR-1',
+    name: 'mirror',
+    synonyms: ['REFLECTION', 'MIRROR', 'ENORMOUS'],
+    adjectives: [],
+    description: 'mirror',
+    initialLocation: 'MIRROR-ROOM-1',
+    flags: ['TRYTAKEBIT', 'NDESCBIT'],
+    action: 'MIRROR-MIRROR'
+  },
+
+  'MIRROR-2': {
+    id: 'MIRROR-2',
+    name: 'mirror',
+    synonyms: ['REFLECTION', 'MIRROR', 'ENORMOUS'],
+    adjectives: [],
+    description: 'mirror',
+    initialLocation: 'MIRROR-ROOM-2',
+    flags: ['TRYTAKEBIT', 'NDESCBIT'],
+    action: 'MIRROR-MIRROR'
+  },
+
+  'TOOL-CHEST': {
+    id: 'TOOL-CHEST',
+    name: 'group of tool chests',
+    synonyms: ['CHEST', 'CHESTS', 'GROUP', 'TOOLCHESTS'],
+    adjectives: ['TOOL'],
+    description: 'group of tool chests',
+    initialLocation: 'MAINTENANCE-ROOM',
+    flags: ['CONTBIT', 'OPENBIT', 'TRYTAKEBIT', 'SACREDBIT'],
+    action: 'TOOL-CHEST-FCN'
+  },
+
   'CANDLES': {
     id: 'CANDLES',
     name: 'pair of candles',
-    synonyms: ['CANDLES', 'CANDLE'],
-    adjectives: [],
+    synonyms: ['CANDLES', 'PAIR'],
+    adjectives: ['BURNING'],
     description: 'pair of candles',
-    initialLocation: 'LIVING-ROOM',
-    flags: ['TAKEBIT', 'LIGHTBIT', 'BURNBIT'],
-    size: 5
+    firstDescription: 'On the two ends of the altar are burning candles.',
+    initialLocation: 'SOUTH-TEMPLE',
+    flags: ['TAKEBIT', 'FLAMEBIT', 'ONBIT', 'LIGHTBIT'],
+    action: 'CANDLES-FCN',
+    size: 10
   },
 
   // Placeholder for remaining objects
@@ -869,13 +1486,13 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
  */
 export const OBJECT_COUNTS = {
   TREASURES: 19,
-  TOOLS: 10,
-  CONTAINERS: 15,
-  CONSUMABLES: 4,
+  TOOLS: 12,
+  CONTAINERS: 18,
+  CONSUMABLES: 5,
   READABLE: 10,
-  NPCS: 5,
-  SCENERY: 30,
-  TOTAL: 100
+  NPCS: 6,
+  SCENERY: 51,
+  TOTAL: 121
 };
 
 /**
