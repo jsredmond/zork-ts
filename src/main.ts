@@ -10,6 +10,7 @@ import { Parser } from './parser/parser.js';
 import { CommandExecutor } from './engine/executor.js';
 import { GameState } from './game/state.js';
 import { GameObjectImpl } from './game/objects.js';
+import { ObjectFlag } from './game/data/flags.js';
 import { createInitialGameState, getRoomCount, getObjectCount } from './game/factories/gameFactory.js';
 import { ALL_ROOMS } from './game/data/rooms-complete.js';
 
@@ -27,6 +28,17 @@ function getAvailableObjects(state: GameState): GameObjectImpl[] {
       if (obj) {
         available.push(obj as GameObjectImpl);
         addedIds.add(objId);
+        
+        // If this is an open container in inventory, add its contents too
+        if (obj.hasFlag(ObjectFlag.CONTBIT) && obj.hasFlag(ObjectFlag.OPENBIT)) {
+          const contents = state.getObjectsInContainer(objId);
+          for (const contentObj of contents) {
+            if (!addedIds.has(contentObj.id)) {
+              available.push(contentObj as GameObjectImpl);
+              addedIds.add(contentObj.id);
+            }
+          }
+        }
       }
     }
   }
@@ -40,6 +52,17 @@ function getAvailableObjects(state: GameState): GameObjectImpl[] {
         if (obj) {
           available.push(obj as GameObjectImpl);
           addedIds.add(objId);
+          
+          // If this is an open container, add its contents too
+          if (obj.hasFlag(ObjectFlag.CONTBIT) && obj.hasFlag(ObjectFlag.OPENBIT)) {
+            const contents = state.getObjectsInContainer(objId);
+            for (const contentObj of contents) {
+              if (!addedIds.has(contentObj.id)) {
+                available.push(contentObj as GameObjectImpl);
+                addedIds.add(contentObj.id);
+              }
+            }
+          }
         }
       }
     }
