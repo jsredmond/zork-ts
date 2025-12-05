@@ -706,12 +706,12 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     id: 'ADVERTISEMENT',
     name: 'leaflet',
     synonyms: ['LEAFLET', 'ADVERTISEMENT', 'BOOKLET', 'MAIL'],
-    adjectives: [],
+    adjectives: ['SMALL'],
     description: 'leaflet',
-    longDescription: 'A leaflet is here.',
+    longDescription: 'A small leaflet is on the ground.',
     initialLocation: 'MAILBOX',
     flags: ['TAKEBIT', 'READBIT', 'BURNBIT'],
-    text: 'WELCOME TO ZORK!\n\nZORK is a game of adventure, danger, and low cunning.',
+    text: '"WELCOME TO ZORK!\n\nZORK is a game of adventure, danger, and low cunning. In it you will explore some of the most amazing territory ever seen by mortals. No computer should be without one!"',
     size: 2
   },
 

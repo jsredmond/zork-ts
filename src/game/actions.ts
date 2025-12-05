@@ -588,6 +588,14 @@ export class ReadAction implements ActionHandler {
       };
     }
 
+    // If object is in a container (not in inventory or room), auto-take it
+    let takenMessage = '';
+    if (!isInInventory && !isInCurrentRoom && isInVisibleContainer) {
+      // Auto-take the object
+      state.moveObject(objectId, 'PLAYER');
+      takenMessage = '(Taken)\n';
+    }
+
     // Get the text property
     const text = obj.getProperty('text');
     
@@ -601,8 +609,13 @@ export class ReadAction implements ActionHandler {
 
     return {
       success: true,
-      message: text,
-      stateChanges: []
+      message: takenMessage + text,
+      stateChanges: takenMessage ? [{
+        type: 'OBJECT_MOVED',
+        objectId: objectId,
+        oldLocation: obj.location,
+        newLocation: 'PLAYER'
+      }] : []
     };
   }
 }
