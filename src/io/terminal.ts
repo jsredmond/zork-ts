@@ -12,6 +12,9 @@ import * as readline from 'readline';
 export class Terminal {
   private rl: readline.Interface | null = null;
   private isRunning: boolean = false;
+  private cursorBlinkTimer: NodeJS.Timeout | null = null;
+  private cursorVisible: boolean = true;
+  private isTyping: boolean = false;
 
   /**
    * Initialize the terminal interface
@@ -27,6 +30,14 @@ export class Terminal {
     this.rl.on('SIGINT', () => {
       this.handleInterrupt();
     });
+
+    // Listen for input to stop cursor blinking when user types
+    if (process.stdin.isTTY) {
+      process.stdin.on('data', () => {
+        this.isTyping = true;
+        this.stopCursorBlink();
+      });
+    }
 
     this.isRunning = true;
   }
@@ -63,6 +74,7 @@ export class Terminal {
     }
 
     this.rl.question('', (answer) => {
+      this.stopCursorBlink();
       callback(answer);
     });
   }
@@ -99,7 +111,86 @@ export class Terminal {
   showPrompt(): void {
     if (this.rl) {
       this.rl.prompt();
+      this.isTyping = false;
+      this.startCursorBlink();
     }
+  }
+
+  /**
+   * Start blinking cursor animation
+   */
+  private startCursorBlink(): void {
+    // Only blink if terminal supports it
+    if (!process.stdout.isTTY) {
+      return;
+    }
+
+    // Clear any existing timer
+    this.stopCursorBlink();
+
+    // Show cursor initially
+    this.showCursor();
+
+    // Start blinking at 500ms interval
+    this.cursorBlinkTimer = setInterval(() => {
+      if (!this.isTyping) {
+        if (this.cursorVisible) {
+          this.hideCursor();
+        } else {
+          this.showCursor();
+        }
+        this.cursorVisible = !this.cursorVisible;
+      }
+    }, 500);
+  }
+
+  /**
+   * Stop blinking cursor animation
+   */
+  private stopCursorBlink(): void {
+    if (this.cursorBlinkTimer) {
+      clearInterval(this.cursorBlinkTimer);
+      this.cursorBlinkTimer = null;
+    }
+    // Ensure cursor is visible when stopping
+    this.showCursor();
+    this.cursorVisible = true;
+  }
+
+  /**
+   * Show the cursor
+   */
+  private showCursor(): void {
+    if (process.stdout.isTTY) {
+      this.write('\x1b[?25h'); // Show cursor
+    }
+  }
+
+  /**
+   * Hide the cursor
+   */
+  private hideCursor(): void {
+    if (process.stdout.isTTY) {
+      this.write('\x1b[?25l'); // Hide cursor
+    }
+  }
+
+  /**
+   * Display status bar with score and moves
+   * @param score - Current score
+   * @param moves - Number of moves
+   */
+  showStatusBar(score: number, moves: number): void {
+    const statusText = `Score: ${score}    Moves: ${moves}`;
+    const terminalWidth = process.stdout.columns || 80;
+    const padding = ' '.repeat(Math.max(0, terminalWidth - statusText.length));
+    
+    // Save cursor position, move to top right, write status, restore cursor
+    this.write('\x1b[s'); // Save cursor position
+    this.write('\x1b[1;1H'); // Move to top-left
+    this.write('\x1b[K'); // Clear line
+    this.write(padding + statusText); // Write status right-aligned
+    this.write('\x1b[u'); // Restore cursor position
   }
 
   /**
@@ -121,6 +212,7 @@ export class Terminal {
    * Close the terminal interface
    */
   close(): void {
+    this.stopCursorBlink();
     if (this.rl) {
       this.rl.close();
       this.rl = null;

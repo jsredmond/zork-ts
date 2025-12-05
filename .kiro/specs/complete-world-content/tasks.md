@@ -195,22 +195,22 @@
     - Note any known limitations
     - _Requirements: All_
 
-- [-] 6. UI/UX Improvements
-  - [ ] 6.1 Add status bar display
+- [x] 6. UI/UX Improvements
+  - [x] 6.1 Add status bar display
     - Display score in top right corner
     - Display move count in top right corner
     - Update status bar after each command
     - Format: "Score: X    Moves: Y"
     - _Requirements: 4.1, 4.2_
   
-  - [ ] 6.2 Fix inventory item indentation
+  - [x] 6.2 Fix inventory item indentation
     - Review current inventory display formatting
     - Ensure consistent indentation for all items
     - Fix any alignment issues with nested items (items in containers)
     - Test with various inventory configurations
     - _Requirements: 2.2, 2.3_
   
-  - [ ] 6.3 Add blinking cursor for input prompt
+  - [x] 6.3 Add blinking cursor for input prompt
     - Implement blinking cursor animation at command prompt
     - Use terminal escape sequences for cursor effect
     - Ensure cursor blinks at appropriate rate (500ms interval)

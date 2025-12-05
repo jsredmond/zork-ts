@@ -62,9 +62,10 @@ export class Display {
   /**
    * Format inventory display
    * @param objects - Objects in inventory
+   * @param allObjects - All game objects (for finding nested items)
    * @returns Formatted inventory
    */
-  formatInventory(objects: GameObject[]): string {
+  formatInventory(objects: GameObject[], allObjects?: Map<string, GameObject>): string {
     if (objects.length === 0) {
       return 'You are empty-handed.';
     }
@@ -73,6 +74,17 @@ export class Display {
     
     for (const obj of objects) {
       lines.push(`  ${obj.name}`);
+      
+      // Show nested items (items inside this container)
+      if (allObjects && obj.capacity && obj.capacity > 0) {
+        const nestedItems = Array.from(allObjects.values()).filter(
+          item => item.location === obj.id
+        );
+        
+        for (const nested of nestedItems) {
+          lines.push(`    ${nested.name}`);
+        }
+      }
     }
 
     return lines.join('\n');

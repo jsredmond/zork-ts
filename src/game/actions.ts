@@ -194,12 +194,22 @@ export class InventoryAction implements ActionHandler {
     // Get all inventory objects
     const inventoryObjects = state.getInventoryObjects();
     
-    // Build inventory list message
-    const objectNames = inventoryObjects.map(obj => obj.name);
+    // Build inventory list message with proper indentation
     let message = "You are carrying:\n";
     
-    for (const name of objectNames) {
-      message += `  ${name}\n`;
+    for (const obj of inventoryObjects) {
+      message += `  ${obj.name}\n`;
+      
+      // Show nested items (items inside this container)
+      if (obj.capacity && obj.capacity > 0) {
+        const nestedItems = Array.from(state.objects.values()).filter(
+          item => item.location === obj.id
+        );
+        
+        for (const nested of nestedItems) {
+          message += `    ${nested.name}\n`;
+        }
+      }
     }
 
     return {

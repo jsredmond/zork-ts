@@ -112,6 +112,45 @@ describe('Display', () => {
       const formatted = display.formatInventory([]);
       expect(formatted).toBe('You are empty-handed.');
     });
+
+    it('should format inventory with nested items in containers', () => {
+      const bag = new GameObjectImpl({
+        id: 'BAG',
+        name: 'leather bag',
+        description: 'A leather bag',
+        flags: [ObjectFlag.TAKEBIT, ObjectFlag.CONTBIT],
+        capacity: 20,
+      });
+
+      const coin = new GameObjectImpl({
+        id: 'COIN',
+        name: 'gold coin',
+        description: 'A shiny gold coin',
+        flags: [ObjectFlag.TAKEBIT],
+        location: 'BAG',
+      });
+
+      const allObjects = new Map([
+        ['BAG', bag],
+        ['COIN', coin],
+      ]);
+
+      const formatted = display.formatInventory([bag], allObjects);
+      
+      expect(formatted).toContain('You are carrying:');
+      expect(formatted).toContain('leather bag');
+      expect(formatted).toContain('gold coin');
+      // Check that nested item has more indentation
+      const lines = formatted.split('\n');
+      const bagLine = lines.find(l => l.includes('leather bag'));
+      const coinLine = lines.find(l => l.includes('gold coin'));
+      expect(bagLine).toBeDefined();
+      expect(coinLine).toBeDefined();
+      // Coin should have more leading spaces than bag
+      const bagSpaces = bagLine!.match(/^ */)?.[0].length || 0;
+      const coinSpaces = coinLine!.match(/^ */)?.[0].length || 0;
+      expect(coinSpaces).toBeGreaterThan(bagSpaces);
+    });
   });
 
   describe('formatMessage', () => {

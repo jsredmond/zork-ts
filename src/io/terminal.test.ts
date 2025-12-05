@@ -56,6 +56,14 @@ describe('Terminal', () => {
     it('should show prompt', () => {
       expect(() => terminal.showPrompt()).not.toThrow();
     });
+
+    it('should show status bar', () => {
+      expect(() => terminal.showStatusBar(10, 5)).not.toThrow();
+    });
+
+    it('should show status bar with different values', () => {
+      expect(() => terminal.showStatusBar(350, 1000)).not.toThrow();
+    });
   });
 
   describe('lifecycle', () => {
