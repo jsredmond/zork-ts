@@ -245,20 +245,20 @@
     - **Property 2: Coverage calculation accuracy**
     - **Validates: Requirements 4.3**
 
-- [ ] 13. Create CLI interface for testing
-  - [ ] 13.1 Implement test command
+- [x] 13. Create CLI interface for testing
+  - [x] 13.1 Implement test command
     - Create command to run tests with options
     - Display progress during test execution
     - Show summary at completion
     - _Requirements: 9.4_
   
-  - [ ] 13.2 Implement status command
+  - [x] 13.2 Implement status command
     - Show current test coverage
     - List recent bugs found
     - Display untested items
     - _Requirements: 10.1, 10.2, 10.3_
   
-  - [ ] 13.3 Implement bug management commands
+  - [x] 13.3 Implement bug management commands
     - List bugs with filtering
     - Update bug status
     - Export bug reports

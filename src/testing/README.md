@@ -143,3 +143,125 @@ Generated reports are saved to `.kiro/testing/test-reports/`:
 - `detailed-YYYY-MM-DD.md` - Detailed test reports
 - `bugs-YYYY-MM-DD.json` - Bug reports (JSON)
 - `progress-YYYY-MM-DD.json` - Test progress (JSON)
+
+## CLI Usage
+
+The testing system provides a command-line interface for easy test execution and management.
+
+### Running Tests
+
+Run tests with various options:
+
+```bash
+# Run all tests (rooms and objects by default)
+npm run test:run
+
+# Run specific test types
+npm run test:run -- --rooms
+npm run test:run -- --objects
+npm run test:run -- --puzzles
+npm run test:run -- --npcs
+npm run test:run -- --edge-cases
+
+# Limit number of tests
+npm run test:run -- --max 50
+
+# Filter by specific rooms or objects
+npm run test:run -- --room-filter WEST-OF-HOUSE,NORTH-OF-HOUSE
+npm run test:run -- --object-filter MAILBOX,LEAFLET
+
+# Combine options
+npm run test:run -- --rooms --objects --max 100
+```
+
+### Checking Status
+
+View current test status and coverage:
+
+```bash
+# Show test dashboard
+npm run test:status
+
+# Show detailed information including untested items
+npm run test:status -- --verbose
+npm run test:status -- -v
+```
+
+### Managing Bugs
+
+List, update, and export bug reports:
+
+```bash
+# List all bugs
+npm run test:bugs
+
+# Filter bugs by status
+npm run test:bugs -- --status OPEN
+npm run test:bugs -- --status FIXED
+
+# Filter bugs by severity
+npm run test:bugs -- --severity CRITICAL
+npm run test:bugs -- --severity MAJOR
+
+# Filter bugs by category
+npm run test:bugs -- --category PARSER_ERROR
+npm run test:bugs -- --category MISSING_CONTENT
+
+# Combine filters
+npm run test:bugs -- --status OPEN --severity CRITICAL
+
+# Update bug status
+npm run test:bug-update BUG-001 FIXED
+npm run test:bug-update BUG-002 IN_PROGRESS
+npm run test:bug-update BUG-003 VERIFIED
+
+# Export bug reports
+npm run test:bug-export                    # Export as Markdown
+npm run test:bug-export -- --json          # Export as JSON
+```
+
+### Valid Bug Statuses
+
+- `OPEN` - Bug is newly reported
+- `IN_PROGRESS` - Bug is being worked on
+- `FIXED` - Bug has been fixed
+- `VERIFIED` - Fix has been verified
+- `WONT_FIX` - Bug will not be fixed
+
+### Valid Bug Severities
+
+- `CRITICAL` - Game-breaking, crashes
+- `MAJOR` - Feature doesn't work
+- `MINOR` - Small issue, workaround exists
+- `TRIVIAL` - Cosmetic, typos
+
+### Valid Bug Categories
+
+- `PARSER_ERROR` - Parser issues
+- `ACTION_ERROR` - Action handler issues
+- `MISSING_CONTENT` - Missing content
+- `INCORRECT_BEHAVIOR` - Wrong behavior
+- `CRASH` - Crashes
+- `TEXT_ERROR` - Text issues
+
+### CLI Examples
+
+```bash
+# Quick test of a few rooms
+npm run test:run -- --rooms --max 20
+
+# Check what's been tested
+npm run test:status
+
+# See detailed status with untested items
+npm run test:status -- --verbose
+
+# Find all critical bugs
+npm run test:bugs -- --severity CRITICAL
+
+# Mark a bug as fixed
+npm run test:bug-update BUG-001 FIXED
+
+# Export bugs for review
+npm run test:bug-export
+```
