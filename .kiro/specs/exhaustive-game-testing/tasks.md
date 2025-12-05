@@ -264,39 +264,39 @@
     - Export bug reports
     - _Requirements: 5.5_
 
-- [ ] 14. Integration and end-to-end testing
-  - [ ] 14.1 Test complete room testing workflow
+- [x] 14. Integration and end-to-end testing
+  - [x] 14.1 Test complete room testing workflow
     - Run room tests on subset of rooms
     - Verify progress is saved
     - Verify bugs are reported
     - _Requirements: 1.1, 1.2, 4.1_
   
-  - [ ] 14.2 Test complete object testing workflow
+  - [x] 14.2 Test complete object testing workflow
     - Run object tests on subset of objects
     - Verify all interactions are tested
     - Verify coverage is calculated correctly
     - _Requirements: 2.1, 2.2, 4.3_
   
-  - [ ] 14.3 Test resume functionality
+  - [x] 14.3 Test resume functionality
     - Run partial test session
     - Stop and save progress
     - Resume and verify continuation
     - _Requirements: 4.2_
 
-- [ ] 15. Documentation and examples
-  - [ ] 15.1 Create testing guide
+- [x] 15. Documentation and examples
+  - [x] 15.1 Create testing guide
     - Document how to run tests
     - Explain test options and filters
     - Provide examples of common workflows
     - _Requirements: All_
   
-  - [ ] 15.2 Create bug report template
+  - [x] 15.2 Create bug report template
     - Define standard bug report format
     - Provide examples of good bug reports
     - Document bug categorization guidelines
     - _Requirements: 5.1, 5.2_
   
-  - [ ] 15.3 Create test result examples
+  - [x] 15.3 Create test result examples
     - Show example coverage reports
     - Show example bug reports
     - Show example test progress files
