@@ -549,7 +549,18 @@ export class ReadAction implements ActionHandler {
     const currentRoom = state.getCurrentRoom();
     const isInInventory = state.isInInventory(objectId);
     const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
-    const isInVisibleContainer = obj.location && state.isInInventory(obj.location);
+    
+    // Check if object is in an open container (either in inventory or in room)
+    let isInVisibleContainer = false;
+    if (obj.location) {
+      const container = state.getObject(obj.location) as GameObjectImpl;
+      if (container && container.hasFlag(ObjectFlag.CONTBIT) && container.hasFlag(ObjectFlag.OPENBIT)) {
+        // Container is open - check if it's accessible
+        const containerInInventory = state.isInInventory(obj.location);
+        const containerInRoom = currentRoom && container.location === currentRoom.id;
+        isInVisibleContainer = containerInInventory || containerInRoom;
+      }
+    }
     
     if (!isInInventory && !isInCurrentRoom && !isInVisibleContainer) {
       return {
