@@ -443,9 +443,19 @@ export class OpenAction implements ActionHandler {
     // Open the object
     obj.addFlag(ObjectFlag.OPENBIT);
 
+    // Check if container has contents and show them
+    let message = "Opened.";
+    if (obj.hasFlag(ObjectFlag.CONTBIT)) {
+      const contents = state.getObjectsInContainer(objectId);
+      if (contents.length > 0) {
+        const contentNames = contents.map(item => item.name).join(', ');
+        message = `Opening the ${obj.name.toLowerCase()} reveals ${contentNames}.`;
+      }
+    }
+
     return {
       success: true,
-      message: "Opened.",
+      message: message,
       stateChanges: [{
         type: 'FLAG_CHANGED',
         objectId: objectId,
