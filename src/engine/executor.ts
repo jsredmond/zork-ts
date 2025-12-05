@@ -16,7 +16,8 @@ import {
   OpenAction,
   CloseAction,
   ReadAction,
-  LookAction
+  LookAction,
+  ClimbAction
 } from '../game/actions.js';
 
 /**
@@ -74,6 +75,9 @@ export class CommandExecutor {
     // Inventory verb
     this.actionHandlers.set('INVENTORY', new InventoryAction());
     this.actionHandlers.set('I', new InventoryAction());
+    
+    // Climbing verb
+    this.actionHandlers.set('CLIMB', new ClimbAction());
   }
 
   /**
