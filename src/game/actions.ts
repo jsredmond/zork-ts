@@ -8,6 +8,7 @@ import { GameObjectImpl } from './objects.js';
 import { ObjectFlag } from './data/flags.js';
 import { Storage } from '../persistence/storage.js';
 import { scoreTreasure, TROPHY_CASE_ID, getRank, MAX_SCORE } from './scoring.js';
+import { Direction } from './rooms.js';
 import { 
   isRoomLit, 
   willRoomBecomeDark, 
@@ -1501,6 +1502,31 @@ export class ClimbAction implements ActionHandler {
         message: "You can't climb that!",
         stateChanges: []
       };
+    }
+
+    // For climbable objects like trees, try to go UP
+    if (objectId === 'TREE') {
+      const currentRoom = state.getCurrentRoom();
+      if (!currentRoom) {
+        return {
+          success: false,
+          message: "You can't do that!",
+          stateChanges: []
+        };
+      }
+
+      // Check if there's an UP exit
+      const upExit = currentRoom.getExit(Direction.UP);
+      if (upExit && upExit.destination) {
+        // Move up
+        state.setCurrentRoom(upExit.destination);
+        state.incrementMoves();
+        return {
+          success: true,
+          message: '',
+          stateChanges: []
+        };
+      }
     }
 
     return {
