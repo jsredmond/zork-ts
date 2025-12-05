@@ -141,20 +141,20 @@
     - Test thief puzzle (combat and treasure room)
     - _Requirements: 6.1, 6.3_
 
-- [ ] 8. Implement NPC testing
-  - [ ] 8.1 Create NPCTester class
+- [x] 8. Implement NPC testing
+  - [x] 8.1 Create NPCTester class
     - Implement combat testing for each NPC
     - Implement item giving tests
     - Test NPC state transitions
     - _Requirements: 7.1, 7.4_
   
-  - [ ] 8.2 Test NPC-specific interactions
+  - [x] 8.2 Test NPC-specific interactions
     - Test feeding cyclops
     - Test bribing/fighting troll
     - Test thief stealing behavior
     - _Requirements: 7.5_
   
-  - [ ] 8.3 Test NPC movement and behavior
+  - [x] 8.3 Test NPC movement and behavior
     - Test thief movement patterns
     - Test NPC respawning/disappearing
     - Verify NPC behavior matches original game
