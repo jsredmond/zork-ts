@@ -31,6 +31,10 @@ export interface GameObject {
   capacity?: number;
   size?: number;
   value?: number;
+  
+  // Methods
+  hasFlag(flag: ObjectFlag): boolean;
+  isOpen(): boolean;
 }
 
 /**
