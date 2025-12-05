@@ -122,32 +122,35 @@ async function gameLoop(): Promise<void> {
     const availableObjects = getAvailableObjects(state);
     const command = parser.parse(processedTokens, availableObjects);
 
+    // Track current room before executing command
+    const roomBeforeCommand = state.currentRoom;
+    
     // Execute command
     const result = executor.execute(command, state);
 
-    // Display result
-    terminal.writeLine(display.formatMessage(result.message));
+    // Display result message if there is one
+    if (result.message) {
+      terminal.writeLine(display.formatMessage(result.message));
+    }
 
-    // If movement was successful, show new room
-    if (result.success && 'verb' in command) {
-      const verb = command.verb?.toUpperCase();
-      const movementVerbs = ['NORTH', 'SOUTH', 'EAST', 'WEST', 'UP', 'DOWN', 'IN', 'OUT', 'N', 'S', 'E', 'W', 'U', 'D', 'GO', 'NE', 'NW', 'SE', 'SW'];
-      
-      if (movementVerbs.includes(verb)) {
-        const currentRoom = state.getCurrentRoom();
-        if (currentRoom) {
-          terminal.writeLine('');
-          terminal.writeLine(display.formatRoom(currentRoom, state, true));
-          
-          // Show objects in room
-          const roomObjects = state.getObjectsInCurrentRoom();
-          if (roomObjects.length > 0) {
-            terminal.writeLine(display.formatObjectList(roomObjects));
-          }
+    // If room changed (movement occurred), show new room
+    if (result.success && state.currentRoom !== roomBeforeCommand) {
+      const currentRoom = state.getCurrentRoom();
+      if (currentRoom) {
+        terminal.writeLine('');
+        terminal.writeLine(display.formatRoom(currentRoom, state, true));
+        
+        // Show objects in room
+        const roomObjects = state.getObjectsInCurrentRoom();
+        if (roomObjects.length > 0) {
+          terminal.writeLine(display.formatObjectList(roomObjects));
         }
       }
-
-      // If LOOK command, show room
+    }
+    
+    // If LOOK command, show room (even if room didn't change)
+    if (result.success && 'verb' in command) {
+      const verb = command.verb?.toUpperCase();
       if (verb === 'LOOK' || verb === 'L') {
         const currentRoom = state.getCurrentRoom();
         if (currentRoom) {
