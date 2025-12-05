@@ -6,6 +6,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { TestProgress, BugDatabase, BugReport } from './types';
+import { serializeTestProgress, deserializeTestProgress, createTestProgress } from './testProgress';
 
 const TESTING_DIR = '.kiro/testing';
 const TEST_PROGRESS_FILE = path.join(TESTING_DIR, 'test-progress.json');
@@ -31,14 +32,19 @@ export function loadTestProgress(): TestProgress | null {
     }
 
     const data = fs.readFileSync(TEST_PROGRESS_FILE, 'utf-8');
-    const progress = JSON.parse(data);
     
-    // Convert date strings back to Date objects
-    progress.lastUpdated = new Date(progress.lastUpdated);
+    // Handle empty file
+    if (!data.trim()) {
+      console.warn('Test progress file is empty');
+      return null;
+    }
     
+    // Use deserializer with validation
+    const progress = deserializeTestProgress(data);
     return progress;
   } catch (error) {
-    console.error('Error loading test progress:', error);
+    console.error('Error loading test progress (file may be corrupted):', error);
+    // Return null for corrupted files as per requirements
     return null;
   }
 }
@@ -49,7 +55,7 @@ export function loadTestProgress(): TestProgress | null {
 export function saveTestProgress(progress: TestProgress): void {
   try {
     ensureTestingDirectory();
-    const data = JSON.stringify(progress, null, 2);
+    const data = serializeTestProgress(progress);
     fs.writeFileSync(TEST_PROGRESS_FILE, data, 'utf-8');
   } catch (error) {
     console.error('Error saving test progress:', error);
@@ -61,19 +67,7 @@ export function saveTestProgress(progress: TestProgress): void {
  * Create a new empty test progress object
  */
 export function createEmptyTestProgress(): TestProgress {
-  return {
-    version: '1.0',
-    lastUpdated: new Date(),
-    testedRooms: [],
-    testedObjects: [],
-    testedInteractions: {},
-    totalTests: 0,
-    coverage: {
-      rooms: 0,
-      objects: 0,
-      interactions: 0
-    }
-  };
+  return createTestProgress();
 }
 
 /**
