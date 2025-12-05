@@ -1,0 +1,2044 @@
+{
+  "totalMessages": 921,
+  "foundInTypeScript": 630,
+  "missingMessages": [
+    {
+      "file": "1actions.zil",
+      "line": 46,
+      "context": "ROUTINE BOARD-F",
+      "message": "The boards are securely fastened.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 78,
+      "context": "ROUTINE GRANITE-WALL-F",
+      "message": "The wall isn't granite.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 95,
+      "context": "ROUTINE WHITE-HOUSE-F",
+      "message": "Why not find your brains?",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 106,
+      "context": "ROUTINE WHITE-HOUSE-F",
+      "message": "You're not at the house.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 108,
+      "context": "ROUTINE WHITE-HOUSE-F",
+      "message": "It's right here! Are you blind or something?",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 149,
+      "context": "ROUTINE FOREST-F",
+      "message": "The pines and the hemlocks seem to be murmuring.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 154,
+      "context": "ROUTINE MOUNTAIN-RANGE-F",
+      "message": "Don't you believe me? The mountains are impassable!",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 187,
+      "context": "ROUTINE WATER-F",
+      "message": "There is now a puddle in the bottom of the  .",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 192,
+      "context": "ROUTINE WATER-F",
+      "message": "The water leaks out of the   and evaporates immediately.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 197,
+      "context": "ROUTINE WATER-F",
+      "message": "The bottle is closed.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 208,
+      "context": "UNKNOWN",
+      "message": "It's in the bottle. Perhaps you should take that instead.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 223,
+      "context": "UNKNOWN",
+      "message": "The bottle is closed.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 227,
+      "context": "UNKNOWN",
+      "message": "There is now a puddle in the bottom of the  .",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 231,
+      "context": "UNKNOWN",
+      "message": "The water spills to the floor and evaporates immediately.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 235,
+      "context": "UNKNOWN",
+      "message": "The water splashes on the walls and evaporates immediately.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 266,
+      "context": "ROUTINE GHOSTS-F",
+      "message": "The spirits jeer loudly and ignore you.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 271,
+      "context": "ROUTINE GHOSTS-F",
+      "message": "How can you attack a spirit with material objects?",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 273,
+      "context": "ROUTINE GHOSTS-F",
+      "message": "You seem unable to interact with these spirits.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 306,
+      "context": "ROUTINE BASKET-F",
+      "message": "The cage is securely fastened to the iron chain.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 319,
+      "context": "ROUTINE FLY-ME",
+      "message": "The bat grabs you by the scruff of your neck and lifts you away....",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 329,
+      "context": "ROUTINE FWEEP",
+      "message": "Fweep!",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 349,
+      "context": "ROUTINE BELL-F",
+      "message": "Ding, dong.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 361,
+      "context": "ROUTINE HOT-BELL-F",
+      "message": "The heat from the bell is too intense.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 364,
+      "context": "ROUTINE HOT-BELL-F",
+      "message": "The water cools the bell and is evaporated.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 372,
+      "context": "ROUTINE BOARDED-WINDOW-FCN",
+      "message": "The windows are boarded and can't be opened.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 378,
+      "context": "ROUTINE NAILS-PSEUDO",
+      "message": "The nails, deeply imbedded in the door, cannot be removed.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 410,
+      "context": "ROUTINE STONE-BARROW-FCN",
+      "message": "ZORK II: The Wizard of Frobozz\\ ZORK III: The Dungeon Master.\\",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 420,
+      "context": "ROUTINE STONE-BARROW-FCN",
+      "message": "ZORK II: The Wizard of Frobozz\\ ZORK III: The Dungeon Master.\\",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 444,
+      "context": "ROUTINE TROPHY-CASE-FCN",
+      "message": "The trophy case is securely fastened to the wall.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 466,
+      "context": "ROUTINE LIVING-ROOM-FCN",
+      "message": "and a rug lying beside an open trap door.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 518,
+      "context": "ROUTINE TRAP-DOOR-FCN",
+      "message": "It's closed.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 542,
+      "context": "ROUTINE CELLAR-FCN",
+      "message": "The trap door crashes shut, and you hear someone barring it.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 555,
+      "context": "ROUTINE UP-CHIMNEY-FUNCTION",
+      "message": "Going up empty-handed is a bad idea.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 616,
+      "context": "ROUTINE RUG-FCN",
+      "message": "I suppose you think it's a magic carpet?",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 727,
+      "context": "UNKNOWN",
+      "message": "The troll, who is remarkably coordinated, catches the",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 743,
+      "context": "UNKNOWN",
+      "message": "D ,PRSO",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 753,
+      "context": "UNKNOWN",
+      "message": "The troll spits in your face, grunting \\",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 757,
+      "context": "UNKNOWN",
+      "message": "The troll laughs at your puny gesture.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 788,
+      "context": "ROUTINE LEAF-PILE",
+      "message": "There are 69,105 leaves here.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 799,
+      "context": "ROUTINE LEAF-PILE",
+      "message": "You rustle the leaves around, making quite a mess.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 829,
+      "context": "ROUTINE CLEARING-FCN",
+      "message": "There is a grating securely fastened into the ground.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 844,
+      "context": "ROUTINE MAZE-11-FCN",
+      "message": "Above you is a grating. Above you is a grating locked with a skull-and-crossbones lock.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 883,
+      "context": "ROUTINE GRATE-FUNCTION",
+      "message": "A pile of leaves falls onto your head and to the ground.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 949,
+      "context": "ROUTINE TORCH-OBJECT",
+      "message": "The water evaporates before it gets close.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 951,
+      "context": "ROUTINE TORCH-OBJECT",
+      "message": "You nearly burn your hand trying to extinguish the flame.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 974,
+      "context": "ROUTINE MIRROR-MIRROR",
+      "message": "You feel a faint tingling transmitted through the",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1001,
+      "context": "ROUTINE MIRROR-MIRROR",
+      "message": "The mirror is many times your size. Give up.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1077,
+      "context": "ROUTINE LLD-ROOM",
+      "message": "You must perform the ceremony.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1080,
+      "context": "ROUTINE LLD-ROOM",
+      "message": "You aren't equipped for an exorcism.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1095,
+      "context": "ROUTINE LLD-ROOM",
+      "message": "In your confusion, the candles drop to the ground (and they are out).",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1106,
+      "context": "ROUTINE LLD-ROOM",
+      "message": "Begone, fiends!\\",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1224,
+      "context": "ROUTINE INTEGRAL-PART",
+      "message": "It is an integral part of the control panel.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1276,
+      "context": "ROUTINE I-REMPTY",
+      "message": "The roar of rushing water is quieter now.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1300,
+      "context": "ROUTINE BUTTON-F",
+      "message": "They're greek to you.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1316,
+      "context": "ROUTINE BUTTON-F",
+      "message": "shut off.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1319,
+      "context": "ROUTINE BUTTON-F",
+      "message": "shut off.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1334,
+      "context": "ROUTINE TOOL-CHEST-FCN",
+      "message": "The chests are all empty.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1341,
+      "context": "ROUTINE TOOL-CHEST-FCN",
+      "message": "The chests are already open.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1394,
+      "context": "ROUTINE TUBE-FUNCTION",
+      "message": "The viscous material oozes into your hand.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1396,
+      "context": "ROUTINE TUBE-FUNCTION",
+      "message": "The tube is apparently empty.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1402,
+      "context": "ROUTINE DAM-FUNCTION",
+      "message": "Sounds reasonable, but this isn't how.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1405,
+      "context": "ROUTINE DAM-FUNCTION",
+      "message": "Are you the little Dutch boy, then? Sorry, this is a big dam.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1495,
+      "context": "ROUTINE BOTTLE-FUNCTION",
+      "message": "The bottle hits the far wall and shatters.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1499,
+      "context": "ROUTINE BOTTLE-FUNCTION",
+      "message": "A brilliant maneuver destroys the bottle.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1504,
+      "context": "ROUTINE BOTTLE-FUNCTION",
+      "message": "The water spills to the floor and evaporates.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1519,
+      "context": "ROUTINE CYCLOPS-FCN",
+      "message": "No use talking to him. He's fast asleep.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1525,
+      "context": "ROUTINE CYCLOPS-FCN",
+      "message": "The cyclops prefers eating to making conversation.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1529,
+      "context": "ROUTINE CYCLOPS-FCN",
+      "message": "The cyclops is sleeping like a baby, albeit a very ugly one.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1587,
+      "context": "UNKNOWN",
+      "message": "The cyclops doesn't take kindly to being grabbed.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1662,
+      "context": "ROUTINE LOUD-ROOM-FCN",
+      "message": "The room is eerie in its quietness.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1668,
+      "context": "ROUTINE LOUD-ROOM-FCN",
+      "message": "The room is eerie in its quietness.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1718,
+      "context": "UNKNOWN",
+      "message": "That's only your opinion.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1722,
+      "context": "UNKNOWN",
+      "message": "The acoustics of the room change subtly.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1813,
+      "context": "ROUTINE THIEF-VS-ADVENTURER",
+      "message": "your possession Doing unto others before...\\",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1817,
+      "context": "UNKNOWN",
+      "message": "your possession Doing unto others before...\\",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1819,
+      "context": "UNKNOWN",
+      "message": "your possession Doing unto others before...\\",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1820,
+      "context": "UNKNOWN",
+      "message": "Doing unto others before...\\",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1826,
+      "context": "UNKNOWN",
+      "message": "robbed you blind first.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1830,
+      "context": "UNKNOWN",
+      "message": "robbed you blind first.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1833,
+      "context": "UNKNOWN",
+      "message": "appropriated the valuables in the room.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1838,
+      "context": "UNKNOWN",
+      "message": "The thief, finding nothing of value, left disgusted.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1856,
+      "context": "UNKNOWN",
+      "message": "robbed you blind first.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1860,
+      "context": "UNKNOWN",
+      "message": "robbed you blind first.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1863,
+      "context": "UNKNOWN",
+      "message": "appropriated the valuables in the room.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1868,
+      "context": "UNKNOWN",
+      "message": "The thief, finding nothing of value, left disgusted.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1925,
+      "context": "ROUTINE ROB-MAZE",
+      "message": "You hear, off in the distance, someone saying \\  D .X",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 1997,
+      "context": "ROUTINE ROBBER-FUNCTION",
+      "message": "Your proposed victim suddenly recovers consciousness.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2006,
+      "context": "UNKNOWN",
+      "message": "D ,PRSO",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2010,
+      "context": "UNKNOWN",
+      "message": "The thief places the",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2014,
+      "context": "UNKNOWN",
+      "message": "Once you got him, what would you do with him?",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2023,
+      "context": "UNKNOWN",
+      "message": "The thief says nothing, as you have not been formally introduced.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2107,
+      "context": "ROUTINE LARGE-BAG-F",
+      "message": "Getting close enough would be a good trick.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2131,
+      "context": "ROUTINE CHALICE-FCN",
+      "message": "You'd be stabbed in the back first.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2134,
+      "context": "ROUTINE CHALICE-FCN",
+      "message": "You can't. It's not a very good chalice, is it?",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2167,
+      "context": "ROUTINE FRONT-DOOR-FCN",
+      "message": "You cannot burn this door.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2180,
+      "context": "ROUTINE BODY-FUNCTION",
+      "message": "A force keeps you from taking the bodies.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2232,
+      "context": "ROUTINE LANTERN",
+      "message": "The lamp has smashed into the floor, and the light has gone out.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2239,
+      "context": "ROUTINE LANTERN",
+      "message": "A burned-out lamp won't light.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2261,
+      "context": "ROUTINE MAILBOX-F",
+      "message": "It is securely anchored.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2270,
+      "context": "ROUTINE MATCH-FUNCTION",
+      "message": "I'm afraid that you have run out of matches.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2273,
+      "context": "ROUTINE MATCH-FUNCTION",
+      "message": "This room is drafty, and the match goes out instantly.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2302,
+      "context": "ROUTINE MATCH-FUNCTION",
+      "message": "The match is burning. The matchbook isn't very interesting, except for what's written on it.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2304,
+      "context": "ROUTINE MATCH-FUNCTION",
+      "message": "The matchbook isn't very interesting, except for what's written on it.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2309,
+      "context": "ROUTINE I-MATCH",
+      "message": "The match has gone out.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2364,
+      "context": "ROUTINE CANDLES-FCN",
+      "message": "already lit.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2366,
+      "context": "ROUTINE CANDLES-FCN",
+      "message": "already lit.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2373,
+      "context": "ROUTINE CANDLES-FCN",
+      "message": "You realize, just in time, that the candles are already lighted.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2376,
+      "context": "ROUTINE CANDLES-FCN",
+      "message": "The heat from the torch is so intense that the candles are vaporized.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2380,
+      "context": "ROUTINE CANDLES-FCN",
+      "message": "You have to light them with something that's burning, you know.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2396,
+      "context": "UNKNOWN",
+      "message": "The candles are not lighted.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2398,
+      "context": "UNKNOWN",
+      "message": "That wouldn't be smart.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2423,
+      "context": "ROUTINE CAVE2-ROOM",
+      "message": "A gust of wind blows out your candles!",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2426,
+      "context": "ROUTINE CAVE2-ROOM",
+      "message": "It is now completely dark.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2441,
+      "context": "ROUTINE SWORD-FCN",
+      "message": "Your sword is glowing very brightly.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2459,
+      "context": "ROUTINE BOOM-ROOM",
+      "message": "How sad for an aspiring adventurer to light a",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2475,
+      "context": "ROUTINE BAT-D",
+      "message": "A large vampire bat, hanging from the ceiling, swoops down at you!",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2518,
+      "context": "ROUTINE MACHINE-F",
+      "message": "The lid closes.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2535,
+      "context": "ROUTINE MSWITCH-FUNCTION",
+      "message": "The machine doesn't seem to want to do anything.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2555,
+      "context": "ROUTINE GUNK-FUNCTION",
+      "message": "The slag was rather insubstantial, and crumbles into dust at your touch.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2618,
+      "context": "ROUTINE SCEPTRE-FUNCTION",
+      "message": "A dazzling display of color briefly emanates from the sceptre.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2645,
+      "context": "ROUTINE RAINBOW-FCN",
+      "message": "You'll have to say which way...",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2665,
+      "context": "ROUTINE FIX-BOAT",
+      "message": "Well done. The boat is repaired.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2676,
+      "context": "ROUTINE RIVER-FUNCTION",
+      "message": "You should get in the boat then launch it.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2735,
+      "context": "ROUTINE RBOAT-FUNCTION",
+      "message": "Read the label for the boat's instructions.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2802,
+      "context": "UNKNOWN",
+      "message": "Inflating it further would probably burst it.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2805,
+      "context": "UNKNOWN",
+      "message": "You can't deflate the boat while you're in it.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2808,
+      "context": "UNKNOWN",
+      "message": "The boat must be on the ground to be deflated.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2829,
+      "context": "ROUTINE IBOAT-FUNCTION",
+      "message": "A tan label is lying inside the boat.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2836,
+      "context": "ROUTINE IBOAT-FUNCTION",
+      "message": "You don't have enough lung power to inflate it.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2847,
+      "context": "ROUTINE RIVR4-ROOM",
+      "message": "You notice something funny about the feel of the buoy.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2905,
+      "context": "ROUTINE TREE-ROOM",
+      "message": "The egg falls to the ground and springs open, seriously damaged.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2922,
+      "context": "ROUTINE EGG-OBJECT",
+      "message": "The egg is already open.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2924,
+      "context": "ROUTINE EGG-OBJECT",
+      "message": "You have neither the tools nor the expertise.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2927,
+      "context": "ROUTINE EGG-OBJECT",
+      "message": "I doubt you could do that without damaging it.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2938,
+      "context": "ROUTINE EGG-OBJECT",
+      "message": "Not to say that using the   isn't original too...",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2942,
+      "context": "ROUTINE EGG-OBJECT",
+      "message": "The concept of using a   is certainly original.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2986,
+      "context": "ROUTINE CANARY-OBJECT",
+      "message": "The canary chirps blithely, if somewhat tinnily, for a short time.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 2989,
+      "context": "ROUTINE CANARY-OBJECT",
+      "message": "There is an unpleasant grinding noise from inside the canary.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3001,
+      "context": "ROUTINE I-FOREST-ROOM",
+      "message": "You hear in the distance the chirping of a song bird.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3018,
+      "context": "ROUTINE CLIFF-OBJECT",
+      "message": "That would be very unwise. Perhaps even fatal.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3041,
+      "context": "ROUTINE ROPE-FUNCTION",
+      "message": "The rope drops over the side and comes within ten feet of the floor.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3068,
+      "context": "ROUTINE ROPE-FUNCTION",
+      "message": "The rope is now untied.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3075,
+      "context": "ROUTINE ROPE-FUNCTION",
+      "message": "The rope drops gently to the floor below.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3093,
+      "context": "ROUTINE SLIDE-FUNCTION",
+      "message": "You tumble down the slide....",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3109,
+      "context": "ROUTINE SANDWICH-BAG-FCN",
+      "message": "It smells of hot peppers.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3122,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "All such attacks are vain in your condition.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3126,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "Even such an action is beyond your capabilities.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3129,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "Might as well. You've got an eternity.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3133,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "You're dead! How can you think of your score?",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3137,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "You have no possessions.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3141,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "and objects appear indistinct. Although there is no light, the room seems dimly illuminated.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3143,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "and objects appear indistinct. Although there is no light, the room seems dimly illuminated.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3145,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "and objects appear indistinct. Although there is no light, the room seems dimly illuminated.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3148,
+      "context": "ROUTINE DEAD-FUNCTION",
+      "message": "Although there is no light, the room seems dimly illuminated.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3169,
+      "context": "UNKNOWN",
+      "message": "Your prayers are not heard.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3179,
+      "context": "ROUTINE LAKE-PSEUDO",
+      "message": "There's not much lake left....",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3194,
+      "context": "ROUTINE CHASM-PSEUDO",
+      "message": "You look before leaping, and realize that you would never survive.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3197,
+      "context": "ROUTINE CHASM-PSEUDO",
+      "message": "It's too far to jump, and there's no bridge.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3218,
+      "context": "ROUTINE DOOR-PSEUDO",
+      "message": "The door won't budge.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3224,
+      "context": "ROUTINE PAINT-PSEUDO",
+      "message": "Some paint chips away, revealing more paint.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3228,
+      "context": "ROUTINE GAS-PSEUDO",
+      "message": "There is too much gas to blow away.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3499,
+      "context": "ROUTINE HERO-BLOW",
+      "message": "Attacking the",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 3998,
+      "context": "ROUTINE V-DIAGNOSE",
+      "message": "survive one serious wound",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 4056,
+      "context": "ROUTINE JIGS-UP",
+      "message": "Bad luck, huh?",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 4148,
+      "context": "ROUTINE STUPID-CONTAINER",
+      "message": "There are lots of",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 4158,
+      "context": "ROUTINE DUMB-CONTAINER",
+      "message": "It looks pretty much like a",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 4169,
+      "context": "ROUTINE CHAIN-PSEUDO",
+      "message": "The chain is secure.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 4171,
+      "context": "ROUTINE CHAIN-PSEUDO",
+      "message": "Perhaps you should do that to the basket.",
+      "type": "TELL"
+    },
+    {
+      "file": "1actions.zil",
+      "line": 4173,
+      "context": "ROUTINE CHAIN-PSEUDO",
+      "message": "The chain secures a basket within the shaft.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 126,
+      "context": "ROUTINE SAILOR-FCN",
+      "message": "You can't talk to the sailor that way.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 140,
+      "context": "ROUTINE SAILOR-FCN",
+      "message": "The seaman looks up and maneuvers the boat toward shore. He cries out \\",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 150,
+      "context": "ROUTINE SAILOR-FCN",
+      "message": "Nothing happens anymore.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 152,
+      "context": "ROUTINE SAILOR-FCN",
+      "message": "Nothing happens yet.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 159,
+      "context": "ROUTINE SAILOR-FCN",
+      "message": "I think that phrase is getting a bit worn out.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 205,
+      "context": "ROUTINE GRUE-FUNCTION",
+      "message": "It makes no sound but is always lurking in the darkness nearby.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 225,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "Talking to yourself is said to be a sign of impending mental collapse.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 236,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "Auto-cannibalism is not the answer.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 241,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "Suicide is not the answer.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 244,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "Why don't you just walk like normal people?",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 247,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "How romantic!",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 251,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "Your image in the mirror looks tired.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 255,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "A good trick, as you are currently invisible.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 261,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "What you can see looks pretty much as usual, sorry to say.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 264,
+      "context": "ROUTINE CRETIN-FCN",
+      "message": "That's difficult unless your eyes are prehensile.",
+      "type": "TELL"
+    },
+    {
+      "file": "gglobals.zil",
+      "line": 301,
+      "context": "ROUTINE ZORKMID-FUNCTION",
+      "message": "The best way to find zorkmids is to go out and look for them.",
+      "type": "TELL"
+    },
+    {
+      "file": "gmain.zil",
+      "line": 144,
+      "context": "UNKNOWN",
+      "message": ":  end multiple exceptions",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 65,
+      "context": "ROUTINE V-RESTART",
+      "message": "Restarting.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 67,
+      "context": "ROUTINE V-RESTART",
+      "message": "Restarting.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 88,
+      "context": "ROUTINE V-SCRIPT",
+      "message": "Here begins a transcript of interaction with",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 124,
+      "context": "ROUTINE V-VERIFY",
+      "message": "Verifying disk...",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 126,
+      "context": "ROUTINE V-VERIFY",
+      "message": "The disk is correct.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 128,
+      "context": "ROUTINE V-VERIFY",
+      "message": "** Disk Failure **",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 136,
+      "context": "ROUTINE V-RANDOM",
+      "message": "Illegal call to #RND.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 154,
+      "context": "ROUTINE V-ADVENT",
+      "message": "A hollow voice says \\",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 165,
+      "context": "ROUTINE V-ALARM",
+      "message": "He's wide awake, or haven't you noticed...",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 171,
+      "context": "ROUTINE V-ANSWER",
+      "message": "Nobody seems to be awaiting your answer.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 196,
+      "context": "ROUTINE V-BACK",
+      "message": "Sorry, my memory is poor. Please give a direction.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 234,
+      "context": "ROUTINE V-BRUSH",
+      "message": "If you wish, but heaven only knows why.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 237,
+      "context": "ROUTINE V-BUG",
+      "message": "Bug? Not in a flawless program like this! (Cough, cough).",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 241,
+      "context": "ROUTINE TELL-NO-PRSI",
+      "message": "You didn't say with what!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 394,
+      "context": "ROUTINE V-CUT",
+      "message": "Your skillful   into innumerable slivers which blow away.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 410,
+      "context": "ROUTINE V-DIG",
+      "message": "There's no reason to be digging here.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 414,
+      "context": "ROUTINE V-DIG",
+      "message": "Digging with the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 416,
+      "context": "ROUTINE V-DIG",
+      "message": "Digging with a",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 430,
+      "context": "ROUTINE V-DISEMBARK",
+      "message": "You realize that getting out here would be fatal.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 464,
+      "context": "ROUTINE V-DISENCHANT",
+      "message": "The sweet smell has dispersed.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 489,
+      "context": "ROUTINE V-EAT",
+      "message": "Thank you very much. It really hit the spot.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 491,
+      "context": "ROUTINE V-EAT",
+      "message": "Thank you very much. It really hit the spot.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 545,
+      "context": "ROUTINE V-ECHO",
+      "message": "echo echo ...",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 546,
+      "context": "ROUTINE V-ECHO",
+      "message": "echo echo ...",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 548,
+      "context": "ROUTINE V-ECHO",
+      "message": "echo echo ...",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 558,
+      "context": "ROUTINE V-ENCHANT",
+      "message": "You must be more specific.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 564,
+      "context": "ROUTINE V-ENCHANT",
+      "message": "The wand stops glowing, but there is no other obvious effect.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 567,
+      "context": "ROUTINE V-ENCHANT",
+      "message": "That might have done something, but it's hard to tell with a",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 572,
+      "context": "ROUTINE V-ENCHANT",
+      "message": "A strong odor of chocolate permeates the room.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 585,
+      "context": "ROUTINE V-ENCHANT",
+      "message": "Filched!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 587,
+      "context": "ROUTINE V-ENCHANT",
+      "message": "You can't filch the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 602,
+      "context": "UNKNOWN",
+      "message": "The wand stops glowing, but there is no other apparent effect.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 683,
+      "context": "ROUTINE V-FIND",
+      "message": "You're around here somewhere...",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 699,
+      "context": "ROUTINE V-FIND",
+      "message": "Beats me.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 705,
+      "context": "ROUTINE V-FROBOZZ",
+      "message": "The FROBOZZ Corporation created, owns, and operates this dungeon.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 743,
+      "context": "ROUTINE V-INCANT",
+      "message": "The wand glows very brightly for a moment.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 748,
+      "context": "ROUTINE V-INCANT",
+      "message": "The incantation echoes back faintly, but nothing else happens.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 751,
+      "context": "ROUTINE V-INCANT",
+      "message": "The incantation echoes back faintly, but nothing else happens.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 763,
+      "context": "ROUTINE V-KISS",
+      "message": "I'd sooner kiss a pig.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 767,
+      "context": "ROUTINE V-KNOCK",
+      "message": "Nobody's home.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 769,
+      "context": "ROUTINE V-KNOCK",
+      "message": "Why knock on a",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 808,
+      "context": "ROUTINE V-LAUNCH",
+      "message": "That's pretty weird.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 828,
+      "context": "ROUTINE V-LEAP",
+      "message": "This was not a very safe place to try jumping.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 863,
+      "context": "ROUTINE V-LOOK-BEHIND",
+      "message": "There is nothing behind the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 912,
+      "context": "ROUTINE PRE-MOVE",
+      "message": "You aren't an accomplished enough juggler.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 931,
+      "context": "ROUTINE PRE-MUNG",
+      "message": "is futile.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 933,
+      "context": "ROUTINE PRE-MUNG",
+      "message": "is futile.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 935,
+      "context": "ROUTINE PRE-MUNG",
+      "message": "is futile.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 936,
+      "context": "ROUTINE PRE-MUNG",
+      "message": "is futile.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 961,
+      "context": "ROUTINE V-ODYSSEUS",
+      "message": "Wasn't he a sailor?",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 964,
+      "context": "ROUTINE V-OIL",
+      "message": "You probably put spinach in your gas tank, too.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1015,
+      "context": "ROUTINE V-PLAY",
+      "message": "You become so engrossed in the role of the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1036,
+      "context": "ROUTINE V-POUR-ON",
+      "message": "The water spills over the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1117,
+      "context": "ROUTINE V-PUT-BEHIND",
+      "message": "That hiding place is too obvious.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1135,
+      "context": "ROUTINE V-RAPE",
+      "message": "What a (ahem!) strange idea.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1185,
+      "context": "ROUTINE V-SAY",
+      "message": "Say what?",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1189,
+      "context": "ROUTINE V-SAY",
+      "message": "You must address the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1193,
+      "context": "ROUTINE V-SAY",
+      "message": "Talking to yourself is a sign of impending mental collapse.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1202,
+      "context": "ROUTINE V-SEND",
+      "message": "Why would you send for the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1204,
+      "context": "ROUTINE V-SEND",
+      "message": "That doesn't make sends.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1282,
+      "context": "ROUTINE V-SPIN",
+      "message": "You can't spin that!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1289,
+      "context": "ROUTINE V-SQUEEZE",
+      "message": "How singularly useless. AUX",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1291,
+      "context": "ROUTINE V-SQUEEZE",
+      "message": "How singularly useless. AUX",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1302,
+      "context": "ROUTINE V-STAB",
+      "message": "No doubt you propose to stab the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1317,
+      "context": "ROUTINE V-STRIKE",
+      "message": "Since you aren't versed in hand-to-hand combat, you'd better attack the   with a weapon.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1328,
+      "context": "ROUTINE V-SWIM",
+      "message": "Swimming isn't usually allowed in the  .",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1339,
+      "context": "ROUTINE V-SWIM",
+      "message": "Between the rocks and waves, you wouldn't last a minute!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1345,
+      "context": "ROUTINE V-SWIM",
+      "message": "Go jump in a lake!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1356,
+      "context": "ROUTINE PRE-TAKE",
+      "message": "You are already wearing it.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1361,
+      "context": "ROUTINE PRE-TAKE",
+      "message": "You can't reach something that's inside a closed container.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1385,
+      "context": "ROUTINE V-TAKE",
+      "message": "You are now wearing the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1434,
+      "context": "ROUTINE V-THROUGH",
+      "message": "You can't go more than part way through the curtain.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1441,
+      "context": "ROUTINE V-THROUGH",
+      "message": "That would involve quite a contortion!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1448,
+      "context": "ROUTINE V-THROW",
+      "message": "A terrific throw! The",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1472,
+      "context": "ROUTINE V-TIE-UP",
+      "message": "You could certainly never tie it with that!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1512,
+      "context": "ROUTINE V-UNTIE",
+      "message": "This cannot be tied, so it cannot be untied!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1584,
+      "context": "ROUTINE V-WALK-AROUND",
+      "message": "Use compass directions for movement.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1590,
+      "context": "ROUTINE V-WALK-TO",
+      "message": "It's here!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1592,
+      "context": "ROUTINE V-WALK-TO",
+      "message": "You should supply a direction!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1599,
+      "context": "ROUTINE V-WEAR",
+      "message": "You can't wear the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1614,
+      "context": "ROUTINE V-WISH",
+      "message": "With luck, your wish will come true.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1618,
+      "context": "ROUTINE V-ZORK",
+      "message": "At your service!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1704,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(floating in midair)",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1706,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(floating in midair)",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1707,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(floating in midair)",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1709,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(floating in midair)",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1710,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(floating in midair)",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1712,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(floating in midair)",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1715,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(floating in midair)",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1719,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(floating in midair)",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1725,
+      "context": "ROUTINE DESCRIBE-OBJECT",
+      "message": "(outside the",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1821,
+      "context": "ROUTINE FIRSTER",
+      "message": "Your collection of treasures consists of:",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1860,
+      "context": "ROUTINE SCORE-UPD",
+      "message": "An almost inaudible voice whispers in your ear, \\",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 1934,
+      "context": "ROUTINE ITAKE",
+      "message": "Your load is too heavy , especially in light of your condition.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 2040,
+      "context": "ROUTINE NO-GO-TELL",
+      "message": "You can't go there without a vehicle. OPTIONAL AUX",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 2042,
+      "context": "ROUTINE NO-GO-TELL",
+      "message": "You can't go there without a vehicle. OPTIONAL AUX",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 2080,
+      "context": "ROUTINE GOTO",
+      "message": "The balloon lands.",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 2099,
+      "context": "UNKNOWN",
+      "message": "There are sinister gurgling noises in the darkness all around you!",
+      "type": "TELL"
+    },
+    {
+      "file": "gverbs.zil",
+      "line": 2114,
+      "context": "UNKNOWN",
+      "message": "room  and devoured you!",
+      "type": "TELL"
+    },
+    {
+      "file": "gparser.zil",
+      "line": 172,
+      "context": "UNKNOWN",
+      "message": "Warning: only the first word after OOPS is used.",
+      "type": "TELL"
+    },
+    {
+      "file": "gparser.zil",
+      "line": 194,
+      "context": "UNKNOWN",
+      "message": "Beg pardon?",
+      "type": "TELL"
+    },
+    {
+      "file": "gparser.zil",
+      "line": 197,
+      "context": "UNKNOWN",
+      "message": "It's difficult to repeat fragments.",
+      "type": "TELL"
+    },
+    {
+      "file": "gparser.zil",
+      "line": 200,
+      "context": "UNKNOWN",
+      "message": "That would just repeat a mistake.",
+      "type": "TELL"
+    },
+    {
+      "file": "gparser.zil",
+      "line": 1065,
+      "context": "ROUTINE GET-OBJECT",
+      "message": "There seems to be a noun missing in that sentence!",
+      "type": "TELL"
+    },
+    {
+      "file": "gparser.zil",
+      "line": 1113,
+      "context": "UNKNOWN",
+      "message": "There seems to be a noun missing in that sentence!",
+      "type": "TELL"
+    }
+  ],
+  "partialMatches": []
+}
