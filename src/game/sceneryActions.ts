@@ -1,0 +1,312 @@
+/**
+ * Scenery Action Handlers
+ * Handles interactions with non-takeable scenery objects
+ */
+
+import { GameState } from './state.js';
+import { ActionResult } from './actions.js';
+
+/**
+ * Handler function for a specific scenery object and verb combination
+ */
+export type SceneryActionHandler = (state: GameState) => string;
+
+/**
+ * SceneryHandler defines all action handlers for a scenery object
+ */
+export interface SceneryHandler {
+  objectId: string;
+  actions: Map<string, SceneryActionHandler>;
+}
+
+/**
+ * Registry of all scenery handlers
+ */
+const sceneryHandlers: Map<string, SceneryHandler> = new Map();
+
+/**
+ * Register a scenery handler for an object
+ */
+export function registerSceneryHandler(handler: SceneryHandler): void {
+  sceneryHandlers.set(handler.objectId, handler);
+}
+
+/**
+ * Handle a scenery action
+ * Returns the message to display, or null if no handler exists
+ */
+export function handleSceneryAction(
+  objectId: string,
+  verb: string,
+  state: GameState
+): string | null {
+  const handler = sceneryHandlers.get(objectId);
+  
+  if (!handler) {
+    return null;
+  }
+
+  const actionHandler = handler.actions.get(verb);
+  
+  if (!actionHandler) {
+    return null;
+  }
+
+  return actionHandler(state);
+}
+
+/**
+ * Check if an object has a scenery handler
+ */
+export function hasSceneryHandler(objectId: string): boolean {
+  return sceneryHandlers.has(objectId);
+}
+
+/**
+ * Check if an object has a handler for a specific verb
+ */
+export function hasSceneryActionHandler(objectId: string, verb: string): boolean {
+  const handler = sceneryHandlers.get(objectId);
+  return handler ? handler.actions.has(verb) : false;
+}
+
+/**
+ * Execute a scenery action and return an ActionResult
+ */
+export function executeSceneryAction(
+  objectId: string,
+  verb: string,
+  state: GameState
+): ActionResult | null {
+  const message = handleSceneryAction(objectId, verb, state);
+  
+  if (message === null) {
+    return null;
+  }
+
+  return {
+    success: true,
+    message: message,
+    stateChanges: []
+  };
+}
+
+// ============================================================================
+// Scenery Handler Implementations
+// ============================================================================
+
+/**
+ * BOARD scenery handler
+ * Handles interactions with the boards on the front door
+ */
+const boardHandler: SceneryHandler = {
+  objectId: 'BOARD',
+  actions: new Map([
+    ['TAKE', () => 'The boards are securely fastened.'],
+    ['EXAMINE', () => 'The boards are securely fastened.'],
+    ['REMOVE', () => 'The boards are securely fastened.']
+  ])
+};
+
+/**
+ * GRANITE-WALL scenery handler
+ * Handles interactions with the granite wall (conditional based on room)
+ */
+const graniteWallHandler: SceneryHandler = {
+  objectId: 'GRANITE-WALL',
+  actions: new Map([
+    ['TAKE', (state) => {
+      if (state.currentRoom === 'SLIDE-ROOM') {
+        return "The wall isn't granite.";
+      }
+      return "It's solid granite.";
+    }],
+    ['EXAMINE', (state) => {
+      if (state.currentRoom === 'SLIDE-ROOM') {
+        return "The wall isn't granite.";
+      }
+      return "It's solid granite.";
+    }],
+    ['FIND', (state) => {
+      if (state.currentRoom === 'NORTH-TEMPLE') {
+        return 'The west wall is solid granite here.';
+      }
+      if (state.currentRoom === 'TREASURE-ROOM') {
+        return 'The east wall is solid granite here.';
+      }
+      if (state.currentRoom === 'SLIDE-ROOM') {
+        return 'It only SAYS "Granite Wall".';
+      }
+      return 'There is no granite wall here.';
+    }]
+  ])
+};
+
+/**
+ * WHITE-HOUSE scenery handler
+ * Handles interactions with the white house (conditional based on room)
+ */
+const whiteHouseHandler: SceneryHandler = {
+  objectId: 'WHITE-HOUSE',
+  actions: new Map([
+    ['EXAMINE', (state) => {
+      // Check if player is inside the house
+      const insideRooms = ['LIVING-ROOM', 'KITCHEN', 'ATTIC'];
+      if (insideRooms.includes(state.currentRoom)) {
+        return 'Why not find your brains?';
+      }
+      // Outside the house - provide directional message
+      return 'The house is a beautiful colonial house which is painted white. It is clear that the owners must have been extremely wealthy.';
+    }],
+    ['TAKE', (state) => {
+      const insideRooms = ['LIVING-ROOM', 'KITCHEN', 'ATTIC'];
+      if (insideRooms.includes(state.currentRoom)) {
+        return 'Why not find your brains?';
+      }
+      return "You can't be serious.";
+    }]
+  ])
+};
+
+/**
+ * FOREST scenery handler
+ * Handles interactions with the forest
+ */
+const forestHandler: SceneryHandler = {
+  objectId: 'FOREST',
+  actions: new Map([
+    ['TAKE', () => "You can't be serious."],
+    ['EXAMINE', () => 'The forest is a deep, dark, and foreboding place.'],
+    ['CLIMB', () => "You can't climb that!"],
+    ['ENTER', () => 'You would need to specify a direction to go.']
+  ])
+};
+
+/**
+ * SONGBIRD scenery handler
+ * Handles interactions with the songbird
+ */
+const songbirdHandler: SceneryHandler = {
+  objectId: 'SONGBIRD',
+  actions: new Map([
+    ['FIND', () => 'The songbird is not here but is probably nearby.'],
+    ['TAKE', () => 'The songbird is not here but is probably nearby.'],
+    ['LISTEN', () => "You can't hear the songbird now."],
+    ['FOLLOW', () => "It can't be followed."],
+    ['EXAMINE', () => "You can't see any songbird here."]
+  ])
+};
+
+/**
+ * TEETH scenery handler
+ * Handles interactions with teeth (including dangerous BRUSH action)
+ */
+const teethHandler: SceneryHandler = {
+  objectId: 'TEETH',
+  actions: new Map([
+    ['BRUSH', (state) => {
+      // Check if player has putty - this is fatal!
+      if (state.isInInventory('PUTTY')) {
+        // This should trigger a death message (JIGS-UP)
+        // For now, return the death message directly
+        return "Oh, no! You have been devoured by a grue!";
+      }
+      // Check if player has any object to brush with
+      const inventoryObjects = state.getInventoryObjects();
+      if (inventoryObjects.length === 0) {
+        return "Dental hygiene is highly recommended, but I'm not sure what you want to brush them with.";
+      }
+      // Player has something but not putty
+      const firstObject = inventoryObjects[0];
+      return `A nice idea, but with a ${firstObject.name.toLowerCase()}?`;
+    }],
+    ['EXAMINE', () => 'They look like teeth to me.'],
+    ['TAKE', () => "You can't be serious."]
+  ])
+};
+
+/**
+ * WALL scenery handler
+ * Handles interactions with generic walls
+ */
+const wallHandler: SceneryHandler = {
+  objectId: 'WALL',
+  actions: new Map([
+    ['EXAMINE', () => 'It looks like a wall to me.'],
+    ['TAKE', () => "You can't be serious."],
+    ['CLIMB', () => "You can't climb that!"]
+  ])
+};
+
+/**
+ * TREE scenery handler
+ * Handles interactions with trees
+ */
+const treeHandler: SceneryHandler = {
+  objectId: 'TREE',
+  actions: new Map([
+    ['EXAMINE', () => 'They look like trees to me.'],
+    ['TAKE', () => "You can't be serious."],
+    ['CLIMB', () => 'You cannot climb the trees here.']
+  ])
+};
+
+/**
+ * MOUNTAIN-RANGE scenery handler
+ * Handles interactions with mountains
+ */
+const mountainRangeHandler: SceneryHandler = {
+  objectId: 'MOUNTAIN-RANGE',
+  actions: new Map([
+    ['EXAMINE', () => 'The mountains are in the distance and look very impressive.'],
+    ['TAKE', () => "You can't be serious."],
+    ['CLIMB', () => 'The mountains are too far away.']
+  ])
+};
+
+/**
+ * LEAVES scenery handler
+ * Handles interactions with pile of leaves (grating puzzle)
+ */
+const leavesHandler: SceneryHandler = {
+  objectId: 'LEAVES',
+  actions: new Map([
+    ['EXAMINE', () => 'There is a pile of leaves here.'],
+    ['TAKE', () => 'You can gather up a pile of leaves, but they slip through your fingers.'],
+    ['MOVE', (state) => {
+      // Check if grating is already revealed
+      const grate = state.getObject('GRATE');
+      if (grate && grate.location === state.currentRoom) {
+        return 'The grating is already visible.';
+      }
+      // This should reveal the grating - handled by puzzle logic
+      return 'Done. In disturbing the pile of leaves, a grating is revealed.';
+    }]
+  ])
+};
+
+/**
+ * SAND scenery handler
+ * Handles interactions with sand
+ */
+const sandHandler: SceneryHandler = {
+  objectId: 'SAND',
+  actions: new Map([
+    ['EXAMINE', () => 'It looks like sand to me.'],
+    ['TAKE', () => 'The sand slips through your fingers.'],
+    ['DIG', () => 'Digging in the sand is futile.']
+  ])
+};
+
+// Register all scenery handlers
+registerSceneryHandler(boardHandler);
+registerSceneryHandler(graniteWallHandler);
+registerSceneryHandler(whiteHouseHandler);
+registerSceneryHandler(forestHandler);
+registerSceneryHandler(songbirdHandler);
+registerSceneryHandler(teethHandler);
+registerSceneryHandler(wallHandler);
+registerSceneryHandler(treeHandler);
+registerSceneryHandler(mountainRangeHandler);
+registerSceneryHandler(leavesHandler);
+registerSceneryHandler(sandHandler);

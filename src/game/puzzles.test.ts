@@ -91,7 +91,7 @@ describe('Dam Puzzle', () => {
     const result = DamPuzzle.turnBolt(state, '');
     
     expect(result.success).toBe(false);
-    expect(result.message).toContain('require a tool');
+    expect(result.message).toContain("won't turn with your best effort");
   });
 
   it('should not turn bolt when gate flag is off', () => {

@@ -17,6 +17,9 @@ import {
   getDarknessMessage,
   canTurnOffLight
 } from '../engine/lighting.js';
+import { executeSceneryAction } from './sceneryActions.js';
+import { executeSpecialBehavior } from './specialBehaviors.js';
+import { getConditionalRoomDescription, getConditionalObjectDescription } from './conditionalMessages.js';
 
 export interface StateChange {
   type: string;
@@ -54,6 +57,18 @@ export class TakeAction implements ActionHandler {
         message: "You can't see that here.",
         stateChanges: []
       };
+    }
+
+    // Check for scenery handler first
+    const sceneryResult = executeSceneryAction(objectId, 'TAKE', state);
+    if (sceneryResult) {
+      return sceneryResult;
+    }
+
+    // Check for special behavior
+    const specialResult = executeSpecialBehavior(objectId, 'TAKE', state);
+    if (specialResult) {
+      return specialResult;
     }
 
     // Check if object is already in inventory
@@ -330,6 +345,18 @@ export class ExamineAction implements ActionHandler {
         message: currentRoom.description,
         stateChanges: []
       };
+    }
+
+    // Check for scenery handler first
+    const sceneryResult = executeSceneryAction(objectId, 'EXAMINE', state);
+    if (sceneryResult) {
+      return sceneryResult;
+    }
+
+    // Check for special behavior
+    const specialResult = executeSpecialBehavior(objectId, 'EXAMINE', state);
+    if (specialResult) {
+      return specialResult;
     }
 
     // Get the object
@@ -670,8 +697,9 @@ export function formatRoomDescription(room: any, state: GameState): string {
   // Room name
   output += room.name + '\n';
 
-  // Room description (full description for unvisited or LOOK command)
-  output += room.description;
+  // Room description (check for conditional description first)
+  const conditionalDesc = getConditionalRoomDescription(room.id, state);
+  output += conditionalDesc || room.description;
 
   // List visible objects in room
   const objectsInRoom = state.getObjectsInCurrentRoom();
@@ -702,12 +730,16 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
   // Room name
   output += room.name + '\n';
 
+  // Check for conditional description
+  const conditionalDesc = getConditionalRoomDescription(room.id, state);
+  const description = conditionalDesc || room.description;
+
   // Show full description if unvisited or verbose mode
   if (!room.visited || verbose) {
-    output += room.description;
+    output += description;
   } else {
     // Brief description for visited rooms
-    output += room.description;
+    output += description;
   }
 
   // List visible objects in room
@@ -947,9 +979,17 @@ function getContainerWeight(container: GameObjectImpl, state: GameState): number
  * Removes an object from a container (synonym for TAKE FROM)
  */
 export class RemoveAction implements ActionHandler {
-  execute(state: GameState, objectId: string, containerId: string): ActionResult {
+  execute(state: GameState, objectId: string, containerId?: string): ActionResult {
+    // If no container specified, treat as scenery interaction
+    if (!containerId) {
+      const sceneryResult = executeSceneryAction(objectId, 'REMOVE', state);
+      if (sceneryResult) {
+        return sceneryResult;
+      }
+    }
+
     const obj = state.getObject(objectId) as GameObjectImpl;
-    const container = state.getObject(containerId) as GameObjectImpl;
+    const container = containerId ? state.getObject(containerId) as GameObjectImpl : null;
     
     if (!obj) {
       return {
@@ -959,10 +999,27 @@ export class RemoveAction implements ActionHandler {
       };
     }
 
-    if (!container) {
+    if (containerId && !container) {
       return {
         success: false,
         message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check for scenery handler when trying to remove from something
+    if (containerId) {
+      const sceneryResult = executeSceneryAction(objectId, 'REMOVE', state);
+      if (sceneryResult) {
+        return sceneryResult;
+      }
+    }
+
+    // If no container, can't remove
+    if (!container || !containerId) {
+      return {
+        success: false,
+        message: "Remove what from what?",
         stateChanges: []
       };
     }
@@ -1200,6 +1257,12 @@ export class AttackAction implements ActionHandler {
     if (targetId === 'MIRROR-1' || targetId === 'MIRROR-2') {
       const { MirrorPuzzle } = require('./puzzles.js');
       return MirrorPuzzle.breakMirror(state);
+    }
+
+    // Check for special behavior
+    const specialResult = executeSpecialBehavior(targetId, 'ATTACK', state, weaponId);
+    if (specialResult) {
+      return specialResult;
     }
 
     // Check if target is an actor
@@ -2236,5 +2299,74 @@ export class SayAction implements ActionHandler {
     // Special handling for magic word
     const { MagicWordPuzzle } = require('./puzzles.js');
     return MagicWordPuzzle.sayMagicWord(state, word);
+  }
+}
+
+/**
+ * DRINK action handler
+ * Player drinks something
+ */
+export class DrinkAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check for special behavior first
+    const specialResult = executeSpecialBehavior(objectId, 'DRINK', state);
+    if (specialResult) {
+      return specialResult;
+    }
+
+    // Check if object is drinkable
+    if (!obj.hasFlag('DRINKBIT')) {
+      return {
+        success: false,
+        message: "I don't think that the " + obj.name.toLowerCase() + " would agree with you.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: true,
+      message: "Thank you very much. I was rather thirsty (from all this talking, probably).",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * EXORCISE action handler
+ * Player attempts to exorcise spirits
+ */
+export class ExorciseAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check for special behavior first
+    const specialResult = executeSpecialBehavior(objectId, 'EXORCISE', state);
+    if (specialResult) {
+      return specialResult;
+    }
+
+    return {
+      success: false,
+      message: "You can't exorcise that!",
+      stateChanges: []
+    };
   }
 }

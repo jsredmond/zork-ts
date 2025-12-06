@@ -13,6 +13,17 @@ interface ZilMessage {
   context: string;
   message: string;
   type: 'TELL' | 'JIGS-UP' | 'DESC' | 'LDESC' | 'TEXT' | 'FDESC';
+  object?: string;        // Associated object (if any)
+  verb?: string;          // Associated verb (if any)
+  condition?: string;     // Any conditional logic
+}
+
+/**
+ * Check if a line is a comment
+ */
+function isCommentLine(line: string): boolean {
+  const trimmed = line.trim();
+  return trimmed.startsWith(';') || trimmed.startsWith('"');
 }
 
 /**
@@ -27,30 +38,43 @@ function extractMessagesFromFile(filePath: string): ZilMessage[] {
     const line = lines[i];
     const lineNum = i + 1;
     
+    // Skip comment lines
+    if (isCommentLine(line)) {
+      continue;
+    }
+    
     // Extract TELL messages
     if (line.includes('<TELL')) {
       const message = extractTellMessage(lines, i);
       if (message) {
+        const contextInfo = getContextWithDetails(lines, i);
         messages.push({
           file: path.basename(filePath),
           line: lineNum,
-          context: getContext(lines, i),
+          context: contextInfo.context,
           message: message,
-          type: 'TELL'
+          type: 'TELL',
+          object: contextInfo.object,
+          verb: contextInfo.verb,
+          condition: contextInfo.condition
         });
       }
     }
     
     // Extract JIGS-UP messages (death messages)
     if (line.includes('<JIGS-UP')) {
-      const message = extractJigsUpMessage(line);
+      const message = extractJigsUpMessage(lines, i);
       if (message) {
+        const contextInfo = getContextWithDetails(lines, i);
         messages.push({
           file: path.basename(filePath),
           line: lineNum,
-          context: getContext(lines, i),
+          context: contextInfo.context,
           message: message,
-          type: 'JIGS-UP'
+          type: 'JIGS-UP',
+          object: contextInfo.object,
+          verb: contextInfo.verb,
+          condition: contextInfo.condition
         });
       }
     }
@@ -59,12 +83,14 @@ function extractMessagesFromFile(filePath: string): ZilMessage[] {
     if (line.includes('(DESC ')) {
       const message = extractQuotedString(line);
       if (message) {
+        const contextInfo = getContextWithDetails(lines, i);
         messages.push({
           file: path.basename(filePath),
           line: lineNum,
-          context: getContext(lines, i),
+          context: contextInfo.context,
           message: message,
-          type: 'DESC'
+          type: 'DESC',
+          object: contextInfo.object
         });
       }
     }
@@ -72,12 +98,14 @@ function extractMessagesFromFile(filePath: string): ZilMessage[] {
     if (line.includes('(LDESC ')) {
       const message = extractQuotedString(line);
       if (message) {
+        const contextInfo = getContextWithDetails(lines, i);
         messages.push({
           file: path.basename(filePath),
           line: lineNum,
-          context: getContext(lines, i),
+          context: contextInfo.context,
           message: message,
-          type: 'LDESC'
+          type: 'LDESC',
+          object: contextInfo.object
         });
       }
     }
@@ -92,17 +120,20 @@ function extractMessagesFromFile(filePath: string): ZilMessage[] {
 function extractTellMessage(lines: string[], startIndex: number): string | null {
   let message = '';
   let inMessage = false;
+  let depth = 0;
   
-  for (let i = startIndex; i < lines.length && i < startIndex + 20; i++) {
+  for (let i = startIndex; i < lines.length && i < startIndex + 30; i++) {
     const line = lines[i];
     
     if (line.includes('<TELL')) {
       inMessage = true;
+      depth = 1;
       // Check if message starts on same line
       const match = line.match(/<TELL\s+"([^"]+)"/);
       if (match) {
         message = match[1];
-        if (line.includes('CR>')) {
+        // Check if TELL ends on same line
+        if (line.includes('CR>') && !line.match(/<TELL[^>]*>/g)?.some((_, idx) => idx > 0)) {
           break;
         }
         continue;
@@ -110,15 +141,22 @@ function extractTellMessage(lines: string[], startIndex: number): string | null 
     }
     
     if (inMessage) {
-      // Extract quoted strings
-      const match = line.match(/"([^"]+)"/);
-      if (match) {
-        if (message) message += ' ';
+      // Track nesting depth
+      const opens = (line.match(/<[A-Z-]+/g) || []).length;
+      const closes = (line.match(/>/g) || []).length;
+      depth += opens - closes;
+      
+      // Extract all quoted strings on this line
+      const matches = line.matchAll(/"([^"]+)"/g);
+      for (const match of matches) {
+        if (message && !message.endsWith(' ') && !match[1].startsWith(' ')) {
+          message += ' ';
+        }
         message += match[1];
       }
       
       // Check for end of TELL
-      if (line.includes('CR>') || line.includes('>)')) {
+      if (depth <= 0 || line.includes('CR>')) {
         break;
       }
     }
@@ -128,11 +166,47 @@ function extractTellMessage(lines: string[], startIndex: number): string | null 
 }
 
 /**
- * Extract JIGS-UP message (death message)
+ * Extract JIGS-UP message (death message) that may span multiple lines
  */
-function extractJigsUpMessage(line: string): string | null {
-  const match = line.match(/<JIGS-UP\s+"([^"]+)"/);
-  return match ? cleanMessage(match[1]) : null;
+function extractJigsUpMessage(lines: string[], startIndex: number): string | null {
+  let message = '';
+  let inMessage = false;
+  
+  for (let i = startIndex; i < lines.length && i < startIndex + 20; i++) {
+    const line = lines[i];
+    
+    if (line.includes('<JIGS-UP')) {
+      inMessage = true;
+      // Check if message starts on same line
+      const match = line.match(/<JIGS-UP\s+"([^"]+)"/);
+      if (match) {
+        message = match[1];
+        // Check if it ends on same line
+        if (line.includes('>)') || (line.match(/>/g) || []).length >= 2) {
+          break;
+        }
+        continue;
+      }
+    }
+    
+    if (inMessage) {
+      // Extract quoted strings
+      const matches = line.matchAll(/"([^"]+)"/g);
+      for (const match of matches) {
+        if (message && !message.endsWith(' ')) {
+          message += ' ';
+        }
+        message += match[1];
+      }
+      
+      // Check for end of JIGS-UP
+      if (line.includes('>)') || line.match(/>/g)?.length >= 1) {
+        break;
+      }
+    }
+  }
+  
+  return message ? cleanMessage(message) : null;
 }
 
 /**
@@ -162,6 +236,86 @@ function getContext(lines: string[], index: number): string {
   }
   
   return 'UNKNOWN';
+}
+
+/**
+ * Get detailed context including object, verb, and conditions
+ */
+function getContextWithDetails(lines: string[], index: number): {
+  context: string;
+  object?: string;
+  verb?: string;
+  condition?: string;
+} {
+  const context = getContext(lines, index);
+  let object: string | undefined;
+  let verb: string | undefined;
+  let condition: string | undefined;
+  
+  // Extract object from context
+  if (context.startsWith('OBJECT ')) {
+    object = context.substring(7);
+  } else if (context.startsWith('ROOM ')) {
+    object = context.substring(5);
+  } else if (context.startsWith('ROUTINE ')) {
+    const routineName = context.substring(8);
+    // Extract object from routine name (e.g., BOARD-F -> BOARD)
+    if (routineName.endsWith('-F')) {
+      object = routineName.substring(0, routineName.length - 2);
+    } else if (routineName.includes('-')) {
+      // Try to extract object from compound names
+      const parts = routineName.split('-');
+      if (parts.length >= 2) {
+        object = parts[0];
+      }
+    }
+  }
+  
+  // Extract verb from nearby VERB? checks
+  for (let i = Math.max(0, index - 10); i <= Math.min(lines.length - 1, index + 5); i++) {
+    const line = lines[i];
+    const verbMatch = line.match(/<VERB\?\s+([A-Z0-9-]+)/);
+    if (verbMatch) {
+      verb = verbMatch[1];
+      break;
+    }
+  }
+  
+  // Extract conditions from nearby COND, EQUAL?, FSET? statements
+  const conditions: string[] = [];
+  for (let i = Math.max(0, index - 15); i <= index; i++) {
+    const line = lines[i];
+    
+    // Check for EQUAL? conditions
+    const equalMatch = line.match(/<EQUAL\?\s+([^>]+)>/);
+    if (equalMatch) {
+      conditions.push(`EQUAL? ${equalMatch[1].trim()}`);
+    }
+    
+    // Check for FSET? conditions
+    const fsetMatch = line.match(/<FSET\?\s+([^>]+)>/);
+    if (fsetMatch) {
+      conditions.push(`FSET? ${fsetMatch[1].trim()}`);
+    }
+    
+    // Check for FCLEAR? conditions
+    const fclearMatch = line.match(/<FCLEAR\?\s+([^>]+)>/);
+    if (fclearMatch) {
+      conditions.push(`FCLEAR? ${fclearMatch[1].trim()}`);
+    }
+    
+    // Check for IN? conditions
+    const inMatch = line.match(/<IN\?\s+([^>]+)>/);
+    if (inMatch) {
+      conditions.push(`IN? ${inMatch[1].trim()}`);
+    }
+  }
+  
+  if (conditions.length > 0) {
+    condition = conditions.join(' AND ');
+  }
+  
+  return { context, object, verb, condition };
 }
 
 /**

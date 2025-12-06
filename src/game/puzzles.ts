@@ -24,7 +24,7 @@ export class DamPuzzle {
     if (!wrenchId || wrenchId !== 'WRENCH') {
       return {
         success: false,
-        message: "It won't turn with your hands. It seems to require a tool designed for that purpose.",
+        message: "The bolt won't turn with your best effort.",
         stateChanges: []
       };
     }
@@ -294,6 +294,27 @@ export class MirrorPuzzle {
   }
 
   /**
+   * Handle taking/touching the mirror
+   */
+  static takeMirror(state: GameState): ActionResult {
+    const mirrorMung = state.getGlobalVariable('MIRROR_MUNG') || false;
+
+    if (mirrorMung) {
+      return {
+        success: false,
+        message: "Haven't you done enough damage already?",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: false,
+      message: "The mirror is many times your size. Give up.",
+      stateChanges: []
+    };
+  }
+
+  /**
    * Handle examining the mirror
    */
   static examineMirror(state: GameState): ActionResult {
@@ -309,7 +330,7 @@ export class MirrorPuzzle {
 
     return {
       success: true,
-      message: "There is an ugly person staring back at you.",
+      message: "There is an ugly person staring back at you. The mirror is many times your size. Give up.",
       stateChanges: []
     };
   }

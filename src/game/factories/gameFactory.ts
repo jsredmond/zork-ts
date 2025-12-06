@@ -8,6 +8,7 @@ import { createAllRooms } from './roomFactory.js';
 import { createAllObjects, placeObjectsInRooms } from './objectFactory.js';
 import { ALL_ROOMS } from '../data/rooms-complete.js';
 import { ALL_OBJECTS } from '../data/objects-complete.js';
+import { initializeConditionalMessages } from '../conditionalMessages.js';
 
 /**
  * Create a complete initial game state with all rooms and objects
@@ -28,6 +29,9 @@ export function createInitialGameState(): GameState {
   
   // Create the final game state with all rooms and objects
   const gameState = GameState.createInitialState(objects, rooms);
+  
+  // Initialize conditional messages
+  initializeConditionalMessages();
   
   return gameState;
 }

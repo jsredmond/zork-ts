@@ -181,6 +181,13 @@ export class TrollBehavior extends BaseActorBehavior {
     return true;
   }
 
+  /**
+   * Handle talking to the troll
+   */
+  onTalk(state: GameState): string {
+    return "The troll isn't much of a conversationalist.";
+  }
+
   onAttacked(state: GameState, weapon?: GameObject): void {
     const troll = this.getActor(state);
     if (!troll) return;

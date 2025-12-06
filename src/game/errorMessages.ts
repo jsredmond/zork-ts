@@ -20,6 +20,13 @@ export interface ErrorContext {
 }
 
 /**
+ * Safely get object name for error messages
+ */
+function getObjectName(object?: GameObject): string {
+  return object?.name ? object.name.toLowerCase() : 'that';
+}
+
+/**
  * Generate an informative error message based on context
  * Provides specific reasons for action failures
  */
@@ -98,15 +105,17 @@ function getTakeError(object?: GameObject, state?: GameState): string {
   // Check if takeable
   if (!object.hasFlag(ObjectFlag.TAKEBIT)) {
     // Provide specific reasons for common non-takeable objects
+    const objectName = object.name ? object.name.toLowerCase() : 'that';
+    
     if (object.hasFlag(ObjectFlag.ACTORBIT)) {
-      return formatMessage("The {object} wouldn't appreciate that.", { object: object.name.toLowerCase() });
+      return formatMessage("The {object} wouldn't appreciate that.", { object: objectName });
     }
     
     if (object.size && object.size > 50) {
-      return formatMessage(ERROR_MESSAGES.TOO_HEAVY_LIFT, { object: object.name.toLowerCase() });
+      return formatMessage(ERROR_MESSAGES.TOO_HEAVY_LIFT, { object: objectName });
     }
     
-    return formatMessage(ERROR_MESSAGES.CANT_TAKE, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.CANT_TAKE, { object: objectName });
   }
   
   // Check weight
@@ -118,7 +127,8 @@ function getTakeError(object?: GameObject, state?: GameState): string {
     }
   }
   
-  return formatMessage(ERROR_MESSAGES.CANT_TAKE, { object: object.name.toLowerCase() });
+  const objectName = object.name ? object.name.toLowerCase() : 'that';
+  return formatMessage(ERROR_MESSAGES.CANT_TAKE, { object: objectName });
 }
 
 /**
@@ -130,7 +140,7 @@ function getDropError(object?: GameObject, state?: GameState): string {
   }
   
   if (state && !state.isInInventory(object.id)) {
-    return formatMessage(ERROR_MESSAGES.NOT_HOLDING, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.NOT_HOLDING, { object: getObjectName(object) });
   }
   
   return ERROR_MESSAGES.DONT_HAVE;
@@ -146,20 +156,20 @@ function getOpenError(object?: GameObject): string {
   
   // Check if it's a container or door
   if (!object.hasFlag(ObjectFlag.CONTBIT) && !object.hasFlag(ObjectFlag.DOORBIT)) {
-    return formatMessage(ERROR_MESSAGES.MUST_TELL_HOW, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.MUST_TELL_HOW, { object: getObjectName(object) });
   }
   
   // Check if already open
   if (object.hasFlag(ObjectFlag.OPENBIT)) {
-    return ERROR_MESSAGES.ALREADY_OPEN;
+    return formatMessage("The {object} is already open.", { object: getObjectName(object) });
   }
   
   // Check if locked (stored as a property, not a flag)
   if (object.getProperty && object.getProperty('locked')) {
-    return formatMessage(ERROR_MESSAGES.LOCKED, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.LOCKED, { object: getObjectName(object) });
   }
   
-  return formatMessage(ERROR_MESSAGES.CANT_OPEN, { object: object.name.toLowerCase() });
+  return formatMessage(ERROR_MESSAGES.CANT_OPEN, { object: getObjectName(object) });
 }
 
 /**
@@ -172,15 +182,15 @@ function getCloseError(object?: GameObject): string {
   
   // Check if it's a container or door
   if (!object.hasFlag(ObjectFlag.CONTBIT) && !object.hasFlag(ObjectFlag.DOORBIT)) {
-    return formatMessage(ERROR_MESSAGES.MUST_TELL_HOW, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.MUST_TELL_HOW, { object: getObjectName(object) });
   }
   
   // Check if already closed
   if (!object.hasFlag(ObjectFlag.OPENBIT)) {
-    return ERROR_MESSAGES.ALREADY_CLOSED;
+    return formatMessage("The {object} is already closed.", { object: getObjectName(object) });
   }
   
-  return formatMessage(ERROR_MESSAGES.CANT_CLOSE, { object: object.name.toLowerCase() });
+  return formatMessage(ERROR_MESSAGES.CANT_CLOSE, { object: getObjectName(object) });
 }
 
 /**
@@ -193,10 +203,10 @@ function getReadError(object?: GameObject): string {
   
   // Check if object has readable text
   if (!object.hasFlag(ObjectFlag.READBIT)) {
-    return formatMessage(ERROR_MESSAGES.NOTHING_TO_READ, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.NOTHING_TO_READ, { object: getObjectName(object) });
   }
   
-  return formatMessage(ERROR_MESSAGES.CANT_READ, { object: object.name.toLowerCase() });
+  return formatMessage(ERROR_MESSAGES.CANT_READ, { object: getObjectName(object) });
 }
 
 /**
@@ -209,22 +219,22 @@ function getAttackError(object?: GameObject, weapon?: GameObject): string {
   
   // Check if attacking an actor
   if (!object.hasFlag(ObjectFlag.ACTORBIT)) {
-    return formatMessage(ERROR_MESSAGES.CANT_ATTACK, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.CANT_ATTACK, { object: getObjectName(object) });
   }
   
   // Check weapon
   if (!weapon || weapon.id === 'hands') {
-    return formatMessage(ERROR_MESSAGES.ATTACK_WITH_HANDS, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.ATTACK_WITH_HANDS, { object: getObjectName(object) });
   }
   
   if (!weapon.hasFlag(ObjectFlag.WEAPONBIT)) {
     return formatMessage(ERROR_MESSAGES.ATTACK_WITH_OBJECT, { 
-      object: object.name.toLowerCase(),
-      weapon: weapon.name.toLowerCase()
+      object: getObjectName(object),
+      weapon: getObjectName(weapon)
     });
   }
   
-  return formatMessage(ERROR_MESSAGES.CANT_ATTACK, { object: object.name.toLowerCase() });
+  return formatMessage(ERROR_MESSAGES.CANT_ATTACK, { object: getObjectName(object) });
 }
 
 /**
@@ -236,10 +246,10 @@ function getEatDrinkError(object?: GameObject): string {
   }
   
   if (!object.hasFlag(ObjectFlag.FOODBIT) && !object.hasFlag(ObjectFlag.DRINKBIT)) {
-    return formatMessage(ERROR_MESSAGES.CANT_EAT, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.CANT_EAT, { object: getObjectName(object) });
   }
   
-  return formatMessage(ERROR_MESSAGES.CANT_EAT, { object: object.name.toLowerCase() });
+  return formatMessage(ERROR_MESSAGES.CANT_EAT, { object: getObjectName(object) });
 }
 
 /**
@@ -252,15 +262,15 @@ function getMoveError(object?: GameObject): string {
   
   // Check if takeable (moveable objects are usually takeable)
   if (object.hasFlag(ObjectFlag.TAKEBIT)) {
-    return formatMessage("Moving the {object} reveals nothing.", { object: object.name.toLowerCase() });
+    return formatMessage("Moving the {object} reveals nothing.", { object: getObjectName(object) });
   }
   
   // Check if it's too heavy
   if (object.size && object.size > 50) {
-    return formatMessage(ERROR_MESSAGES.CANT_MOVE, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.CANT_MOVE, { object: getObjectName(object) });
   }
   
-  return formatMessage(ERROR_MESSAGES.CANT_MOVE, { object: object.name.toLowerCase() });
+  return formatMessage(ERROR_MESSAGES.CANT_MOVE, { object: getObjectName(object) });
 }
 
 /**
@@ -271,7 +281,7 @@ function getClimbError(object?: GameObject): string {
     return ERROR_MESSAGES.CANT_DO_THAT;
   }
   
-  return formatMessage(ERROR_MESSAGES.CANT_CLIMB, { object: object.name.toLowerCase() });
+  return formatMessage(ERROR_MESSAGES.CANT_CLIMB, { object: getObjectName(object) });
 }
 
 /**
@@ -354,12 +364,12 @@ function getGiveError(object?: GameObject, recipient?: GameObject): string {
   // Check if recipient is an actor
   if (!recipient.hasFlag(ObjectFlag.ACTORBIT)) {
     return formatMessage(ERROR_MESSAGES.CANT_GIVE_TO, { 
-      object: object.name.toLowerCase(),
-      target: recipient.name.toLowerCase()
+      object: getObjectName(object),
+      target: getObjectName(recipient)
     });
   }
   
-  return formatMessage(ERROR_MESSAGES.REFUSES_POLITELY, { object: recipient.name.toLowerCase() });
+  return formatMessage(ERROR_MESSAGES.REFUSES_POLITELY, { object: getObjectName(recipient) });
 }
 
 /**
@@ -367,7 +377,7 @@ function getGiveError(object?: GameObject, recipient?: GameObject): string {
  */
 function getDefaultError(action: string, object?: GameObject): string {
   if (object) {
-    return formatMessage(ERROR_MESSAGES.CANT_DO_THAT_TO, { object: object.name.toLowerCase() });
+    return formatMessage(ERROR_MESSAGES.CANT_DO_THAT_TO, { object: getObjectName(object) });
   }
   
   return ERROR_MESSAGES.CANT_DO_THAT;

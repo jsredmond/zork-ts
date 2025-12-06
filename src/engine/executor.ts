@@ -39,7 +39,9 @@ import {
   UnlockAction,
   WaveAction,
   RaiseAction,
-  LowerAction
+  LowerAction,
+  DrinkAction,
+  ExorciseAction
 } from '../game/actions.js';
 
 /**
@@ -141,6 +143,8 @@ export class CommandExecutor {
     this.actionHandlers.set('WAVE', new WaveAction());
     this.actionHandlers.set('RAISE', new RaiseAction());
     this.actionHandlers.set('LOWER', new LowerAction());
+    this.actionHandlers.set('DRINK', new DrinkAction());
+    this.actionHandlers.set('EXORCISE', new ExorciseAction());
   }
 
   /**

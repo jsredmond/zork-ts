@@ -359,11 +359,119 @@ export function getContextualError(action: string, objectName?: string, reason?:
 
 /**
  * Pick a random message from an array (for variety)
+ * Implements PICK-ONE functionality from ZIL
  * @param messages - Array of possible messages
  * @returns Random message from the array
  */
 export function pickRandomMessage(messages: string[]): string {
   return messages[Math.floor(Math.random() * messages.length)];
+}
+
+/**
+ * Get a random refusal message for impossible actions
+ * @returns Random refusal message
+ */
+export function getRefusalMessage(): string {
+  return pickRandomMessage(REFUSAL_MESSAGES);
+}
+
+/**
+ * Get a random ineffective action message
+ * @param objectName - Name of the object being acted upon
+ * @returns Formatted ineffective action message
+ */
+export function getIneffectiveActionMessage(objectName: string): string {
+  const suffix = pickRandomMessage(INEFFECTIVE_ACTION_MESSAGES);
+  return `${objectName}${suffix}`;
+}
+
+/**
+ * Get a random hello message
+ * @returns Random greeting
+ */
+export function getHelloMessage(): string {
+  return pickRandomMessage(HELLO_MESSAGES);
+}
+
+/**
+ * Get a random silly action message
+ * @returns Random silly response
+ */
+export function getSillyActionMessage(): string {
+  return pickRandomMessage(SILLY_ACTION_MESSAGES);
+}
+
+/**
+ * Get a random jump failure message
+ * @returns Random jump failure message
+ */
+export function getJumpFailureMessage(): string {
+  return pickRandomMessage(JUMP_FAILURE_MESSAGES);
+}
+
+/**
+ * Get a humorous response for a specific action
+ * @param action - The action key from HUMOROUS_RESPONSES
+ * @param replacements - Optional replacements for placeholders
+ * @returns Formatted humorous response
+ */
+export function getHumorousResponse(action: string, replacements: Record<string, string> = {}): string {
+  const response = HUMOROUS_RESPONSES[action as keyof typeof HUMOROUS_RESPONSES];
+  if (!response) {
+    return ERROR_MESSAGES.CANT_DO_THAT;
+  }
+  return formatMessage(response, replacements);
+}
+
+/**
+ * Get a parser feedback message with variation
+ * @param feedbackType - Type of feedback (AMBIGUOUS, NOT_HERE, etc.)
+ * @param replacements - Optional replacements for placeholders
+ * @returns Formatted parser feedback message
+ */
+export function getParserFeedback(feedbackType: string, replacements: Record<string, string> = {}): string {
+  const messages = PARSER_FEEDBACK[feedbackType as keyof typeof PARSER_FEEDBACK];
+  if (!messages || !Array.isArray(messages)) {
+    return ERROR_MESSAGES.DONT_UNDERSTAND;
+  }
+  const message = pickRandomMessage(messages);
+  return formatMessage(message, replacements);
+}
+
+/**
+ * Message rotation state for repeated actions
+ * Tracks which message was last used for each context
+ */
+const messageRotationState = new Map<string, number>();
+
+/**
+ * Get a message with rotation (PICK-ONE style from ZIL)
+ * Cycles through messages to provide variety for repeated actions
+ * @param context - Context key for tracking rotation
+ * @param messages - Array of messages to rotate through
+ * @returns Next message in rotation
+ */
+export function getRotatedMessage(context: string, messages: string[]): string {
+  if (messages.length === 0) {
+    return "";
+  }
+  if (messages.length === 1) {
+    return messages[0];
+  }
+  
+  const currentIndex = messageRotationState.get(context) || 0;
+  const nextIndex = (currentIndex + 1) % messages.length;
+  messageRotationState.set(context, nextIndex);
+  
+  return messages[currentIndex];
+}
+
+/**
+ * Reset message rotation for a specific context
+ * @param context - Context key to reset
+ */
+export function resetMessageRotation(context: string): void {
+  messageRotationState.delete(context);
 }
 
 /**
@@ -384,5 +492,172 @@ export const VARIED_RESPONSES = {
     "I don't understand that.",
     "That doesn't make sense.",
     "I'm not sure what you mean."
+  ]
+};
+
+/**
+ * Generic refusal messages for impossible actions (YUKS from gverbs.zil)
+ * Used when player attempts to take/manipulate objects that can't be taken
+ */
+export const REFUSAL_MESSAGES = [
+  "A valiant attempt.",
+  "You can't be serious.",
+  "An interesting idea...",
+  "What a concept!"
+];
+
+/**
+ * Messages for ineffective actions (HO-HUM from gverbs.zil)
+ * Used for PUSH, PULL, WAVE, RUB, LOWER, RAISE, etc.
+ */
+export const INEFFECTIVE_ACTION_MESSAGES = [
+  " doesn't seem to work.",
+  " isn't notably helpful.",
+  " has no effect."
+];
+
+/**
+ * Greeting variations (HELLOS from gverbs.zil)
+ */
+export const HELLO_MESSAGES = [
+  "Hello.",
+  "Good day.",
+  "Nice weather we've been having lately.",
+  "Goodbye."
+];
+
+/**
+ * Silly action responses (WHEEEEE from gverbs.zil)
+ * Used for SKIP, JUMP, and other playful actions
+ */
+export const SILLY_ACTION_MESSAGES = [
+  "Very good. Now you can go to the second grade.",
+  "Are you enjoying yourself?",
+  "Wheeeeeeeeee!!!!!",
+  "Do you expect me to applaud?"
+];
+
+/**
+ * Jump failure messages (JUMPLOSS from gverbs.zil)
+ */
+export const JUMP_FAILURE_MESSAGES = [
+  "You should have looked before you leaped.",
+  "In the movies, your life would be passing before your eyes.",
+  "Geronimo..."
+];
+
+/**
+ * Miscellaneous feedback messages (DUMMY from gverbs.zil)
+ */
+export const MISC_FEEDBACK_MESSAGES = [
+  "Look around.",
+  "Too late for that.",
+  "Have your eyes checked."
+];
+
+/**
+ * Humorous responses to silly commands
+ * From various V-* routines in gverbs.zil
+ */
+export const HUMOROUS_RESPONSES = {
+  ADVENT: 'A hollow voice says "Fool."',
+  BLAST: "You can't blast anything by using words.",
+  BUG: "Bug? Not in a flawless program like this! (Cough, cough).",
+  CHOMP: "Preposterous!",
+  COUNT_BLESSINGS: "Well, for one, you are playing Zork...",
+  COUNT_OTHER: "You have lost your mind.",
+  CURSES_AT_OBJECT: "Insults of this nature won't help you.",
+  CURSES_AT_ACTOR: "Insults of this nature won't help you.",
+  CURSES_GENERAL: "Such language in a high-class establishment like this!",
+  EXORCISE: "What a bizarre concept!",
+  FOLLOW: "You're nuts!",
+  FROBOZZ: "The FROBOZZ Corporation created, owns, and operates this dungeon.",
+  HATCH: "Bizarre!",
+  HELLO_TO_ACTOR: "The {actor} bows his head to you in greeting.",
+  HELLO_TO_OBJECT: "It's a well known fact that only schizophrenics say \"Hello\" to a {object}.",
+  KISS: "I'd sooner kiss a pig.",
+  KNOCK_ON_DOOR: "Nobody's home.",
+  KNOCK_ON_OTHER: "Why knock on a {object}?",
+  LEAN_ON: "Getting tired?",
+  MAKE: "You can't do that.",
+  MUMBLE: "You'll have to speak up if you expect me to hear you!",
+  ODYSSEUS: "Wasn't he a sailor?",
+  OIL: "You probably put spinach in your gas tank, too.",
+  PLAY_ACTOR: "You become so engrossed in the role of the {actor} that you kill yourself, just as he might have done!",
+  PLAY_OTHER: "That's silly!",
+  PLUG: "This has no effect.",
+  PRAY: "If you pray enough, your prayers may be answered.",
+  RAPE: "What a (ahem!) strange idea.",
+  REPENT: "It could very well be too late!",
+  REPLY: "It is hardly likely that the {object} is interested.",
+  RING: "How, exactly, can you ring that?",
+  SAY_WHAT: "Say what?",
+  SAY_TO_SELF: "Talking to yourself is a sign of impending mental collapse.",
+  SEARCH: "You find nothing unusual.",
+  SEND_ACTOR: "Why would you send for the {actor}?",
+  SEND_OTHER: "That doesn't make sends.",
+  SMELL: "It smells like a {object}.",
+  SPIN: "You can't spin that!",
+  SQUEEZE_ACTOR: "The {actor} does not understand this.",
+  SQUEEZE_OTHER: "How singularly useless.",
+  STAB_NO_WEAPON: "No doubt you propose to stab the {object} with your pinky?",
+  STAND: "You are already standing, I think.",
+  STAY: "You will be lost without me!",
+  SWIM_IN_DUNGEON: "Swimming isn't usually allowed in the dungeon.",
+  SWIM_OTHER: "Go jump in a lake!",
+  THROW_AT_SELF: "A terrific throw! The {object} hits you squarely in the head.",
+  THROW_AT_ACTOR: "The {actor} ducks as the {object} flies by and crashes to the ground.",
+  TIE_TO_SELF: "You can't tie anything to yourself.",
+  TIE_OTHER: "You can't tie the {object} to that.",
+  TIE_UP: "You could certainly never tie it with that!",
+  UNTIE: "This cannot be tied, so it cannot be untied!",
+  WEAR_CANT: "You can't wear the {object}.",
+  WIN: "Naturally!",
+  WIND: "You cannot wind up a {object}.",
+  WISH: "With luck, your wish will come true.",
+  YELL: "Aaaarrrrgggghhhh!",
+  ZORK: "At your service!"
+};
+
+/**
+ * Parser feedback variations
+ * Multiple ways to express common parser messages
+ */
+export const PARSER_FEEDBACK = {
+  AMBIGUOUS: [
+    "Which {object} do you mean?",
+    "I see more than one {object} here.",
+    "Be more specific about which {object}."
+  ],
+  NOT_HERE: [
+    "You can't see any {object} here.",
+    "I don't see any {object} here.",
+    "There is no {object} here."
+  ],
+  DONT_HAVE: [
+    "You don't have that.",
+    "You're not holding that.",
+    "You aren't carrying the {object}."
+  ],
+  CANT_SEE: [
+    "You can't see that here.",
+    "I don't see that here.",
+    "That's not visible."
+  ],
+  UNKNOWN_WORD: [
+    "I don't know the word \"{word}\".",
+    "The word \"{word}\" is not in my vocabulary.",
+    "I don't understand the word \"{word}\"."
+  ],
+  DONT_UNDERSTAND: [
+    "I don't understand that.",
+    "That doesn't make sense.",
+    "I couldn't understand that sentence.",
+    "I beg your pardon?"
+  ],
+  NO_VERB: [
+    "There was no verb in that sentence!",
+    "I don't see a verb there.",
+    "What do you want to do?"
   ]
 };

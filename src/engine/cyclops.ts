@@ -156,6 +156,26 @@ export class CyclopsBehavior extends BaseActorBehavior {
     return false;
   }
 
+  /**
+   * Handle talking to the cyclops
+   */
+  onTalk(state: GameState): string {
+    if (this.state === ActorState.SLEEPING) {
+      return "No use talking to him. He's fast asleep.";
+    }
+    return "The cyclops prefers eating to making conversation.";
+  }
+
+  /**
+   * Get cyclops description based on state
+   */
+  getDescription(state: GameState): string {
+    if (this.state === ActorState.SLEEPING) {
+      return "The cyclops is sleeping like a baby, albeit a very ugly one.";
+    }
+    return "A hungry cyclops is standing at the foot of the stairs.";
+  }
+
   onAttacked(state: GameState, weapon?: GameObject): void {
     const cyclops = this.getActor(state);
     if (!cyclops) return;

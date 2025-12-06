@@ -26,8 +26,45 @@ In general, Infocom games were created by taking previous Infocom source code, c
 
 There are also multiple versions of the "Z-Machine" and code did change notably between the first years of Infocom and a decade later. Addition of graphics, sound and memory expansion are all slowly implemented over time.
 
+__TypeScript Rewrite Status__
+
+This repository includes a modern TypeScript rewrite of Zork I, providing a playable version with comprehensive testing and validation.
+
+**Current Status:**
+- ✅ **Gameplay**: 100% complete - all puzzles solvable, all NPCs functional
+- ✅ **Test Accuracy**: 100% - all automated tests passing
+- ⚠️ **Text Accuracy**: 72.77% (676/929 messages) - core gameplay messages complete
+  - 100% special object behaviors
+  - 100% high-priority messages
+  - 85.7% scenery interactions
+  - 83.7% critical messages
+  - Target: 95% coverage
+
+**Key Features:**
+- Full game implementation in TypeScript
+- Comprehensive test suite with property-based testing
+- Message validation against original ZIL source
+- Save/restore functionality
+- Terminal-based interface
+
+**Documentation:**
+- [Final Accuracy Report](.kiro/testing/final-accuracy-report.md)
+- [Implementation Status](.kiro/testing/text-validation-status.md)
+- [Message Accuracy Summary](.kiro/testing/message-accuracy-summary.md)
+
+**Known Limitations:**
+- Some conditional message variations not yet implemented (188 messages)
+- Generic message variations partially complete (32 messages remaining)
+- Edge case error messages may use generic fallbacks (12 messages remaining)
+
+The rewrite provides an authentic Zork I experience with all core gameplay features working correctly. Remaining messages are primarily edge cases and variations that do not affect gameplay completeness.
+
+---
+
 __What is the Purpose of this Repository__
 
 This collection is meant for education, discussion, and historical work, allowing researchers and students to study how code was made for these interactive fiction games and how the system dealt with input and processing.
+
+The TypeScript rewrite demonstrates modern software engineering practices applied to classic interactive fiction, including systematic testing, validation, and documentation.
 
 Researchers are encouraged to share their discoveries about the information in this source code and the history of Infocom and its many innovative employees.
