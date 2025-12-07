@@ -63,75 +63,75 @@
   - Expected: All tests passing
   - _Requirements: 1.5, 10.2, 10.3_
 
-- [-] 11.4 Commit to Git
+- [x] 11.4 Commit to Git
   - Commit message: "feat: Batch 11 - Time-dependent and multi-condition messages (30 messages)"
   - Include all modified files from Batch 11
   - _Requirements: 10.5_
 
 ---
 
-- [ ] 12. Batch 12: Conditional Messages Part 3 (30 messages → 87.7%)
+- [x] 12. Batch 12: Conditional Messages Part 3 (30 messages → 87.7%)
   - Implement location and inventory-dependent messages
   - Target: 815/929 messages (87.7%)
   - _Requirements: 1.1, 1.4_
 
-- [ ] 12.1 Implement location-dependent messages (15 messages)
+- [x] 12.1 Implement location-dependent messages (15 messages)
   - File: `src/game/conditionalMessages.ts`
   - Messages: Text variations based on current room
   - Add location check helpers
   - _Requirements: 1.1, 1.4_
 
-- [ ] 12.2 Implement inventory-dependent messages (15 messages)
+- [x] 12.2 Implement inventory-dependent messages (15 messages)
   - File: `src/game/conditionalMessages.ts`
   - Messages: Text variations based on carried items
   - Test inventory state combinations
   - _Requirements: 1.1, 1.4_
 
-- [ ] 12.3 Validate Batch 12
+- [x] 12.3 Validate Batch 12
   - Run: `npx tsx scripts/verify-coverage-threshold.ts`
   - Expected: ~87.7% coverage
   - Run: `npm test`
   - Expected: All tests passing
   - _Requirements: 1.5, 10.2, 10.3_
 
-- [ ] 12.4 Commit to Git
+- [x] 12.4 Commit to Git
   - Commit message: "feat: Batch 12 - Location and inventory-dependent messages (30 messages)"
   - Include all modified files from Batch 12
   - _Requirements: 10.5_
 
 ---
 
-- [ ] 13. Batch 13: V-Object Messages Part 1 (30 messages → 91.0%)
+- [-] 13. Batch 13: V-Object Messages Part 1 (30 messages → 91.0%)
   - Implement spell and vehicle messages from gverbs.zil
   - Target: 845/929 messages (91.0%)
   - _Requirements: 4.1, 4.2, 4.3_
 
-- [ ] 13.1 Create V-object handler system
+- [x] 13.1 Create V-object handler system
   - File: `src/game/verbHandlers.ts` (new file)
   - Create abstraction for V-object messages
   - Map ZIL V-object patterns to TypeScript
   - _Requirements: 4.1_
 
-- [ ] 13.2 Implement spell-related messages (20 messages)
+- [x] 13.2 Implement spell-related messages (20 messages)
   - File: `src/game/verbHandlers.ts`
   - Messages: FEEBLE, FUMBLE, FEAR, FREEZE, FALL, FERMENT, etc.
   - Integrate with spell system
   - _Requirements: 4.1, 4.2_
 
-- [ ] 13.3 Implement vehicle messages (10 messages)
+- [x] 13.3 Implement vehicle messages (10 messages)
   - File: `src/game/verbHandlers.ts`
   - Messages: Vehicle entry/exit, movement restrictions
   - Test vehicle state transitions
   - _Requirements: 4.1, 4.3_
 
-- [ ] 13.4 Validate Batch 13
+- [x] 13.4 Validate Batch 13
   - Run: `npx tsx scripts/verify-coverage-threshold.ts`
   - Expected: ~91.0% coverage
   - Run: `npm test`
   - Expected: All tests passing
   - _Requirements: 4.5, 10.2, 10.3_
 
-- [ ] 13.5 Commit to Git
+- [-] 13.5 Commit to Git
   - Commit message: "feat: Batch 13 - V-object spell and vehicle messages (30 messages)"
   - Include all modified files from Batch 13
   - _Requirements: 10.5_
