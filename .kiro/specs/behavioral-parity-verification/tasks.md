@@ -207,6 +207,12 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Testing verbose/brief modes
   - _Requirements: 1.1, 1.2, 1.3_
 
+- [ ] 5.9 Commit to Git
+  - Commit message: "feat: Create 100+ reference transcripts for behavioral verification"
+  - Include all transcript files from Phase 1
+  - Include transcript creation tools and documentation
+  - _Requirements: 1.5_
+
 ---
 
 ## Phase 2: Enhanced Comparison Infrastructure (Week 3-4)
@@ -294,6 +300,12 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Add `verify:report` script
   - _Requirements: 9.1, 9.2_
 
+- [ ] 8.5 Commit to Git
+  - Commit message: "feat: Build enhanced comparison infrastructure with state verification"
+  - Include all comparison tools and frameworks
+  - Include CI/CD workflows
+  - _Requirements: 9.4_
+
 ---
 
 ## Phase 3: Initial Comparison (Week 4)
@@ -336,6 +348,12 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - List all differences
   - Provide recommendations
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
+
+- [ ] 9.9 Commit to Git
+  - Commit message: "docs: Initial behavioral comparison analysis"
+  - Include comparison results and analysis
+  - Include fix priority list
+  - _Requirements: 6.1_
 
 ---
 
@@ -412,6 +430,12 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify existing functionality intact
   - _Requirements: 6.2, 6.3_
 
+- [ ] 11.5 Commit to Git
+  - Commit message: "fix: Achieve 100% parity for all critical scenarios"
+  - Include all fixes from Phase 4
+  - Include updated test results
+  - _Requirements: 6.5_
+
 ---
 
 ## Phase 5: Fix All Remaining Differences (Week 6)
@@ -469,8 +493,14 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 - [ ] 14. Verify no regressions from all fixes
   - Run full test suite
   - Run all transcripts
-  - Verify 95%+ overall pass rate
+  - Verify 100% pass rate for all priorities
   - _Requirements: 6.2, 6.3, 6.5_
+
+- [ ] 14.5 Commit to Git
+  - Commit message: "fix: Achieve 100% parity for all high and medium priority scenarios"
+  - Include all fixes from Phase 5
+  - Include updated test results
+  - _Requirements: 6.5_
 
 ---
 
@@ -507,6 +537,12 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Update daemon system to match original exactly
   - Re-run all timing transcripts
   - Verify 100% timing parity
+  - _Requirements: 12.6_
+
+- [ ] 14.9 Commit to Git
+  - Commit message: "fix: Achieve 100% daemon timing parity"
+  - Include all daemon timing fixes
+  - Include timing verification results
   - _Requirements: 12.6_
 
 ---
