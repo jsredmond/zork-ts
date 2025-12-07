@@ -32,7 +32,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Add helper for creating new transcripts
   - _Requirements: 1.4_
 
-- [x] 1.5 Commit to Git
+- [x] 1.3 Commit to Git
   - Commit message: "feat: Set up transcript creation environment"
   - Include transcript directory structure and README
   - Include transcript creation and validation tool
@@ -40,7 +40,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ---
 
-- [-] 2. Create critical priority transcripts (30 transcripts)
+- [x] 2. Create critical priority transcripts (30 transcripts)
   - Target: Opening sequence, all major puzzles, core navigation, all NPCs
   - _Requirements: 1.1, 1.2, 1.3, 1.5, 11.1_
 
@@ -95,7 +95,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Collecting and depositing treasures
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [x] 2.5 Commit to Git
+- [x] 2.11 Commit to Git
   - Commit message: "feat: Create critical priority transcripts"
   - Include all critical transcript files (01-10)
   - _Requirements: 1.1, 1.2, 1.3, 1.5, 11.1_
@@ -156,7 +156,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Rainbow and pot of gold
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 3.5 Commit to Git
+- [ ] 3.11 Commit to Git
   - Commit message: "feat: Create high priority transcripts"
   - Include all high priority transcript files (20-29)
   - _Requirements: 1.1, 1.2, 1.3, 1.5, 11.2, 11.3, 11.4_
@@ -192,7 +192,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Saving and restoring game
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 4.9 Commit to Git
+- [ ] 4.6 Commit to Git
   - Commit message: "feat: Create medium priority transcripts"
   - Include all medium priority transcript files (40-44)
   - _Requirements: 1.1, 1.2, 1.3, 1.5, 5.1, 5.2, 5.3, 5.5_
@@ -236,7 +236,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Testing verbose/brief modes
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 5.9 Commit to Git
+- [ ] 5.7 Commit to Git
   - Commit message: "feat: Create 100+ reference transcripts for behavioral verification"
   - Include all transcript files from Phase 1
   - Include transcript creation tools and documentation
@@ -319,7 +319,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify final states
   - _Requirements: 3.1, 3.2, 3.3, 3.5_
 
-- [ ] 7.5 Commit to Git
+- [ ] 7.4 Commit to Git
   - Commit message: "feat: Create puzzle verification system"
   - Include puzzle verification framework
   - Include puzzle solution definitions
@@ -346,7 +346,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Add `verify:report` script
   - _Requirements: 9.1, 9.2_
 
-- [ ] 8.5 Commit to Git
+- [ ] 8.3 Commit to Git
   - Commit message: "feat: Build enhanced comparison infrastructure with state verification"
   - Include all comparison tools and frameworks
   - Include CI/CD workflows
@@ -395,7 +395,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Provide recommendations
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
 
-- [ ] 9.9 Commit to Git
+- [ ] 9.7 Commit to Git
   - Commit message: "docs: Initial behavioral comparison analysis"
   - Include comparison results and analysis
   - Include fix priority list
@@ -470,7 +470,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify 98%+ similarity
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 10.5 Commit to Git
+- [ ] 10.11 Commit to Git
   - Commit message: "fix: Fix critical behavioral differences"
   - Include all critical puzzle fixes
   - Include updated code for opening, mailbox, trap door, lamp, troll, dam, cyclops, rope, bell, treasure
@@ -484,7 +484,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify existing functionality intact
   - _Requirements: 6.2, 6.3_
 
-- [ ] 11.5 Commit to Git
+- [ ] 11.1 Commit to Git
   - Commit message: "fix: Achieve 100% parity for all critical scenarios"
   - Include all fixes from Phase 4
   - Include updated test results
@@ -528,7 +528,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify 95%+ similarity
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 12.9 Commit to Git
+- [ ] 12.6 Commit to Git
   - Commit message: "fix: Fix NPC and combat differences"
   - Include thief, troll, cyclops, bat behavior fixes
   - Include remaining high-priority fixes
@@ -552,7 +552,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify 90%+ similarity
   - _Requirements: 5.2, 5.3_
 
-- [ ] 13.5 Commit to Git
+- [ ] 13.3 Commit to Git
   - Commit message: "fix: Fix medium-priority differences"
   - Include error message fixes
   - Include inventory and edge case fixes
@@ -566,7 +566,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify 100% pass rate for all priorities
   - _Requirements: 6.2, 6.3, 6.5_
 
-- [ ] 14.5 Commit to Git
+- [ ] 14.1 Commit to Git
   - Commit message: "fix: Achieve 100% parity for all high and medium priority scenarios"
   - Include all fixes from Phase 5
   - Include updated test results
@@ -576,40 +576,40 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ## Phase 6: Daemon Timing Verification (Week 7)
 
-- [ ] 14. Verify daemon timing matches original exactly
+- [ ] 15. Verify daemon timing matches original exactly
   - Test all time-dependent systems
   - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5, 12.6_
 
-- [ ] 14.1 Verify lamp fuel consumption timing
+- [ ] 15.1 Verify lamp fuel consumption timing
   - Test lamp life decreases at correct rate
   - Test dimming messages appear at correct times
   - Test lamp death at correct turn count
   - _Requirements: 12.1_
 
-- [ ] 14.2 Verify candle burning timing
+- [ ] 15.2 Verify candle burning timing
   - Test candle life decreases at correct rate
   - Test burning messages appear at correct times
   - Test candle death at correct turn count
   - _Requirements: 12.2_
 
-- [ ] 14.3 Verify NPC movement timing
+- [ ] 15.3 Verify NPC movement timing
   - Test thief movement frequency
   - Test cyclops movement patterns
   - Test bat movement timing
   - _Requirements: 12.3_
 
-- [ ] 14.4 Verify daemon firing order
+- [ ] 15.4 Verify daemon firing order
   - Test multiple daemons fire in correct order
   - Test daemon priority matches original
   - _Requirements: 12.5_
 
-- [ ] 14.5 Fix any daemon timing differences
+- [ ] 15.5 Fix any daemon timing differences
   - Update daemon system to match original exactly
   - Re-run all timing transcripts
   - Verify 100% timing parity
   - _Requirements: 12.6_
 
-- [ ] 14.9 Commit to Git
+- [ ] 15.6 Commit to Git
   - Commit message: "fix: Achieve 100% daemon timing parity"
   - Include all daemon timing fixes
   - Include timing verification results
@@ -619,11 +619,11 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ## Phase 7: Exhaustive Verification (Week 8)
 
-- [ ] 15. Run exhaustive verification
+- [ ] 16. Run exhaustive verification
   - Execute all verification tests
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
 
-- [ ] 15.1 Run all 100+ transcripts
+- [ ] 16.1 Run all 100+ transcripts
   - Execute all transcripts in all categories
   - Verify 100% pass rate for critical
   - Verify 100% pass rate for high priority
@@ -631,26 +631,26 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify 98%+ pass rate for low priority
   - _Requirements: 2.5, 2.6, 9.1, 9.2, 11.6_
 
-- [ ] 15.2 Verify all puzzles
+- [ ] 16.2 Verify all puzzles
   - Run puzzle verification tests
   - Verify 100% puzzle solution parity
   - _Requirements: 3.5_
 
-- [ ] 15.3 Complete full playthrough verification
+- [ ] 16.3 Complete full playthrough verification
   - Play complete game from start to finish
   - Collect all 19 treasures
   - Achieve maximum score (350 points)
   - Verify game completion
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
 
-- [ ] 15.4 Verify state transitions
+- [ ] 16.4 Verify state transitions
   - Run state transition tests
   - Verify flag changes
   - Verify object states
   - Verify room states
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 15.5 Commit to Git
+- [ ] 16.5 Commit to Git
   - Commit message: "test: Run exhaustive verification"
   - Include all verification test results
   - Include playthrough verification results
@@ -658,30 +658,30 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ---
 
-- [ ] 16. Generate final verification report
+- [ ] 17. Generate final verification report
   - Create comprehensive report
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 16.1 Calculate final metrics
+- [ ] 17.1 Calculate final metrics
   - Overall parity percentage
   - Parity by category
   - Parity by priority
   - Confidence assessment
   - _Requirements: 8.1, 8.2, 8.5_
 
-- [ ] 16.2 Document all verified scenarios
+- [ ] 17.2 Document all verified scenarios
   - List all passing transcripts
   - List all verified puzzles
   - List all verified NPCs
   - _Requirements: 8.3_
 
-- [ ] 16.3 Document remaining differences
+- [ ] 17.3 Document remaining differences
   - List any unfixed differences
   - Explain why not fixed (if intentional)
   - Assess impact
   - _Requirements: 8.4_
 
-- [ ] 16.4 Create final confidence assessment
+- [ ] 17.4 Create final confidence assessment
   - Verify 100% confidence achieved
   - Provide comprehensive evidence
   - Document verification methodology
@@ -689,13 +689,13 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Confirm zero behavioral differences
   - _Requirements: 8.5, 8.6_
 
-- [ ] 16.5 Update project documentation
+- [ ] 17.5 Update project documentation
   - Update README with confidence level
   - Update COMPLETENESS_REPORT
   - Create BEHAVIORAL_PARITY_REPORT
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 16.9 Commit to Git
+- [ ] 17.6 Commit to Git
   - Commit message: "docs: Generate final verification report"
   - Include final metrics and confidence assessment
   - Include updated project documentation
@@ -703,17 +703,17 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ---
 
-- [ ] 17. Final commit and release
+- [ ] 18. Final commit and release
   - Commit all changes
   - Tag release
   - _Requirements: 6.5_
 
-- [ ] 17.1 Commit verification work
+- [ ] 18.1 Commit verification work
   - Commit message: "feat: Achieve 100% behavioral parity verification"
   - Include all 100+ transcripts, tools, and reports
   - _Requirements: 6.5_
 
-- [ ] 17.2 Tag release
+- [ ] 18.2 Tag release
   - Tag: `v2.0.0-complete-parity`
   - Include comprehensive verification report in release notes
   - Document 100% confidence achievement
@@ -723,7 +723,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ## Summary
 
-**Total Tasks**: 17 major tasks, 100+ subtasks  
+**Total Tasks**: 18 major tasks, 100+ subtasks  
 **Timeline**: 8 weeks  
 **Expected Outcome**: 100% behavioral parity confidence  
 **Key Deliverables**:
