@@ -39,29 +39,34 @@
 
 ---
 
-- [ ] 11. Batch 11: Conditional Messages Part 2 (30 messages → 84.5%)
+- [x] 11. Batch 11: Conditional Messages Part 2 (30 messages → 84.5%)
   - Implement multi-flag conditions and time-based messages
   - Target: 785/929 messages (84.5%)
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 11.1 Implement time-dependent messages (15 messages)
+- [x] 11.1 Implement time-dependent messages (15 messages)
   - File: `src/game/conditionalMessages.ts`
   - Messages: Lamp dimming stages, candle burning stages
   - Add time-based condition helpers
   - _Requirements: 1.2, 1.3_
 
-- [ ] 11.2 Implement multi-condition messages (15 messages)
+- [x] 11.2 Implement multi-condition messages (15 messages)
   - File: `src/game/conditionalMessages.ts`
   - Messages: Complex flag combinations (2+ flags)
   - Document condition logic clearly
   - _Requirements: 1.1, 1.3_
 
-- [ ] 11.3 Validate Batch 11
+- [x] 11.3 Validate Batch 11
   - Run: `npx tsx scripts/verify-coverage-threshold.ts`
   - Expected: ~84.5% coverage
   - Run: `npm test`
   - Expected: All tests passing
   - _Requirements: 1.5, 10.2, 10.3_
+
+- [-] 11.4 Commit to Git
+  - Commit message: "feat: Batch 11 - Time-dependent and multi-condition messages (30 messages)"
+  - Include all modified files from Batch 11
+  - _Requirements: 10.5_
 
 ---
 
@@ -88,6 +93,11 @@
   - Run: `npm test`
   - Expected: All tests passing
   - _Requirements: 1.5, 10.2, 10.3_
+
+- [ ] 12.4 Commit to Git
+  - Commit message: "feat: Batch 12 - Location and inventory-dependent messages (30 messages)"
+  - Include all modified files from Batch 12
+  - _Requirements: 10.5_
 
 ---
 
@@ -121,6 +131,11 @@
   - Expected: All tests passing
   - _Requirements: 4.5, 10.2, 10.3_
 
+- [ ] 13.5 Commit to Git
+  - Commit message: "feat: Batch 13 - V-object spell and vehicle messages (30 messages)"
+  - Include all modified files from Batch 13
+  - _Requirements: 10.5_
+
 ---
 
 - [ ] 14. Batch 14: V-Object Messages Part 2 (32 messages → 94.4%)
@@ -152,6 +167,11 @@
   - Run: `npm test`
   - Expected: All tests passing
   - _Requirements: 4.5, 10.2, 10.3_
+
+- [ ] 14.5 Commit to Git
+  - Commit message: "feat: Batch 14 - Remaining V-object messages (32 messages)"
+  - Include all modified files from Batch 14
+  - _Requirements: 10.5_
 
 ---
 
@@ -191,6 +211,11 @@
   - Expected: All tests passing
   - _Requirements: 2.5, 10.2, 10.3_
 
+- [ ] 15.6 Commit to Git
+  - Commit message: "feat: Batch 15 - Parser internal messages (15 messages)"
+  - Include all modified files from Batch 15
+  - _Requirements: 10.5_
+
 ---
 
 - [ ] 16. Batch 16: Generic & Error Messages (15 messages → 97.6%)
@@ -216,6 +241,11 @@
   - Run: `npm test`
   - Expected: All tests passing
   - _Requirements: 3.5, 10.2, 10.3_
+
+- [ ] 16.4 Commit to Git
+  - Commit message: "feat: Batch 16 - Generic and error message variations (15 messages)"
+  - Include all modified files from Batch 16
+  - _Requirements: 10.5_
 
 ---
 
@@ -255,6 +285,11 @@
   - Expected: All tests passing
   - _Requirements: 8.5, 9.5, 10.2, 10.3_
 
+- [ ] 17.6 Commit to Git
+  - Commit message: "feat: Batch 17 - DEAD state and CRETIN messages (10 messages)"
+  - Include all modified files from Batch 17
+  - _Requirements: 10.5_
+
 ---
 
 - [ ] 18. Batch 18: Puzzle & Scenery Completion (8 messages → 99.6%)
@@ -286,6 +321,11 @@
   - Expected: All tests passing
   - _Requirements: 5.5, 7.5, 10.2, 10.3_
 
+- [ ] 18.5 Commit to Git
+  - Commit message: "feat: Batch 18 - Final puzzle and scenery messages (8 messages)"
+  - Include all modified files from Batch 18
+  - _Requirements: 10.5_
+
 ---
 
 - [ ] 19. Batch 19: Final 4 Messages (4 messages → 100%)
@@ -311,6 +351,11 @@
   - Run: `npm test`
   - Expected: All tests passing
   - _Requirements: 10.1, 10.2, 10.3, 10.4_
+
+- [ ] 19.4 Commit to Git
+  - Commit message: "feat: Batch 19 - Final 4 messages - 100% COVERAGE ACHIEVED! 🎉"
+  - Include all modified files from Batch 19
+  - _Requirements: 10.5_
 
 ---
 
@@ -351,3 +396,9 @@
   - Verify all message contexts
   - Confirm 100% coverage is authentic
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
+
+- [ ] 20.6 Final Commit to Git
+  - Commit message: "docs: Complete 100% message coverage documentation and verification"
+  - Include all documentation updates from Batch 20
+  - Tag release: `v1.0.0-complete-coverage`
+  - _Requirements: 10.5_

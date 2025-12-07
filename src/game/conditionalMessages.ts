@@ -118,6 +118,42 @@ export function getRegisteredMessageIds(): string[] {
 }
 
 /**
+ * Helper: Check lamp remaining lifetime percentage
+ */
+export function getLampLifetimePercent(state: GameState): number {
+  const lamp = state.getObject('LAMP');
+  if (!lamp) return 0;
+  
+  const currentLife = state.getGlobalVariable('LAMP_LIFE') || 0;
+  const maxLife = state.getGlobalVariable('LAMP_MAX_LIFE') || 330;
+  
+  return (currentLife / maxLife) * 100;
+}
+
+/**
+ * Helper: Check candle remaining lifetime
+ */
+export function getCandleLifetime(state: GameState): number {
+  return state.getGlobalVariable('CANDLE_LIFE') || 0;
+}
+
+/**
+ * Helper: Check if lamp is burned out
+ */
+export function isLampBurnedOut(state: GameState): boolean {
+  const lamp = state.getObject('LAMP');
+  return lamp?.hasFlag(ObjectFlag.RMUNGBIT) || false;
+}
+
+/**
+ * Helper: Check if candles are burned out
+ */
+export function areCandlesBurnedOut(state: GameState): boolean {
+  const candles = state.getObject('CANDLES');
+  return candles?.hasFlag(ObjectFlag.RMUNGBIT) || false;
+}
+
+/**
  * Initialize all conditional messages
  * This should be called during game initialization
  */
@@ -1317,5 +1353,420 @@ export function initializeConditionalMessages(): void {
       }
     ],
     defaultMessage: 'The sceptre is beautiful.'
+  });
+
+  // ============================================================================
+  // BATCH 11: TIME-DEPENDENT MESSAGES
+  // ============================================================================
+
+  // Lamp dimming warning at 100 turns remaining
+  registerConditionalMessage({
+    messageId: 'LAMP-DIMMING-WARNING-100',
+    variants: [],
+    defaultMessage: 'The lamp appears a bit dimmer.'
+  });
+
+  // Lamp dimming warning at 70 turns remaining
+  registerConditionalMessage({
+    messageId: 'LAMP-DIMMING-WARNING-70',
+    variants: [],
+    defaultMessage: 'The lamp is definitely dimmer now.'
+  });
+
+  // Lamp dimming warning at 15 turns remaining
+  registerConditionalMessage({
+    messageId: 'LAMP-DIMMING-WARNING-15',
+    variants: [],
+    defaultMessage: 'The lamp is nearly out.'
+  });
+
+  // Lamp goes out message
+  registerConditionalMessage({
+    messageId: 'LAMP-GOES-OUT',
+    variants: [],
+    defaultMessage: "I'm afraid the lamp has run out of power."
+  });
+
+  // Candles grow shorter at 20 turns remaining
+  registerConditionalMessage({
+    messageId: 'CANDLES-GROW-SHORTER-20',
+    variants: [],
+    defaultMessage: 'The candles grow shorter.'
+  });
+
+  // Candles becoming short at 10 turns remaining
+  registerConditionalMessage({
+    messageId: 'CANDLES-BECOMING-SHORT-10',
+    variants: [],
+    defaultMessage: 'The candles are becoming quite short.'
+  });
+
+  // Candles won't last long at 5 turns remaining
+  registerConditionalMessage({
+    messageId: 'CANDLES-WONT-LAST-5',
+    variants: [],
+    defaultMessage: "The candles won't last long now."
+  });
+
+  // Candles go out message
+  registerConditionalMessage({
+    messageId: 'CANDLES-GO-OUT',
+    variants: [],
+    defaultMessage: 'The candles have gone out.'
+  });
+
+  // Match burns out quickly (1-2 turns)
+  registerConditionalMessage({
+    messageId: 'MATCH-BURNS-OUT',
+    variants: [],
+    defaultMessage: 'The match has gone out.'
+  });
+
+  // Torch lifetime warning
+  registerConditionalMessage({
+    messageId: 'TORCH-BURNING-LOW',
+    variants: [],
+    defaultMessage: 'The torch is burning low.'
+  });
+
+  // Torch goes out
+  registerConditionalMessage({
+    messageId: 'TORCH-GOES-OUT',
+    variants: [],
+    defaultMessage: 'The torch has gone out.'
+  });
+
+  // Time-based room description changes (dam draining)
+  registerConditionalMessage({
+    messageId: 'DAM-DRAINING-SOUND',
+    variants: [
+      {
+        condition: (state) => {
+          const damOpen = state.getGlobalVariable('DAM_OPEN') || false;
+          const turnsOpen = state.getGlobalVariable('DAM_TURNS_OPEN') || 0;
+          return damOpen && turnsOpen < 10;
+        },
+        message: 'You can hear the roar of rushing water from below.'
+      }
+    ],
+    defaultMessage: 'The sound of water has quieted.'
+  });
+
+  // Reservoir draining progress
+  registerConditionalMessage({
+    messageId: 'RESERVOIR-DRAINING',
+    variants: [
+      {
+        condition: (state) => {
+          const damOpen = state.getGlobalVariable('DAM_OPEN') || false;
+          const turnsOpen = state.getGlobalVariable('DAM_TURNS_OPEN') || 0;
+          return damOpen && turnsOpen >= 5 && turnsOpen < 10;
+        },
+        message: 'The water level is dropping rapidly.'
+      }
+    ],
+    defaultMessage: 'The water is calm.'
+  });
+
+  // Thief appearance timing
+  registerConditionalMessage({
+    messageId: 'THIEF-APPEARS-SOON',
+    variants: [],
+    defaultMessage: 'You hear footsteps in the distance.'
+  });
+
+  // Cyclops sleep duration
+  registerConditionalMessage({
+    messageId: 'CYCLOPS-WAKING-UP',
+    variants: [],
+    defaultMessage: 'The cyclops is starting to stir.'
+  });
+
+  // ============================================================================
+  // BATCH 11: MULTI-CONDITION MESSAGES (2+ flags/states)
+  // ============================================================================
+
+  // Bottle with water and open state
+  registerConditionalMessage({
+    messageId: 'BOTTLE-WATER-OPEN',
+    variants: [
+      {
+        condition: (state) => {
+          const bottle = state.getObject('BOTTLE');
+          const water = state.getObject('WATER');
+          const bottleOpen = bottle?.hasFlag(ObjectFlag.OPENBIT) || false;
+          const waterInBottle = water?.location === 'BOTTLE';
+          return bottleOpen && waterInBottle;
+        },
+        message: 'The bottle is open and contains water.'
+      },
+      {
+        condition: (state) => {
+          const bottle = state.getObject('BOTTLE');
+          const water = state.getObject('WATER');
+          const bottleOpen = bottle?.hasFlag(ObjectFlag.OPENBIT) || false;
+          const waterInBottle = water?.location === 'BOTTLE';
+          return !bottleOpen && waterInBottle;
+        },
+        message: 'The bottle is closed and contains water.'
+      }
+    ],
+    defaultMessage: 'The bottle is empty.'
+  });
+
+  // Trap door with rug state
+  registerConditionalMessage({
+    messageId: 'TRAP-DOOR-RUG-STATE',
+    variants: [
+      {
+        condition: (state) => {
+          const rugMoved = state.getGlobalVariable('RUG_MOVED') || false;
+          const trapDoor = state.getObject('TRAP-DOOR');
+          const trapDoorOpen = trapDoor?.hasFlag(ObjectFlag.OPENBIT) || false;
+          return rugMoved && trapDoorOpen;
+        },
+        message: 'The rug has been moved aside, revealing an open trap door.'
+      },
+      {
+        condition: (state) => {
+          const rugMoved = state.getGlobalVariable('RUG_MOVED') || false;
+          const trapDoor = state.getObject('TRAP-DOOR');
+          const trapDoorOpen = trapDoor?.hasFlag(ObjectFlag.OPENBIT) || false;
+          return rugMoved && !trapDoorOpen;
+        },
+        message: 'The rug has been moved aside, revealing a closed trap door.'
+      }
+    ],
+    defaultMessage: 'The rug is covering something.'
+  });
+
+  // Grate revealed and open state
+  registerConditionalMessage({
+    messageId: 'GRATE-REVEALED-OPEN',
+    variants: [
+      {
+        condition: (state) => {
+          const grate = state.getObject('GRATE');
+          const grateRevealed = state.getGlobalVariable('GRATE_REVEALED') || false;
+          const grateOpen = grate?.hasFlag(ObjectFlag.OPENBIT) || false;
+          return grateRevealed && grateOpen;
+        },
+        message: 'The grating is open, revealing a dark passage below.'
+      },
+      {
+        condition: (state) => {
+          const grateRevealed = state.getGlobalVariable('GRATE_REVEALED') || false;
+          return grateRevealed;
+        },
+        message: 'The grating is closed but visible.'
+      }
+    ],
+    defaultMessage: 'You see nothing special.'
+  });
+
+  // Lamp burned out and on state (impossible but handled)
+  registerConditionalMessage({
+    messageId: 'LAMP-BURNED-OUT-ON',
+    variants: [
+      {
+        condition: (state) => {
+          const lamp = state.getObject('LAMP');
+          const burnedOut = lamp?.hasFlag(ObjectFlag.RMUNGBIT) || false;
+          const isOn = lamp?.hasFlag(ObjectFlag.ONBIT) || false;
+          return burnedOut && isOn;
+        },
+        message: 'The lamp has burned out but is still switched on.'
+      }
+    ],
+    defaultMessage: 'The lamp is off.'
+  });
+
+  // Candles burned out and lit state
+  registerConditionalMessage({
+    messageId: 'CANDLES-BURNED-OUT-LIT',
+    variants: [
+      {
+        condition: (state) => {
+          const candles = state.getObject('CANDLES');
+          const burnedOut = candles?.hasFlag(ObjectFlag.RMUNGBIT) || false;
+          const isLit = candles?.hasFlag(ObjectFlag.ONBIT) || false;
+          return burnedOut && isLit;
+        },
+        message: 'The candles have burned down to nothing.'
+      }
+    ],
+    defaultMessage: 'The candles are out.'
+  });
+
+  // Machine open with coal inside
+  registerConditionalMessage({
+    messageId: 'MACHINE-OPEN-COAL',
+    variants: [
+      {
+        condition: (state) => {
+          const machine = state.getObject('MACHINE');
+          const coal = state.getObject('COAL');
+          const machineOpen = machine?.hasFlag(ObjectFlag.OPENBIT) || false;
+          const coalInMachine = coal?.location === 'MACHINE';
+          return machineOpen && coalInMachine;
+        },
+        message: 'The machine is open and contains a piece of coal.'
+      }
+    ],
+    defaultMessage: 'The machine is closed.'
+  });
+
+  // Boat inflated in water location
+  registerConditionalMessage({
+    messageId: 'BOAT-INFLATED-WATER',
+    variants: [
+      {
+        condition: (state) => {
+          const boat = state.getObject('BOAT');
+          const boatInflated = state.getGlobalVariable('BOAT_INFLATED') || false;
+          const inWaterRoom = ['RESERVOIR', 'IN-STREAM', 'RIVER'].includes(state.currentRoom);
+          return boatInflated && inWaterRoom;
+        },
+        message: 'The boat is floating on the water.'
+      }
+    ],
+    defaultMessage: 'The boat is here.'
+  });
+
+  // Thief alive and in room with treasures
+  registerConditionalMessage({
+    messageId: 'THIEF-TREASURE-ROOM',
+    variants: [
+      {
+        condition: (state) => {
+          const thief = state.getObject('THIEF');
+          const thiefAlive = state.getGlobalVariable('THIEF_ALIVE') !== false;
+          const thiefHere = thief?.location === state.currentRoom;
+          // Check if room has treasures
+          const hasTreasures = state.getGlobalVariable('ROOM_HAS_TREASURES') || false;
+          return thiefAlive && thiefHere && hasTreasures;
+        },
+        message: 'The thief is eyeing the treasures greedily.'
+      }
+    ],
+    defaultMessage: 'The thief is here.'
+  });
+
+  // Mirror broken and in mirror room
+  registerConditionalMessage({
+    messageId: 'MIRROR-BROKEN-ROOM',
+    variants: [
+      {
+        condition: (state) => {
+          const mirrorBroken = state.getGlobalVariable('MIRROR_BROKEN') || false;
+          const inMirrorRoom = ['MIRROR-ROOM-1', 'MIRROR-ROOM-2'].includes(state.currentRoom);
+          return mirrorBroken && inMirrorRoom;
+        },
+        message: 'The enormous mirror is cracked from top to bottom.'
+      }
+    ],
+    defaultMessage: 'The mirror is intact.'
+  });
+
+  // Dam open and reservoir drained
+  registerConditionalMessage({
+    messageId: 'DAM-OPEN-DRAINED',
+    variants: [
+      {
+        condition: (state) => {
+          const damOpen = state.getGlobalVariable('DAM_OPEN') || false;
+          const reservoirDrained = state.getGlobalVariable('RESERVOIR_DRAINED') || false;
+          return damOpen && reservoirDrained;
+        },
+        message: 'The dam is open and the reservoir has been drained.'
+      }
+    ],
+    defaultMessage: 'The dam is closed.'
+  });
+
+  // Cyclops asleep with treasure room accessible
+  registerConditionalMessage({
+    messageId: 'CYCLOPS-ASLEEP-ACCESSIBLE',
+    variants: [
+      {
+        condition: (state) => {
+          const cyclopsAsleep = state.getGlobalVariable('CYCLOPS_ASLEEP') || false;
+          const magicFlag = state.getFlag('MAGIC_FLAG');
+          return cyclopsAsleep && magicFlag;
+        },
+        message: 'The cyclops is sleeping soundly. The passage to the treasure room is open.'
+      }
+    ],
+    defaultMessage: 'The cyclops is awake and blocking the passage.'
+  });
+
+  // Rope tied and player in shaft
+  registerConditionalMessage({
+    messageId: 'ROPE-TIED-SHAFT',
+    variants: [
+      {
+        condition: (state) => {
+          const ropeTied = state.getGlobalVariable('ROPE_TIED') || false;
+          const inShaft = ['SHAFT-ROOM', 'LOWER-SHAFT'].includes(state.currentRoom);
+          return ropeTied && inShaft;
+        },
+        message: 'A rope descends from above.'
+      }
+    ],
+    defaultMessage: 'There is no rope here.'
+  });
+
+  // Basket lowered with items inside
+  registerConditionalMessage({
+    messageId: 'BASKET-LOWERED-ITEMS',
+    variants: [
+      {
+        condition: (state) => {
+          const basketLowered = state.getGlobalVariable('BASKET_LOWERED') || false;
+          const basket = state.getObject('BASKET');
+          const hasItems = basket && state.getObjectsInContainer('BASKET').length > 0;
+          return basketLowered && hasItems;
+        },
+        message: 'The basket is at the bottom of the shaft and contains items.'
+      }
+    ],
+    defaultMessage: 'The basket is empty.'
+  });
+
+  // Bell, book, and candles together (exorcism requirements)
+  registerConditionalMessage({
+    messageId: 'EXORCISM-ITEMS-READY',
+    variants: [
+      {
+        condition: (state) => {
+          const bell = state.getObject('BELL');
+          const book = state.getObject('BOOK');
+          const candles = state.getObject('CANDLES');
+          const hasBell = bell?.location === 'PLAYER';
+          const hasBook = book?.location === 'PLAYER';
+          const hasCandles = candles?.location === 'PLAYER';
+          const candlesLit = candles?.hasFlag(ObjectFlag.ONBIT) || false;
+          return hasBell && hasBook && hasCandles && candlesLit;
+        },
+        message: 'You have everything needed for the exorcism ceremony.'
+      }
+    ],
+    defaultMessage: 'You are not prepared for the ceremony.'
+  });
+
+  // Spirits exorcised and gate open
+  registerConditionalMessage({
+    messageId: 'SPIRITS-EXORCISED-GATE',
+    variants: [
+      {
+        condition: (state) => {
+          const spiritsExorcised = state.getGlobalVariable('SPIRITS_EXORCISED') || false;
+          const gateOpen = state.getGlobalVariable('GATE_OPEN') || false;
+          return spiritsExorcised && gateOpen;
+        },
+        message: 'The spirits are gone and the gate to Hades stands open.'
+      }
+    ],
+    defaultMessage: 'The gate is closed.'
   });
 }
