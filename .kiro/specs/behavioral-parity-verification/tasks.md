@@ -561,15 +561,333 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ---
 
-- [-] 14. Verify no regressions from all fixes
+- [x] 14. Verify no regressions from all fixes
   - Run full test suite
   - Run all transcripts
   - Verify 100% pass rate for all priorities
   - _Requirements: 6.2, 6.3, 6.5_
 
-- [-] 14.1 Commit to Git
-  - Commit message: "fix: Achieve 100% parity for all high and medium priority scenarios"
+- [x] 14.1 Commit to Git
+  - Commit message: "test: Phase 5 regression verification - identified 9 unit test failures and 37 transcript failures"
   - Include all fixes from Phase 5
+  - Include updated test results
+  - _Requirements: 6.5_
+
+---
+
+## Phase 5.5: Fix Regressions from Phase 5 (Week 6)
+
+- [ ] 14.2 Fix unit test regressions (9 failures)
+  - Address all unit test failures identified in regression verification
+  - _Requirements: 6.2, 6.3, 6.5_
+
+- [ ] 14.2.1 Fix error handling regressions
+  - Fix invalid command handling in I/O integration (should return success=false)
+  - Fix non-existent object handling in OpenAction (should return success=false)
+  - Update error handling to match original behavior
+  - _Requirements: 5.1, 5.4, 6.2_
+
+- [ ] 14.2.2 Fix vocabulary test assumptions
+  - Update vocabulary tests to recognize "xyzzy" as valid VERB (easter egg)
+  - Update hasWord tests for "xyzzy" (should return true)
+  - Verify other easter egg commands are properly recognized
+  - _Requirements: 5.5, 6.2_
+
+- [ ] 14.2.3 Fix display formatting issues
+  - Fix inventory display to match expected format (articles in object names)
+  - Fix examine action description format
+  - Ensure consistency with original game output
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.2.4 Fix conditional message whitespace
+  - Fix WEST-OF-HOUSE description line breaks
+  - Ensure conditional messages match original exactly
+  - Normalize whitespace consistently
+  - _Requirements: 2.2, 2.3, 6.2_
+
+- [ ] 14.2.5 Run unit tests to verify fixes
+  - Run full test suite
+  - Verify all 855 tests pass (100% pass rate)
+  - Document any remaining issues
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.2.6 Commit unit test fixes
+  - Commit message: "fix: Resolve 9 unit test regressions from Phase 5"
+  - Include all error handling fixes
+  - Include vocabulary and display fixes
+  - _Requirements: 6.5_
+
+---
+
+- [ ] 14.3 Fix critical transcript failures (7 remaining)
+  - Address critical priority transcript failures
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.3.1 Fix trap door transcript (92.9% → 100%)
+  - Analyze 2 command differences
+  - Update trap door logic to match original
+  - Re-run transcript 03-trap-door
+  - Verify 100% match
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.3.2 Fix lamp/darkness transcript (95.1% → 100%)
+  - Analyze 2 command differences
+  - Update lighting system to match original
+  - Re-run transcript 04-lamp-darkness
+  - Verify 100% match
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.3.3 Fix troll puzzle transcript (75.5% → 100%)
+  - Analyze 7 command differences
+  - Update troll combat and behavior
+  - Re-run transcript 05-troll-puzzle
+  - Verify 100% match
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.3.4 Fix dam puzzle navigation issue
+  - Fix SE direction parsing or find alternative route
+  - Update room connections if needed
+  - Test navigation from Round Room to Loud Room
+  - Re-run transcript 06-dam-puzzle
+  - Target: 100% match (currently 39.3%)
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.3.5 Fix cyclops puzzle transcript (2.1% → 100%)
+  - Analyze 3 command differences
+  - Update cyclops puzzle logic
+  - Re-run transcript 07-cyclops-puzzle
+  - Verify 100% match
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.3.6 Fix bell/book/candle transcript (6.6% → 100%)
+  - Analyze 4 command differences
+  - Update bell puzzle logic
+  - Re-run transcript 09-bell-book-candle
+  - Verify 100% match
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.3.7 Fix treasure collection transcript (5.1% → 100%)
+  - Analyze 5 command differences
+  - Update treasure handling logic
+  - Re-run transcript 10-treasure-collection
+  - Verify 100% match
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.3.8 Commit critical transcript fixes
+  - Commit message: "fix: Resolve 7 critical transcript failures"
+  - Include all critical puzzle fixes
+  - Include navigation fixes
+  - _Requirements: 6.5_
+
+---
+
+- [ ] 14.4 Fix high-priority transcript failures (10 failures)
+  - Address all high-priority transcript failures
+  - _Requirements: 6.1, 6.2, 6.3_
+
+- [ ] 14.4.1 Fix thief encounter transcript (70.0% → 95%+)
+  - Analyze 7 command differences
+  - Update thief behavior and AI
+  - Re-run transcript 20-thief-encounter
+  - Verify 95%+ similarity
+  - _Requirements: 4.1, 4.2, 6.2_
+
+- [ ] 14.4.2 Fix thief defeat transcript (62.0% → 95%+)
+  - Analyze 9 command differences
+  - Update thief defeat logic
+  - Re-run transcript 21-thief-defeat
+  - Verify 95%+ similarity
+  - _Requirements: 4.1, 4.2, 6.2_
+
+- [ ] 14.4.3 Fix troll combat transcript (78.1% → 95%+)
+  - Analyze 7 command differences
+  - Update troll combat mechanics
+  - Re-run transcript 22-troll-combat
+  - Verify 95%+ similarity
+  - _Requirements: 4.3, 6.2_
+
+- [ ] 14.4.4 Fix cyclops feeding transcript (81.1% → 95%+)
+  - Analyze 8 command differences
+  - Update cyclops feeding behavior
+  - Re-run transcript 23-cyclops-feeding
+  - Verify 95%+ similarity
+  - _Requirements: 4.1, 4.4, 6.2_
+
+- [ ] 14.4.5 Fix bat encounter transcript (74.2% → 95%+)
+  - Analyze 7 command differences
+  - Update bat behavior
+  - Re-run transcript 24-bat-encounter
+  - Verify 95%+ similarity
+  - _Requirements: 4.1, 4.2, 6.2_
+
+- [ ] 14.4.6 Fix maze navigation transcript (81.4% → 95%+)
+  - Analyze 6 command differences
+  - Update maze logic
+  - Re-run transcript 25-maze-navigation
+  - Verify 95%+ similarity
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.4.7 Fix mirror room transcript (75.9% → 95%+)
+  - Analyze 7 command differences
+  - Update mirror room logic
+  - Re-run transcript 26-mirror-room
+  - Verify 95%+ similarity
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.4.8 Fix coffin puzzle transcript (69.9% → 95%+)
+  - Analyze 8 command differences
+  - Update coffin puzzle logic
+  - Re-run transcript 27-coffin-puzzle
+  - Verify 95%+ similarity
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.4.9 Fix egg/nest puzzle transcript (69.2% → 95%+)
+  - Analyze 8 command differences
+  - Update egg/nest puzzle logic
+  - Re-run transcript 28-egg-nest
+  - Verify 95%+ similarity
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.4.10 Fix rainbow puzzle transcript (74.2% → 95%+)
+  - Analyze 7 command differences
+  - Update rainbow puzzle logic
+  - Re-run transcript 29-rainbow
+  - Verify 95%+ similarity
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.4.11 Commit high-priority transcript fixes
+  - Commit message: "fix: Resolve 10 high-priority transcript failures"
+  - Include all NPC and puzzle fixes
+  - _Requirements: 6.5_
+
+---
+
+- [ ] 14.5 Fix medium-priority transcript failures (5 failures)
+  - Address medium-priority edge case failures
+  - _Requirements: 5.1, 5.2, 5.3, 5.4, 6.2_
+
+- [ ] 14.5.1 Fix error messages transcript (55.6% → 90%+)
+  - Analyze 10 command differences
+  - Update error message text
+  - Re-run transcript 40-error-messages
+  - Verify 90%+ similarity
+  - _Requirements: 5.4, 6.2_
+
+- [ ] 14.5.2 Fix inventory limits transcript (17.8% → 90%+)
+  - Analyze 17 command differences
+  - Update inventory limit handling
+  - Re-run transcript 41-inventory-limits
+  - Verify 90%+ similarity
+  - _Requirements: 5.2, 6.2_
+
+- [ ] 14.5.3 Fix unusual commands transcript (58.9% → 90%+)
+  - Analyze 11 command differences
+  - Update edge case command handling
+  - Re-run transcript 42-unusual-commands
+  - Verify 90%+ similarity
+  - _Requirements: 5.3, 6.2_
+
+- [ ] 14.5.4 Fix death/resurrection transcript (28.7% → 90%+)
+  - Analyze 12 command differences
+  - Update death and resurrection logic
+  - Re-run transcript 43-death-resurrection
+  - Verify 90%+ similarity
+  - _Requirements: 5.1, 6.2_
+
+- [ ] 14.5.5 Fix save/restore transcript (60.1% → 90%+)
+  - Analyze 7 command differences
+  - Update save/restore functionality
+  - Re-run transcript 44-save-restore
+  - Verify 90%+ similarity
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.5.6 Commit medium-priority transcript fixes
+  - Commit message: "fix: Resolve 5 medium-priority transcript failures"
+  - Include all edge case fixes
+  - _Requirements: 6.5_
+
+---
+
+- [ ] 14.6 Fix low-priority transcript failures (15 failures)
+  - Address low-priority flavor text and timing failures
+  - _Requirements: 5.1, 5.5, 6.2_
+
+- [ ] 14.6.1 Fix flavor text transcript (33.9% → 85%+)
+  - Analyze 12 command differences
+  - Update scenery descriptions
+  - Re-run transcript 60-flavor-text
+  - Verify 85%+ similarity
+  - _Requirements: 5.1, 6.2_
+
+- [ ] 14.6.2 Fix rare interactions transcript (24.8% → 85%+)
+  - Analyze 12 command differences
+  - Update rare interaction handling
+  - Re-run transcript 61-rare-interactions
+  - Verify 85%+ similarity
+  - _Requirements: 5.1, 6.2_
+
+- [ ] 14.6.3 Fix alternative paths transcript (64.2% → 85%+)
+  - Analyze 6 command differences
+  - Update alternative solution paths
+  - Re-run transcript 62-alternative-paths
+  - Verify 85%+ similarity
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.6.4 Fix easter eggs transcript (21.5% → 85%+)
+  - Analyze 13 command differences
+  - Implement missing easter eggs
+  - Re-run transcript 63-easter-eggs
+  - Verify 85%+ similarity
+  - _Requirements: 5.5, 6.2_
+
+- [ ] 14.6.5 Fix verbose mode transcript (21.3% → 85%+)
+  - Analyze 12 command differences
+  - Update verbose/brief mode handling
+  - Re-run transcript 64-verbose-mode
+  - Verify 85%+ similarity
+  - _Requirements: 5.5, 6.2_
+
+- [ ] 14.6.6 Fix timing transcripts (10 failures - defer to Phase 6)
+  - Note: All 10 timing transcripts failed (17.8% - 58.7% similarity)
+  - These will be addressed in Phase 6: Daemon Timing Verification
+  - Transcripts: lamp fuel (70-71), candle (72), NPC movement (73-75), multiple daemons (76-79)
+  - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
+
+- [ ] 14.6.7 Commit low-priority transcript fixes
+  - Commit message: "fix: Resolve low-priority transcript failures (flavor text and edge cases)"
+  - Include all flavor text and easter egg fixes
+  - Note: Timing transcripts deferred to Phase 6
+  - _Requirements: 6.5_
+
+---
+
+- [ ] 14.7 Verify all fixes and run final regression check
+  - Run complete verification suite
+  - _Requirements: 6.2, 6.3, 6.5_
+
+- [ ] 14.7.1 Run full unit test suite
+  - Execute all 855 tests
+  - Verify 100% pass rate
+  - Document results
+  - _Requirements: 6.2, 6.3_
+
+- [ ] 14.7.2 Run all transcript verifications
+  - Execute all 41 transcripts
+  - Verify critical: 100% pass rate
+  - Verify high: 100% pass rate
+  - Verify medium: 100% pass rate
+  - Verify low: 95%+ pass rate
+  - _Requirements: 2.5, 2.6, 6.2_
+
+- [ ] 14.7.3 Generate regression fix report
+  - Document all fixes applied
+  - Show before/after metrics
+  - Confirm no new regressions
+  - _Requirements: 8.1, 8.2, 8.3_
+
+- [ ] 14.7.4 Final commit for Phase 5.5
+  - Commit message: "fix: Complete Phase 5.5 - all regressions resolved, 100% parity achieved for critical/high/medium priorities"
+  - Include regression fix report
   - Include updated test results
   - _Requirements: 6.5_
 
