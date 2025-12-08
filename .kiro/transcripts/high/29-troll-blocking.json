@@ -1,8 +1,8 @@
 {
-  "id": "24-bat-encounter",
-  "name": "Bat Encounter",
-  "description": "Bat carrying player",
-  "category": "npc",
+  "id": "29-troll-blocking",
+  "name": "Troll Blocking Behavior",
+  "description": "Testing troll blocking passages",
+  "category": "puzzle",
   "priority": "high",
   "entries": [
     {
@@ -73,16 +73,16 @@
     {
       "command": "e",
       "expectedOutput": "The troll fends you off with a menacing gesture.\nThe flat of the troll's axe hits you delicately on the head, knocking you out.",
-      "notes": "Go east to bat room"
+      "notes": "Go east"
     },
     {
       "command": "look",
       "expectedOutput": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nThe troll swings his axe, and it nicks your arm as you dodge.\n>Your score is 35 (total of 350 points), in 15 moves.",
-      "notes": "Look at bat"
+      "notes": "Look at rainbow"
     }
   ],
   "metadata": {
-    "created": "2025-12-08T00:15:53.297Z",
+    "created": "2025-12-08T00:15:53.319Z",
     "source": "original-game",
     "verified": false
   }

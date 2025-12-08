@@ -1,8 +1,8 @@
 {
-  "id": "29-rainbow",
-  "name": "Rainbow Puzzle",
-  "description": "Rainbow and pot of gold",
-  "category": "puzzle",
+  "id": "24-troll-combat-2",
+  "name": "Troll Combat Sequence 2",
+  "description": "Additional troll combat testing",
+  "category": "npc",
   "priority": "high",
   "entries": [
     {
@@ -73,16 +73,16 @@
     {
       "command": "e",
       "expectedOutput": "The troll fends you off with a menacing gesture.\nThe flat of the troll's axe hits you delicately on the head, knocking you out.",
-      "notes": "Go east"
+      "notes": "Go east to bat room"
     },
     {
       "command": "look",
       "expectedOutput": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nThe troll swings his axe, and it nicks your arm as you dodge.\n>Your score is 35 (total of 350 points), in 15 moves.",
-      "notes": "Look at rainbow"
+      "notes": "Look at bat"
     }
   ],
   "metadata": {
-    "created": "2025-12-08T00:15:53.319Z",
+    "created": "2025-12-08T00:15:53.297Z",
     "source": "original-game",
     "verified": false
   }
