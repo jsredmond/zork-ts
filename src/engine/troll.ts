@@ -9,6 +9,7 @@ import { GameState } from '../game/state.js';
 import { GameObject } from '../game/objects.js';
 import { BaseActorBehavior, ActorState } from './actors.js';
 import { ObjectFlag } from '../game/data/flags.js';
+import { getRandom } from '../testing/seededRandom.js';
 
 /**
  * Troll behavior implementation
@@ -50,7 +51,7 @@ export class TrollBehavior extends BaseActorBehavior {
       // 75% chance to recover axe (90% if troll is fighting)
       const chance = this.state === ActorState.FIGHTING ? 0.90 : 0.75;
       
-      if (Math.random() < chance) {
+      if (getRandom() < chance) {
         // Troll recovers axe
         axe.flags.add('NDESCBIT' as any);
         axe.flags.delete(ObjectFlag.WEAPONBIT);
@@ -160,7 +161,7 @@ export class TrollBehavior extends BaseActorBehavior {
     // Special handling for weapons (knife, sword)
     if (item.id === 'KNIFE' || item.id === 'SWORD') {
       // 20% chance troll eats it and dies
-      if (Math.random() < 0.20) {
+      if (getRandom() < 0.20) {
         console.log(`The troll, who is not overly proud, graciously accepts the gift and eats it hungrily. Poor troll, he dies from an internal hemorrhage and his carcass disappears in a sinister black fog.`);
         state.moveObject(item.id, null); // Remove item
         this.transitionState(ActorState.DEAD, state);
@@ -197,7 +198,7 @@ export class TrollBehavior extends BaseActorBehavior {
       this.transitionState(ActorState.FIGHTING, state);
       
       // 33% chance to immediately fight back
-      if (Math.random() < 0.33) {
+      if (getRandom() < 0.33) {
         troll.flags.add(ObjectFlag.FIGHTBIT);
       }
     }

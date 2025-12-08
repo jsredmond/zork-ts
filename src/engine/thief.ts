@@ -9,6 +9,7 @@ import { GameState } from '../game/state.js';
 import { GameObject } from '../game/objects.js';
 import { BaseActorBehavior, ActorState } from './actors.js';
 import { ObjectFlag } from '../game/data/flags.js';
+import { getRandom } from '../testing/seededRandom.js';
 
 /**
  * Thief behavior implementation
@@ -89,7 +90,7 @@ export class ThiefBehavior extends BaseActorBehavior {
    */
   private thiefVsAdventurer(state: GameState, isVisible: boolean): boolean {
     // Simplified combat - thief may steal items or attack
-    if (Math.random() < 0.3) {
+    if (getRandom() < 0.3) {
       // Steal from player
       const stolen = this.stealFromPlayer(state);
       if (stolen && isVisible) {
@@ -173,7 +174,7 @@ export class ThiefBehavior extends BaseActorBehavior {
 
     // Steal treasures (75% chance per treasure)
     for (const objId of objectsToSteal) {
-      if (Math.random() < 0.75) {
+      if (getRandom() < 0.75) {
         const obj = state.getObject(objId);
         if (obj) {
           state.moveObject(objId, 'THIEF');
@@ -200,7 +201,7 @@ export class ThiefBehavior extends BaseActorBehavior {
           obj.flags.has(ObjectFlag.TAKEBIT) &&
           !obj.flags.has('SACREDBIT' as any) &&
           !obj.flags.has('INVISIBLE' as any) &&
-          (objId === 'STILETTO' || Math.random() < 0.1)) {
+          (objId === 'STILETTO' || getRandom() < 0.1)) {
         
         state.moveObject(objId, 'THIEF');
         obj.flags.add('TOUCHBIT' as any);
@@ -223,7 +224,7 @@ export class ThiefBehavior extends BaseActorBehavior {
     const treasures = inventory.filter(obj => obj.value && obj.value > 0);
     
     if (treasures.length > 0) {
-      const target = treasures[Math.floor(Math.random() * treasures.length)];
+      const target = treasures[Math.floor(getRandom() * treasures.length)];
       state.moveObject(target.id, 'THIEF');
       target.flags.add('TOUCHBIT' as any);
       target.flags.add('INVISIBLE' as any);
@@ -249,7 +250,7 @@ export class ThiefBehavior extends BaseActorBehavior {
       }
 
       // Drop non-treasures with 30% probability
-      if ((!obj.value || obj.value === 0) && Math.random() < 0.3) {
+      if ((!obj.value || obj.value === 0) && getRandom() < 0.3) {
         obj.flags.delete('INVISIBLE' as any);
         state.moveObject(obj.id, roomId);
         dropped = true;

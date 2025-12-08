@@ -7,6 +7,7 @@
 
 import { GameState } from '../game/state.js';
 import { ObjectFlag } from '../game/data/flags.js';
+import { getRandom } from '../testing/seededRandom.js';
 
 /**
  * Sword glow daemon (I-SWORD)
@@ -143,7 +144,7 @@ export class WeaponInteractions {
     troll.flags.add(ObjectFlag.FIGHTBIT);
     
     // 75% chance troll recovers axe
-    if (Math.random() < 0.75) {
+    if (getRandom() < 0.75) {
       return "The troll deftly catches the axe and, grinning, nimbly flips it from hand to hand.";
     }
     

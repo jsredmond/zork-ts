@@ -14,8 +14,8 @@ const TROLL_MESSAGES = {
     "The troll's axe whistles past your ear."
   ],
   lightWound: [
-    "The troll's axe grazes you.",
-    "The troll nicks you with his axe."
+    "The troll swings his axe, and it nicks your arm as you dodge.",
+    "The troll's axe grazes you."
   ],
   seriousWound: [
     "The troll's axe strikes you with a mighty blow!",
@@ -28,9 +28,10 @@ const TROLL_MESSAGES = {
     "The troll's axe knocks your {weapon} from your hand!"
   ],
   unconscious: [
-    "The troll knocks you unconscious!"
+    "The flat of the troll's axe hits you delicately on the head, knocking you out."
   ],
   killed: [
+    "The troll's axe removes your head.",
     "The troll's axe cleaves you in twain!"
   ],
   hesitate: [

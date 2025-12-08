@@ -479,13 +479,13 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ---
 
-- [-] 11. Verify no regressions from critical fixes
+- [x] 11. Verify no regressions from critical fixes
   - Run full test suite
   - Run all transcripts
   - Verify existing functionality intact
   - _Requirements: 6.2, 6.3_
 
-- [-] 11.1 Commit to Git
+- [x] 11.1 Commit to Git
   - Commit message: "fix: Achieve 100% parity for all critical scenarios"
   - Include all fixes from Phase 4
   - Include updated test results
@@ -495,35 +495,35 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ## Phase 5: Fix All Remaining Differences (Week 6)
 
-- [ ] 12. Fix NPC and combat differences
+- [-] 12. Fix NPC and combat differences
   - Address high-priority failures
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 6.1_
 
-- [ ] 12.1 Fix thief behavior differences
+- [x] 12.1 Fix thief behavior differences
   - Update thief AI and actions
   - Re-run transcripts 20-21
   - Verify 95%+ similarity
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 12.2 Fix troll combat differences
+- [x] 12.2 Fix troll combat differences
   - Update troll combat logic
   - Re-run transcript 22
   - Verify 95%+ similarity
   - _Requirements: 4.3_
 
-- [ ] 12.3 Fix cyclops feeding differences
+- [x] 12.3 Fix cyclops feeding differences
   - Update cyclops feeding logic
   - Re-run transcript 23
   - Verify 95%+ similarity
   - _Requirements: 4.1, 4.4_
 
-- [ ] 12.4 Fix bat encounter differences
+- [x] 12.4 Fix bat encounter differences
   - Update bat behavior
   - Re-run transcript 24
   - Verify 95%+ similarity
   - _Requirements: 4.1, 4.2_
 
-- [ ] 12.5 Fix remaining high-priority differences
+- [x] 12.5 Fix remaining high-priority differences
   - Update maze, mirror, coffin, egg, rainbow logic
   - Re-run transcripts 25-29
   - Verify 95%+ similarity

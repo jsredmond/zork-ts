@@ -400,7 +400,7 @@ function displayHeroCombatMessage(
       `The ${villain} is disarmed by your blow!`
     ],
     [CombatResult.UNCONSCIOUS]: [
-      `The ${villain} is knocked unconscious!`
+      `The ${villain} is battered into unconsciousness.`
     ],
     [CombatResult.KILLED]: [
       `The ${villain} is killed by your ${weaponName}!`
