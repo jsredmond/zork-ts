@@ -1,0 +1,1623 @@
+{
+  "totalTranscripts": 10,
+  "passedTranscripts": 0,
+  "failedTranscripts": 10,
+  "totalCommands": 162,
+  "matchedCommands": 1,
+  "overallPassRate": 0,
+  "averageSimilarity": 0.043092780558132635,
+  "byCategory": {
+    "npc": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "passRate": 0,
+      "averageSimilarity": 0.03782752190271473
+    },
+    "combat": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "passRate": 0,
+      "averageSimilarity": 0.10050545519207231
+    },
+    "puzzle": {
+      "total": 6,
+      "passed": 0,
+      "failed": 6,
+      "passRate": 0,
+      "averageSimilarity": 0.03615663078018498
+    }
+  },
+  "byPriority": {
+    "high": {
+      "total": 10,
+      "passed": 0,
+      "failed": 10,
+      "passRate": 0,
+      "averageSimilarity": 0.043092780558132635
+    }
+  },
+  "results": [
+    {
+      "transcriptId": "20-thief-encounter",
+      "name": "Thief Encounter",
+      "category": "npc",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 16,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.01907629025646782,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "take sword",
+          "expected": "Taken.",
+          "actual": "You can't see any SWORD here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.\nYour sword is glowing with a faint blue glow.",
+          "actual": "You can't go that way.",
+          "similarity": 0.006993006993006993,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nYour sword has begun to glow very brightly.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "kill troll with sword",
+          "expected": "The troll is battered into unconsciousness.",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.06976744186046512,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "kill troll with sword",
+          "expected": "The unconscious troll cannot defend himself: He dies.\nAlmost as soon as the troll breathes his last breath, a cloud of sinister black\nfog envelops him, and when the fog lifts, the carcass has disappeared.\nYour sword is no longer glowing.",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.004219409282700422,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "e",
+          "expected": "East-West Passage\nThis is a narrow east-west passageway. There is a narrow stairway leading down\nat the north end of the room.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 15,
+          "command": "n",
+          "expected": "Chasm\nA chasm runs southwest to northeast and the path follows it. You are on the\nsouth side of the chasm, where a crack opens into a passage.\n>Your score is 40 (total of 350 points), in 16 moves.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 2
+    },
+    {
+      "transcriptId": "21-thief-defeat",
+      "name": "Thief Defeat",
+      "category": "npc",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 17,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.07474928738134091,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "take sword",
+          "expected": "Taken.",
+          "actual": "You can't see any SWORD here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.\nYour sword is glowing with a faint blue glow.",
+          "actual": "You can't go that way.",
+          "similarity": 0.006993006993006993,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nYour sword has begun to glow very brightly.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "kill troll with sword",
+          "expected": "The troll is battered into unconsciousness.",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.06976744186046512,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "kill troll with sword",
+          "expected": "The unconscious troll cannot defend himself: He dies.\nAlmost as soon as the troll breathes his last breath, a cloud of sinister black\nfog envelops him, and when the fog lifts, the carcass has disappeared.\nYour sword is no longer glowing.",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.004219409282700422,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "kill troll with sword",
+          "expected": "You can't see any troll here!",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.9655172413793104,
+          "category": "text",
+          "severity": "minor"
+        },
+        {
+          "commandIndex": 15,
+          "command": "e",
+          "expected": "East-West Passage\nThis is a narrow east-west passageway. There is a narrow stairway leading down\nat the north end of the room.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 16,
+          "command": "n",
+          "expected": "Chasm\nA chasm runs southwest to northeast and the path follows it. You are on the\nsouth side of the chasm, where a crack opens into a passage.\n>Your score is 40 (total of 350 points), in 17 moves.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 0
+    },
+    {
+      "transcriptId": "22-troll-combat",
+      "name": "Troll Combat",
+      "category": "combat",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 16,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.10050545519207231,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "take sword",
+          "expected": "Taken.",
+          "actual": "You can't see any SWORD here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.\nYour sword is glowing with a faint blue glow.",
+          "actual": "You can't go that way.",
+          "similarity": 0.006993006993006993,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nYour sword has begun to glow very brightly.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "attack troll with sword",
+          "expected": "The troll is battered into unconsciousness.",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.06976744186046512,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "attack troll with sword",
+          "expected": "The unconscious troll cannot defend himself: He dies.\nAlmost as soon as the troll breathes his last breath, a cloud of sinister black\nfog envelops him, and when the fog lifts, the carcass has disappeared.\nYour sword is no longer glowing.",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.004219409282700422,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "attack troll with sword",
+          "expected": "You can't see any troll here!",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.9655172413793104,
+          "category": "text",
+          "severity": "minor"
+        },
+        {
+          "commandIndex": 15,
+          "command": "attack troll with sword",
+          "expected": "You can't see any troll here!\n>Your score is 35 (total of 350 points), in 16 moves.",
+          "actual": "You can't see any TROLL here.",
+          "similarity": 0.3373493975903614,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 1
+    },
+    {
+      "transcriptId": "23-cyclops-feeding",
+      "name": "Cyclops Feeding",
+      "category": "puzzle",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 19,
+      "matchedCommands": 1,
+      "averageSimilarity": 0.07860995095577958,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "e",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "take sack",
+          "expected": "Taken.",
+          "actual": "You can't see any SACK here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "open sack",
+          "expected": "Opening the brown sack reveals a clove of garlic, and a lunch.",
+          "actual": "You can't see any SACK here.",
+          "similarity": 0.14516129032258066,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "take lunch",
+          "expected": "Taken.",
+          "actual": "You can't see any LUNCH here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+          "actual": "You can't go that way.",
+          "similarity": 0.008333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 15,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 16,
+          "command": "e",
+          "expected": "The troll fends you off with a menacing gesture.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 18,
+          "command": "give lunch to cyclops",
+          "expected": "You can't see any cyclops here!\nThe flat of the troll's axe hits you delicately on the head, knocking you out.\n>Your score is 35 (total of 350 points), in 19 moves.",
+          "actual": "You can't see any LUNCH here.",
+          "similarity": 0.11585365853658537,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 0
+    },
+    {
+      "transcriptId": "24-bat-encounter",
+      "name": "Bat Encounter",
+      "category": "npc",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 15,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.019656988070335453,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+          "actual": "You can't go that way.",
+          "similarity": 0.008333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "e",
+          "expected": "The troll fends you off with a menacing gesture.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "ne",
+          "expected": "You can't go that way.",
+          "actual": "I don't know how to northeast.",
+          "similarity": 0.03333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "e",
+          "expected": "The troll fends you off with a menacing gesture.\nThe flat of the troll's axe hits you delicately on the head, knocking you out.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "look",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nThe troll swings his axe, and it nicks your arm as you dodge.\n>Your score is 35 (total of 350 points), in 15 moves.",
+          "actual": "Clearing\nYou are in a clearing, with a forest surrounding you on all sides. A path leads south.",
+          "similarity": 0.02894736842105263,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 1
+    },
+    {
+      "transcriptId": "25-maze-navigation",
+      "name": "Maze Navigation",
+      "category": "puzzle",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 16,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.015358250877342997,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+          "actual": "You can't go that way.",
+          "similarity": 0.008333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "s",
+          "expected": "East of Chasm\nYou are on the east edge of a chasm, the bottom of which cannot be seen. A\nnarrow passage goes north, and the path you are on continues to the east.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "e",
+          "expected": "Gallery\nThis is an art gallery. Most of the paintings have been stolen by vandals with\nexceptional taste. The vandals left through either the north or west exits.\nFortunately, there is still one chance for you to be a vandal, for on the far\nwall is a painting of unparalleled beauty.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "e",
+          "expected": "You can't go that way.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "n",
+          "expected": "Studio\nThis appears to have been an artist's studio. The walls and floors are\nsplattered with paints of 69 different colors. Strangely enough, nothing of\nvalue is hanging here. At the south end of the room is an open door (also\ncovered with paint). A dark and narrow chimney leads up from a fireplace;\nalthough you might be able to get up it, it seems unlikely you could get back\ndown.\nLoosely attached to a wall is a small piece of paper.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "e",
+          "expected": "You can't go that way.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 15,
+          "command": "se",
+          "expected": "You can't go that way.\n>Your score is 35 (total of 350 points), in 16 moves.",
+          "actual": "I don't know how to southeast.",
+          "similarity": 0.013157894736842105,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 0
+    },
+    {
+      "transcriptId": "26-mirror-room",
+      "name": "Mirror Room",
+      "category": "puzzle",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 16,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.0405374443595308,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+          "actual": "You can't go that way.",
+          "similarity": 0.008333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "e",
+          "expected": "The troll fends you off with a menacing gesture.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "n",
+          "expected": "You can't go that way.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "look",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nThe flat of the troll's axe hits you delicately on the head, knocking you out.",
+          "actual": "North of House\nYou are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees.",
+          "similarity": 0.037900874635568516,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "touch mirror",
+          "expected": "You can't see any mirror here!\nThe troll swings his axe, and it nicks your arm as you dodge.",
+          "actual": "You can't see any MIRROR here.",
+          "similarity": 0.31521739130434784,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 15,
+          "command": "rub mirror",
+          "expected": "You can't see any mirror here!\nThe troll's axe removes your head.\nIt appears that that last blow was too much for you. I'm afraid you are dead.\n****  You have died  ****\nNow, let's take a look here... Well, you probably deserve another chance. I\ncan't quite fix you up completely, but you can't have everything.\nForest\nThis is a forest, with trees in all directions. To the east, there appears to be\nsunlight.\n>Your score is 25 (total of 350 points), in 16 moves.",
+          "actual": "You can't see any MIRROR here.",
+          "similarity": 0.06290672451193059,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 1
+    },
+    {
+      "transcriptId": "27-coffin-puzzle",
+      "name": "Coffin Puzzle",
+      "category": "puzzle",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 16,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.042200901738989334,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+          "actual": "You can't go that way.",
+          "similarity": 0.008333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "e",
+          "expected": "The troll fends you off with a menacing gesture.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "se",
+          "expected": "You can't go that way.",
+          "actual": "I don't know how to southeast.",
+          "similarity": 0.03333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "look",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nThe flat of the troll's axe hits you delicately on the head, knocking you out.",
+          "actual": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one corner of the house there is a small window which is slightly ajar.",
+          "similarity": 0.029154518950437316,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "open coffin",
+          "expected": "You can't see any coffin here!\nThe troll swings his axe, and it nicks your arm as you dodge.",
+          "actual": "You can't see any COFFIN here.",
+          "similarity": 0.31521739130434784,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 15,
+          "command": "take sceptre",
+          "expected": "You can't see any sceptre here!\nThe troll's axe removes your head.\nIt appears that that last blow was too much for you. I'm afraid you are dead.\n****  You have died  ****\nNow, let's take a look here... Well, you probably deserve another chance. I\ncan't quite fix you up completely, but you can't have everything.\nForest\nThis is a forest, with trees in all directions. To the east, there appears to be\nsunlight.\n>Your score is 25 (total of 350 points), in 16 moves.",
+          "actual": "You can't see any SCEPTRE here.",
+          "similarity": 0.06493506493506493,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 0
+    },
+    {
+      "transcriptId": "28-egg-nest",
+      "name": "Egg and Nest Puzzle",
+      "category": "puzzle",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 16,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.020576248679131742,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+          "actual": "You can't go that way.",
+          "similarity": 0.008333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "w",
+          "expected": "The troll fends you off with a menacing gesture.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "climb",
+          "expected": "You can't go that way.",
+          "actual": "What do you want to climb?",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "n",
+          "expected": "You can't go that way.\nThe flat of the troll's axe hits you delicately on the head, knocking you out.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "look",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nThe troll swings his axe, and it nicks your arm as you dodge.",
+          "actual": "North of House\nYou are facing the north side of a white house. There is no door here, and all the windows are boarded up. To the north a narrow path winds through the trees.",
+          "similarity": 0.03987730061349693,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 15,
+          "command": "take egg",
+          "expected": "You can't see any egg here!\nThe troll's axe removes your head.\nIt appears that that last blow was too much for you. I'm afraid you are dead.\n****  You have died  ****\nNow, let's take a look here... Well, you probably deserve another chance. I\ncan't quite fix you up completely, but you can't have everything.\nForest\nThis is a forest, with trees in all directions. To the east, there appears to be\nsunlight.\n>Your score is 25 (total of 350 points), in 16 moves.",
+          "actual": "You can't see any EGG here.",
+          "similarity": 0.056768558951965066,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 0
+    },
+    {
+      "transcriptId": "29-rainbow",
+      "name": "Rainbow Puzzle",
+      "category": "puzzle",
+      "priority": "high",
+      "passed": false,
+      "totalCommands": 15,
+      "matchedCommands": 0,
+      "averageSimilarity": 0.019656988070335453,
+      "differences": [
+        {
+          "commandIndex": 0,
+          "command": "n",
+          "expected": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 1,
+          "command": "e",
+          "expected": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 2,
+          "command": "open window",
+          "expected": "With great effort, you open the window far enough to allow entry.",
+          "actual": "You can't see any WINDOW here.",
+          "similarity": 0.015384615384615385,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 3,
+          "command": "w",
+          "expected": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\nA quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+          "actual": "You can't go that way.",
+          "similarity": 0.002386634844868735,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 4,
+          "command": "w",
+          "expected": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+          "actual": "You can't go that way.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 5,
+          "command": "take lamp",
+          "expected": "Taken.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 6,
+          "command": "move rug",
+          "expected": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+          "actual": "You can't see any RUG here.",
+          "similarity": 0.02702702702702703,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 7,
+          "command": "open trap door",
+          "expected": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+          "actual": "You can't see any TRAP DOOR here.",
+          "similarity": 0.036585365853658534,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 8,
+          "command": "turn on lamp",
+          "expected": "The brass lantern is now on.",
+          "actual": "You can't see any LAMP here.",
+          "similarity": 0.14285714285714285,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 9,
+          "command": "d",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+          "actual": "You can't go that way.",
+          "similarity": 0.008333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 10,
+          "command": "n",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 11,
+          "command": "e",
+          "expected": "The troll fends you off with a menacing gesture.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 12,
+          "command": "ne",
+          "expected": "You can't go that way.",
+          "actual": "I don't know how to northeast.",
+          "similarity": 0.03333333333333333,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 13,
+          "command": "e",
+          "expected": "The troll fends you off with a menacing gesture.\nThe flat of the troll's axe hits you delicately on the head, knocking you out.",
+          "actual": "",
+          "similarity": 0,
+          "category": "text",
+          "severity": "critical"
+        },
+        {
+          "commandIndex": 14,
+          "command": "look",
+          "expected": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nThe troll swings his axe, and it nicks your arm as you dodge.\n>Your score is 35 (total of 350 points), in 15 moves.",
+          "actual": "Clearing\nYou are in a clearing, with a forest surrounding you on all sides. A path leads south.",
+          "similarity": 0.02894736842105263,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
+      "executionTime": 0
+    }
+  ],
+  "executionTime": 7
+}
