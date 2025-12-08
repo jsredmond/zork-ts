@@ -16,7 +16,10 @@
     "test:bugs": "tsx src/testing/cli-bugs.ts",
     "test:bug-update": "tsx src/testing/cli-bugs.ts update",
     "test:bug-export": "tsx src/testing/cli-bugs.ts export",
-    "package": "npm run build && pkg dist/main.js --targets node20-macos-x64,node20-macos-arm64,node20-win-x64 --output releases/zork"
+    "package": "npm run build && pkg dist/main.js --targets node20-macos-x64,node20-macos-arm64,node20-win-x64 --output releases/zork",
+    "verify:transcripts": "tsx scripts/verify-all-transcripts.ts --report",
+    "verify:puzzles": "vitest --run src/testing/puzzleSolutionVerification.test.ts",
+    "verify:report": "tsx scripts/generate-verification-report.ts --run-and-generate"
   },
   "pkg": {
     "targets": [
@@ -26,16 +29,21 @@
     ],
     "outputPath": "releases"
   },
-  "keywords": ["zork", "interactive-fiction", "text-adventure"],
+  "keywords": [
+    "zork",
+    "interactive-fiction",
+    "text-adventure"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.10.0",
+    "tsx": "^4.7.0",
     "typescript": "^5.3.0",
-    "vitest": "^1.0.0",
-    "tsx": "^4.7.0"
+    "vitest": "^1.0.0"
   },
   "dependencies": {
-    "fast-check": "^3.15.0"
+    "fast-check": "^3.15.0",
+    "zod": "^4.1.13"
   }
 }
