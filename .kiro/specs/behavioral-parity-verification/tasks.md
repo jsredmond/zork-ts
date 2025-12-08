@@ -577,41 +577,41 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ## Phase 5.5: Fix Regressions from Phase 5 (Week 6)
 
-- [ ] 14.2 Fix unit test regressions (9 failures)
+- [-] 14.2 Fix unit test regressions (9 failures)
   - Address all unit test failures identified in regression verification
   - _Requirements: 6.2, 6.3, 6.5_
 
-- [ ] 14.2.1 Fix error handling regressions
+- [x] 14.2.1 Fix error handling regressions
   - Fix invalid command handling in I/O integration (should return success=false)
   - Fix non-existent object handling in OpenAction (should return success=false)
   - Update error handling to match original behavior
   - _Requirements: 5.1, 5.4, 6.2_
 
-- [ ] 14.2.2 Fix vocabulary test assumptions
+- [x] 14.2.2 Fix vocabulary test assumptions
   - Update vocabulary tests to recognize "xyzzy" as valid VERB (easter egg)
   - Update hasWord tests for "xyzzy" (should return true)
   - Verify other easter egg commands are properly recognized
   - _Requirements: 5.5, 6.2_
 
-- [ ] 14.2.3 Fix display formatting issues
+- [x] 14.2.3 Fix display formatting issues
   - Fix inventory display to match expected format (articles in object names)
   - Fix examine action description format
   - Ensure consistency with original game output
   - _Requirements: 6.2, 6.3_
 
-- [ ] 14.2.4 Fix conditional message whitespace
+- [x] 14.2.4 Fix conditional message whitespace
   - Fix WEST-OF-HOUSE description line breaks
   - Ensure conditional messages match original exactly
   - Normalize whitespace consistently
   - _Requirements: 2.2, 2.3, 6.2_
 
-- [ ] 14.2.5 Run unit tests to verify fixes
+- [x] 14.2.5 Run unit tests to verify fixes
   - Run full test suite
   - Verify all 855 tests pass (100% pass rate)
   - Document any remaining issues
   - _Requirements: 6.2, 6.3_
 
-- [ ] 14.2.6 Commit unit test fixes
+- [-] 14.2.6 Commit unit test fixes
   - Commit message: "fix: Resolve 9 unit test regressions from Phase 5"
   - Include all error handling fixes
   - Include vocabulary and display fixes

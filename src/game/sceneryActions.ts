@@ -84,8 +84,16 @@ export function executeSceneryAction(
     return null;
   }
 
+  // Scenery actions that indicate failure should return success: false
+  // Messages like "won't budge", "can't", "don't" indicate failure
+  const isFailureMessage = message.toLowerCase().includes("won't") ||
+                          message.toLowerCase().includes("can't") ||
+                          message.toLowerCase().includes("don't") ||
+                          message.toLowerCase().includes("securely fastened") ||
+                          message.toLowerCase().includes("isn't");
+
   return {
-    success: true,
+    success: !isFailureMessage,
     message: message,
     stateChanges: []
   };

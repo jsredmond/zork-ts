@@ -134,7 +134,8 @@ describe('Scenery Action Handlers', () => {
     it('should return ActionResult for valid scenery action', () => {
       const result = executeSceneryAction('BOARD', 'TAKE', state);
       expect(result).not.toBeNull();
-      expect(result?.success).toBe(true);
+      // Scenery actions that indicate failure (like "securely fastened") should return success: false
+      expect(result?.success).toBe(false);
       expect(result?.message).toBe('The boards are securely fastened.');
       expect(result?.stateChanges).toEqual([]);
     });

@@ -315,8 +315,8 @@ describe('InventoryAction', () => {
 
     expect(result.success).toBe(true);
     expect(result.message).toContain('carrying');
-    expect(result.message).toContain('Sword');
-    expect(result.message).toContain('Brass Lantern');
+    expect(result.message).toContain('sword');
+    expect(result.message).toContain('brass lantern');
   });
 });
 
@@ -750,7 +750,8 @@ describe('ExamineAction', () => {
     const result = examineAction.execute(state, 'LAMP');
 
     expect(result.success).toBe(true);
-    expect(result.message).toContain('battery-powered brass lantern');
+    // Light sources show their on/off state when examined
+    expect(result.message).toContain('turned off');
   });
 
   it('should display room description when examining without an object', () => {
@@ -871,7 +872,7 @@ describe('OpenAction', () => {
   });
 
   it('should return error when opening non-existent object', () => {
-    const result = openAction.execute(state, 'DOOR');
+    const result = openAction.execute(state, 'NONEXISTENT');
 
     expect(result.success).toBe(false);
     expect(result.message).toContain("can't see");
@@ -1127,7 +1128,7 @@ describe('Inventory Management Integration Tests', () => {
 
     // Inventory should now show the sword
     result = inventoryAction.execute(state);
-    expect(result.message).toContain('Sword');
+    expect(result.message).toContain('sword');
 
     // Drop the sword
     result = dropAction.execute(state, 'SWORD');

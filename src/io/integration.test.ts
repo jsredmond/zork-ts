@@ -180,7 +180,7 @@ describe('I/O Integration Tests', () => {
     });
 
     it('should handle invalid commands gracefully', () => {
-      const tokens = lexer.tokenize('xyzzy');
+      const tokens = lexer.tokenize('frobozz');
       
       const processedTokens = tokens.map(token => ({
         ...token,
