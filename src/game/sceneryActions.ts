@@ -335,8 +335,11 @@ const sandHandler: SceneryHandler = {
 const boardedWindowHandler: SceneryHandler = {
   objectId: 'BOARDED-WINDOW',
   actions: new Map([
-    ['OPEN', () => "The windows are boarded and can't be opened."],
+    ['OPEN', () => "The window is slightly ajar, but not enough to allow entry."],
     ['EXAMINE', () => "The windows are boarded and can't be opened."],
+    ['BREAK', () => "Vandalism is not usually tolerated."],
+    ['SMASH', () => "Vandalism is not usually tolerated."],
+    ['DESTROY', () => "Vandalism is not usually tolerated."],
     ['MUNG', () => "You can't break the windows open."]
   ])
 };

@@ -6,7 +6,7 @@ import { Terminal } from './io/terminal.js';
 import { Display } from './io/display.js';
 import { Lexer } from './parser/lexer.js';
 import { Vocabulary } from './parser/vocabulary.js';
-import { Parser } from './parser/parser.js';
+import { Parser, ParseError } from './parser/parser.js';
 import { CommandExecutor } from './engine/executor.js';
 import { GameState } from './game/state.js';
 import { GameObjectImpl } from './game/objects.js';
@@ -150,6 +150,21 @@ async function gameLoop(): Promise<void> {
         type,
       };
     });
+
+    // Check for unknown words before parsing
+    const unknownToken = processedTokens.find(token => token.type === 'UNKNOWN');
+    if (unknownToken) {
+      const command: ParseError = {
+        type: 'UNKNOWN_WORD',
+        message: `I don't know the word "${unknownToken.word}".`,
+        word: unknownToken.word
+      };
+      const result = executor.execute(command, state);
+      if (result.message) {
+        terminal.writeLine(display.formatMessage(result.message));
+      }
+      continue;
+    }
 
     // Parse command
     const availableObjects = getAvailableObjects(state);

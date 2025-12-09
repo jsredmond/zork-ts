@@ -547,7 +547,7 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
 
 ---
 
-- [-] 15. Fix cyclops feeding
+- [x] 15. Fix cyclops feeding
   - Investigate and fix cyclops feeding logic
   - _Requirements: 7.5_
 
@@ -569,32 +569,32 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
   - Target: 95%+ similarity (from 92.1%)
   - _Requirements: 7.5_
 
-- [-] 15.4 Commit cyclops feeding fix
+- [x] 15.4 Commit cyclops feeding fix
   - Commit message: "fix: Cyclops feeding logic matches original"
   - Include cyclops feeding updates
   - _Requirements: 7.5_
 
 ---
 
-- [ ] 16. Verify Phase 3 completion
+- [x] 16. Verify Phase 3 completion
   - Run all high-priority transcripts
   - Verify 100% pass rate
   - _Requirements: 7.1, 10.2_
 
-- [ ] 16.1 Run all high-priority transcripts
+- [x] 16.1 Run all high-priority transcripts
   - Execute: `npx tsx scripts/verify-all-transcripts.ts --category high`
   - Verify all 10 high-priority transcripts pass
   - Verify 100% pass rate
   - Verify average similarity 95%+
   - _Requirements: 10.2_
 
-- [ ] 16.2 Generate Phase 3 completion report
+- [x] 16.2 Generate Phase 3 completion report
   - Document all fixes
   - Document all transcript results
   - Verify 100% high-priority pass rate
   - _Requirements: 10.2_
 
-- [ ] 16.3 Commit Phase 3 completion
+- [x] 16.3 Commit Phase 3 completion
   - Commit message: "docs: Complete Phase 3 - All high-priority issues fixed"
   - Include completion report
   - _Requirements: 10.2_
@@ -612,28 +612,28 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 ---
 
-- [ ] 17. Fix error messages
+- [-] 17. Fix error messages
   - Update all error messages to match original
   - _Requirements: 8.2_
 
-- [ ] 17.1 Audit error messages
+- [x] 17.1 Audit error messages
   - Review all error message text
   - Compare with original game
   - Run error messages transcript (40-error-messages.json)
   - Identify differences (currently 55.6%)
   - _Requirements: 8.2_
 
-- [ ] 17.2 Update error messages
+- [x] 17.2 Update error messages
   - Update error message text to match original exactly
   - Test all error conditions
   - _Requirements: 8.2_
 
-- [ ] 17.3 Verify error messages transcript
+- [x] 17.3 Verify error messages transcript
   - Run error messages transcript
   - Target: 90%+ similarity (from 55.6%)
   - _Requirements: 8.2_
 
-- [ ] 17.4 Commit error message fixes
+- [-] 17.4 Commit error message fixes
   - Commit message: "fix: Error messages match original"
   - Include error message updates
   - _Requirements: 8.2_

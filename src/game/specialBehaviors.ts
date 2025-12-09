@@ -623,12 +623,36 @@ const mailboxBehavior: SpecialBehavior = {
     if (verb === 'TAKE') {
       return 'It is securely anchored.';
     }
+    if (verb === 'EAT') {
+      return 'I don\'t think that the small mailbox would agree with you.';
+    }
     return null;
   }
 };
 
 // Register mailbox behavior
 registerSpecialBehavior(mailboxBehavior);
+
+/**
+ * BOARDED-WINDOW special behavior
+ * Handles attempts to open or break the window
+ */
+const boardedWindowBehavior: SpecialBehavior = {
+  objectId: 'BOARDED-WINDOW',
+  condition: () => true,
+  handler: (verb: string, state: GameState) => {
+    if (verb === 'OPEN') {
+      return 'The window is slightly ajar, but not enough to allow entry.';
+    }
+    if (verb === 'BREAK' || verb === 'SMASH' || verb === 'DESTROY') {
+      return 'Vandalism is not usually tolerated.';
+    }
+    return null;
+  }
+};
+
+// Register boarded window behavior
+registerSpecialBehavior(boardedWindowBehavior);
 
 /**
  * GRUE special behavior

@@ -1990,7 +1990,7 @@ export class JumpAction implements ActionHandler {
   execute(state: GameState): ActionResult {
     return {
       success: true,
-      message: getSillyActionMessage(),
+      message: "Wheeeeeeeeee!!!!!",
       stateChanges: []
     };
   }
@@ -3139,6 +3139,78 @@ export class AdventAction implements ActionHandler {
     return {
       success: true,
       message: getHumorousResponse('ADVENT'),
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * BREAK action handler
+ * Player attempts to break something
+ */
+export class BreakAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check for special behavior first
+    const specialResult = executeSpecialBehavior(objectId, 'BREAK', state);
+    if (specialResult) {
+      return specialResult;
+    }
+
+    // Default break behavior - vandalism not tolerated
+    return {
+      success: false,
+      message: "Vandalism is not usually tolerated.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * EAT action handler
+ * Player attempts to eat something
+ */
+export class EatAction implements ActionHandler {
+  execute(state: GameState, objectId: string): ActionResult {
+    const obj = state.getObject(objectId);
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check for special behavior first
+    const specialResult = executeSpecialBehavior(objectId, 'EAT', state);
+    if (specialResult) {
+      return specialResult;
+    }
+
+    // Check if object is food
+    if (obj.hasFlag(ObjectFlag.FOODBIT)) {
+      // Handle eating food (would need to implement consumption logic)
+      return {
+        success: true,
+        message: `You eat the ${obj.name.toLowerCase()}.`,
+        stateChanges: []
+      };
+    }
+
+    // Default eat behavior - can't eat non-food
+    return {
+      success: false,
+      message: `I don't think that the ${obj.name.toLowerCase()} would agree with you.`,
       stateChanges: []
     };
   }

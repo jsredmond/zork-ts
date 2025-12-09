@@ -52,7 +52,9 @@ import {
   SingAction,
   AdventAction,
   ListenAction,
-  SmellAction
+  SmellAction,
+  BreakAction,
+  EatAction
 } from '../game/actions.js';
 import { handleDeadStateVerb, isPlayerDead } from '../game/deadState.js';
 import { handleSelfReferenceVerb, isSelfReference } from '../game/selfReference.js';
@@ -184,6 +186,15 @@ export class CommandExecutor {
     this.actionHandlers.set('LISTEN', new ListenAction());
     this.actionHandlers.set('SMELL', new SmellAction());
     this.actionHandlers.set('SNIFF', new SmellAction());
+    
+    // Destructive actions
+    this.actionHandlers.set('BREAK', new BreakAction());
+    this.actionHandlers.set('SMASH', new BreakAction());
+    this.actionHandlers.set('DESTROY', new BreakAction());
+    
+    // Consumption actions
+    this.actionHandlers.set('EAT', new EatAction());
+    this.actionHandlers.set('CONSUME', new EatAction());
   }
 
   /**

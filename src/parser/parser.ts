@@ -50,6 +50,16 @@ export class Parser {
       };
     }
 
+    // Check for unknown words first (before looking for verb)
+    const unknownTokenFirst = tokens.find(token => token.type === 'UNKNOWN');
+    if (unknownTokenFirst) {
+      return {
+        type: 'UNKNOWN_WORD',
+        message: `I don't know the word "${unknownTokenFirst.word}".`,
+        word: unknownTokenFirst.word
+      };
+    }
+
     // Find the verb (should be first non-article token)
     let verbIndex = -1;
     let verb = '';
@@ -71,6 +81,14 @@ export class Parser {
 
     // Parse the rest of the command after the verb
     const remainingTokens = tokens.slice(verbIndex + 1);
+    
+    // Special handling for GO without direction
+    if (verb === 'GO' && remainingTokens.length === 0) {
+      return {
+        type: 'INVALID_SYNTAX',
+        message: "Where do you want to go?"
+      };
+    }
     
     // Special handling for GO + DIRECTION (e.g., "GO EAST")
     if (verb === 'GO' && remainingTokens.length > 0 && remainingTokens[0].type === 'DIRECTION') {
