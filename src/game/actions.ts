@@ -663,7 +663,7 @@ export class OpenAction implements ActionHandler {
       else if (contents.length === 1) {
         const item = contents[0];
         // Check for first description only if untouched
-        const fdesc = !item.hasFlag(ObjectFlag.TOUCHBIT) ? item.getProperty('fdesc') : null;
+        const fdesc = !item.hasFlag(ObjectFlag.TOUCHBIT) ? item.firstDescription : null;
         if (fdesc) {
           message = `The ${obj.name.toLowerCase()} opens.\n${fdesc}`;
         } else {
