@@ -489,7 +489,7 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
 
 ---
 
-- [-] 13. Fix coffin puzzle
+- [ ] 13. Fix coffin puzzle
   - Investigate and fix coffin puzzle logic
   - _Requirements: 7.3_
 
@@ -511,36 +511,36 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
   - Target: 95%+ similarity (from 88.0%)
   - _Requirements: 7.3_
 
-- [-] 13.4 Commit coffin puzzle fix
+- [x] 13.4 Commit coffin puzzle fix
   - Commit message: "fix: Coffin puzzle logic matches original"
   - Include coffin puzzle updates
   - _Requirements: 7.3_
 
 ---
 
-- [ ] 14. Fix egg/nest puzzle
+- [-] 14. Fix egg/nest puzzle
   - Investigate and fix egg/nest puzzle logic
   - _Requirements: 7.4_
 
-- [ ] 14.1 Investigate egg/nest puzzle issue
+- [x] 14.1 Investigate egg/nest puzzle issue
   - Review egg/nest puzzle code
   - Compare with original ZIL code
   - Run egg/nest puzzle transcript (28-egg-nest.json)
   - Identify differences (currently 81.3%)
   - _Requirements: 7.4_
 
-- [ ] 14.2 Fix egg/nest puzzle logic
+- [x] 14.2 Fix egg/nest puzzle logic
   - Update egg/nest puzzle implementation
   - Match original behavior exactly
   - Test egg handling
   - _Requirements: 7.4_
 
-- [ ] 14.3 Verify egg/nest puzzle transcript
+- [x] 14.3 Verify egg/nest puzzle transcript
   - Run egg/nest puzzle transcript
   - Target: 95%+ similarity (from 81.3%)
   - _Requirements: 7.4_
 
-- [ ] 14.4 Commit egg/nest puzzle fix
+- [-] 14.4 Commit egg/nest puzzle fix
   - Commit message: "fix: Egg/nest puzzle logic matches original"
   - Include egg/nest puzzle updates
   - _Requirements: 7.4_

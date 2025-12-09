@@ -208,6 +208,11 @@ export class DropAction implements ActionHandler {
       };
     }
 
+    // Special handling for UP-A-TREE room (egg/nest puzzle)
+    if (currentRoom.id === 'UP-A-TREE') {
+      return this.handleTreeDrop(state, objectId, obj);
+    }
+
     // Drop the object in current room
     const oldLocation = obj.location;
     state.moveObject(objectId, currentRoom.id);
@@ -222,6 +227,111 @@ export class DropAction implements ActionHandler {
         newValue: currentRoom.id
       }]
     };
+  }
+
+  /**
+   * Handle dropping objects from UP-A-TREE room
+   * Objects fall to PATH room below, with special handling for egg/nest
+   */
+  private handleTreeDrop(state: GameState, objectId: string, obj: any): ActionResult {
+    const oldLocation = obj.location;
+    const groundRoom = 'PATH'; // Objects fall to ground below tree
+    
+    // Special case: dropping nest with egg inside
+    if (objectId === 'NEST') {
+      const egg = state.getObject('EGG');
+      if (egg && egg.location === 'NEST') {
+        // Egg breaks when nest falls
+        state.moveObject('NEST', groundRoom);
+        this.breakEgg(state, groundRoom);
+        
+        return {
+          success: true,
+          message: "The nest falls to the ground, and the egg spills out of it, seriously damaged.",
+          stateChanges: [
+            {
+              type: 'OBJECT_MOVED',
+              objectId: 'NEST',
+              oldValue: oldLocation,
+              newValue: groundRoom
+            },
+            {
+              type: 'OBJECT_REMOVED',
+              objectId: 'EGG',
+              oldValue: 'NEST',
+              newValue: ''
+            }
+          ]
+        };
+      }
+    }
+    
+    // Special case: dropping egg from tree
+    if (objectId === 'EGG') {
+      state.moveObject('EGG', groundRoom);
+      this.breakEgg(state, groundRoom);
+      
+      return {
+        success: true,
+        message: "The egg falls to the ground and springs open, seriously damaged.",
+        stateChanges: [
+          {
+            type: 'OBJECT_MOVED',
+            objectId: 'EGG',
+            oldValue: oldLocation,
+            newValue: groundRoom
+          }
+        ]
+      };
+    }
+    
+    // Default: object falls to ground
+    state.moveObject(objectId, groundRoom);
+    
+    return {
+      success: true,
+      message: `The ${obj.name} falls to the ground.`,
+      stateChanges: [{
+        type: 'OBJECT_MOVED',
+        objectId: objectId,
+        oldValue: oldLocation,
+        newValue: groundRoom
+      }]
+    };
+  }
+
+  /**
+   * Break the egg and replace with broken egg
+   * Implements BAD-EGG routine from ZIL
+   */
+  private breakEgg(state: GameState, location: string): void {
+    const egg = state.getObject('EGG');
+    const canary = state.getObject('CANARY');
+    const brokenEgg = state.getObject('BROKEN-EGG');
+    const brokenCanary = state.getObject('BROKEN-CANARY');
+    
+    if (!egg) return;
+    
+    // Move broken egg to location
+    if (brokenEgg) {
+      state.moveObject('BROKEN-EGG', location);
+    }
+    
+    // Handle canary
+    if (canary && canary.location === 'EGG') {
+      // Move broken canary into broken egg
+      if (brokenCanary) {
+        state.moveObject('BROKEN-CANARY', 'BROKEN-EGG');
+      }
+    } else {
+      // Remove broken canary if canary wasn't in egg
+      if (brokenCanary && brokenCanary.location) {
+        state.removeObject('BROKEN-CANARY');
+      }
+    }
+    
+    // Remove the intact egg
+    state.removeObject('EGG');
   }
 }
 

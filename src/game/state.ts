@@ -197,6 +197,32 @@ export class GameState {
   }
 
   /**
+   * Remove an object from the game entirely
+   * This is equivalent to REMOVE-CAREFULLY in ZIL
+   */
+  removeObject(objectId: string): void {
+    const obj = this.objects.get(objectId);
+    if (!obj) {
+      return;
+    }
+
+    // Remove from current location
+    if (obj.location) {
+      if (obj.location === 'PLAYER' || this.inventory.includes(objectId)) {
+        this.removeFromInventory(objectId);
+      } else {
+        const room = this.rooms.get(obj.location);
+        if (room) {
+          room.removeObject(objectId);
+        }
+      }
+    }
+
+    // Set location to empty string (removed from game)
+    obj.location = '';
+  }
+
+  /**
    * Get all objects that are children of a given parent (in or on it)
    */
   getObjectsInContainer(containerId: string): GameObject[] {
