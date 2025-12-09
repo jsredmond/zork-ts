@@ -698,29 +698,29 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 ---
 
-- [ ] 20. Fix death and resurrection
+- [-] 20. Fix death and resurrection
   - Fix death and resurrection logic
   - _Requirements: 8.5_
 
-- [ ] 20.1 Investigate death/resurrection issue
+- [x] 20.1 Investigate death/resurrection issue
   - Review death and resurrection code
   - Compare with original ZIL code
   - Run death/resurrection transcript (43-death-resurrection.json)
   - Identify differences (currently 28.7%)
   - _Requirements: 8.5_
 
-- [ ] 20.2 Fix death/resurrection logic
+- [x] 20.2 Fix death/resurrection logic
   - Update death and resurrection implementation
   - Match original behavior exactly
   - Test death and resurrection sequence
   - _Requirements: 8.5_
 
-- [ ] 20.3 Verify death/resurrection transcript
+- [x] 20.3 Verify death/resurrection transcript
   - Run death/resurrection transcript
   - Target: 90%+ similarity (from 28.7%)
   - _Requirements: 8.5_
 
-- [ ] 20.4 Commit death/resurrection fix
+- [-] 20.4 Commit death/resurrection fix
   - Commit message: "fix: Death and resurrection match original"
   - Include death/resurrection updates
   - _Requirements: 8.5_

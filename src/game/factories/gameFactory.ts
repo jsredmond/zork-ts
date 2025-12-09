@@ -47,6 +47,8 @@ export function createInitialGameState(): GameState {
   // Initialize global variables
   gameState.setGlobalVariable('LOAD_MAX', 100);
   gameState.setGlobalVariable('LOAD_ALLOWED', 100);
+  gameState.setGlobalVariable('LUCKY', true);  // Player starts with luck
+  gameState.setGlobalVariable('DEATHS', 0);    // Death counter
   
   // Initialize conditional messages
   initializeConditionalMessages();

@@ -104,6 +104,13 @@ export class GameState {
   }
 
   /**
+   * Get all rooms
+   */
+  getAllRooms(): Room[] {
+    return Array.from(this.rooms.values());
+  }
+
+  /**
    * Add object to inventory
    */
   addToInventory(objectId: string): void {

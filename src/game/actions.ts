@@ -546,6 +546,28 @@ export class MoveAction implements ActionHandler {
       };
     }
 
+    // Check if moved into darkness without light (grue attack)
+    const isNowLit = isRoomLit(state);
+    if (!isNowLit) {
+      // Import death module
+      const { triggerGrueDeath } = require('./death.js');
+      const deathMessage = triggerGrueDeath(state);
+      
+      return {
+        success: false,
+        message: deathMessage,
+        stateChanges: [{
+          type: 'ROOM_CHANGED',
+          oldValue: oldRoom,
+          newValue: exit.destination
+        }, {
+          type: 'PLAYER_DIED',
+          oldValue: false,
+          newValue: true
+        }]
+      };
+    }
+
     // Format the room description
     const roomDescription = getRoomDescriptionAfterMovement(newRoom, state);
     const fullMessage = entryMessage + roomDescription;
