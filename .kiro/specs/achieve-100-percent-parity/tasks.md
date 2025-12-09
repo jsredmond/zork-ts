@@ -157,7 +157,7 @@ Create 50+ accurate transcripts from the original game, fix all mislabeled trans
 
 ---
 
-- [-] 4. Re-record combat transcripts with deterministic RNG
+- [x] 4. Re-record combat transcripts with deterministic RNG
   - Play TypeScript game with seed 12345
   - Record actual combat sequences produced
   - Create proper thief transcripts (missing from original set)
@@ -222,7 +222,7 @@ Create 50+ accurate transcripts from the original game, fix all mislabeled trans
   - Document RNG seed used (12345)
   - _Requirements: 4.3, 4.4, 4.5_
 
-- [-] 4.9 Commit thief transcripts
+- [x] 4.9 Commit thief transcripts
   - Commit message: "feat: Create proper thief encounter and defeat transcripts"
   - Include thief transcript files
   - Document RNG seed in commit message
@@ -230,25 +230,25 @@ Create 50+ accurate transcripts from the original game, fix all mislabeled trans
 
 ---
 
-- [ ] 5. Verify Phase 1 completion
+- [x] 5. Verify Phase 1 completion
   - Run all transcripts
   - Verify transcript accuracy
   - _Requirements: 1.6, 2.5_
 
-- [ ] 5.1 Run transcript verification
+- [x] 5.1 Run transcript verification
   - Execute: `npx tsx scripts/verify-all-transcripts.ts`
   - Review results
   - Verify all transcripts are properly labeled
   - _Requirements: 1.6, 2.5_
 
-- [ ] 5.2 Generate Phase 1 completion report
+- [x] 5.2 Generate Phase 1 completion report
   - Document all transcripts created
   - Document all transcripts relabeled
   - Document all transcripts re-recorded
   - Verify 50+ transcripts exist
   - _Requirements: 1.6_
 
-- [ ] 5.3 Commit Phase 1 completion
+- [x] 5.3 Commit Phase 1 completion
   - Commit message: "docs: Complete Phase 1 - Accurate transcript creation"
   - Include completion report
   - _Requirements: 1.6_
@@ -267,32 +267,32 @@ Fix all bugs blocking puzzle completion: dam navigation, troll death, cyclops pu
 
 ---
 
-- [ ] 6. Fix dam puzzle navigation
+- [x] 6. Fix dam puzzle navigation
   - Enable navigation to dam
   - Fix SE direction or find alternative
   - _Requirements: 3.1_
 
-- [ ] 6.1 Investigate dam navigation issue
+- [x] 6.1 Investigate dam navigation issue
   - Review room connections
   - Test SE direction parsing
   - Identify root cause
   - _Requirements: 3.1_
 
-- [ ] 6.2 Implement fix for dam navigation
+- [x] 6.2 Implement fix for dam navigation
   - Option A: Implement diagonal direction parsing (SE, NE, SW, NW)
   - Option B: Fix room connection data
   - Option C: Find alternative route
   - Test navigation from Round Room to Loud Room
   - _Requirements: 3.1_
 
-- [ ] 6.3 Verify dam puzzle transcript
+- [x] 6.3 Verify dam puzzle transcript
   - Run dam puzzle transcript (06-dam-puzzle.json)
   - Verify navigation works
   - Verify puzzle can be completed
   - Target: 95%+ similarity
   - _Requirements: 3.1_
 
-- [ ] 6.4 Commit dam navigation fix
+- [x] 6.4 Commit dam navigation fix
   - Commit message: "fix: Enable dam puzzle navigation"
   - Include navigation fix
   - Include test results
@@ -300,31 +300,31 @@ Fix all bugs blocking puzzle completion: dam navigation, troll death, cyclops pu
 
 ---
 
-- [ ] 7. Fix troll death sequence
+- [-] 7. Fix troll death sequence
   - Troll body disappears on death
   - Passages open on death
   - _Requirements: 3.2, 3.3_
 
-- [ ] 7.1 Update troll death handler
+- [x] 7.1 Update troll death handler
   - File: `src/engine/troll.ts`
   - Implement body removal on death
   - Implement passage opening on death
   - _Requirements: 3.2, 3.3_
 
-- [ ] 7.2 Test troll death sequence
+- [x] 7.2 Test troll death sequence
   - Kill troll in game
   - Verify body disappears
   - Verify passages open
   - Verify troll flag set correctly
   - _Requirements: 3.2, 3.3_
 
-- [ ] 7.3 Verify troll combat transcripts
+- [x] 7.3 Verify troll combat transcripts
   - Run troll puzzle transcript (05-troll-puzzle.json)
   - Run troll combat transcript (22-troll-combat.json)
   - Verify death sequence matches original
   - _Requirements: 3.2, 3.3_
 
-- [ ] 7.4 Commit troll death fix
+- [-] 7.4 Commit troll death fix
   - Commit message: "fix: Troll body disappears and passages open on death"
   - Include troll death handler updates
   - Include test results

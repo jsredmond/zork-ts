@@ -39,7 +39,7 @@ describe('Troll Death Sequence', () => {
     expect(actor?.getState()).toBe(ActorState.UNCONSCIOUS);
 
     // Check troll description shows unconscious
-    const longDesc = trollAfter?.getProperty('longDescription');
+    const longDesc = trollAfter?.longDescription;
     expect(longDesc).toContain('unconscious');
   });
 

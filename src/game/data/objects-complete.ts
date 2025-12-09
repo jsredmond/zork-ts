@@ -721,7 +721,7 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     synonyms: ['MATCH', 'MATCHES', 'MATCHBOOK', 'BOOK'],
     adjectives: [],
     description: 'matchbook',
-    initialLocation: 'LIVING-ROOM',
+    initialLocation: 'DAM-LOBBY',
     flags: ['TAKEBIT', 'READBIT', 'BURNBIT'],
     text: '(Close cover before striking)\n\nYOU too can make BIG MONEY in the exciting field of PAPER SHUFFLING!',
     size: 2

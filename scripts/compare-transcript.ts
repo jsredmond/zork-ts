@@ -181,7 +181,8 @@ class TranscriptComparator {
         return `[DEBUG: Teleported to ${roomId}]`;
       }
       
-      if (command.startsWith('give ')) {
+      if (command.startsWith('give ') && !command.includes(' to ')) {
+        // Debug command: "give OBJECTID" (not "give X to Y")
         const objectId = command.substring(5).trim();
         const obj = state.getObject(objectId);
         if (obj) {

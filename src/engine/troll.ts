@@ -57,8 +57,8 @@ export class TrollBehavior extends BaseActorBehavior {
         axe.flags.delete(ObjectFlag.WEAPONBIT);
         state.moveObject('AXE', 'TROLL');
         
-        troll.setProperty('longDescription', 
-          'A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.');
+        // Update the longDescription directly (not via setProperty)
+        (troll as any).longDescription = 'A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.';
         
         if (this.isWithPlayer(state)) {
           console.log("The troll, angered and humiliated, recovers his weapon. He appears to have an axe to grind with you.");
@@ -66,7 +66,8 @@ export class TrollBehavior extends BaseActorBehavior {
         }
       } else {
         // Troll is disarmed and cowering
-        troll.setProperty('longDescription', 'A pathetically babbling troll is here.');
+        // Update the longDescription directly (not via setProperty)
+        (troll as any).longDescription = 'A pathetically babbling troll is here.';
         
         if (this.isWithPlayer(state)) {
           console.log("The troll, disarmed, cowers in terror, pleading for his life in the guttural tongue of the trolls.");
@@ -85,7 +86,7 @@ export class TrollBehavior extends BaseActorBehavior {
     if (!troll) return;
 
     if (newState === ActorState.DEAD) {
-      // Troll dies - drop axe and open passages
+      // Troll dies - drop axe, open passages, and remove body
       const axe = state.getObject('AXE');
       if (axe && axe.location === 'TROLL') {
         state.moveObject('AXE', state.currentRoom);
@@ -95,6 +96,9 @@ export class TrollBehavior extends BaseActorBehavior {
 
       // Set troll flag to indicate passages are open
       state.setFlag('TROLL_FLAG', true);
+      
+      // Remove troll from room (body disappears)
+      state.moveObject('TROLL', null);
       
       this.tellIfVisible(state, "The troll's body disappears in a cloud of greasy black smoke.");
     } else if (newState === ActorState.UNCONSCIOUS) {
@@ -107,8 +111,8 @@ export class TrollBehavior extends BaseActorBehavior {
       }
 
       troll.flags.delete(ObjectFlag.FIGHTBIT);
-      troll.setProperty('longDescription', 
-        'An unconscious troll is sprawled on the floor. All passages out of the room are open.');
+      // Update the longDescription directly (not via setProperty)
+      (troll as any).longDescription = 'An unconscious troll is sprawled on the floor. All passages out of the room are open.';
       
       // Set troll flag to indicate passages are open
       state.setFlag('TROLL_FLAG', true);
@@ -122,17 +126,18 @@ export class TrollBehavior extends BaseActorBehavior {
       const axe = state.getObject('AXE');
       if (axe) {
         if (axe.location === 'TROLL') {
-          troll.setProperty('longDescription', 
-            'A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.');
+          // Update the longDescription directly (not via setProperty)
+          (troll as any).longDescription = 'A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.';
         } else if (axe.location === troll.location) {
           // Axe is in the room, troll will try to recover it
           axe.flags.add('NDESCBIT' as any);
           axe.flags.delete(ObjectFlag.WEAPONBIT);
           state.moveObject('AXE', 'TROLL');
-          troll.setProperty('longDescription', 
-            'A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.');
+          // Update the longDescription directly (not via setProperty)
+          (troll as any).longDescription = 'A nasty-looking troll, brandishing a bloody axe, blocks all passages out of the room.';
         } else {
-          troll.setProperty('longDescription', 'A troll is here.');
+          // Update the longDescription directly (not via setProperty)
+          (troll as any).longDescription = 'A troll is here.';
         }
       }
 

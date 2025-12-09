@@ -335,9 +335,23 @@ export class MoveAction implements ActionHandler {
       if (currentRoom.id === 'TROLL-ROOM' && !state.getFlag('TROLL_FLAG')) {
         const troll = state.getObject('TROLL');
         if (troll && troll.location === 'TROLL-ROOM') {
+          // Track how many times player has been blocked
+          const blockCount = (state.getGlobalVariable('TROLL_BLOCK_COUNT') || 0) + 1;
+          state.setGlobalVariable('TROLL_BLOCK_COUNT', blockCount);
+          
+          // Set troll to fighting mode on first block
+          // Set a delay counter so combat daemon doesn't fire for 2 turns
+          if (blockCount === 1) {
+            troll.flags.add(ObjectFlag.FIGHTBIT);
+            state.setGlobalVariable('TROLL_ATTACK_DELAY', 2);
+          }
+          
+          // Troll blocks with menacing gesture
+          const message = "The troll fends you off with a menacing gesture.";
+          
           return {
             success: false,
-            message: "The troll fends you off with a menacing gesture.",
+            message: message,
             stateChanges: []
           };
         }
@@ -402,7 +416,7 @@ export class MoveAction implements ActionHandler {
         if (willBeDark) {
           entryMessage = 'You have moved into a dark place.\n';
         }
-        entryMessage += 'The trap door crashes shut, and you hear someone barring it.\n\n';
+        entryMessage += 'The trap door crashes shut, and you hear someone barring it.\n';
       }
     }
 
@@ -915,6 +929,10 @@ export function formatRoomDescription(room: any, state: GameState): string {
   // List visible objects in room
   const objectsInRoom = state.getObjectsInCurrentRoom();
   
+  // Reverse the order to match original game behavior
+  // (Original game displays objects in reverse definition order)
+  const reversedObjects = [...objectsInRoom].reverse();
+  
   // Helper function to describe an object and its contents
   const describeObject = (obj: GameObject) => {
     // Determine which description to use
@@ -949,7 +967,7 @@ export function formatRoomDescription(room: any, state: GameState): string {
     }
   };
   
-  for (const obj of objectsInRoom) {
+  for (const obj of reversedObjects) {
     // Skip objects with NDESCBIT flag (scenery that shouldn't be listed)
     if (obj.hasFlag(ObjectFlag.NDESCBIT)) {
       // But still list objects that are in/on this scenery object
@@ -998,6 +1016,10 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
   // List visible objects in room
   const objectsInRoom = state.getObjectsInCurrentRoom();
   
+  // Reverse the order to match original game behavior
+  // (Original game displays objects in reverse definition order)
+  const reversedObjects = [...objectsInRoom].reverse();
+  
   // Helper function to describe an object and its contents
   const describeObject = (obj: GameObject) => {
     // Determine which description to use
@@ -1032,7 +1054,7 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
     }
   };
   
-  for (const obj of objectsInRoom) {
+  for (const obj of reversedObjects) {
     // Skip objects with NDESCBIT flag (scenery that shouldn't be listed)
     if (obj.hasFlag(ObjectFlag.NDESCBIT)) {
       // But still list objects that are in/on this scenery object

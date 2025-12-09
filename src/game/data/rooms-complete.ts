@@ -612,6 +612,7 @@ export const ALL_ROOMS: Record<string, RoomData> = {
     exits: [
       { direction: 'EAST', destination: 'ROUND-ROOM' },
       { direction: 'WEST', destination: 'TROLL-ROOM' },
+      { direction: 'NORTH', destination: 'CHASM-ROOM' },
       { direction: 'DOWN', destination: 'CHASM-ROOM' }
     ],
     flags: ['RLANDBIT']

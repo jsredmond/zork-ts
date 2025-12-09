@@ -1,0 +1,230 @@
+{
+  "id": "21-thief-defeat-proper",
+  "name": "Thief Defeat and Item Recovery",
+  "description": "Encountering the thief, having items stolen, defeating the thief in combat, and recovering stolen treasures",
+  "category": "npc",
+  "priority": "high",
+  "entries": [
+    {
+      "command": "n",
+      "expectedOutput": "North of House\nYou are facing the north side of a white house. There is no door here, and all\nthe windows are boarded up. To the north a narrow path winds through the trees.",
+      "notes": "Start from West of House"
+    },
+    {
+      "command": "e",
+      "expectedOutput": "Behind House\nYou are behind the white house. A path leads into the forest to the east. In one\ncorner of the house there is a small window which is slightly ajar.",
+      "notes": "Go to behind house"
+    },
+    {
+      "command": "open window",
+      "expectedOutput": "With great effort, you open the window far enough to allow entry.",
+      "notes": "Open window"
+    },
+    {
+      "command": "w",
+      "expectedOutput": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\n  A quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
+      "notes": "Enter kitchen"
+    },
+    {
+      "command": "w",
+      "expectedOutput": "Living Room\nYou are in the living room. There is a doorway to the east, a wooden door with\nstrange gothic lettering to the west, which appears to be nailed shut, a trophy\ncase, and a large oriental rug in the center of the room.\nAbove the trophy case hangs an elvish sword of great antiquity.\nA battery-powered brass lantern is on the trophy case.",
+      "notes": "Go to living room"
+    },
+    {
+      "command": "take lamp",
+      "expectedOutput": "Taken.",
+      "notes": "Take lamp"
+    },
+    {
+      "command": "take sword",
+      "expectedOutput": "Taken.",
+      "notes": "Take sword"
+    },
+    {
+      "command": "move rug",
+      "expectedOutput": "With a great effort, the rug is moved to one side of the room, revealing the\ndusty cover of a closed trap door.",
+      "notes": "Move rug"
+    },
+    {
+      "command": "open trap door",
+      "expectedOutput": "The door reluctantly opens to reveal a rickety staircase descending into\ndarkness.",
+      "notes": "Open trap door"
+    },
+    {
+      "command": "turn on lamp",
+      "expectedOutput": "The brass lantern is now on.",
+      "notes": "Turn on lamp"
+    },
+    {
+      "command": "d",
+      "expectedOutput": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.\nYour sword is glowing with a faint blue glow.",
+      "notes": "Descend to cellar - sword glows due to troll"
+    },
+    {
+      "command": "n",
+      "expectedOutput": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nYour sword has begun to glow very brightly.",
+      "notes": "Enter troll room"
+    },
+    {
+      "command": "give sword to troll",
+      "expectedOutput": "The troll, who is not overly proud, graciously accepts the gift and, being for\nthe moment sated, throws it back. Fortunately, the troll has poor control, and\nthe sword falls to the floor. He does not look pleased.",
+      "notes": "Give sword to troll (he throws it back)"
+    },
+    {
+      "command": "take sword",
+      "expectedOutput": "Taken.",
+      "notes": "Take sword back"
+    },
+    {
+      "command": "kill troll with sword",
+      "expectedOutput": "The troll is battered into unconsciousness.",
+      "notes": "Knock out troll"
+    },
+    {
+      "command": "kill troll with sword",
+      "expectedOutput": "The unconscious troll cannot defend himself: He dies.\nAlmost as soon as the troll breathes his last breath, a cloud of sinister black\nfog envelops him, and when the fog lifts, the carcass has disappeared.\nYour sword is no longer glowing.",
+      "notes": "Kill troll"
+    },
+    {
+      "command": "e",
+      "expectedOutput": "East-West Passage\nThis is a narrow east-west passageway. There is a narrow stairway leading down\nat the north end of the room.",
+      "notes": "Go east"
+    },
+    {
+      "command": "e",
+      "expectedOutput": "Round Room\nThis is a circular stone room with passages in all directions. Several of them\nhave unfortunately been blocked by cave-ins.",
+      "notes": "Go to round room"
+    },
+    {
+      "command": "n",
+      "expectedOutput": "North-South Passage\nThis is a high north-south passage, which forks to the northeast.",
+      "notes": "Go north"
+    },
+    {
+      "command": "n",
+      "expectedOutput": "Chasm\nA chasm runs southwest to northeast and the path follows it. You are on the\nsouth side of the chasm, where a crack opens into a passage.",
+      "notes": "Go to chasm"
+    },
+    {
+      "command": "ne",
+      "expectedOutput": "Reservoir South\nYou are in a long and narrow chamber, which is bounded at its southern end by a\nnatural stone wall. In the center of the north wall is a massive marble dam.\nThere is a panel with a large red button marked EMERGENCY DAM CONTROL (OPEN) and\na small green button marked OPEN GATE VALVE.",
+      "notes": "Go to reservoir south"
+    },
+    {
+      "command": "push red button",
+      "expectedOutput": "The sluice gates open and water pours through the dam.",
+      "notes": "Open dam"
+    },
+    {
+      "command": "n",
+      "expectedOutput": "Deep Canyon\nYou are on the south edge of a deep canyon. Passages lead off to the east, north\nwest, and south. You can hear the sound of flowing water from below.",
+      "notes": "Go through dam"
+    },
+    {
+      "command": "e",
+      "expectedOutput": "Dam Room\nThis is the room with the dam. The control panel is here.\nThere is a pile of plastic bags here.",
+      "notes": "Go to dam room - find treasure"
+    },
+    {
+      "command": "take bags",
+      "expectedOutput": "Taken.",
+      "notes": "Take treasure"
+    },
+    {
+      "command": "w",
+      "expectedOutput": "Deep Canyon\nYou are on the south edge of a deep canyon. Passages lead off to the east, north\nwest, and south. You can hear the sound of flowing water from below.",
+      "notes": "Return to canyon"
+    },
+    {
+      "command": "n",
+      "expectedOutput": "Reservoir\nYou are in a large cavernous room, the north end of which was formerly a\nreservoir. However, the water level has dropped and it is now only a pool.",
+      "notes": "Go to reservoir"
+    },
+    {
+      "command": "n",
+      "expectedOutput": "Stream View\nYou are standing on a path beside a gently flowing stream. The path travels\nnorth and south here, and a narrow trail leads off into the forest to the east.",
+      "notes": "Continue north"
+    },
+    {
+      "command": "n",
+      "expectedOutput": "On the Rainbow\nYou are on top of a rainbow (I bet you never thought you would walk on a\nrainbow), with a magnificent view of the Falls. The rainbow travels east-west\nhere.",
+      "notes": "Go to rainbow"
+    },
+    {
+      "command": "e",
+      "expectedOutput": "End of Rainbow\nYou are on a small, rocky beach at the edge of the river. A narrow path leads\nwest along the shore, and a steep trail leads upward into the forest. Across the\nriver, the rainbow touches down.\nThere is a pot of gold here.",
+      "notes": "Find pot of gold"
+    },
+    {
+      "command": "take pot",
+      "expectedOutput": "Taken.",
+      "notes": "Take pot of gold"
+    },
+    {
+      "command": "w",
+      "expectedOutput": "On the Rainbow\nYou are on top of a rainbow (I bet you never thought you would walk on a\nrainbow), with a magnificent view of the Falls. The rainbow travels east-west\nhere.",
+      "notes": "Return"
+    },
+    {
+      "command": "w",
+      "expectedOutput": "Canyon Bottom\nYou are beneath the walls of the river canyon which may be climbable here. The\ncanyon narrows to a crack to the west and opens to the east.",
+      "notes": "Go west"
+    },
+    {
+      "command": "e",
+      "expectedOutput": "Rocky Crawl\nThis is a narrow crawl leading from the canyon to a small chamber to the east.",
+      "notes": "Go to rocky crawl"
+    },
+    {
+      "command": "e",
+      "expectedOutput": "Small Cave\nThis is a small cave with an entrance to the west and a stairway leading upward.\nA seedy-looking individual with a large bag is standing here.\nYour sword is glowing with a faint blue glow.",
+      "notes": "Encounter thief!"
+    },
+    {
+      "command": "kill thief with sword",
+      "expectedOutput": "The thief is battered into unconsciousness.\nThe robber's stiletto is knocked from his hand and falls to the floor.",
+      "notes": "Knock out thief"
+    },
+    {
+      "command": "kill thief with sword",
+      "expectedOutput": "The unconscious thief cannot defend himself: He dies.\nAlmost as soon as the thief breathes his last breath, a cloud of sinister black\nfog envelops him, and when the fog lifts, the carcass has disappeared.\nThe robber's booty remains.\nYour sword is no longer glowing.",
+      "notes": "Kill thief - items drop"
+    },
+    {
+      "command": "look",
+      "expectedOutput": "Small Cave\nThis is a small cave with an entrance to the west and a stairway leading upward.\nThere is a stiletto here.\nThere is a large bag here.",
+      "notes": "Check what dropped"
+    },
+    {
+      "command": "take stiletto",
+      "expectedOutput": "Taken.",
+      "notes": "Take stiletto"
+    },
+    {
+      "command": "take bag",
+      "expectedOutput": "Taken.",
+      "notes": "Take bag"
+    },
+    {
+      "command": "open bag",
+      "expectedOutput": "Opening the bag reveals a large emerald.",
+      "notes": "Open bag to find stolen treasure"
+    },
+    {
+      "command": "take emerald",
+      "expectedOutput": "Taken.",
+      "notes": "Recover stolen emerald"
+    },
+    {
+      "command": "i",
+      "expectedOutput": "You are carrying:\n  A large emerald\n  A large bag\n  A stiletto\n  A pot of gold\n  A pile of plastic bags\n  An elvish sword\n  A brass lantern\n    The brass lantern is on.",
+      "notes": "Check inventory - recovered items"
+    }
+  ],
+  "metadata": {
+    "created": "2025-12-08T17:30:00.000Z",
+    "source": "manual-creation",
+    "verified": false,
+    "notes": "This transcript properly tests thief defeat and item recovery, unlike transcript 21 which tests troll combat"
+  }
+}

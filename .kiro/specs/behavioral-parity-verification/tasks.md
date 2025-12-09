@@ -680,21 +680,21 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
   - Verify 100% match
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 14.3.6 Fix bell/book/candle transcript (6.6% → 100%)
+- [x] 14.3.6 Fix bell/book/candle transcript (6.6% → 100%)
   - Analyze 4 command differences
   - Update bell puzzle logic
   - Re-run transcript 09-bell-book-candle
   - Verify 100% match
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 14.3.7 Fix treasure collection transcript (5.1% → 100%)
+- [x] 14.3.7 Fix treasure collection transcript (5.1% → 100%)
   - Analyze 5 command differences
   - Update treasure handling logic
   - Re-run transcript 10-treasure-collection
   - Verify 100% match
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 14.3.8 Commit critical transcript fixes
+- [x] 14.3.8 Commit critical transcript fixes
   - Commit message: "fix: Resolve 7 critical transcript failures"
   - Include all critical puzzle fixes
   - Include navigation fixes
@@ -702,7 +702,7 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ---
 
-- [ ] 14.3.9 Fix object ordering in room descriptions
+- [x] 14.3.9 Fix object ordering in room descriptions
   - Issue: Objects in rooms are displayed in incorrect order (e.g., LAMP, SWORD, MATCHBOOK instead of SWORD, LAMP, MATCHBOOK)
   - Current impact: Affects living room and potentially other rooms (cosmetic issue, ~3-5% similarity loss)
   - Possible solutions:
@@ -715,67 +715,67 @@ This plan outlines the systematic approach to achieve 100% confidence in behavio
 
 ---
 
-- [ ] 14.4 Fix high-priority transcript failures (10 failures)
+- [-] 14.4 Fix high-priority transcript failures (10 failures)
   - Address all high-priority transcript failures
   - _Requirements: 6.1, 6.2, 6.3_
 
-- [ ] 14.4.1 Fix thief encounter transcript (70.0% → 95%+)
+- [x] 14.4.1 Fix thief encounter transcript (70.0% → 95%+)
   - Analyze 7 command differences
   - Update thief behavior and AI
   - Re-run transcript 20-thief-encounter
   - Verify 95%+ similarity
   - _Requirements: 4.1, 4.2, 6.2_
 
-- [ ] 14.4.2 Fix thief defeat transcript (62.0% → 95%+)
+- [x] 14.4.2 Fix thief defeat transcript (62.0% → 95%+)
   - Analyze 9 command differences
   - Update thief defeat logic
   - Re-run transcript 21-thief-defeat
   - Verify 95%+ similarity
   - _Requirements: 4.1, 4.2, 6.2_
 
-- [ ] 14.4.3 Fix troll combat transcript (78.1% → 95%+)
+- [x] 14.4.3 Fix troll combat transcript (78.1% → 95%+)
   - Analyze 7 command differences
   - Update troll combat mechanics
   - Re-run transcript 22-troll-combat
   - Verify 95%+ similarity
   - _Requirements: 4.3, 6.2_
 
-- [ ] 14.4.4 Fix cyclops feeding transcript (81.1% → 95%+)
+- [x] 14.4.4 Fix cyclops feeding transcript (81.1% → 95%+)
   - Analyze 8 command differences
   - Update cyclops feeding behavior
   - Re-run transcript 23-cyclops-feeding
   - Verify 95%+ similarity
   - _Requirements: 4.1, 4.4, 6.2_
 
-- [ ] 14.4.5 Fix bat encounter transcript (74.2% → 95%+)
+- [x] 14.4.5 Fix bat encounter transcript (74.2% → 95%+)
   - Analyze 7 command differences
   - Update bat behavior
   - Re-run transcript 24-bat-encounter
   - Verify 95%+ similarity
   - _Requirements: 4.1, 4.2, 6.2_
 
-- [ ] 14.4.6 Fix maze navigation transcript (81.4% → 95%+)
+- [x] 14.4.6 Fix maze navigation transcript (81.4% → 95%+)
   - Analyze 6 command differences
   - Update maze logic
   - Re-run transcript 25-maze-navigation
   - Verify 95%+ similarity
   - _Requirements: 6.2, 6.3_
 
-- [ ] 14.4.7 Fix mirror room transcript (75.9% → 95%+)
+- [x] 14.4.7 Fix mirror room transcript (75.9% → 95%+)
   - Analyze 7 command differences
   - Update mirror room logic
   - Re-run transcript 26-mirror-room
   - Verify 95%+ similarity
   - _Requirements: 6.2, 6.3_
 
-- [ ] 14.4.8 Fix coffin puzzle transcript (69.9% → 95%+)
+- [x] 14.4.8 Fix coffin puzzle transcript (69.9% → 95%+)
   - Analyze 8 command differences
   - Update coffin puzzle logic
   - Re-run transcript 27-coffin-puzzle
   - Verify 95%+ similarity
   - _Requirements: 6.2, 6.3_
 
-- [ ] 14.4.9 Fix egg/nest puzzle transcript (69.2% → 95%+)
+- [x] 14.4.9 Fix egg/nest puzzle transcript (69.2% → 95%+)
   - Analyze 8 command differences
   - Update egg/nest puzzle logic
   - Re-run transcript 28-egg-nest

@@ -13,6 +13,8 @@ import { TrollBehavior } from '../../engine/troll.js';
 import { ThiefBehavior } from '../../engine/thief.js';
 import { CyclopsBehavior } from '../../engine/cyclops.js';
 import { initializeSwordGlow } from '../../engine/weapons.js';
+import { combatDaemon } from '../../engine/combat.js';
+import { VILLAIN_DATA } from '../../engine/villainData.js';
 
 /**
  * Create a complete initial game state with all rooms and objects
@@ -52,6 +54,9 @@ export function createInitialGameState(): GameState {
   
   // Initialize sword glow daemon
   initializeSwordGlow(gameState);
+  
+  // Register combat daemon - handles villain attacks each turn
+  gameState.eventSystem.registerDaemon('combat', (state) => combatDaemon(state, VILLAIN_DATA));
   
   return gameState;
 }

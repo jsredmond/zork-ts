@@ -293,13 +293,18 @@ export function executePlayerAttack(
   const attackStrength = calculateFightStrength(state);
   const defenseStrength = calculateVillainStrength(state, villainId, villainData);
   
-  // Check if villain is already dead or unconscious
-  if (defenseStrength === 0) {
+  // Check if villain is already unconscious or dead
+  if (defenseStrength < 0) {
+    // Villain is unconscious - kill them
+    console.log(`The unconscious ${villain.name.toLowerCase()} cannot defend himself: He dies.`);
+    return CombatResult.KILLED;
+  } else if (defenseStrength === 0) {
+    // Villain is already dead
     const villainWeapon = findWeapon(state, villainId);
     if (!villainWeapon) {
       console.log(`The unarmed ${villain.name.toLowerCase()} cannot defend himself: He dies.`);
-    } else if (defenseStrength < 0) {
-      console.log(`The unconscious ${villain.name.toLowerCase()} cannot defend himself: He dies.`);
+    } else {
+      console.log(`The ${villain.name.toLowerCase()} is already dead.`);
     }
     return CombatResult.KILLED;
   }
@@ -599,10 +604,38 @@ function applyVillainDamage(
 }
 
 /**
+ * Apply a combat result directly to a villain
+ * Used for testing and special combat scenarios
+ */
+export function applyCombatResult(
+  state: GameState,
+  villainId: string,
+  result: CombatResult,
+  villainData: VillainData
+): void {
+  const villain = state.getObject(villainId) as GameObjectImpl;
+  if (!villain) return;
+  
+  const currentDefense = villain.getProperty('strength') || 0;
+  
+  // Apply the damage
+  applyVillainDamage(state, villainId, result, currentDefense);
+}
+
+/**
  * Combat daemon - runs each turn to handle active combat
  */
 export function combatDaemon(state: GameState, villains: VillainData[]): boolean {
   let anyFighting = false;
+  
+  // Check for troll attack delay (used after first block)
+  const trollDelay = state.getGlobalVariable('TROLL_ATTACK_DELAY') || 0;
+  // DEBUG: console.error(`DEBUG: TROLL_ATTACK_DELAY = ${trollDelay}`);
+  if (trollDelay > 0) {
+    state.setGlobalVariable('TROLL_ATTACK_DELAY', trollDelay - 1);
+    // Don't attack while delay is active
+    return false;
+  }
   
   // Check each villain
   for (const villainData of villains) {

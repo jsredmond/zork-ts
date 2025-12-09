@@ -405,7 +405,7 @@ export class CommandExecutor {
     }
 
     // Intransitive verbs (no object required)
-    if (['XYZZY', 'PLUGH', 'JUMP', 'LEAP', 'PRAY', 'CURSE', 'SING', 'LISTEN', 'SMELL', 'SNIFF', 'WAIT', 'Z'].includes(verb)) {
+    if (['XYZZY', 'PLUGH', 'JUMP', 'LEAP', 'PRAY', 'CURSE', 'SING', 'LISTEN', 'SMELL', 'SNIFF', 'WAIT', 'Z', 'CLIMB'].includes(verb)) {
       return handler.execute(state, command.directObject?.id);
     }
 

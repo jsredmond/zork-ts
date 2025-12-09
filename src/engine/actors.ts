@@ -72,6 +72,12 @@ export interface ActorBehavior {
    * @returns true if item was accepted
    */
   onReceiveItem(state: GameState, item: GameObject): boolean;
+
+  /**
+   * Get the current state of the actor
+   * @returns Current actor state
+   */
+  getState(): ActorState;
 }
 
 /**
@@ -126,6 +132,10 @@ export abstract class BaseActorBehavior implements ActorBehavior {
   onReceiveItem(state: GameState, item: GameObject): boolean {
     // Default: don't accept items
     return false;
+  }
+
+  getState(): ActorState {
+    return this.state;
   }
 
   /**
