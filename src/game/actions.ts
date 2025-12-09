@@ -361,14 +361,24 @@ export class InventoryAction implements ActionHandler {
     const inventoryObjects = state.getInventoryObjects();
     
     // Build inventory list message with proper indentation
+    // Note: Original game displays inventory in reverse order (LIFO - last picked up first)
     let message = "You are carrying:\n";
     
-    for (const obj of inventoryObjects) {
+    for (const obj of inventoryObjects.slice().reverse()) {
       // Add article and capitalize first letter
       const firstChar = obj.name.charAt(0).toLowerCase();
       const article = ['a', 'e', 'i', 'o', 'u'].includes(firstChar) ? 'An' : 'A';
-      const itemName = obj.name.charAt(0).toUpperCase() + obj.name.slice(1).toLowerCase();
-      message += `  ${article} ${itemName.toLowerCase()}\n`;
+      
+      // Use the object's name as-is (already properly formatted in data)
+      let itemDisplay = `${article} ${obj.name}`;
+      
+      // Add lighting status for light sources that are on
+      const objImpl = obj as GameObjectImpl;
+      if (objImpl.hasFlag && objImpl.hasFlag(ObjectFlag.LIGHTBIT) && objImpl.hasFlag(ObjectFlag.ONBIT)) {
+        itemDisplay += ' (providing light)';
+      }
+      
+      message += `  ${itemDisplay}\n`;
       
       // Show nested items (items inside this container)
       if (obj.capacity && obj.capacity > 0) {
@@ -379,8 +389,7 @@ export class InventoryAction implements ActionHandler {
         for (const nested of nestedItems) {
           const nestedFirstChar = nested.name.charAt(0).toLowerCase();
           const nestedArticle = ['a', 'e', 'i', 'o', 'u'].includes(nestedFirstChar) ? 'An' : 'A';
-          const nestedName = nested.name.charAt(0).toUpperCase() + nested.name.slice(1).toLowerCase();
-          message += `    ${nestedArticle} ${nestedName.toLowerCase()}\n`;
+          message += `    ${nestedArticle} ${nested.name}\n`;
         }
       }
     }

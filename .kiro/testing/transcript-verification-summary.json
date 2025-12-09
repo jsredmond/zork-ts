@@ -5,14 +5,14 @@
   "totalCommands": 99,
   "matchedCommands": 78,
   "overallPassRate": 0.4,
-  "averageSimilarity": 0.8403461288971193,
+  "averageSimilarity": 0.8507732788095634,
   "byCategory": {
     "edge-case": {
       "total": 5,
       "passed": 2,
       "failed": 3,
       "passRate": 0.4,
-      "averageSimilarity": 0.8403461288971193
+      "averageSimilarity": 0.8507732788095634
     }
   },
   "byPriority": {
@@ -21,7 +21,7 @@
       "passed": 2,
       "failed": 3,
       "passRate": 0.4,
-      "averageSimilarity": 0.8403461288971193
+      "averageSimilarity": 0.8507732788095634
     }
   },
   "results": [
@@ -35,7 +35,7 @@
       "matchedCommands": 20,
       "averageSimilarity": 1,
       "differences": [],
-      "executionTime": 3
+      "executionTime": 2
     },
     {
       "transcriptId": "41-inventory-limits",
@@ -45,7 +45,7 @@
       "passed": false,
       "totalCommands": 27,
       "matchedCommands": 20,
-      "averageSimilarity": 0.8055028482014349,
+      "averageSimilarity": 0.8576385977636549,
       "differences": [
         {
           "commandIndex": 14,
@@ -60,8 +60,8 @@
           "commandIndex": 15,
           "command": "inventory",
           "expected": "You are carrying:\n  A brass lantern (providing light)\n  An elvish sword\n  A glass bottle\n    A quantity of water\n  A brown sack\n    A lunch\n    A clove of garlic\n  A leaflet",
-          "actual": "You are carrying:\n  A leaflet\n  A brown sack\n    A lunch\n    A clove of garlic\n  A glass bottle\n    A quantity of water\n  A sword\n  A brass lantern",
-          "similarity": 0.18543046357615894,
+          "actual": "You are carrying:\n  A brass lantern (providing light)\n  A sword\n  A glass bottle\n    A quantity of water\n  A brown sack\n    A lunch\n    A clove of garlic\n  A leaflet",
+          "similarity": 0.3973509933774834,
           "category": "text",
           "severity": "critical"
         },
@@ -87,8 +87,8 @@
           "commandIndex": 19,
           "command": "inventory",
           "expected": "You are carrying:\n  A painting\n  A brass lantern (providing light)\n  An elvish sword\n  A glass bottle\n    A quantity of water\n  A brown sack\n    A lunch\n    A clove of garlic\n  A leaflet",
-          "actual": "You are carrying:\n  A leaflet\n  A brown sack\n    A lunch\n    A clove of garlic\n  A glass bottle\n    A quantity of water\n  A sword\n  A brass lantern\n  A painting",
-          "similarity": 0.16049382716049382,
+          "actual": "You are carrying:\n  A painting\n  A brass lantern (providing light)\n  A sword\n  A glass bottle\n    A quantity of water\n  A brown sack\n    A lunch\n    A clove of garlic\n  A leaflet",
+          "similarity": 0.4382716049382716,
           "category": "text",
           "severity": "critical"
         },
@@ -96,19 +96,19 @@
           "commandIndex": 24,
           "command": "inventory",
           "expected": "You are carrying:\n  A painting\n  A brass lantern (providing light)\n  An elvish sword\n  A glass bottle\n    A quantity of water",
-          "actual": "You are carrying:\n  A glass bottle\n    A quantity of water\n  A sword\n  A brass lantern\n  A painting",
-          "similarity": 0.18584070796460178,
+          "actual": "You are carrying:\n  A painting\n  A brass lantern (providing light)\n  A sword\n  A glass bottle\n    A quantity of water",
+          "similarity": 0.584070796460177,
           "category": "text",
-          "severity": "critical"
+          "severity": "major"
         },
         {
           "commandIndex": 26,
           "command": "inventory",
           "expected": "You are carrying:\n  A brown sack\n    A lunch\n    A clove of garlic\n  A painting\n  A brass lantern (providing light)\n  An elvish sword\n  A glass bottle\n    A quantity of water",
-          "actual": "You are carrying:\n  A glass bottle\n    A quantity of water\n  A sword\n  A brass lantern\n  A painting\n  A brown sack\n    A lunch\n    A clove of garlic",
-          "similarity": 0.17105263157894737,
+          "actual": "You are carrying:\n  A brown sack\n    A lunch\n    A clove of garlic\n  A painting\n  A brass lantern (providing light)\n  A sword\n  A glass bottle\n    A quantity of water",
+          "similarity": 0.6907894736842105,
           "category": "text",
-          "severity": "critical"
+          "severity": "major"
         }
       ],
       "executionTime": 2
@@ -278,5 +278,5 @@
       "executionTime": 1
     }
   ],
-  "executionTime": 18
+  "executionTime": 10
 }

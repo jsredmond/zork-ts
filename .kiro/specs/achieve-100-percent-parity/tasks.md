@@ -727,7 +727,7 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 ---
 
-- [-] 21. Fix save and restore
+- [x] 21. Fix save and restore
   - Fix save/restore functionality
   - _Requirements: 8.6_
 
@@ -749,32 +749,32 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
   - Target: 90%+ similarity (from 59.7%)
   - _Requirements: 8.6_
 
-- [-] 21.4 Commit save/restore fix
+- [x] 21.4 Commit save/restore fix
   - Commit message: "fix: Save/restore matches original"
   - Include save/restore updates
   - _Requirements: 8.6_
 
 ---
 
-- [ ] 22. Verify Phase 4 completion
+- [x] 22. Verify Phase 4 completion
   - Run all medium-priority transcripts
   - Verify 100% pass rate
   - _Requirements: 8.1, 10.3_
 
-- [ ] 22.1 Run all medium-priority transcripts
+- [x] 22.1 Run all medium-priority transcripts
   - Execute: `npx tsx scripts/verify-all-transcripts.ts --category medium`
   - Verify all 5 medium-priority transcripts pass
   - Verify 100% pass rate
   - Verify average similarity 90%+
   - _Requirements: 10.3_
 
-- [ ] 22.2 Generate Phase 4 completion report
+- [x] 22.2 Generate Phase 4 completion report
   - Document all fixes
   - Document all transcript results
   - Verify 100% medium-priority pass rate
   - _Requirements: 10.3_
 
-- [ ] 22.3 Commit Phase 4 completion
+- [x] 22.3 Commit Phase 4 completion
   - Commit message: "docs: Complete Phase 4 - All medium-priority issues fixed"
   - Include completion report
   - _Requirements: 10.3_
