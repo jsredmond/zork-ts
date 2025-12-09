@@ -1126,7 +1126,9 @@ export function formatRoomDescription(room: any, state: GameState): string {
       // But still list objects that are in/on this scenery object
       if (obj.isContainer() && (obj.isOpen() || obj.hasFlag(ObjectFlag.SURFACEBIT))) {
         const contents = state.getObjectsInContainer(obj.id);
-        for (const item of contents) {
+        // Reverse order to match original game behavior
+        const reversedContents = [...contents].reverse();
+        for (const item of reversedContents) {
           describeObject(item);
         }
       }
@@ -1213,7 +1215,9 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
       // But still list objects that are in/on this scenery object
       if (obj.isContainer() && (obj.isOpen() || obj.hasFlag(ObjectFlag.SURFACEBIT))) {
         const contents = state.getObjectsInContainer(obj.id);
-        for (const item of contents) {
+        // Reverse order to match original game behavior
+        const reversedContents = [...contents].reverse();
+        for (const item of reversedContents) {
           describeObject(item);
         }
       }
