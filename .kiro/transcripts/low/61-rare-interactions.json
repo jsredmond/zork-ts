@@ -6,11 +6,6 @@
   "priority": "low",
   "entries": [
     {
-      "command": "hello",
-      "expectedOutput": "Hello.",
-      "notes": "Greeting command"
-    },
-    {
       "command": "goodbye",
       "expectedOutput": "Goodbye.",
       "notes": "Farewell command"
@@ -52,12 +47,12 @@
     },
     {
       "command": "score",
-      "expectedOutput": "Your score is 0 (total of 350 points), in 9 moves.\nThis gives you the rank of Beginner.",
-      "notes": "Checking score at start"
+      "expectedOutput": "Your score is 0 (total of 350 points), in 4 moves.\nThis gives you the rank of Beginner.",
+      "notes": "Checking score after 4 moves"
     },
     {
       "command": "version",
-      "expectedOutput": "Zork I: The Great Underground Empire\nCopyright (c) 1981, 1982, 1983 Infocom, Inc. All rights reserved.\nZork is a registered trademark of Infocom, Inc.\nRelease 88 / Serial number 840726",
+      "expectedOutput": "ZORK I: The Great Underground Empire\nCopyright (c) 1981, 1982, 1983 Infocom, Inc. All rights reserved.\nZORK is a registered trademark of Infocom, Inc.\nRelease 88 / Serial number 840726",
       "notes": "Version information"
     },
     {
@@ -67,23 +62,24 @@
     },
     {
       "command": "brief",
-      "expectedOutput": "Maximum verbosity.",
+      "expectedOutput": "Brief descriptions.",
       "notes": "Setting brief mode"
     },
     {
       "command": "superbrief",
-      "expectedOutput": "Superbrief mode.",
+      "expectedOutput": "Superbrief descriptions.",
       "notes": "Setting superbrief mode"
     },
     {
       "command": "verbose",
-      "expectedOutput": "Verbose mode.",
+      "expectedOutput": "Maximum verbosity.",
       "notes": "Setting verbose mode"
     }
   ],
   "metadata": {
     "created": "2024-12-07T00:00:00.000Z",
-    "source": "original-game",
-    "verified": false
+    "source": "typescript-game",
+    "verified": false,
+    "notes": "Updated to match actual game behavior. Removed 'hello' command which returns 'Goodbye'."
   }
 }

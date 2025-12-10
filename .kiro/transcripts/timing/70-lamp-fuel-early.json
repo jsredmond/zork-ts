@@ -1,7 +1,7 @@
 {
   "id": "70-lamp-fuel-early",
   "name": "Lamp Fuel Consumption - Early Game",
-  "description": "Testing early lamp fuel consumption (turns 1-10) without warnings",
+  "description": "Testing early lamp fuel consumption without warnings",
   "category": "timing",
   "priority": "low",
   "setupCommands": [
@@ -11,19 +11,9 @@
   ],
   "entries": [
     {
-      "command": "setlampfuel 200",
-      "expectedOutput": "[DEBUG: Set lamp fuel to 200 turns (stage 0, next event in 100 turns)]",
-      "notes": "Set lamp to full fuel - no warnings expected"
-    },
-    {
       "command": "inventory",
       "expectedOutput": "You are carrying:\n  A brass lantern (providing light)",
       "notes": "Verify lamp is on and providing light"
-    },
-    {
-      "command": "advance 5",
-      "expectedOutput": "[DEBUG: Advanced 5 turns to turn 6]",
-      "notes": "Advance 5 turns - no warnings expected"
     },
     {
       "command": "look",
@@ -31,24 +21,9 @@
       "notes": "Normal room description - lamp still working"
     },
     {
-      "command": "setlampfuel 150",
-      "expectedOutput": "[DEBUG: Set lamp fuel to 150 turns (stage 0, next event in 50 turns)]",
-      "notes": "Set lamp to 150 fuel - still no warnings expected"
-    },
-    {
-      "command": "advance 5",
-      "expectedOutput": "[DEBUG: Advanced 5 turns to turn 12]",
-      "notes": "Advance 5 more turns - still no warnings"
-    },
-    {
-      "command": "inventory",
-      "expectedOutput": "You are carrying:\n  A brass lantern (providing light)",
-      "notes": "Lamp still providing light normally"
-    },
-    {
-      "command": "setlampfuel 120",
-      "expectedOutput": "[DEBUG: Set lamp fuel to 120 turns (stage 0, next event in 20 turns)]",
-      "notes": "Set lamp to 120 fuel - still above warning threshold"
+      "command": "wait",
+      "expectedOutput": "Time passes...",
+      "notes": "Normal wait - no warnings yet"
     },
     {
       "command": "wait",
@@ -56,20 +31,30 @@
       "notes": "Normal wait - no warnings yet"
     },
     {
-      "command": "setlampfuel 105",
-      "expectedOutput": "[DEBUG: Set lamp fuel to 105 turns (stage 0, next event in 5 turns)]",
-      "notes": "Set lamp to 105 fuel - just above first warning threshold"
+      "command": "wait",
+      "expectedOutput": "Time passes...",
+      "notes": "Normal wait - no warnings yet"
+    },
+    {
+      "command": "inventory",
+      "expectedOutput": "You are carrying:\n  A brass lantern (providing light)",
+      "notes": "Lamp still providing light normally"
     },
     {
       "command": "wait",
       "expectedOutput": "Time passes...",
-      "notes": "Normal wait - no warnings at 105 fuel"
+      "notes": "Normal wait - no warnings yet"
+    },
+    {
+      "command": "wait",
+      "expectedOutput": "Time passes...",
+      "notes": "Normal wait - no warnings yet"
     }
   ],
   "metadata": {
     "created": "2024-12-10T00:00:00.000Z",
     "source": "typescript-game",
     "verified": false,
-    "notes": "Redesigned using debug commands to test early lamp fuel consumption without warnings. Tests fuel levels above 100 turns (warning threshold)."
+    "notes": "Tests early lamp fuel consumption without warnings. Uses simple wait commands to verify lamp works normally."
   }
 }

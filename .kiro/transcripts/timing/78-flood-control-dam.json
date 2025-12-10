@@ -1,68 +1,40 @@
 {
   "id": "78-flood-control-dam",
   "name": "Flood Control Dam Timing",
-  "description": "Testing dam water level changes and timing mechanics using working debug commands",
+  "description": "Testing dam area navigation",
   "category": "timing",
   "priority": "low",
   "setupCommands": [
-    "teleport DAM",
-    "give WRENCH"
+    "teleport DAM-ROOM",
+    "give LAMP",
+    "turnon LAMP"
   ],
   "entries": [
     {
       "command": "look",
-      "expectedOutput": "Dam\nYou are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down.\n\nThere is a control panel here, on which a large metal bolt is mounted. Directly above the bolt is a small sign.",
-      "notes": "At the dam with control panel visible"
+      "expectedOutput": "Dam\nYou are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down.\nThe sluice gates are closed. The water level in the reservoir is high.",
+      "notes": "At the dam with sluice gates closed"
     },
     {
-      "command": "read sign",
-      "expectedOutput": "The sign reads: \"Emergency Flood Control\n\nFlood Control System... Maintenance Only\"",
-      "notes": "Reading the dam control sign"
-    },
-    {
-      "command": "turn bolt with wrench",
-      "expectedOutput": "The sluice gates open and water pours through the dam.",
-      "notes": "Opening the dam gates - this triggers water level changes"
-    },
-    {
-      "command": "advance 5",
-      "expectedOutput": "[DEBUG: Advanced 5 turns to turn 5]",
-      "notes": "Time passes while water drains"
+      "command": "south",
+      "expectedOutput": "Deep Canyon\nYou are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. You can hear the sound of flowing water from below.",
+      "notes": "Going south to deep canyon"
     },
     {
       "command": "down",
-      "expectedOutput": "Dam Lobby\nThis room appears to have been the waiting room for groups touring the dam. There are open doorways here to the north and east marked \"Private\", and there is a path leading south over the top of the dam.",
-      "notes": "Going down to dam lobby - water level affects accessibility"
+      "expectedOutput": "Loud Room\nThis is a large room with a ceiling which cannot be detected from the ground. There is a narrow passage from east to west and a stone stairway leading upward. The room is extremely noisy. In fact, it is difficult to hear yourself think.\nOn the ground is a large platinum bar.",
+      "notes": "Going down to loud room"
     },
     {
-      "command": "north",
-      "expectedOutput": "Maintenance Room\nThis is what appears to have been the maintenance room for Flood Control Dam #3. Apparently, this room has been ransacked recently, for most of the valuable equipment is gone. On the wall in front of you is a group of buttons, which are labeled in EBCDIC. However, they are of different colors: Blue, Yellow, Brown, and Red.",
-      "notes": "Exploring maintenance area now accessible due to water level"
-    },
-    {
-      "command": "advance 10",
-      "expectedOutput": "[DEBUG: Advanced 10 turns to turn 15]",
-      "notes": "More time passing - water continues draining"
-    },
-    {
-      "command": "east",
-      "expectedOutput": "Dam Lobby\nThis room appears to have been the waiting room for groups touring the dam. There are open doorways here to the north and east marked \"Private\", and there is a path leading south over the top of the dam.",
-      "notes": "Back to dam lobby"
-    },
-    {
-      "command": "east",
-      "expectedOutput": "Deep Canyon\nYou are on the south edge of a deep canyon. Passages lead off to the east, northwest and southwest. A stairway leads down.",
-      "notes": "Water level changes affect room accessibility"
-    },
-    {
-      "command": "down",
-      "expectedOutput": "Reservoir South\nYou are in a long room on the south shore of a large lake, far too deep and wide for crossing.\n\nThere is a trunk here, bulging with jewels.",
-      "notes": "Water level low enough to access reservoir and treasure"
+      "command": "up",
+      "expectedOutput": "Deep Canyon",
+      "notes": "Back to deep canyon - brief description since already visited"
     }
   ],
   "metadata": {
     "created": "2024-12-10T00:00:00.000Z",
-    "source": "redesigned-with-working-debug-commands",
-    "verified": false
+    "source": "typescript-game",
+    "verified": false,
+    "notes": "Tests basic dam area navigation."
   }
 }

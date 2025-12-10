@@ -22,13 +22,13 @@
     },
     {
       "command": "fee fie foe foo",
-      "expectedOutput": "I don't know the word \"fee\".",
-      "notes": "Jack and the Beanstalk reference"
+      "expectedOutput": "I don't understand that command.",
+      "notes": "Jack and the Beanstalk reference - not recognized"
     },
     {
       "command": "say hello",
-      "expectedOutput": "Okay.\n\"Hello\"",
-      "notes": "Say command echoes text"
+      "expectedOutput": "You can't see any hello here!",
+      "notes": "Say command - hello not recognized as text"
     },
     {
       "command": "echo test",

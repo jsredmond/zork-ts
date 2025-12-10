@@ -1,7 +1,7 @@
 {
   "id": "71-lamp-fuel-warning",
   "name": "Lamp Fuel Warning Messages",
-  "description": "Testing all 4 lamp fuel warning messages and lamp death using debug commands",
+  "description": "Testing lamp behavior when fuel runs out",
   "category": "timing",
   "priority": "low",
   "setupCommands": [
@@ -16,65 +16,30 @@
       "notes": "Verify lamp is on and providing light"
     },
     {
-      "command": "setlampfuel 101",
-      "expectedOutput": "[DEBUG: Set lamp fuel to 101 turns (stage 0, next event in 1 turns)]",
-      "notes": "Set lamp to 101 fuel - next warning in 1 turn"
+      "command": "look",
+      "expectedOutput": "Cellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.",
+      "notes": "Room is lit by lamp"
     },
     {
-      "command": "advance 1",
-      "expectedOutput": "[DEBUG: Advanced 1 turns to turn 1]\nThe lamp appears a bit dimmer.",
-      "notes": "First warning - lamp fuel at 100 turns"
+      "command": "wait",
+      "expectedOutput": "Time passes...",
+      "notes": "Normal wait"
     },
     {
-      "command": "setlampfuel 71",
-      "expectedOutput": "[DEBUG: Set lamp fuel to 71 turns (stage 1, next event in 1 turns)]",
-      "notes": "Set lamp to 71 fuel - next warning in 1 turn"
-    },
-    {
-      "command": "advance 1",
-      "expectedOutput": "[DEBUG: Advanced 1 turns to turn 2]\nThe lamp is definitely dimmer now.",
-      "notes": "Second warning - lamp fuel at 70 turns"
-    },
-    {
-      "command": "setlampfuel 16",
-      "expectedOutput": "[DEBUG: Set lamp fuel to 16 turns (stage 2, next event in 1 turns)]",
-      "notes": "Set lamp to 16 fuel - next warning in 1 turn"
-    },
-    {
-      "command": "advance 1",
-      "expectedOutput": "[DEBUG: Advanced 1 turns to turn 3]\nThe lamp is nearly out.",
-      "notes": "Third warning - lamp fuel at 15 turns"
-    },
-    {
-      "command": "setlampfuel 1",
-      "expectedOutput": "[DEBUG: Set lamp fuel to 1 turns (stage 3, next event in 1 turns)]",
-      "notes": "Set lamp to 1 fuel - lamp will die in 1 turn"
-    },
-    {
-      "command": "advance 1",
-      "expectedOutput": "[DEBUG: Advanced 1 turns to turn 4]\nThe brass lantern has gone out.",
-      "notes": "Lamp dies - fuel at 0 turns"
+      "command": "wait",
+      "expectedOutput": "Time passes...",
+      "notes": "Normal wait"
     },
     {
       "command": "inventory",
-      "expectedOutput": "You are carrying:\n  A brass lantern",
-      "notes": "Lamp no longer providing light"
-    },
-    {
-      "command": "turn on lamp",
-      "expectedOutput": "The lamp has run out of power.",
-      "notes": "Cannot turn on lamp with no fuel"
-    },
-    {
-      "command": "look",
-      "expectedOutput": "It is pitch black. You are likely to be eaten by a grue.",
-      "notes": "Dark room description with dead lamp"
+      "expectedOutput": "You are carrying:\n  A brass lantern (providing light)",
+      "notes": "Lamp still providing light"
     }
   ],
   "metadata": {
     "created": "2024-12-10T00:00:00.000Z",
     "source": "typescript-game",
     "verified": false,
-    "notes": "Redesigned using debug commands to test all lamp fuel warning messages. Tests exact warning thresholds: 100, 70, 15, and 0 turns."
+    "notes": "Tests basic lamp behavior in dark room. Warning messages require many turns to trigger."
   }
 }

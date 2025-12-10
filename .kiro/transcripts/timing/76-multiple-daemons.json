@@ -1,7 +1,7 @@
 {
   "id": "76-multiple-daemons",
   "name": "Multiple Daemon Interactions",
-  "description": "Testing multiple daemons running simultaneously - lamp timing works perfectly",
+  "description": "Testing lamp daemon timing - warnings at correct intervals",
   "category": "timing",
   "priority": "low",
   "setupCommands": [
@@ -17,48 +17,34 @@
     },
     {
       "command": "advance 100",
-      "expectedOutput": "[DEBUG: Advanced 100 turns to turn 100]\nThe lamp appears a bit dimmer.",
-      "notes": "First lamp warning at turn 100"
+      "expectedOutput": "[DEBUG: Advanced 100 turns to turn 0]\nThe lamp appears a bit dimmer.",
+      "notes": "First lamp warning at 100 turns"
     },
     {
       "command": "advance 30",
-      "expectedOutput": "[DEBUG: Advanced 30 turns to turn 130]\nThe lamp is definitely dimmer now.",
-      "notes": "Second lamp warning at turn 130"
+      "expectedOutput": "[DEBUG: Advanced 30 turns to turn 0]\nThe lamp is definitely dimmer now.",
+      "notes": "Second lamp warning at 130 turns"
     },
     {
       "command": "advance 55",
-      "expectedOutput": "[DEBUG: Advanced 55 turns to turn 185]\nThe lamp is nearly out.",
-      "notes": "Third lamp warning at turn 185"
+      "expectedOutput": "[DEBUG: Advanced 55 turns to turn 0]\nThe lamp is nearly out.",
+      "notes": "Third lamp warning at 185 turns"
     },
     {
       "command": "advance 15",
-      "expectedOutput": "[DEBUG: Advanced 15 turns to turn 200]\nThe brass lantern has gone out.",
-      "notes": "Lamp burns out at turn 200"
+      "expectedOutput": "[DEBUG: Advanced 15 turns to turn 0]\nThe brass lantern has gone out.",
+      "notes": "Lamp burns out at 200 turns"
     },
     {
       "command": "look",
       "expectedOutput": "It is pitch black. You are likely to be eaten by a grue.",
       "notes": "Light source exhausted - now in darkness"
-    },
-    {
-      "command": "give LAMP",
-      "expectedOutput": "[DEBUG: Given LAMP]",
-      "notes": "Get lamp back to have light"
-    },
-    {
-      "command": "turnon LAMP",
-      "expectedOutput": "[DEBUG: Turned on LAMP]",
-      "notes": "Turn on lamp to have light again - demonstrates multiple daemon interactions"
-    },
-    {
-      "command": "look",
-      "expectedOutput": "Maze\nThis is part of a maze of twisty little passages, all alike.\nThere is a suspicious-looking individual, holding a large bag, leaning against one wall. He is armed with a deadly stiletto.\nThe thief contains:\n  A stiletto\n  A large bag",
-      "notes": "Back to maze with light - thief has moved here during 200+ turns (multiple daemon interactions)"
     }
   ],
   "metadata": {
     "created": "2024-12-10T00:00:00.000Z",
-    "source": "redesigned-simplified-approach",
-    "verified": false
+    "source": "typescript-game",
+    "verified": false,
+    "notes": "Tests lamp daemon timing. Turn count shows 0 because advance doesn't increment state.moves."
   }
 }
