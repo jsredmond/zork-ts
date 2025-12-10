@@ -1,15 +1,23 @@
 # Product Overview
 
-This repository contains the original source code for **Zork I: The Great Underground Empire**, a 1980 interactive fiction game by Infocom. Written by Marc Blank, Dave Lebling, Bruce Daniels, and Tim Anderson, Zork I is a pioneering text adventure game that established many conventions of the interactive fiction genre.
+This repository contains both the **original ZIL source code** and a **modern TypeScript rewrite** of **Zork I: The Great Underground Empire**, a 1980 interactive fiction game by Infocom.
+
+## Dual Codebase
+
+1. **Original ZIL Source** - Historical reference files (*.zil) from Infocom
+2. **TypeScript Rewrite** - Modern implementation in `src/` aiming for 100% parity with the original
 
 ## Purpose
 
-This collection serves educational, historical, and research purposes, allowing study of:
-- How interactive fiction games were implemented in the early 1980s
-- Input parsing and natural language processing techniques
-- Game state management and world modeling
-- The evolution of the Z-machine virtual machine
+- Preserve and study the original Zork I implementation
+- Provide a playable, maintainable TypeScript version
+- Enable testing and verification against original game behavior
 
-## Historical Context
+## TypeScript Rewrite Goals
 
-This source code represents a snapshot of the Infocom development system at shutdown. The code may differ from the original production release, as there is no remaining way to verify against official versions. The repository is considered canonical but not necessarily the exact production arrangement.
+The TypeScript implementation aims for complete behavioral parity with the original:
+- Same room descriptions and object interactions
+- Same puzzle solutions and game mechanics
+- Same NPC behaviors (troll, thief, cyclops)
+- Same timing systems (lamp fuel, candle burning, daemons)
+- Same scoring and win conditions

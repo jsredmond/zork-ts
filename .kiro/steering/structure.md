@@ -1,69 +1,53 @@
 # Project Structure
 
-## Main Entry Point
+## TypeScript Rewrite (`src/`)
 
-**zork1.zil** - The main compilation file that includes all other modules in the correct order
+### Entry Point
+- **src/main.ts** - Game entry point and main loop
 
-## File Organization
+### Core Modules
 
-### Core Game Files (Prefixed with 'g' for "generic")
-These files contain the game engine and are shared across the Zork trilogy:
+#### `src/engine/`
+Game engine and mechanics:
+- **executor.ts** - Command execution
+- **daemons.ts** - Timed events (lamp, candle, NPCs)
+- **combat.ts** - Combat system
+- **lighting.ts** - Light source management
+- **troll.ts**, **thief.ts**, **cyclops.ts** - NPC behaviors
 
-- **gmacros.zil** - Macro definitions used throughout the codebase
-- **gsyntax.zil** - Syntax definitions for command parsing
-- **gglobals.zil** - Global variable declarations
-- **gmain.zil** - Main game loop and PERFORM routine
-- **gparser.zil** - Natural language parser implementation
-- **gverbs.zil** - Generic verb implementations
-- **gclock.zil** - Game clock and timing system
+#### `src/game/`
+Game content and state:
+- **state.ts** - Game state management
+- **actions.ts** - Verb action handlers
+- **objects.ts** - Object definitions and behaviors
+- **rooms.ts** - Room class
+- **scoring.ts** - Score tracking
+- **death.ts** - Death and resurrection
+- **data/** - Room and object data definitions
+- **factories/** - Game initialization
 
-### Zork I Specific Files (Prefixed with '1')
-Game-specific content for Zork I:
+#### `src/parser/`
+Natural language parsing:
+- **lexer.ts** - Tokenization
+- **parser.ts** - Command parsing
+- **vocabulary.ts** - Word definitions
 
-- **1dungeon.zil** - Room definitions, objects, and world layout
-- **1actions.zil** - Game-specific action handlers and responses
+#### `src/io/`
+Input/output:
+- **terminal.ts** - Terminal I/O with status bar
+- **display.ts** - Output formatting
 
-### Build Artifacts
+#### `src/persistence/`
+Save/restore:
+- **serializer.ts** - Game state serialization
+- **storage.ts** - File storage
 
-- **COMPILED/** - Directory containing compiled game files
-  - **zork1.z3** - The compiled Z-machine game file
-- **zork1.chart** - Compilation statistics
-- **zork1.errors** - Compilation error log
-- **zork1.record** - Build record
-- **zork1.serial** - Serial number for release tracking
-- **zork1.zip** - Legacy compiled file (may not be buildable with modern tools)
-- **zork1freq.xzap** - Frequency analysis data
-- **parser.cmp** - Parser compilation artifact
+#### `src/testing/`
+Test infrastructure and verification tools
 
-## Code Conventions
+## Original ZIL Source (Reference)
 
-### Naming Patterns
-
-- **Global variables**: Begin with uppercase letters or use SETG
-- **Constants**: Defined with CONSTANT, typically all caps
-- **Parser globals**: Prefixed with `P-` (e.g., P-LEXV, P-ITBL)
-- **Actions**: Prefixed with `ACT?` or `V?` (e.g., V?WALK, ACT?TELL)
-- **Object properties**: Prefixed with `P?` (e.g., P?ACTION)
-- **Word constants**: Prefixed with `W?` (e.g., W?THEN, W?PERIOD)
-
-### File Inclusion Order
-
-The main file (zork1.zil) includes files in this specific order:
-1. GMACROS - Macro definitions first
-2. GSYNTAX - Syntax definitions
-3. 1DUNGEON - World and object definitions
-4. GGLOBALS - Global variables
-5. GCLOCK - Clock system
-6. GMAIN - Main loop
-7. GPARSER - Parser
-8. GVERBS - Verb handlers
-9. 1ACTIONS - Game-specific actions
-
-This order is critical as later files depend on definitions from earlier ones.
-
-### Code Style
-
-- **S-expressions**: All code uses LISP-style parenthesized expressions
-- **Angle brackets**: Used for special forms (e.g., `<ROUTINE>`, `<GLOBAL>`, `<SETG>`)
-- **Comments**: Prefixed with semicolon `;` or enclosed in quotes `"comment"`
-- **Indentation**: Nested expressions are indented for readability
+- **zork1.zil** - Main include file
+- **gmacros.zil**, **gparser.zil**, etc. - Generic engine
+- **1dungeon.zil**, **1actions.zil** - Zork I specific content
+- **COMPILED/zork1.z3** - Pre-compiled game file

@@ -1,44 +1,43 @@
 # Technology Stack
 
-## Language
+## TypeScript Rewrite
 
-**ZIL (Zork Implementation Language)** - A dialect of MDL (Muddle), which itself is a LISP variant created by MIT. ZIL was Infocom's proprietary language for developing interactive fiction games.
+### Runtime
+- **Node.js** with TypeScript (tsx for execution)
+- **Vitest** for testing
 
-## Build System
+### Common Commands
 
-### Historical Compiler
-- **ZILCH**: The original Infocom compiler that ran on TOPS20 mainframes
-- **Note**: The original ZILCH compiler is no longer available
-
-### Modern Alternative
-- **ZILF** (http://zilf.io): A user-maintained open-source compiler that can compile these .ZIL files with minor issues
-- ZILF is currently the only known way to compile this source code into playable Z-machine files
-
-## Target Platform
-
-**Z-machine**: A virtual machine designed by Infocom for running interactive fiction games. The compiled output is a .z3 file (Z-machine version 3) that can be played using modern Z-machine interpreters.
-
-## Common Commands
-
-### Compilation
-There is no standard build command included in this repository. To compile with ZILF:
 ```bash
-# Using ZILF (must be installed separately)
-zilf zork1.zil
+# Run the game
+npm run dev
+
+# Run tests
+npm test
+
+# Run specific test file
+npx vitest run src/game/actions.test.ts
 ```
 
-### Playing the Game
-The compiled game (COMPILED/zork1.z3) can be played using any Z-machine interpreter such as:
-- Frotz
-- Gargoyle
-- Zoom
-- Web-based interpreters
+### Key Dependencies
+- `tsx` - TypeScript execution
+- `vitest` - Test framework
+- `readline` - Terminal input handling
 
-## File Types
+## Original ZIL Source (Reference Only)
 
-- `.zil` - ZIL source code files
-- `.z3` - Compiled Z-machine version 3 game file
-- `.chart` - Compilation statistics
-- `.errors` - Compilation error log
-- `.record` - Build record
-- `.serial` - Serial number tracking
+### Language
+**ZIL (Zork Implementation Language)** - Infocom's proprietary LISP dialect
+
+### Historical Compiler
+- **ZILCH**: Original compiler (no longer available)
+- **ZILF** (http://zilf.io): Modern open-source alternative
+
+### File Types
+- `.zil` - ZIL source code (reference)
+- `.z3` - Compiled Z-machine game file
+
+## Playing Options
+
+1. **TypeScript version**: `npm run dev`
+2. **Original compiled**: Use COMPILED/zork1.z3 with Frotz, Gargoyle, or other Z-machine interpreters
