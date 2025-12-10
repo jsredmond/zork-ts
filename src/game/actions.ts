@@ -525,6 +525,11 @@ export class MoveAction implements ActionHandler {
 
     // Move to new room
     const oldRoom = state.currentRoom;
+    
+    // Check if destination room was visited before moving there
+    const destinationRoom = state.rooms.get(exit.destination);
+    const wasVisited = destinationRoom?.visited || false;
+    
     state.setCurrentRoom(exit.destination);
     // Note: Move counter is incremented by processTurn() in the event system
 
@@ -579,7 +584,7 @@ export class MoveAction implements ActionHandler {
     }
 
     // Format the room description
-    const roomDescription = getRoomDescriptionAfterMovement(newRoom, state, false);
+    const roomDescription = getRoomDescriptionAfterMovement(newRoom, state, false, wasVisited);
     const fullMessage = entryMessage + roomDescription;
 
     return {
@@ -1156,7 +1161,7 @@ export function formatRoomDescription(room: any, state: GameState): string {
  * Get room description for display after movement
  * Shows brief description for visited rooms, full for unvisited
  */
-export function getRoomDescriptionAfterMovement(room: any, state: GameState, verbose: boolean = false): string {
+export function getRoomDescriptionAfterMovement(room: any, state: GameState, verbose: boolean = false, wasVisited: boolean = false): string {
   // Check if room is lit
   if (!isRoomLit(state)) {
     return getDarknessMessage();
@@ -1182,7 +1187,7 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
     if (verbose) {
       output += description;
     }
-  } else if (isVerbose || !room.visited) {
+  } else if (isVerbose || !wasVisited) {
     // Verbose mode or first visit: always show full description
     output += description;
   } else {

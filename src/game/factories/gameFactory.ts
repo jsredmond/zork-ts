@@ -52,6 +52,8 @@ export function createInitialGameState(): GameState {
   gameState.setGlobalVariable('DEATHS', 0);    // Death counter
   gameState.setGlobalVariable('LAMP_FUEL', 200); // Initial lamp fuel from ZIL
   gameState.setGlobalVariable('CANDLE_FUEL', 40); // Initial candle fuel from ZIL
+  gameState.setGlobalVariable('VERBOSE', false); // Default to brief mode
+  gameState.setGlobalVariable('SUPER_BRIEF', false); // Not superbrief by default
   
   // Initialize conditional messages
   initializeConditionalMessages();

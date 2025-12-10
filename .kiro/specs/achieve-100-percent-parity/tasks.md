@@ -938,7 +938,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [-] 27. Fix verbose/brief mode
+- [x] 27. Fix verbose/brief mode
   - Fix verbose and brief mode handling
   - _Requirements: 9.5_
 
@@ -960,32 +960,32 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
   - Target: 100%+ similarity
   - _Requirements: 9.5_
 
-- [-] 27.4 Commit verbose/brief mode fix
+- [x] 27.4 Commit verbose/brief mode fix
   - Commit message: "fix: Verbose/brief mode matches original"
   - Include mode handling updates
   - _Requirements: 9.5_
 
 ---
 
-- [ ] 28. Verify Phase 5 completion
+- [x] 28. Verify Phase 5 completion
   - Run all low-priority transcripts
   - Verify 100% pass rate
   - _Requirements: 9.1, 10.4_
 
-- [ ] 28.1 Run all low-priority transcripts
+- [x] 28.1 Run all low-priority transcripts
   - Execute: `npx tsx scripts/verify-all-transcripts.ts --category low`
   - Verify 17/17 low-priority transcripts pass
   - Verify 100% pass rate
   - Verify average similarity 100%
   - _Requirements: 10.4_
 
-- [ ] 28.2 Generate Phase 5 completion report
+- [x] 28.2 Generate Phase 5 completion report
   - Document all fixes
   - Document all transcript results
   - Verify 100% low-priority pass rate
   - _Requirements: 10.4_
 
-- [ ] 28.3 Commit Phase 5 completion
+- [x] 28.3 Commit Phase 5 completion
   - Commit message: "docs: Complete Phase 5 - All low-priority issues fixed"
   - Include completion report
   - _Requirements: 10.4_
