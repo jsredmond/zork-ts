@@ -579,7 +579,7 @@ export class MoveAction implements ActionHandler {
     }
 
     // Format the room description
-    const roomDescription = getRoomDescriptionAfterMovement(newRoom, state);
+    const roomDescription = getRoomDescriptionAfterMovement(newRoom, state, false);
     const fullMessage = entryMessage + roomDescription;
 
     return {
@@ -1167,20 +1167,35 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
   // Room name
   output += room.name + '\n';
 
+  // Get verbosity settings
+  const isVerbose = state.getGlobalVariable('VERBOSE');
+  const isSuperBrief = state.getGlobalVariable('SUPER_BRIEF');
+
   // Check for conditional description
   const conditionalDesc = getConditionalRoomDescription(room.id, state);
   const description = conditionalDesc || room.description;
 
-  // Show full description if unvisited or verbose mode
-  if (!room.visited || verbose) {
+  // Determine what to show based on mode and room visit status
+  if (isSuperBrief) {
+    // Superbrief mode: only show room name (already added above)
+    // Don't add description or objects unless it's a LOOK command
+    if (verbose) {
+      output += description;
+    }
+  } else if (isVerbose || !room.visited) {
+    // Verbose mode or first visit: always show full description
     output += description;
   } else {
-    // Brief description for visited rooms
-    output += description;
+    // Brief mode for visited rooms: only show room name (already added above)
+    // Don't add description unless it's a LOOK command
+    if (verbose) {
+      output += description;
+    }
   }
 
-  // List visible objects in room
-  const objectsInRoom = state.getObjectsInCurrentRoom();
+  // List visible objects in room (always show objects unless in superbrief mode without verbose)
+  if (!isSuperBrief || verbose) {
+    const objectsInRoom = state.getObjectsInCurrentRoom();
   
   // Reverse the order to match original game behavior
   // (Original game displays objects in reverse definition order)
@@ -1236,6 +1251,7 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
     }
     
     describeObject(obj);
+    }
   }
 
   return output;
@@ -1987,7 +2003,7 @@ export class VerboseAction implements ActionHandler {
     
     return {
       success: true,
-      message: "Maximum verbosity.",
+      message: "Verbose mode.",
       stateChanges: [{
         type: 'VERBOSITY_CHANGED',
         oldValue: null,
@@ -2008,7 +2024,7 @@ export class BriefAction implements ActionHandler {
     
     return {
       success: true,
-      message: "Brief descriptions.",
+      message: "Maximum verbosity.",
       stateChanges: [{
         type: 'VERBOSITY_CHANGED',
         oldValue: null,
@@ -2029,7 +2045,7 @@ export class SuperBriefAction implements ActionHandler {
     
     return {
       success: true,
-      message: "Superbrief descriptions.",
+      message: "Superbrief mode.",
       stateChanges: [{
         type: 'VERBOSITY_CHANGED',
         oldValue: null,

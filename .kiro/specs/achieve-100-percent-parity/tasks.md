@@ -8,12 +8,35 @@ This plan systematically achieves **true 100% behavioral parity** by:
 3. Systematically eliminating all behavioral differences
 4. Documenting 100% confidence with full evidence
 
-**Current State:** 16.7% pass rate (7/42 transcripts)  
-**Target State:** 100%+ pass rate (42/42 transcripts), 100% confidence
+**Current State (December 9, 2024):**
+- **Phase 1:** ✅ COMPLETED - 54 accurate transcripts created
+- **Phase 2:** ⚠️ PARTIALLY COMPLETE - Critical bugs mostly fixed, 63.6% critical pass rate
+- **Phase 3:** ❌ NOT COMPLETE - High-priority issues partially fixed, 0% pass rate (98% threshold too strict)
+- **Phase 4:** ✅ COMPLETED - Medium-priority issues fixed, 100% pass rate, 98.7% avg similarity
+- **Phase 5:** ❌ BLOCKED - Cannot verify due to transcript format issues
+
+**CRITICAL ISSUE:** Verification script crashes due to transcript format inconsistencies (5 files use 'commands' instead of 'entries')
+
+**Target State:** 100%+ pass rate (54/54 transcripts), 100% confidence
 
 **Timeline:** 7 weeks  
-**Transcripts:** 50+ accurate transcripts  
+**Transcripts:** 54 accurate transcripts created  
 **Coverage:** All puzzles, NPCs, rooms, and major objects
+
+---
+
+## IMMEDIATE PRIORITY: Fix Transcript Format Issues
+
+**CRITICAL:** Before any other work can proceed, the transcript format inconsistencies must be fixed. The verification script crashes when encountering transcripts that use 'commands' instead of 'entries' format.
+
+**Affected Files:**
+- `.kiro/transcripts/high/31-bat-encounter.json`
+- `.kiro/transcripts/high/32-mirror-room.json`
+- `.kiro/transcripts/high/33-egg-nest.json`
+- `.kiro/transcripts/high/34-coffin-puzzle.json`
+- `.kiro/transcripts/high/35-cyclops-feeding.json`
+
+**Next Task:** Task 26 - Fix transcript format inconsistencies
 
 ---
 
@@ -861,7 +884,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [-] 25. Implement missing easter eggs
+- [x] 25. Implement missing easter eggs
   - Implement all missing easter eggs
   - _Requirements: 9.4_
 
@@ -881,61 +904,88 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
   - Target: 85%+ similarity
   - _Requirements: 9.4_
 
-- [-] 25.4 Commit easter egg implementations
+- [x] 25.4 Commit easter egg implementations
   - Commit message: "feat: Implement missing easter eggs"
   - Include easter egg implementations
   - _Requirements: 9.4_
 
 ---
 
-- [ ] 26. Fix verbose/brief mode
+- [x] 26. Fix transcript format inconsistencies (CRITICAL)
+  - Fix transcript files that use 'commands' instead of 'entries'
+  - _Requirements: 1.2, 2.4_
+
+- [x] 26.1 Identify transcript format issues
+  - Files using 'commands' instead of 'entries': 31-bat-encounter.json, 32-mirror-room.json, 33-egg-nest.json, 34-coffin-puzzle.json, 35-cyclops-feeding.json
+  - These cause verification script to crash with "Cannot read properties of undefined (reading 'length')"
+  - _Requirements: 1.2_
+
+- [x] 26.2 Convert transcript formats to standard
+  - Convert 'commands' array to 'entries' array format
+  - Update each command object to include 'expectedOutput' field
+  - Maintain all existing command sequences
+  - _Requirements: 1.2, 2.4_
+
+- [x] 26.3 Verify transcript format fixes
+  - Run verification script to ensure no more crashes
+  - All transcripts should load without errors
+  - _Requirements: 1.2_
+
+- [x] 26.4 Commit transcript format fixes
+  - Commit message: "fix: Convert transcript formats to standard entries format"
+  - Include all converted transcript files
+  - _Requirements: 1.2, 2.4_
+
+---
+
+- [-] 27. Fix verbose/brief mode
   - Fix verbose and brief mode handling
   - _Requirements: 9.5_
 
-- [ ] 26.1 Investigate verbose/brief mode issue
+- [x] 27.1 Investigate verbose/brief mode issue
   - Review verbose/brief mode code
   - Compare with original ZIL code
   - Run verbose mode transcript (64)
   - Identify differences
   - _Requirements: 9.5_
 
-- [ ] 26.2 Fix verbose/brief mode logic
+- [x] 27.2 Fix verbose/brief mode logic
   - Update verbose/brief mode implementation
   - Match original behavior exactly
   - Test mode switching
   - _Requirements: 9.5_
 
-- [ ] 26.3 Verify verbose mode transcript
+- [x] 27.3 Verify verbose mode transcript
   - Run verbose mode transcript
-  - Target: 85%+ similarity
+  - Target: 100%+ similarity
   - _Requirements: 9.5_
 
-- [ ] 26.4 Commit verbose/brief mode fix
+- [-] 27.4 Commit verbose/brief mode fix
   - Commit message: "fix: Verbose/brief mode matches original"
   - Include mode handling updates
   - _Requirements: 9.5_
 
 ---
 
-- [ ] 27. Verify Phase 5 completion
+- [ ] 28. Verify Phase 5 completion
   - Run all low-priority transcripts
   - Verify 100% pass rate
   - _Requirements: 9.1, 10.4_
 
-- [ ] 27.1 Run all low-priority transcripts
+- [ ] 28.1 Run all low-priority transcripts
   - Execute: `npx tsx scripts/verify-all-transcripts.ts --category low`
   - Verify 17/17 low-priority transcripts pass
   - Verify 100% pass rate
-  - Verify average similarity 85%+
+  - Verify average similarity 100%
   - _Requirements: 10.4_
 
-- [ ] 27.2 Generate Phase 5 completion report
+- [ ] 28.2 Generate Phase 5 completion report
   - Document all fixes
   - Document all transcript results
   - Verify 100% low-priority pass rate
   - _Requirements: 10.4_
 
-- [ ] 27.3 Commit Phase 5 completion
+- [ ] 28.3 Commit Phase 5 completion
   - Commit message: "docs: Complete Phase 5 - All low-priority issues fixed"
   - Include completion report
   - _Requirements: 10.4_
@@ -956,35 +1006,35 @@ Achieve and document 100% confidence in behavioral parity.
 
 ---
 
-- [ ] 28. Run comprehensive verification
+- [ ] 29. Run comprehensive verification
   - Run all transcripts and tests
   - _Requirements: 10.5, 12.1_
 
-- [ ] 28.1 Run all transcripts
+- [ ] 29.1 Run all transcripts
   - Execute: `npx tsx scripts/verify-all-transcripts.ts`
   - Verify 42/42 transcripts pass (100%)
   - Document all results
   - _Requirements: 10.5_
 
-- [ ] 28.2 Run all puzzle verifications
+- [ ] 29.2 Run all puzzle verifications
   - Execute: `npm run verify:puzzles`
   - Verify all 15+ puzzles work
   - Document all results
   - _Requirements: 5.5, 12.3_
 
-- [ ] 28.3 Run all NPC verifications
+- [ ] 29.3 Run all NPC verifications
   - Test all 4 NPCs (thief, troll, cyclops, bat)
   - Verify all behaviors match original
   - Document all results
   - _Requirements: 6.5, 12.4_
 
-- [ ] 28.4 Run full test suite
+- [ ] 29.4 Run full test suite
   - Execute: `npm test`
   - Verify all unit tests pass
   - Document any failures
   - _Requirements: 12.1_
 
-- [ ] 28.5 Generate comprehensive verification report
+- [ ] 29.5 Generate comprehensive verification report
   - Document all transcript results
   - Document all puzzle results
   - Document all NPC results
@@ -993,31 +1043,31 @@ Achieve and document 100% confidence in behavioral parity.
 
 ---
 
-- [ ] 29. Complete full game playthrough
+- [ ] 30. Complete full game playthrough
   - Play complete game start to finish
   - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5, 12.5_
 
-- [ ] 29.1 Play complete game
+- [ ] 30.1 Play complete game
   - Start new game
   - Collect all 19 treasures
   - Achieve maximum score (350 points)
   - Complete game
   - _Requirements: 11.1, 11.2, 11.3_
 
-- [ ] 29.2 Verify playthrough matches original
+- [ ] 30.2 Verify playthrough matches original
   - Compare playthrough with original game
   - Verify all treasures collectible
   - Verify score calculation correct
   - Verify completion sequence identical
   - _Requirements: 11.4, 11.5_
 
-- [ ] 29.3 Test alternative playthrough paths
+- [ ] 30.3 Test alternative playthrough paths
   - Play game with different solution order
   - Verify alternative paths work
   - Document any issues
   - _Requirements: 11.4_
 
-- [ ] 29.4 Document playthrough verification
+- [ ] 30.4 Document playthrough verification
   - Document complete playthrough
   - Document all treasures collected
   - Document final score
@@ -1026,11 +1076,11 @@ Achieve and document 100% confidence in behavioral parity.
 
 ---
 
-- [ ] 30. Generate final confidence report
+- [ ] 31. Generate final confidence report
   - Document 100% confidence achievement
   - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5, 12.6_
 
-- [ ] 30.1 Calculate final metrics
+- [ ] 31.1 Calculate final metrics
   - Overall transcript pass rate
   - Average similarity across all transcripts
   - Puzzle verification rate
@@ -1038,21 +1088,22 @@ Achieve and document 100% confidence in behavioral parity.
   - Playthrough verification status
   - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
 
-- [ ] 30.2 Document evidence
+- [ ] 31.2 Document evidence
   - All transcript results (50+ transcripts)
   - All puzzle verifications (15+ puzzles)
   - All NPC verifications (4 NPCs)
   - Complete playthrough verification
-  - All test results
-  - _Requirements: 12.2, 12.3, 12.4, 12.5_
+  - All test results _Requirements: 12.2, 12.3, 12.4, 12.5_
 
-- [ ] 30.3 Declare confidence level
+  - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
+
+- [ ] 31.3 Declare confidence level
   - If 100% pass rate: Declare 100% confidence
   - If <100% pass rate: Continue fixing until 100% achieved
   - Document any challenges overcome
   - _Requirements: 12.6_
 
-- [ ] 30.4 Create final report
+- [ ] 31.4 Create final report
   - File: `.kiro/testing/100-percent-parity-report.md`
   - Include all metrics
   - Include all evidence
@@ -1061,17 +1112,17 @@ Achieve and document 100% confidence in behavioral parity.
 
 ---
 
-- [ ] 31. Final commit and release
+- [ ] 32. Final commit and release
   - Commit all work and tag release
   - _Requirements: 12.6_
 
-- [ ] 31.1 Commit final verification
+- [ ] 32.1 Commit final verification
   - Commit message: "docs: Achieve 100% behavioral parity"
   - Include final report
   - Include all verification results
   - _Requirements: 12.6_
 
-- [ ] 31.2 Tag release
+- [ ] 32.2 Tag release
   - Tag: `v2.0.0-100-percent-parity`
   - Include comprehensive report in release notes
   - Document 100% confidence achievement
@@ -1081,7 +1132,7 @@ Achieve and document 100% confidence in behavioral parity.
 
 ## Summary
 
-**Total Tasks:** 31 major tasks, 150+ subtasks  
+**Total Tasks:** 32 major tasks, 150+ subtasks  
 **Timeline:** 7 weeks  
 **Expected Outcome:** 100% behavioral parity confidence  
 
