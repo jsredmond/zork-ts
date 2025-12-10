@@ -820,49 +820,49 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [ ] 23. Fix daemon timing
+- [-] 23. Fix daemon timing
   - Fix all daemon timing issues
   - **MUST ACHIEVE:** 85%+ similarity on timing transcripts (70-79)
   - **VERIFICATION REQUIRED:** Run `npx tsx scripts/verify-all-transcripts.ts --priority low` and verify timing transcripts pass
   - _Requirements: 9.2_
 
-- [ ] 23.1 Audit daemon execution
+- [x] 23.1 Audit daemon execution
   - Review daemon execution order
   - Compare with original ZIL code
   - Identify timing differences
   - _Requirements: 9.2_
 
-- [ ] 23.2 Fix lamp fuel consumption timing
+- [x] 23.2 Fix lamp fuel consumption timing
   - Update lamp fuel daemon
   - Match original timing exactly
   - **VERIFY:** Run lamp fuel transcripts (70-71) and achieve 85%+ similarity
   - _Requirements: 9.2_
 
-- [ ] 23.3 Fix candle burning timing
+- [x] 23.3 Fix candle burning timing
   - Update candle daemon
   - Match original timing exactly
   - **VERIFY:** Run candle transcript (72) and achieve 85%+ similarity
   - _Requirements: 9.2_
 
-- [ ] 23.4 Fix NPC movement timing
+- [x] 23.4 Fix NPC movement timing
   - Update NPC movement daemons
   - Match original timing exactly
   - **VERIFY:** Run NPC movement transcripts (73-75) and achieve 85%+ similarity
   - _Requirements: 9.2_
 
-- [ ] 23.5 Fix multiple daemon interactions
+- [x] 23.5 Fix multiple daemon interactions
   - Test multiple daemons running together
   - Verify execution order matches original
   - **VERIFY:** Run multiple daemon transcripts (76-79) and achieve 85%+ similarity
   - _Requirements: 9.2_
 
-- [ ] 23.6 Verify all timing transcripts pass
+- [x] 23.6 Verify all timing transcripts pass
   - Execute: `npx tsx scripts/verify-all-transcripts.ts --priority low`
   - **REQUIRED:** All timing transcripts (70-79) must achieve 85%+ similarity
   - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.2_
 
-- [ ] 23.7 Commit daemon timing fixes
+- [-] 23.7 Commit daemon timing fixes
   - Commit message: "fix: Daemon timing matches original - all timing transcripts pass"
   - Include all daemon updates
   - Include verification results showing 85%+ similarity

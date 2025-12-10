@@ -15,7 +15,7 @@ import { CyclopsBehavior } from '../../engine/cyclops.js';
 import { initializeSwordGlow, swordGlowDaemon } from '../../engine/weapons.js';
 import { combatDaemon } from '../../engine/combat.js';
 import { VILLAIN_DATA } from '../../engine/villainData.js';
-import { lampTimerDaemon, candleTimerDaemon } from '../../engine/daemons.js';
+import { lampTimerInterrupt, candleTimerInterrupt } from '../../engine/daemons.js';
 
 /**
  * Create a complete initial game state with all rooms and objects
@@ -87,15 +87,15 @@ export function createInitialGameState(): GameState {
     return state.actorManager.getActor('THIEF')?.executeTurn(state) || false;
   }, true);
   
-  // 4. Register candle timer daemon (I-CANDLES) - disabled initially, enabled when candles are lit
-  gameState.eventSystem.registerDaemon('I-CANDLES', (state) => {
-    return candleTimerDaemon(state);
-  }, false);
+  // 4. Register candle timer interrupt (I-CANDLES) - scheduled when candles are lit
+  gameState.eventSystem.registerInterrupt('I-CANDLES', (state) => {
+    return candleTimerInterrupt(state);
+  }, 0); // Will be scheduled when candles are lit
   
-  // 5. Register lamp timer daemon (I-LANTERN) - disabled initially, enabled when lamp is turned on
-  gameState.eventSystem.registerDaemon('I-LANTERN', (state) => {
-    return lampTimerDaemon(state);
-  }, false);
+  // 5. Register lamp timer interrupt (I-LANTERN) - scheduled when lamp is turned on
+  gameState.eventSystem.registerInterrupt('I-LANTERN', (state) => {
+    return lampTimerInterrupt(state);
+  }, 0); // Will be scheduled when lamp is turned on
   
   return gameState;
 }

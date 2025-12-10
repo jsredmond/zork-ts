@@ -285,6 +285,7 @@ export class Vocabulary {
       'CHALICE', 'CUP',
       'TRIDENT', 'FORK',
       'DIAMOND',
+      'EMERALD',
       'FIGURINE',
       'SWORD', 'BLADE', 'WEAPON',
       'LAMP', 'LANTERN', // 'LIGHT', // Commented out - conflicts with LIGHT verb
@@ -385,6 +386,7 @@ export class Vocabulary {
       'HEAVY',
       // 'LIGHT', // Commented out - conflicts with LIGHT verb, and objects use "BRASS LANTERN" not "LIGHT LANTERN"
       'DARK',
+      'BLACK',
       'BRIGHT',
       'SHINY',
       'DIRTY',
