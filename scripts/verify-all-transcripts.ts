@@ -25,6 +25,7 @@ import { GameObjectImpl } from '../src/game/objects.js';
 import { ObjectFlag } from '../src/game/data/flags.js';
 import { ALL_ROOMS } from '../src/game/data/rooms-complete.js';
 import { enableDeterministicRandom, resetDeterministicRandom } from '../src/testing/seededRandom.js';
+import { initializeLampTimer } from '../src/engine/daemons.js';
 
 interface TranscriptEntry {
   command: string;
@@ -229,9 +230,225 @@ class BatchTranscriptVerifier {
         const obj = state.getObject(objectId) as GameObjectImpl;
         if (obj) {
           obj.addFlag(ObjectFlag.ONBIT);
+          
+          // Initialize lamp timer if this is the lamp
+          if (objectId === 'LAMP') {
+            initializeLampTimer(state);
+          }
+          
           return `[DEBUG: Turned on ${objectId}]`;
         }
         return `[DEBUG: Object ${objectId} not found]`;
+      }
+      
+      if (command.startsWith('advance ')) {
+        const turns = parseInt(command.substring(8).trim());
+        if (!isNaN(turns) && turns > 0) {
+          for (let i = 0; i < turns; i++) {
+            state.eventSystem.processTurn(state);
+          }
+          return `[DEBUG: Advanced ${turns} turns to turn ${state.moves}]`;
+        }
+        return `[DEBUG: Invalid turn count]`;
+      }
+      
+      if (command.startsWith('setlampstage ')) {
+        const stage = parseInt(command.substring(13).trim());
+        if (!isNaN(stage) && stage >= 0 && stage <= 3) {
+          state.setGlobalVariable('LAMP_STAGE_INDEX', stage);
+          
+          // Set up the lamp event for the next stage
+          const events = (state as any).eventSystem.events;
+          const lampEvent = events.get('I-LANTERN');
+          if (lampEvent) {
+            const stageTicks = [100, 70, 15, 0];
+            const nextStageTicks = [30, 55, 15, 0]; // Ticks until next stage
+            
+            if (stage < 3) {
+              lampEvent.ticksRemaining = nextStageTicks[stage];
+              lampEvent.enabled = true;
+            } else {
+              lampEvent.enabled = false;
+            }
+          }
+          
+          return `[DEBUG: Set lamp to stage ${stage}]`;
+        }
+        return `[DEBUG: Invalid stage (0-3)]`;
+      }
+
+      if (command.startsWith('setlampfuel ')) {
+        const turns = parseInt(command.substring(12).trim());
+        if (!isNaN(turns) && turns >= 0 && turns <= 200) {
+          // Calculate which stage we should be in based on fuel remaining
+          let stage = 0;
+          let ticksRemaining = 0;
+          
+          if (turns > 100) {
+            // Stage 0: Initial stage, warning at turn 100
+            stage = 0;
+            ticksRemaining = 200 - turns; // Turns until first warning
+          } else if (turns > 70) {
+            // Stage 1: First warning given, next at turn 130 (when fuel = 70)
+            stage = 1;
+            ticksRemaining = 100 - turns; // Turns until second warning
+          } else if (turns > 15) {
+            // Stage 2: Second warning given, next at turn 185 (when fuel = 15)
+            stage = 2;
+            ticksRemaining = 70 - turns; // Turns until third warning
+          } else if (turns > 0) {
+            // Stage 3: Third warning given, lamp dies at turn 200 (when fuel = 0)
+            stage = 3;
+            ticksRemaining = 15 - turns; // Turns until lamp dies
+          } else {
+            // Lamp is dead
+            stage = 4;
+            ticksRemaining = 0;
+          }
+          
+          state.setGlobalVariable('LAMP_STAGE_INDEX', stage);
+          
+          // Set up the lamp event
+          const events = (state as any).eventSystem.events;
+          const lampEvent = events.get('I-LANTERN');
+          if (lampEvent && stage < 4) {
+            lampEvent.ticksRemaining = ticksRemaining;
+            lampEvent.enabled = true;
+          } else if (lampEvent) {
+            lampEvent.enabled = false;
+          }
+          
+          return `[DEBUG: Set lamp fuel to ${turns} turns (stage ${stage}, next event in ${ticksRemaining} turns)]`;
+        }
+        return `[DEBUG: Invalid fuel level (0-200)]`;
+      }
+
+      if (command.startsWith('setcandlefuel ')) {
+        const turns = parseInt(command.substring(14).trim());
+        if (!isNaN(turns) && turns >= 0 && turns <= 40) {
+          // Calculate which stage we should be in based on fuel remaining
+          let stage = 0;
+          let ticksRemaining = 0;
+          
+          if (turns > 20) {
+            // Stage 0: Initial stage, warning at turn 20
+            stage = 0;
+            ticksRemaining = 40 - turns; // Turns until first warning
+          } else if (turns > 10) {
+            // Stage 1: First warning given, next at turn 30 (when fuel = 10)
+            stage = 1;
+            ticksRemaining = 20 - turns; // Turns until second warning
+          } else if (turns > 5) {
+            // Stage 2: Second warning given, next at turn 35 (when fuel = 5)
+            stage = 2;
+            ticksRemaining = 10 - turns; // Turns until third warning
+          } else if (turns > 0) {
+            // Stage 3: Third warning given, candles die at turn 40 (when fuel = 0)
+            stage = 3;
+            ticksRemaining = 5 - turns; // Turns until candles die
+          } else {
+            // Candles are dead
+            stage = 4;
+            ticksRemaining = 0;
+          }
+          
+          state.setGlobalVariable('CANDLE_STAGE_INDEX', stage);
+          
+          // Set up the candle event
+          const events = (state as any).eventSystem.events;
+          const candleEvent = events.get('I-CANDLES');
+          if (candleEvent && stage < 4) {
+            candleEvent.ticksRemaining = ticksRemaining;
+            candleEvent.enabled = true;
+          } else if (candleEvent) {
+            candleEvent.enabled = false;
+          }
+          
+          return `[DEBUG: Set candle fuel to ${turns} turns (stage ${stage}, next event in ${ticksRemaining} turns)]`;
+        }
+        return `[DEBUG: Invalid fuel level (0-40)]`;
+      }
+
+      if (command.startsWith('setnpcposition ')) {
+        const parts = command.substring(15).trim().split(' ');
+        if (parts.length >= 2) {
+          const npcId = parts[0].toUpperCase();
+          const roomId = parts[1].toUpperCase();
+          
+          // Check if NPC exists
+          const npc = state.getObject(npcId);
+          if (!npc) {
+            return `[DEBUG: NPC ${npcId} not found]`;
+          }
+          
+          // Check if room exists
+          const room = state.getRoom(roomId);
+          if (!room) {
+            return `[DEBUG: Room ${roomId} not found]`;
+          }
+          
+          // Move NPC to room
+          state.moveObject(npcId, roomId);
+          
+          // Special handling for thief - update thief state
+          if (npcId === 'THIEF') {
+            state.setGlobalVariable('THIEF_ROOM', roomId);
+          }
+          
+          return `[DEBUG: Moved ${npcId} to ${roomId}]`;
+        }
+        return `[DEBUG: Usage: setnpcposition <npc> <room>]`;
+      }
+
+      if (command.startsWith('triggerdaemon ')) {
+        const daemonName = command.substring(14).trim().toUpperCase();
+        
+        // Get the event system
+        const events = (state as any).eventSystem.events;
+        
+        if (daemonName === 'LAMP' || daemonName === 'I-LANTERN') {
+          const lampEvent = events.get('I-LANTERN');
+          if (lampEvent && lampEvent.enabled) {
+            // Trigger the lamp daemon immediately
+            lampEvent.ticksRemaining = 0;
+            state.eventSystem.processTurn(state);
+            return `[DEBUG: Triggered lamp daemon]`;
+          }
+          return `[DEBUG: Lamp daemon not enabled or not found]`;
+        }
+        
+        if (daemonName === 'CANDLE' || daemonName === 'I-CANDLES') {
+          const candleEvent = events.get('I-CANDLES');
+          if (candleEvent && candleEvent.enabled) {
+            // Trigger the candle daemon immediately
+            candleEvent.ticksRemaining = 0;
+            state.eventSystem.processTurn(state);
+            return `[DEBUG: Triggered candle daemon]`;
+          }
+          return `[DEBUG: Candle daemon not enabled or not found]`;
+        }
+        
+        if (daemonName === 'THIEF' || daemonName === 'I-THIEF') {
+          const thiefEvent = events.get('I-THIEF');
+          if (thiefEvent && thiefEvent.enabled) {
+            // Trigger the thief daemon immediately
+            state.eventSystem.processTurn(state);
+            return `[DEBUG: Triggered thief daemon]`;
+          }
+          return `[DEBUG: Thief daemon not enabled or not found]`;
+        }
+        
+        if (daemonName === 'COMBAT') {
+          const combatEvent = events.get('combat');
+          if (combatEvent && combatEvent.enabled) {
+            // Trigger the combat daemon immediately
+            state.eventSystem.processTurn(state);
+            return `[DEBUG: Triggered combat daemon]`;
+          }
+          return `[DEBUG: Combat daemon not enabled or not found]`;
+        }
+        
+        return `[DEBUG: Unknown daemon: ${daemonName}. Available: LAMP, CANDLE, THIEF, COMBAT]`;
       }
 
       // Handle "look at X" as "examine X"
