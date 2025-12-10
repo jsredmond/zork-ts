@@ -255,17 +255,25 @@ export function initializeConditionalMessages(): void {
 
   // DAM conditional description (dam state)
   registerConditionalMessage({
-    messageId: 'ROOM-DESC-DAM',
+    messageId: 'ROOM-DESC-DAM-ROOM',
     variants: [
       {
         condition: (state) => {
-          const damOpen = state.getGlobalVariable('DAM_OPEN') || false;
-          return damOpen;
+          const gatesOpen = state.getGlobalVariable('GATES_OPEN') || false;
+          const lowTide = state.getFlag('LOW_TIDE');
+          return gatesOpen && lowTide;
         },
-        message: 'You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down. The sluice gates are open and water is pouring through the dam.'
+        message: 'You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down.\nThe water level behind the dam is low: The sluice gates have been opened. Water rushes through the dam and downstream.'
+      },
+      {
+        condition: (state) => {
+          const gatesOpen = state.getGlobalVariable('GATES_OPEN') || false;
+          return gatesOpen;
+        },
+        message: 'You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down.\nThe sluice gates are open, and water rushes through the dam. The water level in the reservoir is still high.'
       }
     ],
-    defaultMessage: 'You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down. The sluice gates are closed.'
+    defaultMessage: 'You are standing on the top of the Flood Control Dam #3, which was quite a tourist attraction in times far distant. There are paths to the north, south, and west, and a scramble down.\nThe sluice gates are closed. The water level in the reservoir is high.'
   });
 
   // RESERVOIR conditional description (water level)

@@ -140,8 +140,8 @@ export class ScriptRunner {
     index: number,
     state: GameState
   ): CommandExecutionResult {
-    // Parse the command
-    const parsed = this.parser.parse(command.input);
+    // Parse the command - pass state to get available objects
+    const parsed = this.parser.parse(command.input, state);
 
     // Execute the command
     const actionResult: ActionResult = this.executor.execute(parsed, state);

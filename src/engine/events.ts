@@ -203,8 +203,8 @@ export class EventSystem {
       }
     }
 
-    // Increment move counter
-    state.incrementMoves();
+    // Note: Move counter is incremented by individual actions (MoveAction, WaitAction, etc.)
+    // This ensures moves are only counted for actions that consume a turn
 
     return stateChanged;
   }

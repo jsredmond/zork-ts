@@ -24,6 +24,7 @@ import { GameState } from '../src/game/state.js';
 import { GameObjectImpl } from '../src/game/objects.js';
 import { ObjectFlag } from '../src/game/data/flags.js';
 import { ALL_ROOMS } from '../src/game/data/rooms-complete.js';
+import { ALL_OBJECTS } from '../src/game/data/objects-complete.js';
 import { enableDeterministicRandom, resetDeterministicRandom } from '../src/testing/seededRandom.js';
 import { initializeLampTimer, initializeCandleTimer } from '../src/engine/daemons.js';
 
@@ -181,11 +182,16 @@ class BatchTranscriptVerifier {
       }
     }
 
-    // Add all global scenery objects (GLOBAL-OBJECTS with NDESCBIT flag)
+    // Add only truly global scenery objects (from GLOBAL-OBJECTS, not LOCAL-GLOBALS)
+    // LOCAL-GLOBALS objects should only be available in rooms that list them in globalObjects
     for (const [objId, obj] of state.objects.entries()) {
       if (!addedIds.has(objId) && obj.location === null && obj.hasFlag(ObjectFlag.NDESCBIT)) {
-        available.push(obj as GameObjectImpl);
-        addedIds.add(objId);
+        // Check the original object data to see if it's from GLOBAL-OBJECTS
+        const objData = ALL_OBJECTS[objId];
+        if (objData && objData.initialLocation === 'GLOBAL-OBJECTS') {
+          available.push(obj as GameObjectImpl);
+          addedIds.add(objId);
+        }
       }
     }
 
@@ -241,7 +247,8 @@ class BatchTranscriptVerifier {
         return `[DEBUG: Object ${objectId} not found]`;
       }
       
-      if (command.startsWith('light ')) {
+      // Debug command: "light OBJECTID" (without "with" - that's a game command)
+      if (command.startsWith('light ') && !command.includes(' with ')) {
         const objectId = command.substring(6).trim();
         const obj = state.getObject(objectId) as GameObjectImpl;
         if (obj) {
@@ -532,15 +539,22 @@ class BatchTranscriptVerifier {
 
   /**
    * Normalize whitespace in a string
+   * Collapses all whitespace (including newlines within paragraphs) to single spaces
+   * but preserves paragraph breaks (double newlines)
    */
   private normalizeWhitespace(str: string): string {
     return str
       .trim()
       .replace(/\r\n/g, '\n')
       .replace(/\r/g, '\n')
+      // Preserve paragraph breaks (double newlines) by replacing with placeholder
+      .replace(/\n\n+/g, '<<PARA>>')
+      // Collapse single newlines and spaces to single space
+      .replace(/\n/g, ' ')
       .replace(/[ \t]+/g, ' ')
-      .replace(/\n +/g, '\n')
-      .replace(/ +\n/g, '\n');
+      // Restore paragraph breaks
+      .replace(/<<PARA>>/g, '\n\n')
+      .trim();
   }
 
   /**

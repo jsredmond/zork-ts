@@ -30,7 +30,7 @@ import {
   getHumorousResponse
 } from './data/messages.js';
 import { triggerGrueDeath } from './death.js';
-import { TrapDoorPuzzle, GratingPuzzle, CoffinPuzzle, MagicWordPuzzle, BellPuzzle, RainbowPuzzle, MirrorPuzzle } from './puzzles.js';
+import { TrapDoorPuzzle, GratingPuzzle, CoffinPuzzle, MagicWordPuzzle, BellPuzzle, RainbowPuzzle, MirrorPuzzle, DamPuzzle, RopeBasketPuzzle, BoatPuzzle } from './puzzles.js';
 import { executePlayerAttack, executeVillainAttack } from '../engine/combat.js';
 import { getVillainData } from '../engine/villainData.js';
 
@@ -88,7 +88,6 @@ export class TakeAction implements ActionHandler {
 
     // Special handling for rope when tied
     if (objectId === 'ROPE') {
-      const { RopeBasketPuzzle } = require('./puzzles.js');
       const ropeResult = RopeBasketPuzzle.takeRope(state);
       if (ropeResult) {
         return ropeResult;
@@ -421,6 +420,21 @@ export class MoveAction implements ActionHandler {
 
     // Check if current room is dark - can't see exits in the dark
     const wasLit = isRoomLit(state);
+    
+    // If player is in darkness and tries to move, grue attacks
+    // (In original Zork, you can enter a dark room safely, but moving again triggers grue)
+    if (!wasLit) {
+      const deathMessage = triggerGrueDeath(state);
+      return {
+        success: false,
+        message: deathMessage,
+        stateChanges: [{
+          type: 'PLAYER_DIED',
+          oldValue: false,
+          newValue: true
+        }]
+      };
+    }
 
     // Normalize direction to uppercase and map ENTER to IN
     let normalizedDirection = direction.toUpperCase();
@@ -531,7 +545,8 @@ export class MoveAction implements ActionHandler {
     const wasVisited = destinationRoom?.hasFlag(RoomFlag.TOUCHBIT) || false;
     
     state.setCurrentRoom(exit.destination);
-    // Note: Move counter is incremented by processTurn() in the event system
+    // Increment move counter for successful movement
+    state.incrementMoves();
 
     // Handle room entry actions
     let entryMessage = '';
@@ -548,7 +563,8 @@ export class MoveAction implements ActionHandler {
         if (willBeDark) {
           entryMessage = 'You have moved into a dark place.\n';
         }
-        entryMessage += 'The trap door crashes shut, and you hear someone barring it.\n';
+        // Add blank line before room description (original game behavior)
+        entryMessage += 'The trap door crashes shut, and you hear someone barring it.\n\n';
       }
     }
 
@@ -562,23 +578,21 @@ export class MoveAction implements ActionHandler {
       };
     }
 
-    // Check if moved into darkness without light (grue attack)
+    // Check if moved into darkness without light
+    // In original Zork, entering a dark room gives a warning, but doesn't kill you immediately
+    // The grue only attacks if you try to move again while in darkness
     const isNowLit = isRoomLit(state);
     if (!isNowLit) {
-      // Trigger grue death
-      const deathMessage = triggerGrueDeath(state);
+      // Show darkness warning message instead of immediate death
+      const darknessMessage = entryMessage + '\nIt is pitch black. You are likely to be eaten by a grue.';
       
       return {
-        success: false,
-        message: deathMessage,
+        success: true,
+        message: darknessMessage,
         stateChanges: [{
           type: 'ROOM_CHANGED',
           oldValue: oldRoom,
           newValue: exit.destination
-        }, {
-          type: 'PLAYER_DIED',
-          oldValue: false,
-          newValue: true
         }]
       };
     }
@@ -650,7 +664,7 @@ export class ExamineAction implements ActionHandler {
     if (!obj) {
       return {
         success: false,
-        message: `Object '${objectId}' not found.`,
+        message: "You can't see that here.",
         stateChanges: []
       };
     }
@@ -687,7 +701,6 @@ export class ExamineAction implements ActionHandler {
 
     // Special handling for control panel
     if (objectId === 'CONTROL-PANEL') {
-      const { DamPuzzle } = require('./puzzles.js');
       return {
         success: true,
         message: DamPuzzle.getControlPanelDescription(state),
@@ -1261,9 +1274,8 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
       // But still list objects that are in/on this scenery object
       if (obj.isContainer() && (obj.isOpen() || obj.hasFlag(ObjectFlag.SURFACEBIT))) {
         const contents = state.getObjectsInContainer(obj.id);
-        // Reverse order to match original game behavior
-        const reversedContents = [...contents].reverse();
-        for (const item of reversedContents) {
+        // Don't reverse - show in definition order to match original game
+        for (const item of contents) {
           describeObject(item);
         }
       }
@@ -1421,7 +1433,6 @@ export class PutAction implements ActionHandler {
 
     // Special handling for putty on leak (dam puzzle)
     if (objectId === 'PUTTY' && containerId === 'LEAK') {
-      const { DamPuzzle } = require('./puzzles.js');
       return DamPuzzle.fixLeak(state, objectId);
     }
 
@@ -2100,7 +2111,8 @@ export class SuperBriefAction implements ActionHandler {
  */
 export class WaitAction implements ActionHandler {
   execute(state: GameState): ActionResult {
-    // Note: Move counter is incremented by processTurn() in the event system
+    // Increment move counter for wait action
+    state.incrementMoves();
     
     return {
       success: true,
@@ -2267,13 +2279,11 @@ export class ClimbAction implements ActionHandler {
 
     // Special handling for rainbow
     if (objectId === 'RAINBOW') {
-      const { RainbowPuzzle } = require('./puzzles.js');
       return RainbowPuzzle.climbRainbow(state);
     }
 
     // Special handling for rope
     if (objectId === 'ROPE') {
-      const { RopeBasketPuzzle } = require('./puzzles.js');
       return RopeBasketPuzzle.climbRope(state);
     }
 
@@ -2337,8 +2347,46 @@ export class PushAction implements ActionHandler {
 
     // Special handling for coffin
     if (objectId === 'COFFIN') {
-      const { CoffinPuzzle } = require('./puzzles.js');
       return CoffinPuzzle.pushCoffin(state);
+    }
+
+    // Special handling for dam control buttons
+    if (objectId === 'YELLOW-BUTTON') {
+      // Yellow button activates gate control
+      state.setGlobalVariable('GATE_FLAG', true);
+      return {
+        success: true,
+        message: 'Click.',
+        stateChanges: [{ type: 'FLAG_SET', oldValue: false, newValue: true }]
+      };
+    }
+    
+    if (objectId === 'BROWN-BUTTON') {
+      // Brown button - no effect
+      return {
+        success: true,
+        message: 'Click.',
+        stateChanges: []
+      };
+    }
+    
+    if (objectId === 'RED-BUTTON') {
+      // Red button - no effect
+      return {
+        success: true,
+        message: 'Click.',
+        stateChanges: []
+      };
+    }
+    
+    if (objectId === 'BLUE-BUTTON') {
+      // Blue button - activates dam lights
+      state.setFlag('DAM_LIGHTS', true);
+      return {
+        success: true,
+        message: 'Click.',
+        stateChanges: [{ type: 'FLAG_SET', oldValue: false, newValue: true }]
+      };
     }
 
     return {
@@ -2400,7 +2448,6 @@ export class TurnAction implements ActionHandler {
 
     // Special handling for bolt (dam puzzle)
     if (objectId === 'BOLT') {
-      const { DamPuzzle } = require('./puzzles.js');
       return DamPuzzle.turnBolt(state, toolId || '');
     }
 
@@ -2751,7 +2798,6 @@ export class TieAction implements ActionHandler {
 
     // Special handling for rope
     if (objectId === 'ROPE') {
-      const { RopeBasketPuzzle } = require('./puzzles.js');
       return RopeBasketPuzzle.tieRope(state, objectId, targetId);
     }
 
@@ -2781,7 +2827,6 @@ export class RaiseAction implements ActionHandler {
 
     // Special handling for basket
     if (objectId === 'BASKET' || objectId === 'RAISED-BASKET' || objectId === 'LOWERED-BASKET') {
-      const { RopeBasketPuzzle } = require('./puzzles.js');
       return RopeBasketPuzzle.raiseBasket(state);
     }
 
@@ -2811,7 +2856,6 @@ export class LowerAction implements ActionHandler {
 
     // Special handling for basket
     if (objectId === 'BASKET' || objectId === 'RAISED-BASKET' || objectId === 'LOWERED-BASKET') {
-      const { RopeBasketPuzzle } = require('./puzzles.js');
       return RopeBasketPuzzle.lowerBasket(state);
     }
 
@@ -2841,7 +2885,6 @@ export class PushButtonAction implements ActionHandler {
 
     // Special handling for maintenance room buttons
     if (objectId === 'BLUE-BUTTON' || objectId === 'BROWN-BUTTON' || objectId === 'YELLOW-BUTTON') {
-      const { DamPuzzle } = require('./puzzles.js');
       return DamPuzzle.pushButton(state, objectId);
     }
 
@@ -2879,7 +2922,6 @@ export class UnlockAction implements ActionHandler {
 
     // Special handling for grating
     if (objectId === 'GRATE' || objectId === 'GRATING') {
-      const { GratingPuzzle } = require('./puzzles.js');
       return GratingPuzzle.unlockGrating(state, keyId);
     }
 
@@ -2957,7 +2999,6 @@ export class InflateAction implements ActionHandler {
 
     // Special handling for boat
     if (objectId === 'BOAT' || objectId === 'INFLATABLE-BOAT') {
-      const { BoatPuzzle } = require('./puzzles.js');
       return BoatPuzzle.inflateBoat(state, objectId, toolId || '');
     }
 
@@ -2987,7 +3028,6 @@ export class DeflateAction implements ActionHandler {
 
     // Special handling for boat
     if (objectId === 'BOAT' || objectId === 'INFLATED-BOAT') {
-      const { BoatPuzzle } = require('./puzzles.js');
       return BoatPuzzle.deflateBoat(state);
     }
 
@@ -3031,7 +3071,6 @@ export class SayAction implements ActionHandler {
     // If we have a word but no raw input, handle magic word case
     if (word) {
       // Special handling for magic word
-      const { MagicWordPuzzle } = require('./puzzles.js');
       return MagicWordPuzzle.sayMagicWord(state, word);
     }
 

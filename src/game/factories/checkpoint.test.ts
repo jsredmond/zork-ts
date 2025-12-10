@@ -80,13 +80,17 @@ describe('Task 14.4 Checkpoint - Basic Navigation and Object Interaction', () =>
   it('should track visited status for rooms', () => {
     const state = createInitialGameState();
     
-    // WEST-OF-HOUSE should not be visited initially
+    // WEST-OF-HOUSE should be visited since setCurrentRoom marks it as visited
     const westOfHouse = state.getCurrentRoom();
-    expect(westOfHouse?.visited).toBe(false);
+    expect(westOfHouse?.visited).toBe(true);
+    
+    // Check that a room we haven't visited yet is not visited
+    const northOfHouse = state.rooms.get('NORTH-OF-HOUSE');
+    expect(northOfHouse?.visited).toBe(false);
     
     // Mark as visited
-    westOfHouse?.markVisited();
-    expect(westOfHouse?.visited).toBe(true);
+    northOfHouse?.markVisited();
+    expect(northOfHouse?.visited).toBe(true);
   });
 
   it('should have proper room exits configured', () => {
@@ -118,7 +122,7 @@ describe('Task 14.4 Checkpoint - Basic Navigation and Object Interaction', () =>
     // Check sword properties
     const sword = state.getObject('SWORD');
     expect(sword).toBeDefined();
-    expect(sword?.name).toBe('sword');
+    expect(sword?.name).toBe('elvish sword');
     expect(sword?.hasFlag).toBeDefined();
   });
 

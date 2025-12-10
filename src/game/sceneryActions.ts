@@ -334,6 +334,18 @@ const globalLeavesHandler: SceneryHandler = {
 };
 
 /**
+ * LEAVES scenery handler
+ * Handles interactions with leaves (alias for GLOBAL-LEAVES)
+ */
+const leavesHandler: SceneryHandler = {
+  objectId: 'LEAVES',
+  actions: new Map([
+    ['EXAMINE', () => 'The leaves are a beautiful color.'],
+    ['TAKE', () => 'You can gather up a pile of leaves, but they slip through your fingers.']
+  ])
+};
+
+/**
  * SAND scenery handler
  * Handles interactions with sand
  */
@@ -704,6 +716,7 @@ registerSceneryHandler(treeHandler);
 registerSceneryHandler(treesHandler);
 registerSceneryHandler(mountainRangeHandler);
 registerSceneryHandler(globalLeavesHandler);
+registerSceneryHandler(leavesHandler);
 registerSceneryHandler(sandHandler);
 registerSceneryHandler(boardedWindowHandler);
 registerSceneryHandler(windowHandler);

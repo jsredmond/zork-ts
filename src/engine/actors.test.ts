@@ -214,9 +214,10 @@ describe('TrollBehavior', () => {
     state.currentRoom = 'TROLL-ROOM';
   });
 
-  it('should initialize with fighting state', () => {
+  it('should initialize with normal state', () => {
+    // Troll starts in NORMAL state, combat daemon will set FIGHTBIT probabilistically
     expect(troll.actorId).toBe('TROLL');
-    expect(troll.state).toBe(ActorState.FIGHTING);
+    expect(troll.state).toBe(ActorState.NORMAL);
   });
 
   it('should execute turn without crashing', () => {

@@ -5,8 +5,8 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { 
-  lampTimerDaemon, 
-  candleTimerDaemon,
+  lampTimerInterrupt, 
+  candleTimerInterrupt,
   initializeLampTimer,
   disableLampTimer,
   initializeCandleTimer,
@@ -24,7 +24,6 @@ describe('Lamp Timer Daemon', () => {
 
   beforeEach(() => {
     state = new GameState();
-    resetLampTimer();
     
     // Create a lamp object
     lamp = new GameObjectImpl({
@@ -40,12 +39,16 @@ describe('Lamp Timer Daemon', () => {
     
     state.objects.set('LAMP', lamp);
     state.addToInventory('LAMP');
+    
+    // Register the lamp timer interrupt (normally done by gameFactory)
+    state.eventSystem.registerInterrupt('I-LANTERN', (s) => lampTimerInterrupt(s), 0);
   });
 
   it('should initialize lamp timer correctly', () => {
     initializeLampTimer(state);
     
-    expect(state.getGlobalVariable('LAMP_TICKS')).toBe(100);
+    // The implementation uses LAMP_STAGE_INDEX, not LAMP_TICKS
+    expect(state.getGlobalVariable('LAMP_STAGE_INDEX')).toBe(0);
     expect(state.eventSystem.hasEvent('I-LANTERN')).toBe(true);
   });
 
@@ -53,18 +56,19 @@ describe('Lamp Timer Daemon', () => {
     lamp.flags.delete(ObjectFlag.ONBIT);
     initializeLampTimer(state);
     
-    const result = lampTimerDaemon(state);
+    const result = lampTimerInterrupt(state);
     
     expect(result).toBe(false);
   });
 
-  it('should decrement ticks when lamp is on', () => {
+  it('should advance stage when lamp is on', () => {
     initializeLampTimer(state);
-    state.setGlobalVariable('LAMP_TICKS', 5);
     
-    lampTimerDaemon(state);
+    // Run the interrupt
+    lampTimerInterrupt(state);
     
-    expect(state.getGlobalVariable('LAMP_TICKS')).toBe(4);
+    // Stage should advance
+    expect(state.getGlobalVariable('LAMP_STAGE_INDEX')).toBe(1);
   });
 
   it('should disable lamp timer when requested', () => {
@@ -78,14 +82,10 @@ describe('Lamp Timer Daemon', () => {
 
   it('should turn off lamp when battery runs out', () => {
     initializeLampTimer(state);
-    state.setGlobalVariable('LAMP_TICKS', 1);
     
-    // Run through all stages to reach burnout
-    for (let i = 0; i < 200; i++) {
-      lampTimerDaemon(state);
-      if (!lamp.flags.has(ObjectFlag.ONBIT)) {
-        break;
-      }
+    // Run through all stages to reach burnout (4 stages: 100, 70, 15, 0)
+    for (let i = 0; i < 4; i++) {
+      lampTimerInterrupt(state);
     }
     
     expect(lamp.flags.has(ObjectFlag.ONBIT)).toBe(false);
@@ -98,7 +98,6 @@ describe('Candle Timer Daemon', () => {
 
   beforeEach(() => {
     state = new GameState();
-    resetCandleTimer();
     
     // Create candles object
     candles = new GameObjectImpl({
@@ -114,12 +113,16 @@ describe('Candle Timer Daemon', () => {
     
     state.objects.set('CANDLES', candles);
     state.addToInventory('CANDLES');
+    
+    // Register the candle timer interrupt (normally done by gameFactory)
+    state.eventSystem.registerInterrupt('I-CANDLES', (s) => candleTimerInterrupt(s), 0);
   });
 
   it('should initialize candle timer correctly', () => {
     initializeCandleTimer(state);
     
-    expect(state.getGlobalVariable('CANDLE_TICKS')).toBe(20);
+    // The implementation uses CANDLE_STAGE_INDEX, not CANDLE_TICKS
+    expect(state.getGlobalVariable('CANDLE_STAGE_INDEX')).toBe(0);
     expect(state.eventSystem.hasEvent('I-CANDLES')).toBe(true);
   });
 
@@ -127,24 +130,25 @@ describe('Candle Timer Daemon', () => {
     candles.flags.delete(ObjectFlag.ONBIT);
     initializeCandleTimer(state);
     
-    const result = candleTimerDaemon(state);
+    const result = candleTimerInterrupt(state);
     
     expect(result).toBe(false);
   });
 
-  it('should decrement ticks when candles are on', () => {
+  it('should advance stage when candles are on', () => {
     initializeCandleTimer(state);
-    state.setGlobalVariable('CANDLE_TICKS', 5);
     
-    candleTimerDaemon(state);
+    // Run the interrupt
+    candleTimerInterrupt(state);
     
-    expect(state.getGlobalVariable('CANDLE_TICKS')).toBe(4);
+    // Stage should advance
+    expect(state.getGlobalVariable('CANDLE_STAGE_INDEX')).toBe(1);
   });
 
   it('should mark candles as touched when lit', () => {
     initializeCandleTimer(state);
     
-    candleTimerDaemon(state);
+    candleTimerInterrupt(state);
     
     expect(candles.flags.has('TOUCHBIT' as any)).toBe(true);
   });
@@ -160,14 +164,10 @@ describe('Candle Timer Daemon', () => {
 
   it('should turn off candles when they burn out', () => {
     initializeCandleTimer(state);
-    state.setGlobalVariable('CANDLE_TICKS', 1);
     
-    // Run through all stages to reach burnout
-    for (let i = 0; i < 50; i++) {
-      candleTimerDaemon(state);
-      if (!candles.flags.has(ObjectFlag.ONBIT)) {
-        break;
-      }
+    // Run through all stages to reach burnout (4 stages: 20, 10, 5, 0)
+    for (let i = 0; i < 4; i++) {
+      candleTimerInterrupt(state);
     }
     
     expect(candles.flags.has(ObjectFlag.ONBIT)).toBe(false);
@@ -179,8 +179,10 @@ describe('Timer Integration', () => {
 
   beforeEach(() => {
     state = new GameState();
-    resetLampTimer();
-    resetCandleTimer();
+    
+    // Register both timer interrupts (normally done by gameFactory)
+    state.eventSystem.registerInterrupt('I-LANTERN', (s) => lampTimerInterrupt(s), 0);
+    state.eventSystem.registerInterrupt('I-CANDLES', (s) => candleTimerInterrupt(s), 0);
   });
 
   it('should handle both timers running simultaneously', () => {
@@ -220,8 +222,8 @@ describe('Timer Integration', () => {
     expect(state.eventSystem.hasEvent('I-LANTERN')).toBe(true);
     expect(state.eventSystem.hasEvent('I-CANDLES')).toBe(true);
 
-    // Both should have tick counts
-    expect(state.getGlobalVariable('LAMP_TICKS')).toBeDefined();
-    expect(state.getGlobalVariable('CANDLE_TICKS')).toBeDefined();
+    // Both should have stage indices
+    expect(state.getGlobalVariable('LAMP_STAGE_INDEX')).toBeDefined();
+    expect(state.getGlobalVariable('CANDLE_STAGE_INDEX')).toBeDefined();
   });
 });

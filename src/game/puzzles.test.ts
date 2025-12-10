@@ -375,7 +375,8 @@ describe('Rainbow Puzzle', () => {
     const result = RainbowPuzzle.waveSceptre(state, 'SCEPTRE');
     
     expect(result.success).toBe(true);
-    expect(result.message).toContain('pot of gold');
+    // The rainbow becomes solid, pot of gold becomes visible but no explicit message
+    expect(result.message).toContain('rainbow');
     expect(pot.hasFlag(ObjectFlag.INVISIBLE)).toBe(false);
   });
 

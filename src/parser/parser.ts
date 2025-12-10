@@ -3,9 +3,10 @@
  * Converts tokens into structured commands
  */
 
-import { Token } from './lexer.js';
+import { Token, Lexer, TokenType } from './lexer.js';
 import { GameObject } from '../game/objects.js';
 import { Vocabulary } from './vocabulary.js';
+import { GameState } from '../game/state.js';
 
 /**
  * ParsedCommand interface defines the structure of a parsed command
@@ -38,18 +39,70 @@ export interface ParseError {
 export class Parser {
   private lastMentionedObject: GameObject | null = null;
   private vocabulary: Vocabulary;
+  private lexer: Lexer;
 
   constructor(vocabulary?: Vocabulary) {
     this.vocabulary = vocabulary;
+    this.lexer = new Lexer();
   }
 
   /**
    * Parse tokens into a structured command
-   * @param tokens - Array of tokens from the lexer
-   * @param availableObjects - Objects that can be referenced in commands
+   * Supports both Token[] and string input for convenience
+   * @param tokensOrInput - Array of tokens from the lexer, or a string to be tokenized
+   * @param availableObjectsOrState - Objects that can be referenced in commands, or GameState
+   * @param originalInput - The original input string (optional, for special commands)
    * @returns ParsedCommand or ParseError
    */
-  parse(tokens: Token[], availableObjects: GameObject[], originalInput?: string): ParsedCommand | ParseError {
+  parse(
+    tokensOrInput: Token[] | string,
+    availableObjectsOrState: GameObject[] | GameState,
+    originalInput?: string
+  ): ParsedCommand | ParseError {
+    // Handle string input by tokenizing it first
+    let tokens: Token[];
+    let availableObjects: GameObject[];
+    
+    if (typeof tokensOrInput === 'string') {
+      // Input is a string - tokenize it
+      tokens = this.lexer.tokenize(tokensOrInput);
+      originalInput = tokensOrInput;
+      
+      // Classify tokens using vocabulary if available
+      if (this.vocabulary) {
+        for (const token of tokens) {
+          if (token.type === TokenType.UNKNOWN) {
+            token.type = this.vocabulary.lookupWord(token.word);
+          }
+        }
+      }
+    } else if (Array.isArray(tokensOrInput)) {
+      // Input is already Token[]
+      tokens = tokensOrInput;
+    } else {
+      // Invalid input - return error
+      return {
+        type: 'INVALID_SYNTAX',
+        message: "I beg your pardon?"
+      };
+    }
+    
+    // Handle availableObjects - can be GameObject[] or GameState
+    if (availableObjectsOrState && 'getObjectsInCurrentRoom' in availableObjectsOrState) {
+      // It's a GameState - get available objects from it
+      const state = availableObjectsOrState as GameState;
+      availableObjects = state.getObjectsInCurrentRoom();
+      // Also include inventory items
+      const inventoryObjects = state.inventory
+        .map(id => state.getObject(id))
+        .filter((obj): obj is GameObject => obj !== undefined);
+      availableObjects = [...availableObjects, ...inventoryObjects];
+    } else if (Array.isArray(availableObjectsOrState)) {
+      availableObjects = availableObjectsOrState;
+    } else {
+      availableObjects = [];
+    }
+    
     if (tokens.length === 0) {
       return {
         type: 'INVALID_SYNTAX',
@@ -84,15 +137,9 @@ export class Parser {
       }
     }
 
-    // Check for unknown words first (after vocabulary lookup)
-    const unknownTokenFirst = tokens.find(token => token.type === 'UNKNOWN');
-    if (unknownTokenFirst) {
-      return {
-        type: 'UNKNOWN_WORD',
-        message: `I don't know the word "${unknownTokenFirst.word}".`,
-        word: unknownTokenFirst.word
-      };
-    }
+    // NOTE: We no longer check for unknown words here.
+    // Unknown words might be object names/synonyms that aren't in the vocabulary.
+    // We'll check for truly unknown words after trying to match objects.
 
     // Find the verb (should be first non-article token)
     let verbIndex = -1;
@@ -298,6 +345,10 @@ export class Parser {
     const matches = this.findMatchingObjects(words, availableObjects);
 
     if (matches.length === 0) {
+      // When no objects match, return OBJECT_NOT_FOUND
+      // This is the expected behavior when the user tries to interact with something
+      // that doesn't exist in the current context, even if the word is unknown.
+      // The original Zork says "You can't see any X here!" rather than "I don't know the word X"
       return {
         type: 'OBJECT_NOT_FOUND',
         message: `You can't see any ${objectName.toLowerCase()} here!`

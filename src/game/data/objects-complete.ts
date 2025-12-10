@@ -976,14 +976,14 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     adjectives: [],
     description: 'water',
     initialLocation: 'LOCAL-GLOBALS',
-    flags: ['DRINKBIT'],
+    flags: ['DRINKBIT', 'NDESCBIT'],
     action: 'WATER-F'
   },
 
   'KITCHEN-WINDOW': {
     id: 'KITCHEN-WINDOW',
     name: 'kitchen window',
-    synonyms: [],
+    synonyms: ['WINDOW'],
     adjectives: ['KITCHEN', 'SMALL'],
     description: 'kitchen window',
     initialLocation: 'LOCAL-GLOBALS',
@@ -1064,7 +1064,7 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     adjectives: ['STEEP', 'METAL', 'TWISTING'],
     description: 'chute',
     initialLocation: 'LOCAL-GLOBALS',
-    flags: ['CLIMBBIT'],
+    flags: ['CLIMBBIT', 'NDESCBIT'],
     action: 'SLIDE-FUNCTION'
   },
 

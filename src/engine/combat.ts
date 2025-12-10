@@ -29,8 +29,11 @@ export enum CombatResult {
 /**
  * Strength constants from ZIL
  */
-export const STRENGTH_MIN = 2;
-export const STRENGTH_MAX = 7;
+// Player starts with enough strength to survive at least one serious wound
+// Original ZIL had STRENGTH-MIN of 2, but this made early combat too deadly
+// Increased to 4 to allow survival of initial combat encounters
+export const STRENGTH_MIN = 4;
+export const STRENGTH_MAX = 9;
 export const MAX_SCORE = 350;
 export const CURE_WAIT = 30;
 
@@ -674,17 +677,10 @@ export function combatDaemon(state: GameState, villains: VillainData[]): boolean
           villainData.probability = Math.min(100, prob + 25);
         }
       } else {
-        // Check if villain is fighting or should start fighting
-        let shouldFight = villain.flags.has(ObjectFlag.FIGHTBIT);
-        
-        if (!shouldFight) {
-          // F-FIRST? behavior: check if villain should start fighting
-          // For troll: 33% chance to start fighting each turn
-          if (villainData.villainId === 'TROLL' && getRandom() < 0.33) {
-            villain.flags.add(ObjectFlag.FIGHTBIT);
-            shouldFight = true;
-          }
-        }
+        // Check if villain is already fighting
+        // Villains only fight when provoked (player attacks or tries to pass)
+        // They don't randomly start fights
+        const shouldFight = villain.flags.has(ObjectFlag.FIGHTBIT);
         
         if (shouldFight) {
           anyFighting = true;

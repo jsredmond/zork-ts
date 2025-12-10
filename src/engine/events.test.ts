@@ -258,12 +258,14 @@ describe('EventSystem', () => {
   });
 
   describe('Move Counter', () => {
-    it('should increment move counter each turn', () => {
+    it('should not increment move counter in processTurn (actions handle this)', () => {
+      // Move counter is now incremented by individual actions (MoveAction, WaitAction, etc.)
+      // processTurn no longer increments moves to avoid double-counting
       const initialMoves = state.moves;
       
       eventSystem.processTurn(state);
       
-      expect(state.moves).toBe(initialMoves + 1);
+      expect(state.moves).toBe(initialMoves);
     });
 
     it('should not increment moves when clock wait is set', () => {

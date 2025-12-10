@@ -72,7 +72,18 @@ const invalidVerbGen = fc.string().filter(s =>
   s.length > 0 && 
   !['TAKE', 'DROP', 'EXAMINE', 'LOOK', 'INVENTORY', 'OPEN', 'CLOSE', 'READ',
     'NORTH', 'SOUTH', 'EAST', 'WEST', 'UP', 'DOWN', 'IN', 'OUT',
-    'N', 'S', 'E', 'W', 'U', 'D', 'GO', 'GET', 'PICK', 'PUT', 'X', 'L', 'I'].includes(s.toUpperCase())
+    'N', 'S', 'E', 'W', 'U', 'D', 'GO', 'GET', 'PICK', 'PUT', 'X', 'L', 'I',
+    'Y', 'YES', 'NO', 'WAIT', 'Z', 'AGAIN', 'G', 'QUIT', 'Q', 'SAVE', 'RESTORE',
+    'RESTART', 'SCORE', 'VERSION', 'VERBOSE', 'BRIEF', 'SUPERBRIEF', 'DIAGNOSE',
+    'HELLO', 'HI', 'PRAY', 'JUMP', 'SWIM', 'CLIMB', 'ATTACK', 'KILL', 'FIGHT',
+    'WAVE', 'THROW', 'GIVE', 'SHOW', 'TELL', 'ASK', 'SAY', 'ANSWER', 'YELL',
+    'SHOUT', 'SCREAM', 'SING', 'LISTEN', 'SMELL', 'TASTE', 'TOUCH', 'FEEL',
+    'RUB', 'PUSH', 'PULL', 'TURN', 'MOVE', 'LIFT', 'LOWER', 'RAISE', 'LIGHT',
+    'EXTINGUISH', 'BURN', 'POUR', 'FILL', 'EMPTY', 'EAT', 'DRINK', 'WEAR',
+    'REMOVE', 'TIE', 'UNTIE', 'BREAK', 'CUT', 'DIG', 'ENTER', 'EXIT', 'LEAVE',
+    'BOARD', 'DISEMBARK', 'LAUNCH', 'LAND', 'CROSS', 'FOLLOW', 'FIND', 'SEARCH',
+    'UNLOCK', 'LOCK', 'KNOCK', 'RING', 'WIND', 'SET', 'INFLATE', 'DEFLATE',
+    'PLUG', 'ODYSSEUS', 'ULYSSES', 'ECHO', 'EXORCISE', 'PRAY'].includes(s.toUpperCase())
 );
 
 /**

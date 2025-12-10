@@ -12,6 +12,10 @@ import { getRandom } from '../testing/seededRandom.js';
 /**
  * Sword glow daemon (I-SWORD)
  * Makes the sword glow when enemies are nearby
+ * 
+ * In original Zork, the sword only glows brightly when in the same room as an enemy.
+ * The faint glow for adjacent rooms is not shown as a message - it's only visible
+ * when examining the sword.
  */
 export function swordGlowDaemon(state: GameState): boolean {
   const sword = state.getObject('SWORD');
@@ -32,10 +36,10 @@ export function swordGlowDaemon(state: GameState): boolean {
   if (isRoomInfested(state, currentRoom.id)) {
     glowLevel = 2; // Bright glow
   } else {
-    // Check adjacent rooms
+    // Check adjacent rooms (for examine sword, but don't show message)
     for (const [direction, exit] of currentRoom.exits.entries()) {
       if (exit.destination && isRoomInfested(state, exit.destination)) {
-        glowLevel = 1; // Faint glow
+        glowLevel = 1; // Faint glow (silent)
         break;
       }
     }
@@ -48,14 +52,15 @@ export function swordGlowDaemon(state: GameState): boolean {
   if (glowLevel !== currentGlow) {
     sword.setProperty('glowLevel', glowLevel);
     
-    // Display message
+    // Only display message for bright glow (enemy in same room) or when glow stops
+    // Faint glow (adjacent enemy) is silent - only visible when examining sword
     if (glowLevel === 2) {
       console.log("Your sword has begun to glow very brightly.");
-    } else if (glowLevel === 1) {
-      console.log("Your sword is glowing with a faint blue glow.");
-    } else {
+    } else if (glowLevel === 0 && currentGlow === 2) {
+      // Only show "no longer glowing" when going from bright to none
       console.log("Your sword is no longer glowing.");
     }
+    // Note: Faint glow (level 1) is silent
     
     return true;
   }
