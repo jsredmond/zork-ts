@@ -5,7 +5,7 @@
 
 import { GameState } from './state.js';
 import { GameObjectImpl } from './objects.js';
-import { ObjectFlag } from './data/flags.js';
+import { ObjectFlag, RoomFlag } from './data/flags.js';
 import { Storage } from '../persistence/storage.js';
 import { scoreTreasure, TROPHY_CASE_ID, getRank, MAX_SCORE } from './scoring.js';
 import { Direction } from './rooms.js';
@@ -526,9 +526,9 @@ export class MoveAction implements ActionHandler {
     // Move to new room
     const oldRoom = state.currentRoom;
     
-    // Check if destination room was visited before moving there
+    // Check if destination room was visited before moving there (using TOUCHBIT flag like ZIL)
     const destinationRoom = state.rooms.get(exit.destination);
-    const wasVisited = destinationRoom?.visited || false;
+    const wasVisited = destinationRoom?.hasFlag(RoomFlag.TOUCHBIT) || false;
     
     state.setCurrentRoom(exit.destination);
     // Note: Move counter is incremented by processTurn() in the event system
@@ -1180,21 +1180,27 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
   const conditionalDesc = getConditionalRoomDescription(room.id, state);
   const description = conditionalDesc || room.description;
 
+  // Track if description was added for proper object formatting
+  let descriptionAdded = false;
+
   // Determine what to show based on mode and room visit status
   if (isSuperBrief) {
     // Superbrief mode: only show room name (already added above)
     // Don't add description or objects unless it's a LOOK command
     if (verbose) {
       output += description;
+      descriptionAdded = true;
     }
   } else if (isVerbose || !wasVisited) {
     // Verbose mode or first visit: always show full description
     output += description;
+    descriptionAdded = true;
   } else {
     // Brief mode for visited rooms: only show room name (already added above)
     // Don't add description unless it's a LOOK command
     if (verbose) {
       output += description;
+      descriptionAdded = true;
     }
   }
 
@@ -1205,6 +1211,9 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
   // Reverse the order to match original game behavior
   // (Original game displays objects in reverse definition order)
   const reversedObjects = [...objectsInRoom].reverse();
+  
+  // Track if this is the first object (for proper newline formatting)
+  let isFirstObject = true;
   
   // Helper function to describe an object and its contents
   const describeObject = (obj: GameObject) => {
@@ -1225,7 +1234,13 @@ export function getRoomDescriptionAfterMovement(room: any, state: GameState, ver
       objectDesc = `There is ${article} ${obj.name.toLowerCase()} here.`;
     }
     
-    output += '\n' + objectDesc;
+    // Add newline before object description only if description was added or not first object
+    if (descriptionAdded || !isFirstObject) {
+      output += '\n' + objectDesc;
+    } else {
+      output += objectDesc;
+    }
+    isFirstObject = false;
     
     // If object is an open or transparent container, list its contents
     if (obj.isContainer() && (obj.isOpen() || obj.hasFlag(ObjectFlag.TRANSBIT))) {
@@ -2008,7 +2023,7 @@ export class VerboseAction implements ActionHandler {
     
     return {
       success: true,
-      message: "Verbose mode.",
+      message: "Maximum verbosity.",
       stateChanges: [{
         type: 'VERBOSITY_CHANGED',
         oldValue: null,
@@ -2029,7 +2044,7 @@ export class BriefAction implements ActionHandler {
     
     return {
       success: true,
-      message: "Maximum verbosity.",
+      message: "Brief descriptions.",
       stateChanges: [{
         type: 'VERBOSITY_CHANGED',
         oldValue: null,
@@ -2050,7 +2065,7 @@ export class SuperBriefAction implements ActionHandler {
     
     return {
       success: true,
-      message: "Superbrief mode.",
+      message: "Superbrief descriptions.",
       stateChanges: [{
         type: 'VERBOSITY_CHANGED',
         oldValue: null,

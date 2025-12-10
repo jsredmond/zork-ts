@@ -5,7 +5,7 @@
 
 import { GameObject } from './objects.js';
 import { Room } from './rooms.js';
-import { GlobalFlags, INITIAL_GLOBAL_FLAGS } from './data/flags.js';
+import { GlobalFlags, INITIAL_GLOBAL_FLAGS, RoomFlag } from './data/flags.js';
 import { EventSystem } from '../engine/events.js';
 import { ActorManager } from '../engine/actors.js';
 
@@ -89,6 +89,8 @@ export class GameState {
     const room = this.rooms.get(roomId);
     if (room) {
       room.markVisited();
+      // Also set TOUCHBIT flag for ZIL compatibility
+      room.addFlag(RoomFlag.TOUCHBIT);
     }
   }
 

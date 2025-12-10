@@ -903,7 +903,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [-] 25. Implement missing easter eggs
+- [x] 25. Implement missing easter eggs
   - Implement all missing easter eggs
   - **MUST ACHIEVE:** 85%+ similarity on easter eggs transcript (63)
   - **VERIFICATION REQUIRED:** Run transcript 63-easter-eggs and achieve 85%+ similarity
@@ -927,7 +927,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
   - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.4_
 
-- [-] 25.4 Commit easter egg implementations
+- [x] 25.4 Commit easter egg implementations
   - Commit message: "feat: Implement missing easter eggs - transcript 63 passes"
   - Include easter egg implementations
   - Include verification results showing 85%+ similarity
@@ -962,33 +962,33 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [ ] 27. Fix verbose/brief mode
+- [-] 27. Fix verbose/brief mode
   - Fix verbose and brief mode handling
   - **MUST ACHIEVE:** 85%+ similarity on verbose mode transcript (64)
   - **VERIFICATION REQUIRED:** Run transcript 64-verbose-mode and achieve 85%+ similarity
   - _Requirements: 9.5_
 
-- [ ] 27.1 Investigate verbose/brief mode issue
+- [x] 27.1 Investigate verbose/brief mode issue
   - Review verbose/brief mode code
   - Compare with original ZIL code
   - Run verbose mode transcript (64)
   - Identify differences (currently 45.5% similarity)
   - _Requirements: 9.5_
 
-- [ ] 27.2 Fix verbose/brief mode logic
+- [x] 27.2 Fix verbose/brief mode logic
   - Update verbose/brief mode implementation
   - Match original behavior exactly
   - Test mode switching
   - **VERIFY:** Run transcript after each change to track progress
   - _Requirements: 9.5_
 
-- [ ] 27.3 Verify verbose mode transcript passes
+- [x] 27.3 Verify verbose mode transcript passes
   - Run verbose mode transcript (64)
   - **REQUIRED:** Must achieve 85%+ similarity (currently 45.5%)
   - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.5_
 
-- [ ] 27.4 Commit verbose/brief mode fix
+- [-] 27.4 Commit verbose/brief mode fix
   - Commit message: "fix: Verbose/brief mode matches original - transcript 64 passes"
   - Include mode handling updates
   - Include verification results showing 85%+ similarity

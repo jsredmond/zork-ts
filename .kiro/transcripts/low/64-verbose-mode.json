@@ -7,7 +7,7 @@
   "entries": [
     {
       "command": "verbose",
-      "expectedOutput": "Verbose mode.",
+      "expectedOutput": "Maximum verbosity.",
       "notes": "Setting verbose mode - always shows full room descriptions"
     },
     {
@@ -21,13 +21,13 @@
       "notes": "Moving to new room shows full description"
     },
     {
-      "command": "north",
+      "command": "west",
       "expectedOutput": "West of House\nYou are standing in an open field west of a white house, with a boarded front door.\nThere is a small mailbox here.",
       "notes": "Returning to visited room still shows full description in verbose mode"
     },
     {
       "command": "brief",
-      "expectedOutput": "Maximum verbosity.",
+      "expectedOutput": "Brief descriptions.",
       "notes": "Setting brief mode - shows full description on first visit only"
     },
     {
@@ -36,7 +36,7 @@
       "notes": "First visit to room in brief mode shows full description"
     },
     {
-      "command": "north",
+      "command": "west",
       "expectedOutput": "West of House\nThere is a small mailbox here.",
       "notes": "Returning to visited room in brief mode shows only room name and objects"
     },
@@ -47,7 +47,7 @@
     },
     {
       "command": "superbrief",
-      "expectedOutput": "Superbrief mode.",
+      "expectedOutput": "Superbrief descriptions.",
       "notes": "Setting superbrief mode - only shows room names"
     },
     {
@@ -56,7 +56,7 @@
       "notes": "In superbrief mode, only room name is shown"
     },
     {
-      "command": "north",
+      "command": "west",
       "expectedOutput": "West of House",
       "notes": "Superbrief continues to show only room names"
     },
@@ -67,7 +67,7 @@
     },
     {
       "command": "verbose",
-      "expectedOutput": "Verbose mode.",
+      "expectedOutput": "Maximum verbosity.",
       "notes": "Switching back to verbose mode"
     },
     {

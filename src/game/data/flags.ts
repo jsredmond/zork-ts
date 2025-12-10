@@ -116,7 +116,10 @@ export enum RoomFlag {
   MAZEBIT = 'MAZEBIT',
   
   // Room is not on land (water/boat required)
-  NONLANDBIT = 'NONLANDBIT'
+  NONLANDBIT = 'NONLANDBIT',
+  
+  // Room has been visited/touched by player
+  TOUCHBIT = 'TOUCHBIT'
 }
 
 /**

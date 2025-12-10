@@ -43,7 +43,7 @@ export function createInitialGameState(): GameState {
   placeObjectsInRooms(objects, rooms);
   
   // Set initial room
-  gameState.currentRoom = 'WEST-OF-HOUSE';
+  gameState.setCurrentRoom('WEST-OF-HOUSE');
   
   // Initialize global variables
   gameState.setGlobalVariable('LOAD_MAX', 100);
