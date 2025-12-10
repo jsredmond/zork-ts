@@ -52,8 +52,8 @@
     },
     {
       "command": "look",
-      "expectedOutput": "Maze\nThis is part of a maze of twisty little passages, all alike.\n\nA grue is lurking in a dark corner of the maze.",
-      "notes": "Back to maze with light - multiple systems working together"
+      "expectedOutput": "Maze\nThis is part of a maze of twisty little passages, all alike.\nThere is a suspicious-looking individual, holding a large bag, leaning against one wall. He is armed with a deadly stiletto.\nThe thief contains:\n  A stiletto\n  A large bag",
+      "notes": "Back to maze with light - thief has moved here during 200+ turns (multiple daemon interactions)"
     }
   ],
   "metadata": {
