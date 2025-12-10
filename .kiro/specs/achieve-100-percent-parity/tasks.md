@@ -820,7 +820,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [-] 23. Fix daemon timing
+- [x] 23. Fix daemon timing
   - Fix all daemon timing issues
   - **MUST ACHIEVE:** 85%+ similarity on timing transcripts (70-79)
   - **VERIFICATION REQUIRED:** Run `npx tsx scripts/verify-all-transcripts.ts --priority low` and verify timing transcripts pass
@@ -862,7 +862,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
   - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.2_
 
-- [-] 23.7 Commit daemon timing fixes
+- [x] 23.7 Commit daemon timing fixes
   - Commit message: "fix: Daemon timing matches original - all timing transcripts pass"
   - Include all daemon updates
   - Include verification results showing 85%+ similarity
@@ -870,32 +870,32 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [ ] 24. Fix flavor text
+- [x] 24. Fix flavor text
   - Update flavor text to match original
   - **MUST ACHIEVE:** 85%+ similarity on flavor text transcript (60)
   - **VERIFICATION REQUIRED:** Run transcript 60-flavor-text and achieve 85%+ similarity
   - _Requirements: 9.3_
 
-- [ ] 24.1 Audit flavor text
+- [x] 24.1 Audit flavor text
   - Review all scenery descriptions
   - Compare with original game
   - Run flavor text transcript (60)
   - Identify differences (currently 47.0% similarity)
   - _Requirements: 9.3_
 
-- [ ] 24.2 Update flavor text
+- [x] 24.2 Update flavor text
   - Update scenery descriptions to match original
   - Test all flavor text
   - **VERIFY:** Run transcript after each change to track progress
   - _Requirements: 9.3_
 
-- [ ] 24.3 Verify flavor text transcript passes
+- [x] 24.3 Verify flavor text transcript passes
   - Run flavor text transcript (60)
   - **REQUIRED:** Must achieve 85%+ similarity (currently 47.0%)
   - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.3_
 
-- [ ] 24.4 Commit flavor text fixes
+- [x] 24.4 Commit flavor text fixes
   - Commit message: "fix: Flavor text matches original - transcript 60 passes"
   - Include flavor text updates
   - Include verification results showing 85%+ similarity
@@ -903,31 +903,31 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [ ] 25. Implement missing easter eggs
+- [-] 25. Implement missing easter eggs
   - Implement all missing easter eggs
   - **MUST ACHIEVE:** 85%+ similarity on easter eggs transcript (63)
   - **VERIFICATION REQUIRED:** Run transcript 63-easter-eggs and achieve 85%+ similarity
   - _Requirements: 9.4_
 
-- [ ] 25.1 Identify missing easter eggs
+- [x] 25.1 Identify missing easter eggs
   - Review easter eggs transcript (63)
   - Compare with original game
   - List all missing easter eggs (currently 71.4% similarity)
   - _Requirements: 9.4_
 
-- [ ] 25.2 Implement easter eggs
+- [x] 25.2 Implement easter eggs
   - Implement all missing easter egg responses
   - Test each easter egg individually
   - **VERIFY:** Run transcript after each implementation to track progress
   - _Requirements: 9.4_
 
-- [ ] 25.3 Verify easter eggs transcript passes
+- [x] 25.3 Verify easter eggs transcript passes
   - Run easter eggs transcript (63)
   - **REQUIRED:** Must achieve 85%+ similarity (currently 71.4%)
   - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.4_
 
-- [ ] 25.4 Commit easter egg implementations
+- [-] 25.4 Commit easter egg implementations
   - Commit message: "feat: Implement missing easter eggs - transcript 63 passes"
   - Include easter egg implementations
   - Include verification results showing 85%+ similarity
