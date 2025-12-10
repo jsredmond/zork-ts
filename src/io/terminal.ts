@@ -310,6 +310,24 @@ export class Terminal {
   }
 
   /**
+   * Get the prompt string used for user input
+   * @returns The prompt string ("> ")
+   */
+  getPrompt(): string {
+    return '> ';
+  }
+
+  /**
+   * Format a command with the prompt prefix
+   * This represents how commands appear in the terminal history
+   * @param command - The command text
+   * @returns The command prefixed with the prompt
+   */
+  formatCommandWithPrompt(command: string): string {
+    return `${this.getPrompt()}${command}`;
+  }
+
+  /**
    * Check if terminal is running
    */
   isActive(): boolean {

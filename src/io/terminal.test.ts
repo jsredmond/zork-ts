@@ -185,5 +185,39 @@ describe('Terminal', () => {
         { numRuns: 100 }
       );
     });
+
+    /**
+     * **Feature: status-bar-ui, Property 3: Commands are prefixed with prompt**
+     * *For any* command entered by the player, the displayed output SHALL show the command prefixed with "> ".
+     * **Validates: Requirements 4.1, 4.2, 4.3**
+     */
+    it('Property 3: commands are prefixed with prompt', () => {
+      fc.assert(
+        fc.property(
+          fc.string({ minLength: 1, maxLength: 100 }).filter(s => s.trim().length > 0),
+          (command) => {
+            const formatted = terminal.formatCommandWithPrompt(command);
+            // Command should be prefixed with "> "
+            return formatted.startsWith('> ') && formatted === `> ${command}`;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+
+  describe('prompt methods', () => {
+    beforeEach(() => {
+      terminal.initialize();
+    });
+
+    it('should return correct prompt string', () => {
+      expect(terminal.getPrompt()).toBe('> ');
+    });
+
+    it('should format command with prompt', () => {
+      expect(terminal.formatCommandWithPrompt('north')).toBe('> north');
+      expect(terminal.formatCommandWithPrompt('take lamp')).toBe('> take lamp');
+    });
   });
 });
