@@ -1,27 +1,27 @@
 {
   "totalTranscripts": 5,
-  "passedTranscripts": 2,
-  "failedTranscripts": 3,
+  "passedTranscripts": 1,
+  "failedTranscripts": 4,
   "totalCommands": 99,
-  "matchedCommands": 78,
-  "overallPassRate": 0.4,
-  "averageSimilarity": 0.8507732788095634,
+  "matchedCommands": 79,
+  "overallPassRate": 0.2,
+  "averageSimilarity": 0.8514090344240435,
   "byCategory": {
     "edge-case": {
       "total": 5,
-      "passed": 2,
-      "failed": 3,
-      "passRate": 0.4,
-      "averageSimilarity": 0.8507732788095634
+      "passed": 1,
+      "failed": 4,
+      "passRate": 0.2,
+      "averageSimilarity": 0.8514090344240435
     }
   },
   "byPriority": {
     "medium": {
       "total": 5,
-      "passed": 2,
-      "failed": 3,
-      "passRate": 0.4,
-      "averageSimilarity": 0.8507732788095634
+      "passed": 1,
+      "failed": 4,
+      "passRate": 0.2,
+      "averageSimilarity": 0.8514090344240435
     }
   },
   "results": [
@@ -35,7 +35,7 @@
       "matchedCommands": 20,
       "averageSimilarity": 1,
       "differences": [],
-      "executionTime": 2
+      "executionTime": 3
     },
     {
       "transcriptId": "41-inventory-limits",
@@ -44,18 +44,9 @@
       "priority": "medium",
       "passed": false,
       "totalCommands": 27,
-      "matchedCommands": 20,
-      "averageSimilarity": 0.8576385977636549,
+      "matchedCommands": 22,
+      "averageSimilarity": 0.9167614317801118,
       "differences": [
-        {
-          "commandIndex": 14,
-          "command": "down",
-          "expected": "Cellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
-          "actual": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.\nYour sword is glowing with a faint blue glow.",
-          "similarity": 0.04195804195804196,
-          "category": "text",
-          "severity": "critical"
-        },
         {
           "commandIndex": 15,
           "command": "inventory",
@@ -66,22 +57,13 @@
           "severity": "critical"
         },
         {
-          "commandIndex": 16,
-          "command": "south",
-          "expected": "East of Chasm\nYou are on the east edge of a chasm, the bottom of which cannot be seen. A\nnarrow passage goes north, and the path you are on continues to the east.",
-          "actual": "East of Chasm\nYou are on the east edge of a chasm, the bottom of which cannot be seen. A narrow passage goes north, and the path you are on continues to the east.\nYour sword is no longer glowing.",
-          "similarity": 0.8256410256410256,
-          "category": "text",
-          "severity": "minor"
-        },
-        {
           "commandIndex": 17,
           "command": "east",
           "expected": "Gallery\nThis is an art gallery. Most of the paintings which were here have been stolen\nby vandals with exceptional taste. The vandals left through either the north or\nwest exits.\nHanging on a wall is a beautiful painting by a neglected artist. It is a\nportrait of an elven maid with a wistful expression.",
-          "actual": "Gallery\nThis is an art gallery. Most of the paintings have been stolen by vandals with exceptional taste. The vandals left through either the north or west exits.\nFortunately, there is still one chance for you to be a vandal, for on the far wall is a painting of unparalleled beauty.",
-          "similarity": 0.22697368421052633,
+          "actual": "Gallery\nThis is an art gallery. Most of the paintings which were here have been stolen by vandals with exceptional taste. The vandals left through either the north or west exits.\nHanging on a wall is a beautiful painting by a neglected artist. It is a portrait of an elven maid with a wistful expression.\nFortunately, there is still one chance for you to be a vandal, for on the far wall is a painting of unparalleled beauty.",
+          "similarity": 0.7082352941176471,
           "category": "text",
-          "severity": "critical"
+          "severity": "major"
         },
         {
           "commandIndex": 19,
@@ -205,18 +187,28 @@
           "severity": "critical"
         }
       ],
-      "executionTime": 1
+      "executionTime": 0
     },
     {
       "transcriptId": "43-death-resurrection",
       "name": "Death and Resurrection",
       "category": "edge-case",
       "priority": "medium",
-      "passed": true,
+      "passed": false,
       "totalCommands": 17,
-      "matchedCommands": 17,
-      "averageSimilarity": 0.9959352446693271,
-      "differences": [],
+      "matchedCommands": 16,
+      "averageSimilarity": 0.9399911887252711,
+      "differences": [
+        {
+          "commandIndex": 12,
+          "command": "down",
+          "expected": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.\nYour sword is glowing with a faint blue glow.",
+          "actual": "Cellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.",
+          "similarity": 0.04195804195804196,
+          "category": "text",
+          "severity": "critical"
+        }
+      ],
       "executionTime": 1
     },
     {
@@ -278,5 +270,5 @@
       "executionTime": 1
     }
   ],
-  "executionTime": 10
+  "executionTime": 17
 }

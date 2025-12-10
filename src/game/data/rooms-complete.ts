@@ -329,7 +329,7 @@ export const ALL_ROOMS: Record<string, RoomData> = {
     id: 'GALLERY',
     name: 'Gallery',
     description: 'Gallery',
-    longDescription: 'This is an art gallery. Most of the paintings have been stolen by vandals with exceptional taste. The vandals left through either the north or west exits.',
+    longDescription: 'This is an art gallery. Most of the paintings which were here have been stolen by vandals with exceptional taste. The vandals left through either the north or west exits.\nHanging on a wall is a beautiful painting by a neglected artist. It is a portrait of an elven maid with a wistful expression.',
     exits: [
       { direction: 'WEST', destination: 'EAST-OF-CHASM' },
       { direction: 'NORTH', destination: 'STUDIO' }

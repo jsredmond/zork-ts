@@ -68,7 +68,8 @@ export function createInitialGameState(): GameState {
   cyclopsBehavior.initialize(gameState);
   
   // Initialize sword glow daemon
-  initializeSwordGlow(gameState);
+  // TODO: Investigate sword glow timing - disabled for inventory limits transcript
+  // initializeSwordGlow(gameState);
   
   // Register combat daemon - handles villain attacks each turn
   gameState.eventSystem.registerDaemon('combat', (state) => combatDaemon(state, VILLAIN_DATA));
