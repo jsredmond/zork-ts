@@ -806,107 +806,131 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 ## Phase 5: Fix Low-Priority Issues (Week 5-6)
 
+**⚠️ PHASE STATUS: FAILED - REQUIRES RESTART ⚠️**
+- **Verification Results:** 0% pass rate (0/15 transcripts), 40.8% avg similarity
+- **Root Cause:** Tasks 23-27 were marked complete but implementations don't work
+- **Action Required:** Re-implement all daemon timing, flavor text, easter eggs, and verbose mode fixes
+
 ### Goal
 Fix all low-priority timing and flavor text issues: daemon timing, flavor text, easter eggs, verbose mode.
 
 **Success Criteria:**
-- 100% of low-priority transcripts pass (17/17)
-- Average similarity 85%+
+- 100% of low-priority transcripts pass (15/15) - **CURRENTLY: 0/15**
+- Average similarity 85%+ - **CURRENTLY: 40.8%**
 
 ---
 
 - [ ] 23. Fix daemon timing
   - Fix all daemon timing issues
+  - **MUST ACHIEVE:** 85%+ similarity on timing transcripts (70-79)
+  - **VERIFICATION REQUIRED:** Run `npx tsx scripts/verify-all-transcripts.ts --priority low` and verify timing transcripts pass
   - _Requirements: 9.2_
 
-- [x] 23.1 Audit daemon execution
+- [ ] 23.1 Audit daemon execution
   - Review daemon execution order
   - Compare with original ZIL code
   - Identify timing differences
   - _Requirements: 9.2_
 
-- [x] 23.2 Fix lamp fuel consumption timing
+- [ ] 23.2 Fix lamp fuel consumption timing
   - Update lamp fuel daemon
   - Match original timing exactly
-  - Run lamp fuel transcripts (70-71)
+  - **VERIFY:** Run lamp fuel transcripts (70-71) and achieve 85%+ similarity
   - _Requirements: 9.2_
 
-- [x] 23.3 Fix candle burning timing
+- [ ] 23.3 Fix candle burning timing
   - Update candle daemon
   - Match original timing exactly
-  - Run candle transcript (72)
+  - **VERIFY:** Run candle transcript (72) and achieve 85%+ similarity
   - _Requirements: 9.2_
 
-- [x] 23.4 Fix NPC movement timing
+- [ ] 23.4 Fix NPC movement timing
   - Update NPC movement daemons
   - Match original timing exactly
-  - Run NPC movement transcripts (73-75)
+  - **VERIFY:** Run NPC movement transcripts (73-75) and achieve 85%+ similarity
   - _Requirements: 9.2_
 
-- [x] 23.5 Fix multiple daemon interactions
+- [ ] 23.5 Fix multiple daemon interactions
   - Test multiple daemons running together
   - Verify execution order matches original
-  - Run multiple daemon transcripts (76-79)
+  - **VERIFY:** Run multiple daemon transcripts (76-79) and achieve 85%+ similarity
   - _Requirements: 9.2_
 
-- [x] 23.6 Commit daemon timing fixes
-  - Commit message: "fix: Daemon timing matches original"
+- [ ] 23.6 Verify all timing transcripts pass
+  - Execute: `npx tsx scripts/verify-all-transcripts.ts --priority low`
+  - **REQUIRED:** All timing transcripts (70-79) must achieve 85%+ similarity
+  - **DO NOT MARK COMPLETE** until verification passes
+  - _Requirements: 9.2_
+
+- [ ] 23.7 Commit daemon timing fixes
+  - Commit message: "fix: Daemon timing matches original - all timing transcripts pass"
   - Include all daemon updates
+  - Include verification results showing 85%+ similarity
   - _Requirements: 9.2_
 
 ---
 
-- [x] 24. Fix flavor text
+- [ ] 24. Fix flavor text
   - Update flavor text to match original
+  - **MUST ACHIEVE:** 85%+ similarity on flavor text transcript (60)
+  - **VERIFICATION REQUIRED:** Run transcript 60-flavor-text and achieve 85%+ similarity
   - _Requirements: 9.3_
 
-- [x] 24.1 Audit flavor text
+- [ ] 24.1 Audit flavor text
   - Review all scenery descriptions
   - Compare with original game
   - Run flavor text transcript (60)
-  - Identify differences
+  - Identify differences (currently 47.0% similarity)
   - _Requirements: 9.3_
 
-- [x] 24.2 Update flavor text
+- [ ] 24.2 Update flavor text
   - Update scenery descriptions to match original
   - Test all flavor text
+  - **VERIFY:** Run transcript after each change to track progress
   - _Requirements: 9.3_
 
-- [x] 24.3 Verify flavor text transcript
-  - Run flavor text transcript
-  - Target: 85%+ similarity
+- [ ] 24.3 Verify flavor text transcript passes
+  - Run flavor text transcript (60)
+  - **REQUIRED:** Must achieve 85%+ similarity (currently 47.0%)
+  - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.3_
 
-- [x] 24.4 Commit flavor text fixes
-  - Commit message: "fix: Flavor text matches original"
+- [ ] 24.4 Commit flavor text fixes
+  - Commit message: "fix: Flavor text matches original - transcript 60 passes"
   - Include flavor text updates
+  - Include verification results showing 85%+ similarity
   - _Requirements: 9.3_
 
 ---
 
-- [x] 25. Implement missing easter eggs
+- [ ] 25. Implement missing easter eggs
   - Implement all missing easter eggs
+  - **MUST ACHIEVE:** 85%+ similarity on easter eggs transcript (63)
+  - **VERIFICATION REQUIRED:** Run transcript 63-easter-eggs and achieve 85%+ similarity
   - _Requirements: 9.4_
 
-- [x] 25.1 Identify missing easter eggs
+- [ ] 25.1 Identify missing easter eggs
   - Review easter eggs transcript (63)
   - Compare with original game
-  - List all missing easter eggs
+  - List all missing easter eggs (currently 71.4% similarity)
   - _Requirements: 9.4_
 
-- [x] 25.2 Implement easter eggs
+- [ ] 25.2 Implement easter eggs
   - Implement all missing easter egg responses
-  - Test each easter egg
+  - Test each easter egg individually
+  - **VERIFY:** Run transcript after each implementation to track progress
   - _Requirements: 9.4_
 
-- [x] 25.3 Verify easter eggs transcript
-  - Run easter eggs transcript
-  - Target: 85%+ similarity
+- [ ] 25.3 Verify easter eggs transcript passes
+  - Run easter eggs transcript (63)
+  - **REQUIRED:** Must achieve 85%+ similarity (currently 71.4%)
+  - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.4_
 
-- [x] 25.4 Commit easter egg implementations
-  - Commit message: "feat: Implement missing easter eggs"
+- [ ] 25.4 Commit easter egg implementations
+  - Commit message: "feat: Implement missing easter eggs - transcript 63 passes"
   - Include easter egg implementations
+  - Include verification results showing 85%+ similarity
   - _Requirements: 9.4_
 
 ---
@@ -938,56 +962,88 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [x] 27. Fix verbose/brief mode
+- [ ] 27. Fix verbose/brief mode
   - Fix verbose and brief mode handling
+  - **MUST ACHIEVE:** 85%+ similarity on verbose mode transcript (64)
+  - **VERIFICATION REQUIRED:** Run transcript 64-verbose-mode and achieve 85%+ similarity
   - _Requirements: 9.5_
 
-- [x] 27.1 Investigate verbose/brief mode issue
+- [ ] 27.1 Investigate verbose/brief mode issue
   - Review verbose/brief mode code
   - Compare with original ZIL code
   - Run verbose mode transcript (64)
-  - Identify differences
+  - Identify differences (currently 45.5% similarity)
   - _Requirements: 9.5_
 
-- [x] 27.2 Fix verbose/brief mode logic
+- [ ] 27.2 Fix verbose/brief mode logic
   - Update verbose/brief mode implementation
   - Match original behavior exactly
   - Test mode switching
+  - **VERIFY:** Run transcript after each change to track progress
   - _Requirements: 9.5_
 
-- [x] 27.3 Verify verbose mode transcript
-  - Run verbose mode transcript
-  - Target: 100%+ similarity
+- [ ] 27.3 Verify verbose mode transcript passes
+  - Run verbose mode transcript (64)
+  - **REQUIRED:** Must achieve 85%+ similarity (currently 45.5%)
+  - **DO NOT MARK COMPLETE** until verification passes
   - _Requirements: 9.5_
 
-- [x] 27.4 Commit verbose/brief mode fix
-  - Commit message: "fix: Verbose/brief mode matches original"
+- [ ] 27.4 Commit verbose/brief mode fix
+  - Commit message: "fix: Verbose/brief mode matches original - transcript 64 passes"
   - Include mode handling updates
+  - Include verification results showing 85%+ similarity
   - _Requirements: 9.5_
 
 ---
 
-- [x] 28. Verify Phase 5 completion
-  - Run all low-priority transcripts
-  - Verify 100% pass rate
+- [x] 28. Verify Phase 5 completion (FAILED - NEEDS RESTART)
+  - **ACTUAL RESULTS:** 0% pass rate (0/15 transcripts), 40.8% avg similarity
+  - **STATUS:** Phase 5 NOT complete - all tasks 23-27 need to be re-implemented
   - _Requirements: 9.1, 10.4_
 
 - [x] 28.1 Run all low-priority transcripts
-  - Execute: `npx tsx scripts/verify-all-transcripts.ts --category low`
-  - Verify 17/17 low-priority transcripts pass
-  - Verify 100% pass rate
-  - Verify average similarity 100%
+  - Execute: `npx tsx scripts/verify-all-transcripts.ts --priority low`
+  - **ACTUAL RESULTS:** 0/15 transcripts passed, 40.8% average similarity
+  - **FAILED:** Target was 100% pass rate with 85%+ similarity
   - _Requirements: 10.4_
 
 - [x] 28.2 Generate Phase 5 completion report
-  - Document all fixes
-  - Document all transcript results
-  - Verify 100% low-priority pass rate
+  - Document all fixes (NONE ACTUALLY WORKING)
+  - Document all transcript results (ALL FAILING)
+  - **RESULT:** Phase 5 requires complete restart
   - _Requirements: 10.4_
 
-- [x] 28.3 Commit Phase 5 completion
-  - Commit message: "docs: Complete Phase 5 - All low-priority issues fixed"
-  - Include completion report
+- [x] 28.3 Commit Phase 5 verification results
+  - Commit message: "docs: Phase 5 verification - All low-priority issues NOT fixed"
+  - Include completion report showing failure
+  - _Requirements: 10.4_
+
+---
+
+- [ ] 28.4 Re-verify Phase 5 completion (AFTER FIXES)
+  - **ONLY MARK COMPLETE AFTER** tasks 23-27 are properly implemented
+  - Run all low-priority transcripts
+  - **REQUIRED:** 100% pass rate (15/15 transcripts)
+  - **REQUIRED:** 85%+ average similarity
+  - _Requirements: 9.1, 10.4_
+
+- [ ] 28.5 Run final low-priority verification
+  - Execute: `npx tsx scripts/verify-all-transcripts.ts --priority low`
+  - **MUST ACHIEVE:** 15/15 transcripts pass
+  - **MUST ACHIEVE:** 85%+ average similarity
+  - **DO NOT MARK COMPLETE** until targets are met
+  - _Requirements: 10.4_
+
+- [ ] 28.6 Generate successful Phase 5 completion report
+  - Document all successful fixes
+  - Document all transcript results (ALL PASSING)
+  - Verify 100% low-priority pass rate achieved
+  - _Requirements: 10.4_
+
+- [ ] 28.7 Commit successful Phase 5 completion
+  - Commit message: "docs: Complete Phase 5 - All low-priority issues fixed (verified)"
+  - Include successful completion report
+  - Include verification results showing 100% pass rate
   - _Requirements: 10.4_
 
 ---
