@@ -121,6 +121,16 @@ export const OBJECTS: Record<string, ObjectData> = {
     flags: ['NDESCBIT']
   },
 
+  'UP': {
+    id: 'UP',
+    name: 'up',
+    synonyms: ['UP'],
+    adjectives: [],
+    description: 'up',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
   'TREES': {
     id: 'TREES',
     name: 'trees',

@@ -17,6 +17,7 @@ export interface ParsedCommand {
   preposition?: string;              // The preposition connecting objects (e.g., "IN", "ON")
   directObjectName?: string;         // The name used to refer to direct object (for ambiguity)
   indirectObjectName?: string;       // The name used to refer to indirect object
+  rawInput?: string;                 // The original raw input for special commands like SAY
 }
 
 /**

@@ -345,6 +345,45 @@ class TranscriptComparator {
       };
     });
 
+    // Special handling for SAY and ECHO commands that can take any text
+    const firstToken = processedTokens[0];
+    if (firstToken && (firstToken.word.toUpperCase() === 'SAY' || firstToken.word.toUpperCase() === 'ECHO')) {
+      // Create a special command for SAY/ECHO with raw input
+      const specialCommand = {
+        verb: firstToken.word.toUpperCase(),
+        rawInput: processedCommand
+      };
+      
+      // Skip daemons for all but the last command in a multi-command sequence
+      const skipDaemons = !isLastCommand;
+      const result = this.executor.execute(specialCommand, state, skipDaemons);
+      
+      // Save this command as last command if it was successful
+      if (result.success && normalizedCommand !== 'again' && normalizedCommand !== 'g') {
+        this.lastCommand = command;
+      }
+      
+      return result.message || '';
+    }
+
+    // Special handling for "wake up" command
+    if (processedCommand.toLowerCase().trim() === 'wake up') {
+      const specialCommand = {
+        verb: 'WAKE'
+      };
+      
+      // Skip daemons for all but the last command in a multi-command sequence
+      const skipDaemons = !isLastCommand;
+      const result = this.executor.execute(specialCommand, state, skipDaemons);
+      
+      // Save this command as last command if it was successful
+      if (result.success && normalizedCommand !== 'again' && normalizedCommand !== 'g') {
+        this.lastCommand = command;
+      }
+      
+      return result.message || '';
+    }
+
     // Parse - use getAvailableObjects to include open container contents
     const availableObjects = this.getAvailableObjects(state);
     const parsedCommand = this.parser.parse(processedTokens, availableObjects);

@@ -193,8 +193,9 @@ export class Vocabulary {
       'WEAR',
       'WIND',
       'YELL', 'SCREAM', 'SHOUT',
+      'SAY', 'ECHO', 'DANCE', 'SLEEP', 'WAKE',
       'ULYSSES',  // Magic word that can be spoken by itself
-      'XYZZY', 'PLUGH',  // Magic words from Adventure
+      'XYZZY', 'PLUGH', 'PLOVER',  // Magic words from Adventure
       'JUMP', 'LEAP', 'DIVE',
       'CURSE', 'SHIT', 'FUCK', 'DAMN',
       'SING',
@@ -278,6 +279,8 @@ export class Vocabulary {
   private loadNouns(): void {
     // Common nouns from Zork I objects
     const nouns = [
+      'MYSELF', 'ME',  // Self-reference for easter eggs
+      'UP',  // For "wake up" command
       'SKULL', 'HEAD',
       'CHALICE', 'CUP',
       'TRIDENT', 'FORK',

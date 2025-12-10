@@ -130,7 +130,7 @@ export function handleSelfReferenceVerb(
 
   // FIND - finding yourself
   if (verb === 'FIND' && isSelfReference(directObject)) {
-    return "You're around here somewhere...";
+    return "You are right here!";
   }
 
   // RUB - rubbing yourself

@@ -9,7 +9,7 @@ This plan systematically achieves **true 100% behavioral parity** by:
 4. Documenting 100% confidence with full evidence
 
 **Current State:** 16.7% pass rate (7/42 transcripts)  
-**Target State:** 95%+ pass rate (40/42 transcripts), 100% confidence
+**Target State:** 100%+ pass rate (42/42 transcripts), 100% confidence
 
 **Timeline:** 7 weeks  
 **Transcripts:** 50+ accurate transcripts  
@@ -187,9 +187,9 @@ Create 50+ accurate transcripts from the original game, fix all mislabeled trans
   - Replace original transcript
   - _Requirements: 4.1, 4.2_
 
-- [x] 4.4 Verify re-recorded transcripts achieve 95%+
+- [x] 4.4 Verify re-recorded transcripts achieve 100%
   - Run comparison on all re-recorded transcripts
-  - Verify 95%+ similarity
+  - Verify 100% similarity
   - Document RNG seed used (12345)
   - _Requirements: 4.3, 4.4, 4.5_
 
@@ -216,9 +216,9 @@ Create 50+ accurate transcripts from the original game, fix all mislabeled trans
   - Save as `.kiro/transcripts/high/37-thief-defeat-proper.json`
   - _Requirements: 4.1, 4.2_
 
-- [x] 4.8 Verify thief transcripts achieve 95%+
+- [x] 4.8 Verify thief transcripts achieve 100%
   - Run comparison on thief transcripts
-  - Verify 95%+ similarity
+  - Verify 100% similarity
   - Document RNG seed used (12345)
   - _Requirements: 4.3, 4.4, 4.5_
 
@@ -289,7 +289,7 @@ Fix all bugs blocking puzzle completion: dam navigation, troll death, cyclops pu
   - Run dam puzzle transcript (06-dam-puzzle.json)
   - Verify navigation works
   - Verify puzzle can be completed
-  - Target: 95%+ similarity
+  - Target: 100% similarity
   - _Requirements: 3.1_
 
 - [x] 6.4 Commit dam navigation fix
@@ -352,7 +352,7 @@ Fix all bugs blocking puzzle completion: dam navigation, troll death, cyclops pu
 - [x] 8.3 Verify cyclops puzzle transcript
   - Run cyclops puzzle transcript (07-cyclops-puzzle.json)
   - Verify puzzle works correctly
-  - Target: 95%+ similarity (from 2.1%)
+  - Target: 100% similarity (from 2.1%)
   - _Requirements: 3.4_
 
 - [x] 8.4 Commit cyclops puzzle fix
@@ -383,7 +383,7 @@ Fix all bugs blocking puzzle completion: dam navigation, troll death, cyclops pu
 - [x] 9.3 Verify bell puzzle transcript
   - Run bell puzzle transcript (09-bell-book-candle.json)
   - Verify puzzle works correctly
-  - Target: 95%+ similarity (from 6.6%)
+  - Target: 100% similarity (from 6.6%)
   - _Requirements: 3.5_
 
 - [x] 9.4 Commit bell puzzle fix
@@ -414,7 +414,7 @@ Fix all bugs blocking puzzle completion: dam navigation, troll death, cyclops pu
 - [x] 10.3 Verify treasure collection transcript
   - Run treasure collection transcript (10-treasure-collection.json)
   - Verify treasure handling works correctly
-  - Target: 95%+ similarity (from 5.1%)
+  - Target: 100% similarity (from 5.1%)
   - _Requirements: 3.6_
 
 - [x] 10.4 Commit treasure collection fix
@@ -456,7 +456,7 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
 
 **Success Criteria:**
 - 100% of high-priority transcripts pass (10/10)
-- Average similarity 95%+
+- Average similarity 100%
 
 ---
 
@@ -479,7 +479,7 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
 
 - [x] 12.3 Verify mirror room transcript
   - Run mirror room transcript
-  - Target: 95%+ similarity (from 88.0%)
+  - Target: 100% similarity (from 88.0%)
   - _Requirements: 7.2_
 
 - [x] 12.4 Commit mirror room fix
@@ -508,7 +508,7 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
 
 - [x] 13.3 Verify coffin puzzle transcript
   - Run coffin puzzle transcript
-  - Target: 95%+ similarity (from 88.0%)
+  - Target: 100% similarity (from 88.0%)
   - _Requirements: 7.3_
 
 - [x] 13.4 Commit coffin puzzle fix
@@ -537,7 +537,7 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
 
 - [x] 14.3 Verify egg/nest puzzle transcript
   - Run egg/nest puzzle transcript
-  - Target: 95%+ similarity (from 81.3%)
+  - Target: 100% similarity (from 81.3%)
   - _Requirements: 7.4_
 
 - [x] 14.4 Commit egg/nest puzzle fix
@@ -566,7 +566,7 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
 
 - [x] 15.3 Verify cyclops feeding transcript
   - Run cyclops feeding transcript
-  - Target: 95%+ similarity (from 92.1%)
+  - Target: 100% similarity (from 92.1%)
   - _Requirements: 7.5_
 
 - [x] 15.4 Commit cyclops feeding fix
@@ -585,7 +585,7 @@ Fix all high-priority behavioral differences: mirror room, coffin, egg/nest, cyc
   - Execute: `npx tsx scripts/verify-all-transcripts.ts --category high`
   - Verify all 10 high-priority transcripts pass
   - Verify 100% pass rate
-  - Verify average similarity 95%+
+  - Verify average similarity 100%
   - _Requirements: 10.2_
 
 - [x] 16.2 Generate Phase 3 completion report
@@ -608,7 +608,7 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 **Success Criteria:**
 - 100% of medium-priority transcripts pass (5/5)
-- Average similarity 90%+
+- Average similarity 100%
 
 ---
 
@@ -630,7 +630,7 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 - [x] 17.3 Verify error messages transcript
   - Run error messages transcript
-  - Target: 90%+ similarity (from 55.6%)
+  - Target: 100% similarity (from 55.6%)
   - _Requirements: 8.2_
 
 - [x] 17.4 Commit error message fixes
@@ -659,7 +659,7 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 - [x] 18.3 Verify inventory limits transcript
   - Run inventory limits transcript
-  - Target: 90%+ similarity (from 17.8%)
+  - Target: 100% similarity (from 17.8%)
   - _Requirements: 8.3_
 
 - [x] 18.4 Commit inventory limits fix
@@ -688,7 +688,7 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 - [x] 19.3 Verify unusual commands transcript
   - Run unusual commands transcript
-  - Target: 90%+ similarity (from 58.9%)
+  - Target: 100% similarity (from 58.9%)
   - _Requirements: 8.4_
 
 - [x] 19.4 Commit unusual commands fix
@@ -717,7 +717,7 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 - [x] 20.3 Verify death/resurrection transcript
   - Run death/resurrection transcript
-  - Target: 90%+ similarity (from 28.7%)
+  - Target: 100% similarity (from 28.7%)
   - _Requirements: 8.5_
 
 - [x] 20.4 Commit death/resurrection fix
@@ -746,7 +746,7 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
 
 - [x] 21.3 Verify save/restore transcript
   - Run save/restore transcript
-  - Target: 90%+ similarity (from 59.7%)
+  - Target: 100% similarity (from 59.7%)
   - _Requirements: 8.6_
 
 - [x] 21.4 Commit save/restore fix
@@ -765,7 +765,7 @@ Fix all medium-priority edge cases: error messages, inventory limits, unusual co
   - Execute: `npx tsx scripts/verify-all-transcripts.ts --category medium`
   - Verify all 5 medium-priority transcripts pass
   - Verify 100% pass rate
-  - Verify average similarity 90%+
+  - Verify average similarity 100%
   - _Requirements: 10.3_
 
 - [x] 22.2 Generate Phase 4 completion report
@@ -861,27 +861,27 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [ ] 25. Implement missing easter eggs
+- [-] 25. Implement missing easter eggs
   - Implement all missing easter eggs
   - _Requirements: 9.4_
 
-- [ ] 25.1 Identify missing easter eggs
+- [x] 25.1 Identify missing easter eggs
   - Review easter eggs transcript (63)
   - Compare with original game
   - List all missing easter eggs
   - _Requirements: 9.4_
 
-- [ ] 25.2 Implement easter eggs
+- [x] 25.2 Implement easter eggs
   - Implement all missing easter egg responses
   - Test each easter egg
   - _Requirements: 9.4_
 
-- [ ] 25.3 Verify easter eggs transcript
+- [x] 25.3 Verify easter eggs transcript
   - Run easter eggs transcript
   - Target: 85%+ similarity
   - _Requirements: 9.4_
 
-- [ ] 25.4 Commit easter egg implementations
+- [-] 25.4 Commit easter egg implementations
   - Commit message: "feat: Implement missing easter eggs"
   - Include easter egg implementations
   - _Requirements: 9.4_
@@ -919,7 +919,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 - [ ] 27. Verify Phase 5 completion
   - Run all low-priority transcripts
-  - Verify 95%+ pass rate
+  - Verify 100% pass rate
   - _Requirements: 9.1, 10.4_
 
 - [ ] 27.1 Run all low-priority transcripts

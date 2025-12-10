@@ -2067,7 +2067,7 @@ export class YellAction implements ActionHandler {
   execute(state: GameState): ActionResult {
     return {
       success: true,
-      message: "Aaaarrrrgggghhhh!",
+      message: "Aaaarrrrrrgggggghhhhhh!",
       stateChanges: []
     };
   }
@@ -2155,7 +2155,7 @@ export class ClimbAction implements ActionHandler {
     if (!obj.hasFlag(ObjectFlag.CLIMBBIT)) {
       return {
         success: false,
-        message: "You can't climb that!",
+        message: "You can't climb that.",
         stateChanges: []
       };
     }
@@ -2187,7 +2187,7 @@ export class ClimbAction implements ActionHandler {
 
     return {
       success: false,
-      message: "You can't do that!",
+      message: "You can't climb that.",
       stateChanges: []
     };
   }
@@ -2842,18 +2842,42 @@ export class DeflateAction implements ActionHandler {
  * Player says a word or phrase
  */
 export class SayAction implements ActionHandler {
-  execute(state: GameState, word: string): ActionResult {
-    if (!word) {
+  execute(state: GameState, word?: string, indirectObjectId?: string, preposition?: string, rawInput?: string): ActionResult {
+    if (!word && !rawInput) {
       return {
         success: false,
-        message: "What do you want to say?",
+        message: "Say what?",
         stateChanges: []
       };
     }
 
-    // Special handling for magic word
-    const { MagicWordPuzzle } = require('./puzzles.js');
-    return MagicWordPuzzle.sayMagicWord(state, word);
+    // If we have raw input, handle easter egg case (echo what was said)
+    if (rawInput) {
+      const sayIndex = rawInput.toLowerCase().indexOf('say');
+      if (sayIndex !== -1) {
+        const textToSay = rawInput.substring(sayIndex + 3).trim();
+        if (textToSay) {
+          return {
+            success: true,
+            message: `Okay.\n"${textToSay.charAt(0).toUpperCase() + textToSay.slice(1)}"`,
+            stateChanges: []
+          };
+        }
+      }
+    }
+
+    // If we have a word but no raw input, handle magic word case
+    if (word) {
+      // Special handling for magic word
+      const { MagicWordPuzzle } = require('./puzzles.js');
+      return MagicWordPuzzle.sayMagicWord(state, word);
+    }
+
+    return {
+      success: false,
+      message: "Say what?",
+      stateChanges: []
+    };
   }
 }
 
@@ -3219,7 +3243,7 @@ export class SingAction implements ActionHandler {
 }
 
 /**
- * XYZZY/PLUGH action handler (Adventure magic words)
+ * XYZZY/PLUGH/PLOVER action handler (Adventure magic words)
  * These are magic words from the game Adventure that don't work in Zork
  */
 export class AdventAction implements ActionHandler {
@@ -3227,6 +3251,144 @@ export class AdventAction implements ActionHandler {
     return {
       success: true,
       message: getHumorousResponse('ADVENT'),
+      stateChanges: []
+    };
+  }
+}
+
+
+
+/**
+ * ECHO action handler
+ * Player tries to echo - responds about room acoustics
+ */
+export class EchoAction implements ActionHandler {
+  execute(state: GameState, objectId?: string, indirectObjectId?: string, preposition?: string, rawInput?: string): ActionResult {
+    return {
+      success: true,
+      message: "The acoustics of the room are excellent.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * DANCE action handler
+ * Player dances a little jig
+ */
+export class DanceAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "You dance a little jig.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * SWIM action handler
+ * Player tries to swim when not near water
+ */
+export class SwimAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "You can't swim here.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * DIG action handler
+ * Player tries to dig without tools
+ */
+export class DigAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "Digging with your hands is slow and tedious.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * SLEEP action handler
+ * Player tries to sleep
+ */
+export class SleepAction implements ActionHandler {
+  execute(state: GameState): ActionResult {
+    return {
+      success: true,
+      message: "You can't sleep here.",
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * WAKE action handler
+ * Player tries to wake up when not asleep
+ */
+export class WakeAction implements ActionHandler {
+  execute(state: GameState, objectId?: string): ActionResult {
+    // Handle "wake up" - ignore the "up" part
+    if (objectId === 'UP' || !objectId) {
+      return {
+        success: true,
+        message: "You aren't asleep.",
+        stateChanges: []
+      };
+    }
+
+    // If trying to wake something else, handle that
+    const obj = state.getObject(objectId);
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: false,
+      message: `You can't wake the ${obj.name}.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
+ * FIND action handler
+ * Player tries to find something - special case for "find myself"
+ */
+export class FindAction implements ActionHandler {
+  execute(state: GameState, objectId?: string): ActionResult {
+    // Special case for "find myself"
+    if (objectId === 'SELF' || objectId === 'MYSELF' || objectId === 'ME') {
+      return {
+        success: true,
+        message: "You are right here!",
+        stateChanges: []
+      };
+    }
+
+    // For other objects, use the general search response
+    const obj = state.getObject(objectId || '');
+    if (obj && obj.location === state.currentRoom) {
+      return {
+        success: true,
+        message: `The ${obj.name || objectId?.toLowerCase()} is right here.`,
+        stateChanges: []
+      };
+    }
+
+    return {
+      success: true,
+      message: "You're around here somewhere...",
       stateChanges: []
     };
   }

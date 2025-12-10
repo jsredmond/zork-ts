@@ -268,6 +268,49 @@ async function gameLoop(): Promise<void> {
       };
     });
 
+    // Special handling for SAY and ECHO commands that can take any text
+    const firstToken = processedTokens[0];
+    if (firstToken && (firstToken.word.toUpperCase() === 'SAY' || firstToken.word.toUpperCase() === 'ECHO')) {
+      // Create a special command for SAY/ECHO with raw input
+      const specialCommand = {
+        verb: firstToken.word.toUpperCase(),
+        rawInput: processedInput
+      };
+      
+      // Skip daemons for all but the last command in a multi-command sequence
+      const result = executor.execute(specialCommand, state, !isLastCommand);
+      
+      // Save this command as last command if it was successful
+      if (result.success && normalizedInput !== 'again' && normalizedInput !== 'g') {
+        lastCommand = input;
+      }
+      
+      if (result.message) {
+        terminal.writeLine(display.formatMessage(result.message));
+      }
+      return;
+    }
+
+    // Special handling for "wake up" command
+    if (processedInput.toLowerCase().trim() === 'wake up') {
+      const specialCommand = {
+        verb: 'WAKE'
+      };
+      
+      // Skip daemons for all but the last command in a multi-command sequence
+      const result = executor.execute(specialCommand, state, !isLastCommand);
+      
+      // Save this command as last command if it was successful
+      if (result.success && normalizedInput !== 'again' && normalizedInput !== 'g') {
+        lastCommand = input;
+      }
+      
+      if (result.message) {
+        terminal.writeLine(display.formatMessage(result.message));
+      }
+      return;
+    }
+
     // Check for unknown words before parsing
     const unknownToken = processedTokens.find(token => token.type === 'UNKNOWN');
     if (unknownToken) {

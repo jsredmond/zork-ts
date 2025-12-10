@@ -60,7 +60,16 @@ import {
   SaveAction,
   RestoreAction,
   TouchAction,
-  RubAction
+  RubAction,
+  SayAction,
+  EchoAction,
+  DanceAction,
+  SwimAction,
+  DigAction,
+  SleepAction,
+  WakeAction,
+  YellAction,
+  FindAction
 } from '../game/actions.js';
 import { handleDeadStateVerb, isPlayerDead } from '../game/deadState.js';
 import { handleSelfReferenceVerb, isSelfReference } from '../game/selfReference.js';
@@ -189,6 +198,7 @@ export class CommandExecutor {
     this.actionHandlers.set('ULYSSES', new UlyssesAction());
     this.actionHandlers.set('XYZZY', new AdventAction());
     this.actionHandlers.set('PLUGH', new AdventAction());
+    this.actionHandlers.set('PLOVER', new AdventAction());
     
     // Silly/humorous actions
     this.actionHandlers.set('JUMP', new JumpAction());
@@ -199,6 +209,16 @@ export class CommandExecutor {
     this.actionHandlers.set('LISTEN', new ListenAction());
     this.actionHandlers.set('SMELL', new SmellAction());
     this.actionHandlers.set('SNIFF', new SmellAction());
+    this.actionHandlers.set('SAY', new SayAction());
+    this.actionHandlers.set('ECHO', new EchoAction());
+    this.actionHandlers.set('DANCE', new DanceAction());
+    this.actionHandlers.set('SWIM', new SwimAction());
+    this.actionHandlers.set('DIG', new DigAction());
+    this.actionHandlers.set('SLEEP', new SleepAction());
+    this.actionHandlers.set('WAKE', new WakeAction());
+    this.actionHandlers.set('YELL', new YellAction());
+    this.actionHandlers.set('SCREAM', new YellAction());
+    this.actionHandlers.set('FIND', new FindAction());
     
     // Destructive actions
     this.actionHandlers.set('BREAK', new BreakAction());
@@ -258,6 +278,15 @@ export class CommandExecutor {
       }
 
       const verb = parsedCommand.verb.toUpperCase();
+
+      // Special handling for SAY and ECHO commands that can take any text
+      if (verb === 'SAY' || verb === 'ECHO') {
+        const handler = this.actionHandlers.get(verb);
+        if (handler) {
+          result = handler.execute(state, undefined, undefined, undefined, parsedCommand.rawInput);
+          return skipDaemons ? result : this.runDaemonsAndReturn(result, state);
+        }
+      }
 
       // Commands that don't consume a turn (don't run daemons/increment moves)
       // Note: VERBOSE, BRIEF, SUPERBRIEF do increment moves but don't trigger daemons
@@ -431,8 +460,13 @@ export class CommandExecutor {
       return handler.execute(state);
     }
 
+    // SAY command needs raw input
+    if (verb === 'SAY') {
+      return handler.execute(state, command.directObject?.id, command.indirectObject?.id, command.preposition, parsedCommand.rawInput);
+    }
+
     // Intransitive verbs (no object required)
-    if (['XYZZY', 'PLUGH', 'JUMP', 'LEAP', 'PRAY', 'CURSE', 'SING', 'LISTEN', 'SMELL', 'SNIFF', 'WAIT', 'Z', 'CLIMB'].includes(verb)) {
+    if (['XYZZY', 'PLUGH', 'PLOVER', 'JUMP', 'LEAP', 'PRAY', 'CURSE', 'SING', 'LISTEN', 'SMELL', 'SNIFF', 'WAIT', 'Z', 'CLIMB', 'ECHO', 'DANCE', 'SWIM', 'DIG', 'SLEEP', 'WAKE', 'YELL', 'SCREAM'].includes(verb)) {
       return handler.execute(state, command.directObject?.id);
     }
 
