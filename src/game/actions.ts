@@ -655,8 +655,9 @@ export class ExamineAction implements ActionHandler {
     const isInInventory = state.isInInventory(objectId);
     const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
     const isInVisibleContainer = obj.location && state.isInInventory(obj.location);
+    const isGlobalObject = obj.location === null; // Global objects are always accessible
     
-    if (!isInInventory && !isInCurrentRoom && !isInVisibleContainer) {
+    if (!isInInventory && !isInCurrentRoom && !isInVisibleContainer && !isGlobalObject) {
       return {
         success: false,
         message: "You can't see that here.",

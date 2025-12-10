@@ -294,6 +294,7 @@ export class Vocabulary {
       'WALL', 'WALLS',
       'FLOOR', 'GROUND',
       'CEILING',
+      'SKY',
       'ROOM', 'ROOMS',
       'HOUSE', 'BUILDING',
       'TREE', 'TREES',

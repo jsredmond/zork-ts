@@ -71,6 +71,106 @@ export const OBJECTS: Record<string, ObjectData> = {
     action: 'GRANITE-WALL-F'
   },
 
+  'SKY': {
+    id: 'SKY',
+    name: 'sky',
+    synonyms: ['SKY'],
+    adjectives: [],
+    description: 'sky',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'GROUND': {
+    id: 'GROUND',
+    name: 'ground',
+    synonyms: ['GROUND', 'FLOOR'],
+    adjectives: [],
+    description: 'ground',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'CEILING': {
+    id: 'CEILING',
+    name: 'ceiling',
+    synonyms: ['CEILING'],
+    adjectives: [],
+    description: 'ceiling',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'FLOOR': {
+    id: 'FLOOR',
+    name: 'floor',
+    synonyms: ['FLOOR'],
+    adjectives: [],
+    description: 'floor',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'SELF': {
+    id: 'SELF',
+    name: 'self',
+    synonyms: ['SELF', 'ME', 'MYSELF'],
+    adjectives: [],
+    description: 'self',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'TREES': {
+    id: 'TREES',
+    name: 'trees',
+    synonyms: ['TREES', 'TREE'],
+    adjectives: [],
+    description: 'trees',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'LEAVES': {
+    id: 'LEAVES',
+    name: 'leaves',
+    synonyms: ['LEAVES', 'LEAF'],
+    adjectives: [],
+    description: 'leaves',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'WALLS': {
+    id: 'WALLS',
+    name: 'walls',
+    synonyms: ['WALLS'],
+    adjectives: [],
+    description: 'walls',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'WINDOW': {
+    id: 'WINDOW',
+    name: 'window',
+    synonyms: ['WINDOW', 'WINDOWS'],
+    adjectives: [],
+    description: 'window',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'DOOR': {
+    id: 'DOOR',
+    name: 'door',
+    synonyms: ['DOOR', 'DOORS'],
+    adjectives: [],
+    description: 'door',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
   'SONGBIRD': {
     id: 'SONGBIRD',
     name: 'songbird',

@@ -826,35 +826,35 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
   - Run multiple daemon transcripts (76-79)
   - _Requirements: 9.2_
 
-- [-] 23.6 Commit daemon timing fixes
+- [x] 23.6 Commit daemon timing fixes
   - Commit message: "fix: Daemon timing matches original"
   - Include all daemon updates
   - _Requirements: 9.2_
 
 ---
 
-- [ ] 24. Fix flavor text
+- [-] 24. Fix flavor text
   - Update flavor text to match original
   - _Requirements: 9.3_
 
-- [ ] 24.1 Audit flavor text
+- [x] 24.1 Audit flavor text
   - Review all scenery descriptions
   - Compare with original game
   - Run flavor text transcript (60)
   - Identify differences
   - _Requirements: 9.3_
 
-- [ ] 24.2 Update flavor text
+- [x] 24.2 Update flavor text
   - Update scenery descriptions to match original
   - Test all flavor text
   - _Requirements: 9.3_
 
-- [ ] 24.3 Verify flavor text transcript
+- [x] 24.3 Verify flavor text transcript
   - Run flavor text transcript
   - Target: 85%+ similarity
   - _Requirements: 9.3_
 
-- [ ] 24.4 Commit flavor text fixes
+- [-] 24.4 Commit flavor text fixes
   - Commit message: "fix: Flavor text matches original"
   - Include flavor text updates
   - _Requirements: 9.3_

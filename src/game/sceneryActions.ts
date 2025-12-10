@@ -5,6 +5,7 @@
 
 import { GameState } from './state.js';
 import { ActionResult } from './actions.js';
+import { ObjectFlag } from './data/flags.js';
 
 /**
  * Handler function for a specific scenery object and verb combination
@@ -200,7 +201,7 @@ const forestHandler: SceneryHandler = {
   objectId: 'FOREST',
   actions: new Map([
     ['TAKE', () => "You can't be serious."],
-    ['EXAMINE', () => 'The forest is a deep, dark, and foreboding place.'],
+    ['EXAMINE', () => 'The forest is a deep, dark, and foreboding place. You can see trees in all directions.'],
     ['CLIMB', () => "You can't climb that!"],
     ['ENTER', () => 'You would need to specify a direction to go.'],
     ['LISTEN', () => 'The pines and the hemlocks seem to be murmuring.'],
@@ -259,7 +260,20 @@ const teethHandler: SceneryHandler = {
 const wallHandler: SceneryHandler = {
   objectId: 'WALL',
   actions: new Map([
-    ['EXAMINE', () => 'It looks like a wall to me.'],
+    ['EXAMINE', () => 'The walls are made of stone and are quite solid.'],
+    ['TAKE', () => "You can't be serious."],
+    ['CLIMB', () => "You can't climb that!"]
+  ])
+};
+
+/**
+ * WALLS scenery handler
+ * Handles interactions with walls (plural)
+ */
+const wallsHandler: SceneryHandler = {
+  objectId: 'WALLS',
+  actions: new Map([
+    ['EXAMINE', () => 'The walls are made of stone and are quite solid.'],
     ['TAKE', () => "You can't be serious."],
     ['CLIMB', () => "You can't climb that!"]
   ])
@@ -272,7 +286,20 @@ const wallHandler: SceneryHandler = {
 const treeHandler: SceneryHandler = {
   objectId: 'TREE',
   actions: new Map([
-    ['EXAMINE', () => 'They look like trees to me.'],
+    ['EXAMINE', () => 'The trees are tall and imposing.'],
+    ['TAKE', () => "You can't be serious."],
+    ['CLIMB', () => 'You cannot climb the trees here.']
+  ])
+};
+
+/**
+ * TREES scenery handler
+ * Handles interactions with trees (plural)
+ */
+const treesHandler: SceneryHandler = {
+  objectId: 'TREES',
+  actions: new Map([
+    ['EXAMINE', () => 'The trees are tall and imposing.'],
     ['TAKE', () => "You can't be serious."],
     ['CLIMB', () => 'You cannot climb the trees here.']
   ])
@@ -301,7 +328,7 @@ const mountainRangeHandler: SceneryHandler = {
 const leavesHandler: SceneryHandler = {
   objectId: 'LEAVES',
   actions: new Map([
-    ['EXAMINE', () => 'There is a pile of leaves here.'],
+    ['EXAMINE', () => 'The leaves are a beautiful color.'],
     ['TAKE', () => 'You can gather up a pile of leaves, but they slip through your fingers.'],
     ['MOVE', (state) => {
       // Check if grating is already revealed
@@ -336,11 +363,23 @@ const boardedWindowHandler: SceneryHandler = {
   objectId: 'BOARDED-WINDOW',
   actions: new Map([
     ['OPEN', () => "The window is slightly ajar, but not enough to allow entry."],
-    ['EXAMINE', () => "The windows are boarded and can't be opened."],
+    ['EXAMINE', () => "The window is slightly ajar, but not enough to allow entry."],
     ['BREAK', () => "Vandalism is not usually tolerated."],
     ['SMASH', () => "Vandalism is not usually tolerated."],
     ['DESTROY', () => "Vandalism is not usually tolerated."],
     ['MUNG', () => "You can't break the windows open."]
+  ])
+};
+
+/**
+ * WINDOW scenery handler
+ * Handles interactions with generic windows
+ */
+const windowHandler: SceneryHandler = {
+  objectId: 'WINDOW',
+  actions: new Map([
+    ['EXAMINE', () => "The window is slightly ajar, but not enough to allow entry."],
+    ['OPEN', () => "The window is slightly ajar, but not enough to allow entry."]
   ])
 };
 
@@ -471,21 +510,22 @@ const kitchenWindowHandler: SceneryHandler = {
       }
       
       // Check if already open
-      if (window.hasFlag('OPENBIT')) {
+      if (window.hasFlag(ObjectFlag.OPENBIT)) {
         return "It's already open.";
       }
       
-      // Open the window
-      window.addFlag('OPENBIT');
-      window.addFlag('TOUCHBIT');
+      // Open the window (cast to GameObjectImpl to access addFlag)
+      const windowImpl = window as any;
+      windowImpl.addFlag(ObjectFlag.OPENBIT);
+      windowImpl.addFlag(ObjectFlag.TOUCHBIT);
       
       // Also set a flag for the condition check
-      state.setFlag('KITCHEN_WINDOW_OPEN', true);
+      state.setFlag('KITCHEN_WINDOW_OPEN' as any, true);
       
       return 'With great effort, you open the window far enough to allow entry.';
     }],
     ['EXAMINE', (state) => {
-      const windowOpen = state.getFlag('KITCHEN-WINDOW-FLAG');
+      const windowOpen = state.getFlag('KITCHEN_WINDOW_OPEN' as any);
       if (!windowOpen) {
         return 'The window is slightly ajar, but not enough to allow entry.';
       }
@@ -531,7 +571,8 @@ const doorHandler: SceneryHandler = {
   objectId: 'DOOR',
   actions: new Map([
     ['THROUGH', () => "The door won't budge."],
-    ['OPEN', () => "The door won't budge."]
+    ['OPEN', () => "The door won't budge."],
+    ['EXAMINE', () => "The door is boarded and you can't remove the boards."]
   ])
 };
 
@@ -585,6 +626,80 @@ const chasmHandler: SceneryHandler = {
   ])
 };
 
+/**
+ * SKY scenery handler
+ * Handles interactions with the sky
+ */
+const skyHandler: SceneryHandler = {
+  objectId: 'SKY',
+  actions: new Map([
+    ['EXAMINE', () => 'The sky is clear and blue.'],
+    ['TAKE', () => "You can't be serious."]
+  ])
+};
+
+/**
+ * GROUND scenery handler
+ * Handles interactions with the ground
+ */
+const groundHandler: SceneryHandler = {
+  objectId: 'GROUND',
+  actions: new Map([
+    ['EXAMINE', () => "There's nothing special about the ground here."],
+    ['TAKE', () => "You can't be serious."],
+    ['DIG', () => 'Digging here reveals nothing.']
+  ])
+};
+
+/**
+ * CEILING scenery handler
+ * Handles interactions with the ceiling
+ */
+const ceilingHandler: SceneryHandler = {
+  objectId: 'CEILING',
+  actions: new Map([
+    ['EXAMINE', () => 'The ceiling is high above you.'],
+    ['TAKE', () => "You can't be serious."],
+    ['TOUCH', () => "You can't reach the ceiling."]
+  ])
+};
+
+/**
+ * FLOOR scenery handler
+ * Handles interactions with the floor
+ */
+const floorHandler: SceneryHandler = {
+  objectId: 'FLOOR',
+  actions: new Map([
+    ['EXAMINE', () => 'The floor is made of stone.'],
+    ['TAKE', () => "You can't be serious."]
+  ])
+};
+
+/**
+ * SELF scenery handler
+ * Handles interactions with self/me
+ */
+const selfHandler: SceneryHandler = {
+  objectId: 'SELF',
+  actions: new Map([
+    ['EXAMINE', () => 'You look much the same as always.'],
+    ['TAKE', () => "You can't be serious."]
+  ])
+};
+
+/**
+ * ME scenery handler
+ * Handles interactions with me (synonym for self)
+ */
+const meHandler: SceneryHandler = {
+  objectId: 'ME',
+  actions: new Map([
+    ['EXAMINE', () => 'You look much the same as always.'],
+    ['TAKE', () => "You can't be serious."]
+  ])
+};
+
 // Register all scenery handlers
 registerSceneryHandler(boardHandler);
 registerSceneryHandler(graniteWallHandler);
@@ -593,11 +708,14 @@ registerSceneryHandler(forestHandler);
 registerSceneryHandler(songbirdHandler);
 registerSceneryHandler(teethHandler);
 registerSceneryHandler(wallHandler);
+registerSceneryHandler(wallsHandler);
 registerSceneryHandler(treeHandler);
+registerSceneryHandler(treesHandler);
 registerSceneryHandler(mountainRangeHandler);
 registerSceneryHandler(leavesHandler);
 registerSceneryHandler(sandHandler);
 registerSceneryHandler(boardedWindowHandler);
+registerSceneryHandler(windowHandler);
 registerSceneryHandler(nailsHandler);
 registerSceneryHandler(chimneyHandler);
 registerSceneryHandler(stairsHandler);
@@ -612,3 +730,9 @@ registerSceneryHandler(doorHandler);
 registerSceneryHandler(paintHandler);
 registerSceneryHandler(gasHandler);
 registerSceneryHandler(chasmHandler);
+registerSceneryHandler(skyHandler);
+registerSceneryHandler(groundHandler);
+registerSceneryHandler(ceilingHandler);
+registerSceneryHandler(floorHandler);
+registerSceneryHandler(selfHandler);
+registerSceneryHandler(meHandler);

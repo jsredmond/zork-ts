@@ -585,7 +585,7 @@ const frontDoorBehavior: SpecialBehavior = {
       return 'The door is boarded and you can\'t remove the boards.';
     }
     if (verb === 'EXAMINE') {
-      return 'The door is boarded shut.';
+      return 'The door is boarded and you can\'t remove the boards.';
     }
     return null;
   }
