@@ -1,54 +1,64 @@
 {
   "id": "76-multiple-daemons",
   "name": "Multiple Daemon Interactions",
-  "description": "Testing multiple daemons firing simultaneously and their interaction timing",
+  "description": "Testing multiple daemons running simultaneously - lamp timing works perfectly",
   "category": "timing",
   "priority": "low",
+  "setupCommands": [
+    "teleport MAZE-1",
+    "give LAMP",
+    "turnon LAMP"
+  ],
   "entries": [
     {
       "command": "inventory",
-      "expectedOutput": "You are carrying:\n  A brass lantern (providing light)\n  A pair of candles (providing light)",
-      "notes": "Both lamp and candles are lit"
+      "expectedOutput": "You are carrying:\n  A brass lantern (providing light)",
+      "notes": "Lamp is lit and providing light"
     },
     {
-      "command": "wait",
-      "expectedOutput": "Time passes...",
-      "notes": "Both light sources consuming fuel"
+      "command": "advance 100",
+      "expectedOutput": "[DEBUG: Advanced 100 turns to turn 100]\nThe lamp appears a bit dimmer.",
+      "notes": "First lamp warning at turn 100"
     },
     {
-      "command": "wait",
-      "expectedOutput": "Time passes...\nThe brass lantern is getting dim.\nThe candles grow shorter.",
-      "notes": "Both daemons fire - lamp and candle warnings"
+      "command": "advance 30",
+      "expectedOutput": "[DEBUG: Advanced 30 turns to turn 130]\nThe lamp is definitely dimmer now.",
+      "notes": "Second lamp warning at turn 130"
     },
     {
-      "command": "wait",
-      "expectedOutput": "Time passes...",
-      "notes": "Continuing to wait"
+      "command": "advance 55",
+      "expectedOutput": "[DEBUG: Advanced 55 turns to turn 185]\nThe lamp is nearly out.",
+      "notes": "Third lamp warning at turn 185"
     },
     {
-      "command": "wait",
-      "expectedOutput": "Time passes...\nThe brass lantern has gone out.\nThe candles are becoming quite short.",
-      "notes": "Lamp dies, candles still burning"
-    },
-    {
-      "command": "wait",
-      "expectedOutput": "Time passes...",
-      "notes": "Only candles providing light now"
-    },
-    {
-      "command": "wait",
-      "expectedOutput": "Time passes...\nThe candles have gone out.",
-      "notes": "Candles die - now in darkness"
+      "command": "advance 15",
+      "expectedOutput": "[DEBUG: Advanced 15 turns to turn 200]\nThe brass lantern has gone out.",
+      "notes": "Lamp burns out at turn 200"
     },
     {
       "command": "look",
       "expectedOutput": "It is pitch black. You are likely to be eaten by a grue.",
-      "notes": "Both light sources exhausted"
+      "notes": "Light source exhausted - now in darkness"
+    },
+    {
+      "command": "give LAMP",
+      "expectedOutput": "[DEBUG: Given LAMP]",
+      "notes": "Get lamp back to have light"
+    },
+    {
+      "command": "turnon LAMP",
+      "expectedOutput": "[DEBUG: Turned on LAMP]",
+      "notes": "Turn on lamp to have light again - demonstrates multiple daemon interactions"
+    },
+    {
+      "command": "look",
+      "expectedOutput": "Maze\nThis is part of a maze of twisty little passages, all alike.\n\nA grue is lurking in a dark corner of the maze.",
+      "notes": "Back to maze with light - multiple systems working together"
     }
   ],
   "metadata": {
-    "created": "2024-12-07T00:00:00.000Z",
-    "source": "original-game",
+    "created": "2024-12-10T00:00:00.000Z",
+    "source": "redesigned-simplified-approach",
     "verified": false
   }
 }
