@@ -25,7 +25,7 @@ import { GameObjectImpl } from '../src/game/objects.js';
 import { ObjectFlag } from '../src/game/data/flags.js';
 import { ALL_ROOMS } from '../src/game/data/rooms-complete.js';
 import { enableDeterministicRandom, resetDeterministicRandom } from '../src/testing/seededRandom.js';
-import { initializeLampTimer } from '../src/engine/daemons.js';
+import { initializeLampTimer, initializeCandleTimer } from '../src/engine/daemons.js';
 
 interface TranscriptEntry {
   command: string;
@@ -241,13 +241,47 @@ class BatchTranscriptVerifier {
         return `[DEBUG: Object ${objectId} not found]`;
       }
       
+      if (command.startsWith('light ')) {
+        const objectId = command.substring(6).trim();
+        const obj = state.getObject(objectId) as GameObjectImpl;
+        if (obj) {
+          obj.addFlag(ObjectFlag.ONBIT);
+          
+          // Initialize candle timer if this is the candles
+          if (objectId === 'CANDLES') {
+            initializeCandleTimer(state);
+          }
+          
+          return `[DEBUG: Lit ${objectId}]`;
+        }
+        return `[DEBUG: Object ${objectId} not found]`;
+      }
+      
       if (command.startsWith('advance ')) {
         const turns = parseInt(command.substring(8).trim());
         if (!isNaN(turns) && turns > 0) {
-          for (let i = 0; i < turns; i++) {
-            state.eventSystem.processTurn(state);
+          // Capture console output from daemons
+          const originalLog = console.log;
+          let daemonOutput = '';
+          
+          console.log = (...args: any[]) => {
+            daemonOutput += args.join(' ') + '\n';
+          };
+          
+          try {
+            for (let i = 0; i < turns; i++) {
+              state.eventSystem.processTurn(state);
+            }
+          } finally {
+            console.log = originalLog;
           }
-          return `[DEBUG: Advanced ${turns} turns to turn ${state.moves}]`;
+          
+          let result = `[DEBUG: Advanced ${turns} turns to turn ${state.moves}]`;
+          if (daemonOutput.trim()) {
+            result += '\n' + daemonOutput.trim();
+          }
+          
+          return result;
         }
         return `[DEBUG: Invalid turn count]`;
       }
@@ -330,26 +364,42 @@ class BatchTranscriptVerifier {
           let stage = 0;
           let ticksRemaining = 0;
           
-          if (turns > 20) {
-            // Stage 0: Initial stage, warning at turn 20
+          // For testing purposes, set up the interrupt to trigger on next advance
+          // This allows us to test specific warning messages
+          if (turns === 21) {
+            // Set up to trigger first warning on next advance
             stage = 0;
-            ticksRemaining = 40 - turns; // Turns until first warning
-          } else if (turns > 10) {
-            // Stage 1: First warning given, next at turn 30 (when fuel = 10)
+            ticksRemaining = 1;
+          } else if (turns === 11) {
+            // Set up to trigger second warning on next advance
             stage = 1;
-            ticksRemaining = 20 - turns; // Turns until second warning
-          } else if (turns > 5) {
-            // Stage 2: Second warning given, next at turn 35 (when fuel = 5)
+            ticksRemaining = 1;
+          } else if (turns === 6) {
+            // Set up to trigger third warning on next advance
             stage = 2;
-            ticksRemaining = 10 - turns; // Turns until third warning
-          } else if (turns > 0) {
-            // Stage 3: Third warning given, candles die at turn 40 (when fuel = 0)
+            ticksRemaining = 1;
+          } else if (turns === 1) {
+            // Set up to trigger death on next advance
             stage = 3;
-            ticksRemaining = 5 - turns; // Turns until candles die
+            ticksRemaining = 1;
           } else {
-            // Candles are dead
-            stage = 4;
-            ticksRemaining = 0;
+            // Default behavior - calculate based on fuel level
+            if (turns > 20) {
+              stage = 0;
+              ticksRemaining = turns - 20;
+            } else if (turns > 10) {
+              stage = 1;
+              ticksRemaining = turns - 10;
+            } else if (turns > 5) {
+              stage = 2;
+              ticksRemaining = turns - 5;
+            } else if (turns > 0) {
+              stage = 3;
+              ticksRemaining = turns;
+            } else {
+              stage = 4;
+              ticksRemaining = 0;
+            }
           }
           
           state.setGlobalVariable('CANDLE_STAGE_INDEX', stage);

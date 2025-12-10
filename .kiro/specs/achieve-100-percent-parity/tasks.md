@@ -1192,24 +1192,24 @@ Completely redesign and implement all low-priority timing and flavor text transc
 
 ---
 
-- [ ] 32. Redesign all candle burning timing transcripts
+- [-] 32. Redesign all candle burning timing transcripts
   - Create new candle burning transcripts using proper methodology
   - _Requirements: 9.2_
 
-- [ ] 32.1 Redesign 72-candle-burning.json
+- [x] 32.1 Redesign 72-candle-burning.json
   - Test candle burning progression using debug commands
   - Verify all 4 candle warning messages appear correctly
   - Test candle death sequence
   - Target: 100% similarity
   - _Requirements: 9.2_
 
-- [ ] 32.2 Test redesigned candle burning transcript
+- [x] 32.2 Test redesigned candle burning transcript
   - Run candle burning transcript
   - Verify 100% pass rate (1/1)
   - Verify 85%+ similarity
   - _Requirements: 9.2_
 
-- [ ] 32.3 Commit redesigned candle burning transcript
+- [-] 32.3 Commit redesigned candle burning transcript
   - Commit message: "feat: Redesign candle burning timing transcript"
   - Include redesigned transcript and verification results
   - _Requirements: 9.2_
