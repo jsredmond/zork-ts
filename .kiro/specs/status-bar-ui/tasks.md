@@ -94,7 +94,7 @@
 
 ---
 
-- [-] 5. Final testing and polish
+- [x] 5. Final testing and polish
   - Manual testing of status bar behavior
   - Verify parity with original Zork display
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 2.1, 3.1, 4.1_
@@ -115,7 +115,7 @@
   - Verify commands show with prompt in history
   - _Requirements: 3.1, 3.2, 4.1, 4.2_
 
-- [-] 5.4 Final commit and tag
+- [x] 5.4 Final commit and tag
   - Commit message: "feat: Complete status bar UI implementation"
   - Tag: v1.0.0-status-bar-ui
   - _Requirements: All_
