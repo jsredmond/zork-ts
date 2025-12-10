@@ -1,31 +1,64 @@
 {
   "id": "71-lamp-fuel-warning",
   "name": "Lamp Fuel Warning Messages",
-  "description": "Testing lamp dimming warning messages as fuel runs low",
+  "description": "Testing all 4 lamp fuel warning messages and lamp death using debug commands",
   "category": "timing",
   "priority": "low",
+  "setupCommands": [
+    "teleport CELLAR",
+    "give LAMP",
+    "turnon LAMP"
+  ],
   "entries": [
     {
       "command": "inventory",
       "expectedOutput": "You are carrying:\n  A brass lantern (providing light)",
-      "notes": "Checking lamp status - should be on and providing light"
+      "notes": "Verify lamp is on and providing light"
     },
     {
-      "command": "wait",
-      "expectedOutput": "Time passes...\nThe brass lantern is getting dim.",
-      "notes": "First warning - lamp is getting dim"
+      "command": "setlampfuel 101",
+      "expectedOutput": "[DEBUG: Set lamp fuel to 101 turns (stage 0, next event in 1 turns)]",
+      "notes": "Set lamp to 101 fuel - next warning in 1 turn"
     },
     {
-      "command": "wait",
-      "expectedOutput": "Time passes...\nThe brass lantern has gone out.",
-      "notes": "Lamp runs out of fuel",
-      "stateChecks": [
-        {
-          "type": "object",
-          "target": "lamp",
-          "expectedValue": "off"
-        }
-      ]
+      "command": "advance 1",
+      "expectedOutput": "[DEBUG: Advanced 1 turns to turn 1]\nThe lamp appears a bit dimmer.",
+      "notes": "First warning - lamp fuel at 100 turns"
+    },
+    {
+      "command": "setlampfuel 71",
+      "expectedOutput": "[DEBUG: Set lamp fuel to 71 turns (stage 1, next event in 1 turns)]",
+      "notes": "Set lamp to 71 fuel - next warning in 1 turn"
+    },
+    {
+      "command": "advance 1",
+      "expectedOutput": "[DEBUG: Advanced 1 turns to turn 2]\nThe lamp is definitely dimmer now.",
+      "notes": "Second warning - lamp fuel at 70 turns"
+    },
+    {
+      "command": "setlampfuel 16",
+      "expectedOutput": "[DEBUG: Set lamp fuel to 16 turns (stage 2, next event in 1 turns)]",
+      "notes": "Set lamp to 16 fuel - next warning in 1 turn"
+    },
+    {
+      "command": "advance 1",
+      "expectedOutput": "[DEBUG: Advanced 1 turns to turn 3]\nThe lamp is nearly out.",
+      "notes": "Third warning - lamp fuel at 15 turns"
+    },
+    {
+      "command": "setlampfuel 1",
+      "expectedOutput": "[DEBUG: Set lamp fuel to 1 turns (stage 3, next event in 1 turns)]",
+      "notes": "Set lamp to 1 fuel - lamp will die in 1 turn"
+    },
+    {
+      "command": "advance 1",
+      "expectedOutput": "[DEBUG: Advanced 1 turns to turn 4]\nThe brass lantern has gone out.",
+      "notes": "Lamp dies - fuel at 0 turns"
+    },
+    {
+      "command": "inventory",
+      "expectedOutput": "You are carrying:\n  A brass lantern",
+      "notes": "Lamp no longer providing light"
     },
     {
       "command": "turn on lamp",
@@ -39,8 +72,9 @@
     }
   ],
   "metadata": {
-    "created": "2024-12-07T00:00:00.000Z",
-    "source": "original-game",
-    "verified": false
+    "created": "2024-12-10T00:00:00.000Z",
+    "source": "typescript-game",
+    "verified": false,
+    "notes": "Redesigned using debug commands to test all lamp fuel warning messages. Tests exact warning thresholds: 100, 70, 15, and 0 turns."
   }
 }

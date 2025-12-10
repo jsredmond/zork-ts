@@ -1692,6 +1692,15 @@ export class TurnOnAction implements ActionHandler {
       };
     }
 
+    // Check if lamp is burned out
+    if (objectId === 'LAMP' && obj.hasFlag(ObjectFlag.RMUNGBIT)) {
+      return {
+        success: false,
+        message: "The lamp has run out of power.",
+        stateChanges: []
+      };
+    }
+
     // Check if room was dark before
     const wasDark = !isRoomLit(state);
 

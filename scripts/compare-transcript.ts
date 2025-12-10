@@ -22,6 +22,7 @@ import { ObjectFlag } from '../src/game/data/flags.js';
 import { ALL_ROOMS } from '../src/game/data/rooms-complete.js';
 import { enableDeterministicRandom, resetDeterministicRandom } from '../src/testing/seededRandom.js';
 import { SaveAction, RestoreAction } from '../src/game/actions.js';
+import { initializeLampTimer } from '../src/engine/daemons.js';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -217,6 +218,12 @@ class TranscriptComparator {
         const obj = state.getObject(objectId) as GameObjectImpl;
         if (obj) {
           obj.addFlag(ObjectFlag.ONBIT);
+          
+          // Initialize lamp timer if this is the lamp
+          if (objectId === 'LAMP') {
+            initializeLampTimer(state);
+          }
+          
           return `[DEBUG: Turned on ${objectId}]`;
         }
         return `[DEBUG: Object ${objectId} not found]`;
@@ -231,6 +238,78 @@ class TranscriptComparator {
           return `[DEBUG: Set ${flagName} to ${value}]`;
         }
         return `[DEBUG: Invalid set command format. Use: set FLAG_NAME true/false]`;
+      }
+      
+      if (command.startsWith('advance ')) {
+        const turns = parseInt(command.substring(8).trim());
+        if (!isNaN(turns) && turns > 0) {
+          // Capture console output from daemons
+          const originalLog = console.log;
+          let daemonOutput = '';
+          console.log = (...args: any[]) => {
+            daemonOutput += args.join(' ') + '\n';
+          };
+
+          try {
+            for (let i = 0; i < turns; i++) {
+              state.eventSystem.processTurn(state);
+            }
+          } finally {
+            console.log = originalLog;
+          }
+
+          // Build result message
+          let result = `[DEBUG: Advanced ${turns} turns to turn ${state.moves}]`;
+          if (daemonOutput) {
+            result += '\n' + daemonOutput.trim();
+          }
+          return result;
+        }
+        return `[DEBUG: Invalid turn count]`;
+      }
+
+      if (command.startsWith('setlampfuel ')) {
+        const turns = parseInt(command.substring(12).trim());
+        if (!isNaN(turns) && turns >= 0 && turns <= 200) {
+          // Set the lamp fuel
+          state.setGlobalVariable('LAMP_FUEL', turns);
+          
+          // Calculate stage based on fuel level
+          let stage = 0;
+          let ticksRemaining = 0;
+          
+          if (turns > 100) {
+            stage = 0;
+            ticksRemaining = turns - 100;
+          } else if (turns > 70) {
+            stage = 1;
+            ticksRemaining = turns - 70;
+          } else if (turns > 15) {
+            stage = 2;
+            ticksRemaining = turns - 15;
+          } else if (turns > 0) {
+            stage = 3;
+            ticksRemaining = turns;
+          } else {
+            stage = 4; // Dead
+            ticksRemaining = 0;
+          }
+          
+          state.setGlobalVariable('LAMP_STAGE_INDEX', stage);
+          
+          // Set up the lamp event
+          const events = (state as any).eventSystem.events;
+          const lampEvent = events.get('I-LANTERN');
+          if (lampEvent && stage < 4) {
+            lampEvent.ticksRemaining = ticksRemaining;
+            lampEvent.enabled = true;
+          } else if (lampEvent && stage >= 4) {
+            lampEvent.enabled = false;
+          }
+          
+          return `[DEBUG: Set lamp fuel to ${turns} turns (stage ${stage}, next event in ${ticksRemaining} turns)]`;
+        }
+        return `[DEBUG: Invalid fuel level (0-200)]`;
       }
       
       // Split input into multiple commands (separated by periods or 'then')
