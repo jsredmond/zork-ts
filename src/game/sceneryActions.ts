@@ -322,23 +322,14 @@ const mountainRangeHandler: SceneryHandler = {
 };
 
 /**
- * LEAVES scenery handler
- * Handles interactions with pile of leaves (grating puzzle)
+ * GLOBAL-LEAVES scenery handler
+ * Handles interactions with leaves (generic scenery)
  */
-const leavesHandler: SceneryHandler = {
-  objectId: 'LEAVES',
+const globalLeavesHandler: SceneryHandler = {
+  objectId: 'GLOBAL-LEAVES',
   actions: new Map([
     ['EXAMINE', () => 'The leaves are a beautiful color.'],
-    ['TAKE', () => 'You can gather up a pile of leaves, but they slip through your fingers.'],
-    ['MOVE', (state) => {
-      // Check if grating is already revealed
-      const grate = state.getObject('GRATE');
-      if (grate && grate.location === state.currentRoom) {
-        return 'The grating is already visible.';
-      }
-      // This should reveal the grating - handled by puzzle logic
-      return 'Done. In disturbing the pile of leaves, a grating is revealed.';
-    }]
+    ['TAKE', () => 'You can gather up a pile of leaves, but they slip through your fingers.']
   ])
 };
 
@@ -712,7 +703,7 @@ registerSceneryHandler(wallsHandler);
 registerSceneryHandler(treeHandler);
 registerSceneryHandler(treesHandler);
 registerSceneryHandler(mountainRangeHandler);
-registerSceneryHandler(leavesHandler);
+registerSceneryHandler(globalLeavesHandler);
 registerSceneryHandler(sandHandler);
 registerSceneryHandler(boardedWindowHandler);
 registerSceneryHandler(windowHandler);

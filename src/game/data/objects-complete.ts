@@ -817,7 +817,7 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
   'WALL': {
     id: 'WALL',
     name: 'surrounding wall',
-    synonyms: ['WALL', 'WALLS'],
+    synonyms: ['WALL'],
     adjectives: ['SURROUNDING'],
     description: 'surrounding wall',
     initialLocation: 'GLOBAL-OBJECTS',
@@ -833,6 +833,76 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     initialLocation: 'GLOBAL-OBJECTS',
     flags: ['NDESCBIT'],
     action: 'GRANITE-WALL-F'
+  },
+
+  'SKY': {
+    id: 'SKY',
+    name: 'sky',
+    synonyms: ['SKY'],
+    adjectives: [],
+    description: 'sky',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'GROUND': {
+    id: 'GROUND',
+    name: 'ground',
+    synonyms: ['GROUND'],
+    adjectives: [],
+    description: 'ground',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'CEILING': {
+    id: 'CEILING',
+    name: 'ceiling',
+    synonyms: ['CEILING'],
+    adjectives: [],
+    description: 'ceiling',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'FLOOR': {
+    id: 'FLOOR',
+    name: 'floor',
+    synonyms: ['FLOOR'],
+    adjectives: [],
+    description: 'floor',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'SELF': {
+    id: 'SELF',
+    name: 'self',
+    synonyms: ['SELF', 'ME', 'MYSELF'],
+    adjectives: [],
+    description: 'self',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'GLOBAL-LEAVES': {
+    id: 'GLOBAL-LEAVES',
+    name: 'leaves',
+    synonyms: ['LEAVES', 'LEAF'],
+    adjectives: [],
+    description: 'leaves',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
+  },
+
+  'WALLS': {
+    id: 'WALLS',
+    name: 'walls',
+    synonyms: ['WALLS'],
+    adjectives: [],
+    description: 'walls',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
   },
 
   'SONGBIRD': {
@@ -860,12 +930,22 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
   'FOREST': {
     id: 'FOREST',
     name: 'forest',
-    synonyms: ['FOREST', 'TREES', 'PINES', 'HEMLOCKS'],
+    synonyms: ['FOREST', 'PINES', 'HEMLOCKS'],
     adjectives: [],
     description: 'forest',
     initialLocation: 'LOCAL-GLOBALS',
     flags: ['NDESCBIT'],
     action: 'FOREST-F'
+  },
+
+  'TREES': {
+    id: 'TREES',
+    name: 'trees',
+    synonyms: ['TREES'],
+    adjectives: [],
+    description: 'trees',
+    initialLocation: 'GLOBAL-OBJECTS',
+    flags: ['NDESCBIT']
   },
 
   'TREE': {
@@ -903,7 +983,7 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
   'KITCHEN-WINDOW': {
     id: 'KITCHEN-WINDOW',
     name: 'kitchen window',
-    synonyms: ['WINDOW'],
+    synonyms: [],
     adjectives: ['KITCHEN', 'SMALL'],
     description: 'kitchen window',
     initialLocation: 'LOCAL-GLOBALS',
@@ -1067,7 +1147,7 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
   'CLIMBABLE-CLIFF': {
     id: 'CLIMBABLE-CLIFF',
     name: 'cliff',
-    synonyms: ['WALL', 'CLIFF', 'WALLS', 'LEDGE'],
+    synonyms: ['WALL', 'CLIFF', 'LEDGE'],
     adjectives: ['ROCKY', 'SHEER'],
     description: 'cliff',
     initialLocation: 'LOCAL-GLOBALS',

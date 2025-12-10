@@ -125,7 +125,7 @@ export function handleSelfReferenceVerb(
       return 'What you can see looks pretty much as usual, sorry to say.';
     }
     
-    return 'That would require a mirror.';
+    return 'You look much the same as always.';
   }
 
   // FIND - finding yourself

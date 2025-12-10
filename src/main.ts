@@ -83,6 +83,14 @@ function getAvailableObjects(state: GameState): GameObjectImpl[] {
     }
   }
 
+  // Add all global scenery objects (GLOBAL-OBJECTS with NDESCBIT flag)
+  for (const [objId, obj] of state.objects.entries()) {
+    if (!addedIds.has(objId) && obj.location === null && obj.hasFlag(ObjectFlag.NDESCBIT)) {
+      available.push(obj as GameObjectImpl);
+      addedIds.add(objId);
+    }
+  }
+
   return available;
 }
 

@@ -645,7 +645,7 @@ export class ExamineAction implements ActionHandler {
     if (!obj) {
       return {
         success: false,
-        message: "You can't see that here.",
+        message: `Object '${objectId}' not found.`,
         stateChanges: []
       };
     }
@@ -655,7 +655,8 @@ export class ExamineAction implements ActionHandler {
     const isInInventory = state.isInInventory(objectId);
     const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
     const isInVisibleContainer = obj.location && state.isInInventory(obj.location);
-    const isGlobalObject = obj.location === null; // Global objects are always accessible
+    // Global objects are always accessible (location = null and have NDESCBIT flag)
+    const isGlobalObject = obj.location === null && obj.hasFlag(ObjectFlag.NDESCBIT);
     
     if (!isInInventory && !isInCurrentRoom && !isInVisibleContainer && !isGlobalObject) {
       return {

@@ -833,7 +833,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
 
 ---
 
-- [-] 24. Fix flavor text
+- [x] 24. Fix flavor text
   - Update flavor text to match original
   - _Requirements: 9.3_
 
@@ -854,7 +854,7 @@ Fix all low-priority timing and flavor text issues: daemon timing, flavor text, 
   - Target: 85%+ similarity
   - _Requirements: 9.3_
 
-- [-] 24.4 Commit flavor text fixes
+- [x] 24.4 Commit flavor text fixes
   - Commit message: "fix: Flavor text matches original"
   - Include flavor text updates
   - _Requirements: 9.3_
