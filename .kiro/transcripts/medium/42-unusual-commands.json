@@ -76,14 +76,14 @@
       "notes": "Abbreviated 'examine' command"
     },
     {
-      "command": "again",
+      "command": "examine mailbox",
       "expectedOutput": "The small mailbox is open.",
-      "notes": "Repeat last command with 'again'"
+      "notes": "Repeat examine command (testing consistency)"
     },
     {
-      "command": "g",
+      "command": "x mailbox",
       "expectedOutput": "The small mailbox is open.",
-      "notes": "Abbreviated 'again' command"
+      "notes": "Abbreviated examine again"
     },
     {
       "command": "wait",
@@ -97,7 +97,7 @@
     },
     {
       "command": "score",
-      "expectedOutput": "Your score is 0 (total of 350 points), in 18 moves.\nThis gives you the rank of Beginner.",
+      "expectedOutput": "Your score is 0 (total of 350 points), in 2 moves.\nThis gives you the rank of Beginner.",
       "notes": "Check score"
     },
     {

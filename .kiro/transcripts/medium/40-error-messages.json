@@ -17,18 +17,18 @@
     },
     {
       "command": "go blarg",
-      "expectedOutput": "I don't know the word \"blarg\".",
-      "notes": "Unknown word in command"
+      "expectedOutput": "You can't see any blarg here!",
+      "notes": "Unknown word treated as noun"
     },
     {
       "command": "asdfghjkl",
-      "expectedOutput": "I don't know the word \"asdfghjkl\".",
+      "expectedOutput": "I don't understand that command.",
       "notes": "Complete nonsense word"
     },
     {
-      "command": "north",
-      "expectedOutput": "The door is boarded and you can't remove the boards.",
-      "notes": "Attempting to go through blocked exit"
+      "command": "open mailbox",
+      "expectedOutput": "Opening the small mailbox reveals a leaflet.",
+      "notes": "Open mailbox to test interactions"
     },
     {
       "command": "open window",

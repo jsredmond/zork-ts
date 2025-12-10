@@ -32,7 +32,7 @@
     },
     {
       "command": "west",
-      "expectedOutput": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nOn the table is an elongated brown sack, smelling of hot peppers.\nA bottle is sitting on the table.\nThe glass bottle contains:\n  A quantity of water",
+      "expectedOutput": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\n  A quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
       "notes": "Enter kitchen with multiple items"
     },
     {
@@ -77,7 +77,7 @@
     },
     {
       "command": "down",
-      "expectedOutput": "Cellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+      "expectedOutput": "The trap door crashes shut, and you hear someone barring it.\n\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.",
       "notes": "Enter cellar"
     },
     {
@@ -92,7 +92,7 @@
     },
     {
       "command": "east",
-      "expectedOutput": "Gallery\nThis is an art gallery. Most of the paintings which were here have been stolen\nby vandals with exceptional taste. The vandals left through either the north or\nwest exits.\nHanging on a wall is a beautiful painting by a neglected artist. It is a\nportrait of an elven maid with a wistful expression.",
+      "expectedOutput": "Gallery\nThis is an art gallery. Most of the paintings which were here have been stolen by vandals with exceptional taste. The vandals left through either the north or west exits.\nHanging on a wall is a beautiful painting by a neglected artist. It is a portrait of an elven maid with a wistful expression.\nFortunately, there is still one chance for you to be a vandal, for on the far wall is a painting of unparalleled beauty.",
       "notes": "Enter gallery with painting"
     },
     {

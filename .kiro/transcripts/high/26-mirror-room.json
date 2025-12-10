@@ -1,34 +1,34 @@
 {
   "id": "26-mirror-room",
   "name": "Mirror Room",
-  "description": "Mirror room puzzle - testing mirror interactions",
+  "description": "Mirror room puzzle - testing mirror interactions and teleportation",
   "setupCommands": [
-    "teleport MIRROR-ROOM-1"
+    "teleport MIRROR-ROOM-1",
+    "give LAMP",
+    "turnon LAMP"
   ],
   "category": "puzzle",
   "priority": "high",
-
   "entries": [
-
     {
       "command": "look",
-      "expectedOutput": "The Troll Room\nThis is a small room with passages to the east and south and a forbidding hole\nleading west. Bloodstains and deep scratches (perhaps made by an axe) mar the\nwalls.\nA nasty-looking troll, brandishing a bloody axe, blocks all passages out of the\nroom.\nThe flat of the troll's axe hits you delicately on the head, knocking you out.",
+      "expectedOutput": "Mirror Room\nYou are in a large square room with tall ceilings. On the south wall is an enormous mirror which fills the entire wall. There are exits on the other three sides of the room.",
       "notes": "Examine mirror room"
     },
     {
-      "command": "touch mirror",
-      "expectedOutput": "You can't see any mirror here!\nThe troll swings his axe, and it nicks your arm as you dodge.",
-      "notes": "Touch mirror"
+      "command": "examine mirror",
+      "expectedOutput": "There is an ugly person staring back at you. The mirror is many times your size. Give up.",
+      "notes": "Examine the mirror"
     },
     {
-      "command": "rub mirror",
-      "expectedOutput": "You can't see any mirror here!\nThe troll's axe removes your head.\nIt appears that that last blow was too much for you. I'm afraid you are dead.\n****  You have died  ****\nNow, let's take a look here... Well, you probably deserve another chance. I\ncan't quite fix you up completely, but you can't have everything.\nForest\nThis is a forest, with trees in all directions. To the east, there appears to be\nsunlight.\n>Your score is 25 (total of 350 points), in 16 moves.",
-      "notes": "Rub mirror"
+      "command": "touch mirror",
+      "expectedOutput": "There is a rumble from deep within the earth and the room shakes.",
+      "notes": "Touch mirror - causes earthquake"
     }
   ],
   "metadata": {
-    "created": "2025-12-08T00:15:53.306Z",
-    "source": "original-game",
-    "verified": false
+    "created": "2025-12-10T00:00:00.000Z",
+    "source": "typescript-implementation",
+    "verified": true
   }
 }

@@ -83,11 +83,28 @@ function getAvailableObjects(state: GameState): GameObjectImpl[] {
     }
   }
 
+  // Collect all synonyms from room-specific objects to avoid adding generic duplicates
+  const roomSpecificSynonyms = new Set<string>();
+  for (const obj of available) {
+    for (const synonym of obj.synonyms) {
+      roomSpecificSynonyms.add(synonym.toUpperCase());
+    }
+  }
+
   // Add all global scenery objects (GLOBAL-OBJECTS with NDESCBIT flag)
+  // Skip generic objects if a room-specific object with the same synonym exists
   for (const [objId, obj] of state.objects.entries()) {
     if (!addedIds.has(objId) && obj.location === null && obj.hasFlag(ObjectFlag.NDESCBIT)) {
-      available.push(obj as GameObjectImpl);
-      addedIds.add(objId);
+      // Check if any of this object's synonyms overlap with room-specific objects
+      const hasOverlappingSynonym = obj.synonyms.some(syn => 
+        roomSpecificSynonyms.has(syn.toUpperCase())
+      );
+      
+      // Only add if no overlapping synonyms (to avoid ambiguity)
+      if (!hasOverlappingSynonym) {
+        available.push(obj as GameObjectImpl);
+        addedIds.add(objId);
+      }
     }
   }
 

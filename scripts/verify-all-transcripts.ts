@@ -27,6 +27,7 @@ import { ALL_ROOMS } from '../src/game/data/rooms-complete.js';
 import { ALL_OBJECTS } from '../src/game/data/objects-complete.js';
 import { enableDeterministicRandom, resetDeterministicRandom } from '../src/testing/seededRandom.js';
 import { initializeLampTimer, initializeCandleTimer } from '../src/engine/daemons.js';
+import { SaveAction, RestoreAction } from '../src/game/actions.js';
 
 interface TranscriptEntry {
   command: string;
@@ -106,6 +107,7 @@ class BatchTranscriptVerifier {
   private vocabulary: Vocabulary;
   private parser: Parser;
   private executor: CommandExecutor;
+  private lastCommand: string = '';
 
   constructor() {
     this.lexer = new Lexer();
@@ -182,15 +184,32 @@ class BatchTranscriptVerifier {
       }
     }
 
+    // Collect all synonyms from room-specific objects to avoid adding generic duplicates
+    const roomSpecificSynonyms = new Set<string>();
+    for (const obj of available) {
+      for (const synonym of obj.synonyms) {
+        roomSpecificSynonyms.add(synonym.toUpperCase());
+      }
+    }
+
     // Add only truly global scenery objects (from GLOBAL-OBJECTS, not LOCAL-GLOBALS)
     // LOCAL-GLOBALS objects should only be available in rooms that list them in globalObjects
+    // Skip generic objects if a room-specific object with the same synonym exists
     for (const [objId, obj] of state.objects.entries()) {
       if (!addedIds.has(objId) && obj.location === null && obj.hasFlag(ObjectFlag.NDESCBIT)) {
         // Check the original object data to see if it's from GLOBAL-OBJECTS
         const objData = ALL_OBJECTS[objId];
         if (objData && objData.initialLocation === 'GLOBAL-OBJECTS') {
-          available.push(obj as GameObjectImpl);
-          addedIds.add(objId);
+          // Check if any of this object's synonyms overlap with room-specific objects
+          const hasOverlappingSynonym = obj.synonyms.some(syn => 
+            roomSpecificSynonyms.has(syn.toUpperCase())
+          );
+          
+          // Only add if no overlapping synonyms (to avoid ambiguity)
+          if (!hasOverlappingSynonym) {
+            available.push(obj as GameObjectImpl);
+            addedIds.add(objId);
+          }
         }
       }
     }
@@ -199,10 +218,52 @@ class BatchTranscriptVerifier {
   }
 
   /**
-   * Execute a command and return the output
+   * Execute a command and return the output (handles multi-commands)
    */
   private executeCommand(command: string, state: GameState): string {
+    // Split into multiple commands if needed
+    const commands = this.splitMultipleCommands(command);
+    
+    if (commands.length > 1) {
+      // Execute each command and combine outputs
+      const outputs: string[] = [];
+      for (const cmd of commands) {
+        const output = this.executeSingleCommand(cmd, state);
+        if (output) {
+          outputs.push(output);
+        }
+      }
+      return outputs.join('\n');
+    }
+    
+    return this.executeSingleCommand(command, state);
+  }
+
+  /**
+   * Execute a single command and return the output
+   */
+  private executeSingleCommand(command: string, state: GameState): string {
     try {
+      // Handle 'again' command - repeat last command
+      const normalizedCommand = command.trim().toLowerCase();
+      if (normalizedCommand === 'again' || normalizedCommand === 'g') {
+        if (!this.lastCommand) {
+          return "There is no command to repeat.";
+        }
+        return this.executeSingleCommand(this.lastCommand, state);
+      }
+
+      // Handle pending actions (SAVE/RESTORE waiting for filename)
+      if (state.pendingAction) {
+        const pendingType = state.pendingAction.type;
+        const handler = pendingType === 'SAVE' ? new SaveAction() : new RestoreAction();
+        
+        // Treat the entire input as the filename
+        const result = handler.execute(state, command.trim());
+        
+        return result.message || '';
+      }
+
       // Handle debug commands for setup
       if (command.startsWith('teleport ')) {
         const roomId = command.substring(9).trim();
@@ -531,6 +592,11 @@ class BatchTranscriptVerifier {
 
       const result = this.executor.execute(parsedCommand, state);
 
+      // Save this command as last command if it was successful
+      if (result.success && normalizedCommand !== 'again' && normalizedCommand !== 'g') {
+        this.lastCommand = command;
+      }
+
       return result.message || '';
     } catch (error) {
       return `ERROR: ${error instanceof Error ? error.message : String(error)}`;
@@ -555,6 +621,47 @@ class BatchTranscriptVerifier {
       // Restore paragraph breaks
       .replace(/<<PARA>>/g, '\n\n')
       .trim();
+  }
+
+  /**
+   * Split input into multiple commands based on periods and 'then'
+   */
+  private splitMultipleCommands(input: string): string[] {
+    const commands: string[] = [];
+    let currentCommand = '';
+    let inQuotes = false;
+    
+    for (let i = 0; i < input.length; i++) {
+      const char = input[i];
+      
+      if (char === '"') {
+        inQuotes = !inQuotes;
+        currentCommand += char;
+      } else if (char === '.' && !inQuotes) {
+        if (currentCommand.trim().length > 0) {
+          commands.push(currentCommand.trim());
+        }
+        currentCommand = '';
+      } else {
+        currentCommand += char;
+      }
+    }
+    
+    if (currentCommand.trim().length > 0) {
+      commands.push(currentCommand.trim());
+    }
+    
+    const finalCommands: string[] = [];
+    for (const cmd of commands) {
+      const thenSplit = cmd.split(/\s+then\s+/i);
+      for (const part of thenSplit) {
+        if (part.trim().length > 0) {
+          finalCommands.push(part.trim());
+        }
+      }
+    }
+    
+    return finalCommands.length > 0 ? finalCommands : [input];
   }
 
   /**
@@ -585,6 +692,9 @@ class BatchTranscriptVerifier {
    */
   public compareTranscript(transcript: Transcript): ComparisonResult {
     const startTime = Date.now();
+    
+    // Reset last command for new transcript
+    this.lastCommand = '';
     
     // Enable deterministic random for consistent combat outcomes
     enableDeterministicRandom(12345);

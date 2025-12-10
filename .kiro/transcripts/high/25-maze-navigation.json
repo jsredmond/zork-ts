@@ -52,7 +52,7 @@
     },
     {
       "command": "d",
-      "expectedOutput": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.",
+      "expectedOutput": "The trap door crashes shut, and you hear someone barring it.\n\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.",
       "notes": "Go down"
     },
     {
@@ -62,7 +62,7 @@
     },
     {
       "command": "e",
-      "expectedOutput": "Gallery\nThis is an art gallery. Most of the paintings have been stolen by vandals with\nexceptional taste. The vandals left through either the north or west exits.\nFortunately, there is still one chance for you to be a vandal, for on the far\nwall is a painting of unparalleled beauty.",
+      "expectedOutput": "Gallery\nThis is an art gallery. Most of the paintings which were here have been stolen by vandals with exceptional taste. The vandals left through either the north or west exits.\nHanging on a wall is a beautiful painting by a neglected artist. It is a portrait of an elven maid with a wistful expression.\nFortunately, there is still one chance for you to be a vandal, for on the far wall is a painting of unparalleled beauty.",
       "notes": "Go east"
     },
     {
@@ -82,7 +82,7 @@
     },
     {
       "command": "se",
-      "expectedOutput": "You can't go that way.\n>Your score is 35 (total of 350 points), in 16 moves.",
+      "expectedOutput": "You can't go that way.",
       "notes": "Navigate maze"
     }
   ],

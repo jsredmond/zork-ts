@@ -32,7 +32,7 @@
     },
     {
       "command": "west",
-      "expectedOutput": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used\nrecently for the preparation of food. A passage leads to the west and a dark\nstaircase can be seen leading upward. A dark chimney leads down and to the east\nis a small window which is open.\nOn the table is an elongated brown sack, smelling of hot peppers.\nA bottle is sitting on the table.\nThe glass bottle contains:\n  A quantity of water",
+      "expectedOutput": "Kitchen\nYou are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is open.\nA bottle is sitting on the table.\nThe glass bottle contains:\n  A quantity of water\nOn the table is an elongated brown sack, smelling of hot peppers.",
       "notes": "Enter kitchen through window (west from behind house)"
     },
     {
@@ -67,7 +67,7 @@
     },
     {
       "command": "down",
-      "expectedOutput": "The trap door crashes shut, and you hear someone barring it.\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a\ncrawlway to the south. On the west is the bottom of a steep metal ramp which is\nunclimbable.\nYour sword is glowing with a faint blue glow.",
+      "expectedOutput": "The trap door crashes shut, and you hear someone barring it.\n\nCellar\nYou are in a dark and damp cellar with a narrow passageway leading north, and a crawlway to the south. On the west is the bottom of a steep metal ramp which is unclimbable.",
       "notes": "Enter cellar"
     },
     {

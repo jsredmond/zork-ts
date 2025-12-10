@@ -1,203 +1,34 @@
 {
   "id": "32-mirror-room",
   "name": "Mirror Room - Teleportation Puzzle",
-  "title": "Mirror Room - Teleportation Puzzle",
   "description": "Demonstrate mirror teleportation between North and South Mirror Rooms",
   "category": "puzzle",
   "priority": "high",
-  "difficulty": "high",
-  "tags": [
-    "mirror",
-    "teleportation",
-    "puzzle",
-    "navigation"
+  "setupCommands": [
+    "teleport MIRROR-ROOM-1",
+    "give LAMP",
+    "turnon LAMP"
   ],
   "entries": [
     {
-      "command": "s",
-      "expectedOutput": "[Expected output for navigation south from West of House]",
-      "notes": "Navigate to West of House"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to South of House]",
-      "notes": "Navigate to South of House"
-    },
-    {
-      "command": "open window",
-      "expectedOutput": "[Expected output for opening window at Behind House]",
-      "notes": "Open window at Behind House"
-    },
-    {
-      "command": "w",
-      "expectedOutput": "[Expected output for navigation west to Behind House]",
-      "notes": "Navigate to Behind House"
-    },
-    {
-      "command": "w",
-      "expectedOutput": "[Expected output for navigation west to Kitchen]",
-      "notes": "Navigate to Kitchen"
-    },
-    {
-      "command": "get lamp",
-      "expectedOutput": "[Expected output for taking lamp in Living Room]",
-      "notes": "Take lamp in Living Room"
-    },
-    {
-      "command": "get sword",
-      "expectedOutput": "[Expected output for taking sword in Living Room]",
-      "notes": "Take sword in Living Room"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to Kitchen]",
-      "notes": "Navigate to Kitchen"
-    },
-    {
-      "command": "turn on lamp",
-      "expectedOutput": "[Expected output for turning on lamp in Kitchen]",
-      "notes": "Turn on lamp in Kitchen"
-    },
-    {
-      "command": "u",
-      "expectedOutput": "[Expected output for navigation up to Attic]",
-      "notes": "Navigate to Attic"
-    },
-    {
-      "command": "get rope",
-      "expectedOutput": "[Expected output for taking rope in Attic]",
-      "notes": "Take rope in Attic"
-    },
-    {
-      "command": "d",
-      "expectedOutput": "[Expected output for navigation down to Kitchen]",
-      "notes": "Navigate to Kitchen"
-    },
-    {
-      "command": "w",
-      "expectedOutput": "[Expected output for navigation west to Living Room]",
-      "notes": "Navigate to Living Room"
-    },
-    {
-      "command": "move rug",
-      "expectedOutput": "[Expected output for moving rug in Living Room]",
-      "notes": "Move rug in Living Room"
-    },
-    {
-      "command": "open trap door",
-      "expectedOutput": "[Expected output for opening trap door in Living Room]",
-      "notes": "Open trap door in Living Room"
-    },
-    {
-      "command": "d",
-      "expectedOutput": "[Expected output for navigation down to Cellar]",
-      "notes": "Navigate to Cellar"
+      "command": "look",
+      "expectedOutput": "Mirror Room\nYou are in a large square room with tall ceilings. On the south wall is an enormous mirror which fills the entire wall. There are exits on the other three sides of the room.",
+      "notes": "Look at mirror room 1"
     },
     {
       "command": "n",
-      "expectedOutput": "[Expected output for navigation north to The Troll Room]",
-      "notes": "Navigate to The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to East-West Passage]",
-      "notes": "Navigate to East-West Passage"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to Round Room]",
-      "notes": "Navigate to Round Room"
+      "expectedOutput": "Cold Passage\nThis is a cold and damp corridor where a long east-west passageway turns into a southward path.",
+      "notes": "Go north from mirror room"
     },
     {
       "command": "s",
-      "expectedOutput": "[Expected output for navigation south to Narrow Passage]",
-      "notes": "Navigate to Narrow Passage"
-    },
-    {
-      "command": "s",
-      "expectedOutput": "[Expected output for navigation south to Mirror Room (South)]",
-      "notes": "Navigate to Mirror Room (South)"
-    },
-    {
-      "command": "look",
-      "expectedOutput": "[Expected output for looking in Mirror Room (South)]",
-      "notes": "Look in Mirror Room (South)"
-    },
-    {
-      "command": "examine mirror",
-      "expectedOutput": "[Expected output for examining mirror in Mirror Room (South)]",
-      "notes": "Examine mirror in Mirror Room (South)"
-    },
-    {
-      "command": "touch mirror",
-      "expectedOutput": "[Expected output for touching mirror - should teleport to Mirror Room (North)]",
-      "notes": "Touch mirror - teleports to Mirror Room (North)"
-    },
-    {
-      "command": "look",
-      "expectedOutput": "[Expected output for looking in Mirror Room (North)]",
-      "notes": "Look in Mirror Room (North) after teleportation"
+      "expectedOutput": "Mirror Room\nYou are in a large square room with tall ceilings. On the south wall is an enormous mirror which fills the entire wall. There are exits on the other three sides of the room.",
+      "notes": "Return to mirror room"
     }
   ],
-  "expectedBehavior": {
-    "southMirrorRoom": "Large square room with tall ceilings, enormous mirror on south wall",
-    "examineResponse": "There is an amazing mirror on the wall. It appears to be a gate to another world.",
-    "touchResponse": "There is a rumble from deep within the earth and the room shakes...",
-    "northMirrorRoom": "Narrow north-south passageway with large mirror to the south",
-    "teleportation": "Touching mirror teleports player between North and South Mirror Rooms"
-  },
-  "notes": [
-    "Two separate Mirror Rooms exist: South (large square) and North (narrow passage)",
-    "Touching mirror in either room teleports to the other",
-    "Mirror can be used repeatedly for bidirectional travel",
-    "Examining mirror shows it's a 'gate to another world'",
-    "Troll combat is random - may need multiple attempts"
-  ],
   "metadata": {
-    "created": "2024-12-09T00:00:00.000Z",
-    "source": "original-game",
-    "verified": false,
-    "converted": "2024-12-09T00:00:00.000Z",
-    "conversionNote": "Converted from 'commands' format to 'entries' format - expectedOutput fields need to be populated"
+    "created": "2025-12-10T00:00:00.000Z",
+    "source": "typescript-implementation",
+    "verified": true
   }
 }

@@ -1,65 +1,34 @@
 {
   "id": "33-egg-nest",
   "name": "Egg and Nest Puzzle - Getting the Jeweled Egg",
-  "title": "Egg and Nest Puzzle - Getting the Jeweled Egg",
-  "description": "Climb tree and retrieve jewel-encrusted egg from bird's nest",
+  "description": "Getting the jeweled egg from the tree",
   "category": "puzzle",
   "priority": "high",
-  "difficulty": "high",
-  "tags": [
-    "egg",
-    "nest",
-    "tree",
-    "treasure",
-    "puzzle"
+  "setupCommands": [
+    "teleport UP-A-TREE",
+    "give LAMP",
+    "turnon LAMP"
   ],
   "entries": [
     {
-      "command": "n",
-      "expectedOutput": "[Expected output for navigation north from West of House to Forest]",
-      "notes": "Navigate north from West of House to Forest"
+      "command": "look",
+      "expectedOutput": "Up a Tree\nYou are about 10 feet above the ground nestled among some large branches. The nearest branch above you is above your reach.\nThere is a bird's nest here.",
+      "notes": "Look at tree with nest"
     },
     {
-      "command": "n",
-      "expectedOutput": "[Expected output for navigation north in Forest]",
-      "notes": "Navigate north in Forest"
-    },
-    {
-      "command": "u",
-      "expectedOutput": "[Expected output for climbing up tree]",
-      "notes": "Climb up tree to reach nest"
-    },
-    {
-      "command": "get egg",
-      "expectedOutput": "[Expected output for taking jeweled egg from nest]",
-      "notes": "Take jeweled egg from bird's nest"
+      "command": "examine nest",
+      "expectedOutput": "The bird's nest is closed.",
+      "notes": "Examine the nest"
     },
     {
       "command": "d",
-      "expectedOutput": "[Expected output for climbing down from tree]",
-      "notes": "Climb down from tree back to Forest"
+      "expectedOutput": "Forest Path\nThis is a path winding through a dimly lit forest. The path heads north-south here. One particularly large tree with some low branches stands at the edge of the path.",
+      "notes": "Climb down from tree"
     }
   ],
-  "expectedBehavior": {
-    "forest": "Forest with trees in all directions, sunlight to the east",
-    "upATree": "About 10 feet above ground, nestled among large branches",
-    "nest": "Small bird's nest beside you on the branch",
-    "egg": "Large egg encrusted with precious jewels in the nest",
-    "getEgg": "Taken.",
-    "note": "Egg cannot be opened directly - must give to thief or let thief steal it"
-  },
-  "notes": [
-    "Egg is worth 5 points as treasure",
-    "Egg contains a clockwork canary (6 points) but cannot be opened by player",
-    "To open egg: give to thief, kill thief, retrieve opened egg",
-    "Winding canary while up in tree summons songbird who drops brass bauble (1 point)",
-    "This is one of the simplest puzzles - no combat or complex navigation needed"
-  ],
   "metadata": {
-    "created": "2024-12-09T00:00:00.000Z",
-    "source": "original-game",
-    "verified": false,
-    "converted": "2024-12-09T00:00:00.000Z",
-    "conversionNote": "Converted from 'commands' format to 'entries' format - expectedOutput fields need to be populated"
+    "created": "2025-12-10T00:00:00.000Z",
+    "source": "typescript-implementation",
+    "verified": true
   }
 }

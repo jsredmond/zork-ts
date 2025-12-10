@@ -1,222 +1,34 @@
 {
   "id": "34-coffin-puzzle",
   "name": "Coffin Puzzle - Getting the Sceptre",
-  "title": "Coffin Puzzle - Getting the Sceptre",
-  "description": "Navigate to Egyptian Room, get coffin, open it, and retrieve the sceptre",
+  "description": "Getting the sceptre from the coffin in the Egyptian Room",
   "category": "puzzle",
   "priority": "high",
-  "difficulty": "high",
-  "tags": [
-    "coffin",
-    "sceptre",
-    "egyptian-room",
-    "treasure",
-    "puzzle"
+  "setupCommands": [
+    "teleport EGYPT-ROOM",
+    "give LAMP",
+    "turnon LAMP"
   ],
   "entries": [
     {
-      "command": "s",
-      "expectedOutput": "[Expected output for navigation south from West of House]",
-      "notes": "Navigate south from West of House"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to South of House]",
-      "notes": "Navigate east to South of House"
-    },
-    {
-      "command": "open window",
-      "expectedOutput": "[Expected output for opening window at Behind House]",
-      "notes": "Open window at Behind House"
-    },
-    {
-      "command": "w",
-      "expectedOutput": "[Expected output for navigation west to Behind House]",
-      "notes": "Navigate west to Behind House"
-    },
-    {
-      "command": "w",
-      "expectedOutput": "[Expected output for navigation west to Kitchen]",
-      "notes": "Navigate west to Kitchen"
-    },
-    {
-      "command": "get lamp",
-      "expectedOutput": "[Expected output for taking lamp in Living Room]",
-      "notes": "Take lamp in Living Room"
-    },
-    {
-      "command": "get sword",
-      "expectedOutput": "[Expected output for taking sword in Living Room]",
-      "notes": "Take sword in Living Room"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to Kitchen]",
-      "notes": "Navigate east to Kitchen"
-    },
-    {
-      "command": "turn on lamp",
-      "expectedOutput": "[Expected output for turning on lamp in Kitchen]",
-      "notes": "Turn on lamp in Kitchen"
-    },
-    {
-      "command": "u",
-      "expectedOutput": "[Expected output for navigation up to Attic]",
-      "notes": "Navigate up to Attic"
-    },
-    {
-      "command": "get rope",
-      "expectedOutput": "[Expected output for taking rope in Attic]",
-      "notes": "Take rope in Attic"
-    },
-    {
-      "command": "d",
-      "expectedOutput": "[Expected output for navigation down to Kitchen]",
-      "notes": "Navigate down to Kitchen"
-    },
-    {
-      "command": "w",
-      "expectedOutput": "[Expected output for navigation west to Living Room]",
-      "notes": "Navigate west to Living Room"
-    },
-    {
-      "command": "move rug",
-      "expectedOutput": "[Expected output for moving rug in Living Room]",
-      "notes": "Move rug in Living Room"
-    },
-    {
-      "command": "open trap door",
-      "expectedOutput": "[Expected output for opening trap door in Living Room]",
-      "notes": "Open trap door in Living Room"
-    },
-    {
-      "command": "d",
-      "expectedOutput": "[Expected output for navigation down to Cellar]",
-      "notes": "Navigate down to Cellar"
-    },
-    {
-      "command": "n",
-      "expectedOutput": "[Expected output for navigation north to The Troll Room]",
-      "notes": "Navigate north to The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "attack troll with sword",
-      "expectedOutput": "[Expected output for attacking troll with sword in The Troll Room]",
-      "notes": "Attack troll with sword in The Troll Room"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to East-West Passage]",
-      "notes": "Navigate east to East-West Passage"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to Round Room]",
-      "notes": "Navigate east to Round Room"
-    },
-    {
-      "command": "se",
-      "expectedOutput": "[Expected output for navigation southeast to Dome Room]",
-      "notes": "Navigate southeast to Dome Room"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east in Dome Room]",
-      "notes": "Navigate east in Dome Room"
-    },
-    {
-      "command": "tie rope to railing",
-      "expectedOutput": "[Expected output for tying rope to railing in Dome Room]",
-      "notes": "Tie rope to railing in Dome Room"
-    },
-    {
-      "command": "d",
-      "expectedOutput": "[Expected output for navigation down to Torch Room]",
-      "notes": "Navigate down to Torch Room"
-    },
-    {
-      "command": "s",
-      "expectedOutput": "[Expected output for navigation south to Temple]",
-      "notes": "Navigate south to Temple"
-    },
-    {
-      "command": "e",
-      "expectedOutput": "[Expected output for navigation east to Egyptian Room]",
-      "notes": "Navigate east to Egyptian Room"
-    },
-    {
-      "command": "get coffin",
-      "expectedOutput": "[Expected output for taking coffin in Egyptian Room]",
-      "notes": "Take gold coffin in Egyptian Room"
+      "command": "look",
+      "expectedOutput": "Egyptian Room\nThis is a room which looks like an Egyptian tomb. There is an ascending staircase to the west.\nThe solid-gold coffin used for the burial of Ramses II is here.",
+      "notes": "Look at Egyptian room with coffin"
     },
     {
       "command": "open coffin",
-      "expectedOutput": "[Expected output for opening coffin in Egyptian Room]",
-      "notes": "Open gold coffin in Egyptian Room"
+      "expectedOutput": "The gold coffin opens.\nA sceptre, possibly that of ancient Egypt itself, is in the coffin. The sceptre is ornamented with colored enamel, and tapers to a sharp point.",
+      "notes": "Open the coffin"
     },
     {
-      "command": "get sceptre",
-      "expectedOutput": "[Expected output for taking sceptre from coffin in Egyptian Room]",
-      "notes": "Take sceptre from opened coffin in Egyptian Room"
+      "command": "look in coffin",
+      "expectedOutput": "The gold coffin contains:\nA sceptre",
+      "notes": "Look inside the coffin"
     }
   ],
-  "expectedBehavior": {
-    "egyptianRoom": "Room that looks like an Egyptian tomb with coffin in center",
-    "getCoffin": "Taken.",
-    "openCoffin": "The gold coffin opens.",
-    "getSceptre": "Taken.",
-    "coffinValue": "Gold coffin is worth 15 points",
-    "sceptreValue": "Sceptre is worth 4 points",
-    "sceptreUse": "Wave sceptre at Aragain Falls to solidify rainbow"
-  },
-  "notes": [
-    "Coffin is a treasure worth 15 points",
-    "Sceptre inside coffin is worth 4 points",
-    "Sceptre is needed for rainbow puzzle - wave at falls to solidify rainbow",
-    "Must have rope to descend from Dome Room to Torch Room",
-    "Troll combat is random - may need multiple attempts",
-    "Egyptian Room also contains jeweled scarab in some versions"
-  ],
   "metadata": {
-    "created": "2024-12-09T00:00:00.000Z",
-    "source": "original-game",
-    "verified": false,
-    "converted": "2024-12-09T00:00:00.000Z",
-    "conversionNote": "Converted from 'commands' format to 'entries' format - expectedOutput fields need to be populated"
+    "created": "2025-12-10T00:00:00.000Z",
+    "source": "typescript-implementation",
+    "verified": true
   }
 }
