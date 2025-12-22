@@ -15,7 +15,7 @@ import {
   getTreasureValue,
   isTreasure,
   getRank,
-  TREASURE_VALUES,
+  TREASURE_CASE_VALUES,
   TROPHY_CASE_ID,
   MAX_SCORE,
   scoreAction,
@@ -492,7 +492,7 @@ describe('Scoring System', () => {
         fc.property(
           // Generate a list of treasure IDs to place in trophy case
           fc.array(
-            fc.constantFrom(...Object.keys(TREASURE_VALUES)),
+            fc.constantFrom(...Object.keys(TREASURE_CASE_VALUES)),
             { minLength: 1, maxLength: 5 }
           ),
           (treasureIds) => {
@@ -580,7 +580,7 @@ describe('Scoring System', () => {
         fc.property(
           // Generate a list of unique treasure IDs
           fc.uniqueArray(
-            fc.constantFrom(...Object.keys(TREASURE_VALUES)),
+            fc.constantFrom(...Object.keys(TREASURE_CASE_VALUES)),
             { minLength: 2, maxLength: 5 }
           ),
           (treasureIds) => {
@@ -733,7 +733,7 @@ describe('Scoring System', () => {
       fc.assert(
         fc.property(
           // Generate a treasure ID and a sequence of put/take operations
-          fc.constantFrom(...Object.keys(TREASURE_VALUES)),
+          fc.constantFrom(...Object.keys(TREASURE_CASE_VALUES)),
           // Ensure at least one "put" operation (true) in the sequence
           fc.array(fc.boolean(), { minLength: 1, maxLength: 10 }).filter(ops => ops.some(op => op)),
           (treasureId, operations) => {
@@ -943,7 +943,7 @@ describe('Scoring System', () => {
      */
     it('Property 6: Max score invariant - total possible score should not exceed MAX_SCORE', () => {
       // Calculate the theoretical maximum score
-      const totalTreasureValue = Object.values(TREASURE_VALUES).reduce((sum, val) => sum + val, 0);
+      const totalTreasureValue = Object.values(TREASURE_CASE_VALUES).reduce((sum, val) => sum + val, 0);
       const totalActionValue = Object.values(ACTION_VALUES).reduce((sum, val) => sum + val, 0);
       const theoreticalMax = totalTreasureValue + totalActionValue;
 
@@ -968,9 +968,9 @@ describe('Final Integration Tests - Scoring System', () => {
    */
   describe('9.1 Treasure Scoring Verification', () => {
     it('should have correct total treasure value (132 points from 21 treasures)', () => {
-      // Calculate total treasure value from TREASURE_VALUES
-      const totalTreasureValue = Object.values(TREASURE_VALUES).reduce((sum, val) => sum + val, 0);
-      const treasureCount = Object.keys(TREASURE_VALUES).length;
+      // Calculate total treasure value from TREASURE_CASE_VALUES
+      const totalTreasureValue = Object.values(TREASURE_CASE_VALUES).reduce((sum, val) => sum + val, 0);
+      const treasureCount = Object.keys(TREASURE_CASE_VALUES).length;
       
       // Current implementation has 21 treasures worth 132 points total
       expect(treasureCount).toBe(21);
@@ -1003,7 +1003,7 @@ describe('Final Integration Tests - Scoring System', () => {
 
       // Create all treasures
       const inventory: string[] = [];
-      for (const treasureId of Object.keys(TREASURE_VALUES)) {
+      for (const treasureId of Object.keys(TREASURE_CASE_VALUES)) {
         const treasure = new GameObjectImpl({
           id: treasureId,
           name: treasureId.toLowerCase(),
@@ -1029,7 +1029,7 @@ describe('Final Integration Tests - Scoring System', () => {
 
       // Place all treasures and verify each awards correct points
       let runningTotal = 0;
-      for (const [treasureId, expectedValue] of Object.entries(TREASURE_VALUES)) {
+      for (const [treasureId, expectedValue] of Object.entries(TREASURE_CASE_VALUES)) {
         const scoreBefore = state.score;
         putAction.execute(state, treasureId, TROPHY_CASE_ID);
         const pointsAwarded = state.score - scoreBefore;
@@ -1103,27 +1103,27 @@ describe('Final Integration Tests - Scoring System', () => {
 
     it('should have correct individual treasure values matching ZIL', () => {
       // Verify each treasure value matches the original ZIL TVALUE
-      expect(TREASURE_VALUES['SKULL']).toBe(10);
-      expect(TREASURE_VALUES['CHALICE']).toBe(5);
-      expect(TREASURE_VALUES['TRIDENT']).toBe(11);
-      expect(TREASURE_VALUES['DIAMOND']).toBe(10);
-      expect(TREASURE_VALUES['JADE']).toBe(5);
-      expect(TREASURE_VALUES['EMERALD']).toBe(10);
-      expect(TREASURE_VALUES['BAG-OF-COINS']).toBe(5);
-      expect(TREASURE_VALUES['PAINTING']).toBe(6);
-      expect(TREASURE_VALUES['SCEPTRE']).toBe(6);
-      expect(TREASURE_VALUES['COFFIN']).toBe(15);
-      expect(TREASURE_VALUES['TORCH']).toBe(6);
-      expect(TREASURE_VALUES['BRACELET']).toBe(5);
-      expect(TREASURE_VALUES['SCARAB']).toBe(5);
-      expect(TREASURE_VALUES['BAR']).toBe(5);
-      expect(TREASURE_VALUES['POT-OF-GOLD']).toBe(10);
-      expect(TREASURE_VALUES['TRUNK']).toBe(5);
-      expect(TREASURE_VALUES['EGG']).toBe(5);
-      expect(TREASURE_VALUES['CANARY']).toBe(4);
-      expect(TREASURE_VALUES['BAUBLE']).toBe(1);
-      expect(TREASURE_VALUES['BROKEN-EGG']).toBe(2);
-      expect(TREASURE_VALUES['BROKEN-CANARY']).toBe(1);
+      expect(TREASURE_CASE_VALUES['SKULL']).toBe(10);
+      expect(TREASURE_CASE_VALUES['CHALICE']).toBe(5);
+      expect(TREASURE_CASE_VALUES['TRIDENT']).toBe(11);
+      expect(TREASURE_CASE_VALUES['DIAMOND']).toBe(10);
+      expect(TREASURE_CASE_VALUES['JADE']).toBe(5);
+      expect(TREASURE_CASE_VALUES['EMERALD']).toBe(10);
+      expect(TREASURE_CASE_VALUES['BAG-OF-COINS']).toBe(5);
+      expect(TREASURE_CASE_VALUES['PAINTING']).toBe(6);
+      expect(TREASURE_CASE_VALUES['SCEPTRE']).toBe(6);
+      expect(TREASURE_CASE_VALUES['COFFIN']).toBe(15);
+      expect(TREASURE_CASE_VALUES['TORCH']).toBe(6);
+      expect(TREASURE_CASE_VALUES['BRACELET']).toBe(5);
+      expect(TREASURE_CASE_VALUES['SCARAB']).toBe(5);
+      expect(TREASURE_CASE_VALUES['BAR']).toBe(5);
+      expect(TREASURE_CASE_VALUES['POT-OF-GOLD']).toBe(10);
+      expect(TREASURE_CASE_VALUES['TRUNK']).toBe(5);
+      expect(TREASURE_CASE_VALUES['EGG']).toBe(5);
+      expect(TREASURE_CASE_VALUES['CANARY']).toBe(4);
+      expect(TREASURE_CASE_VALUES['BAUBLE']).toBe(1);
+      expect(TREASURE_CASE_VALUES['BROKEN-EGG']).toBe(2);
+      expect(TREASURE_CASE_VALUES['BROKEN-CANARY']).toBe(1);
     });
   });
 
@@ -1395,7 +1395,7 @@ describe('Final Integration Tests - Scoring System', () => {
     });
 
     it('should verify total possible score (treasures + actions) equals 277 points', () => {
-      const totalTreasureValue = Object.values(TREASURE_VALUES).reduce((sum, val) => sum + val, 0);
+      const totalTreasureValue = Object.values(TREASURE_CASE_VALUES).reduce((sum, val) => sum + val, 0);
       const totalActionValue = Object.values(ACTION_VALUES).reduce((sum, val) => sum + val, 0);
       const totalPossibleScore = totalTreasureValue + totalActionValue;
 

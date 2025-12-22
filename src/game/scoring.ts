@@ -14,31 +14,61 @@ import { GameState } from './state.js';
 import { GameObjectImpl } from './objects.js';
 
 /**
- * Treasure values (TVALUE) - points when in trophy case
- * Corrected to match original ZIL 1dungeon.zil
+ * Treasure take values (VALUE) - points when first taking
+ * From ZIL P?VALUE property on objects in 1dungeon.zil
+ * Points are awarded once when the treasure is first taken
  */
-export const TREASURE_VALUES: Record<string, number> = {
+export const TREASURE_TAKE_VALUES: Record<string, number> = {
   'SKULL': 10,
-  'CHALICE': 5,
-  'TRIDENT': 11,
+  'SCEPTRE': 4,
+  'COFFIN': 10,
+  'TRIDENT': 4,
+  'CHALICE': 10,
   'DIAMOND': 10,
   'JADE': 5,
-  'EMERALD': 10,       // Corrected from 5 to 10
-  'BAG-OF-COINS': 5,   // Corrected from 10 to 5
-  'PAINTING': 6,       // Corrected from 4 to 6
-  'SCEPTRE': 6,        // Corrected from 4 to 6
-  'COFFIN': 15,        // Corrected from 10 to 15
-  'TORCH': 6,          // Corrected from 5 to 6
+  'BAG-OF-COINS': 10,
+  'EMERALD': 5,
+  'PAINTING': 4,
+  'BAR': 10,
+  'POT-OF-GOLD': 10,
   'BRACELET': 5,
   'SCARAB': 5,
+  'TORCH': 14,
+  'TRUNK': 15,
+  'EGG': 5,
+  'BAUBLE': 1,
+  'CANARY': 6,
+  'BROKEN-EGG': 0,     // No VALUE in ZIL, only TVALUE
+  'BROKEN-CANARY': 0   // No VALUE in ZIL, only TVALUE
+};
+
+/**
+ * Treasure case values (TVALUE) - points when in trophy case
+ * From ZIL P?TVALUE property on objects in 1dungeon.zil
+ * Points are calculated dynamically based on treasures currently in trophy case
+ */
+export const TREASURE_CASE_VALUES: Record<string, number> = {
+  'SKULL': 10,
+  'SCEPTRE': 6,
+  'COFFIN': 15,
+  'TRIDENT': 11,
+  'CHALICE': 5,
+  'DIAMOND': 10,
+  'JADE': 5,
+  'BAG-OF-COINS': 5,
+  'EMERALD': 10,
+  'PAINTING': 6,
   'BAR': 5,
   'POT-OF-GOLD': 10,
-  'TRUNK': 5,          // Corrected from 15 to 5
+  'BRACELET': 5,
+  'SCARAB': 5,
+  'TORCH': 6,
+  'TRUNK': 5,
   'EGG': 5,
-  'CANARY': 4,
   'BAUBLE': 1,
-  'BROKEN-EGG': 2,     // Added
-  'BROKEN-CANARY': 1   // Added
+  'CANARY': 4,
+  'BROKEN-EGG': 2,
+  'BROKEN-CANARY': 1
 };
 
 /**
@@ -127,14 +157,14 @@ export function getRank(score: number): string {
  * Check if an object is a treasure
  */
 export function isTreasure(objectId: string): boolean {
-  return objectId in TREASURE_VALUES;
+  return objectId in TREASURE_CASE_VALUES;
 }
 
 /**
- * Get the treasure value for an object
+ * Get the treasure case value (TVALUE) for an object
  */
 export function getTreasureValue(objectId: string): number {
-  return TREASURE_VALUES[objectId] || 0;
+  return TREASURE_CASE_VALUES[objectId] || 0;
 }
 
 /**
@@ -207,7 +237,7 @@ export function applyDeathPenalty(state: GameState): void {
  */
 export function calculateTreasureScore(state: GameState): number {
   let total = 0;
-  for (const [objectId, value] of Object.entries(TREASURE_VALUES)) {
+  for (const [objectId, value] of Object.entries(TREASURE_CASE_VALUES)) {
     const obj = state.getObject(objectId);
     if (obj && obj.location === TROPHY_CASE_ID) {
       total += value;
@@ -315,7 +345,7 @@ export function getTreasuresInCase(state: GameState): string[] {
 export function getScoredTreasureCount(state: GameState): number {
   let count = 0;
   
-  for (const objectId of Object.keys(TREASURE_VALUES)) {
+  for (const objectId of Object.keys(TREASURE_CASE_VALUES)) {
     const obj = state.getObject(objectId) as GameObjectImpl;
     if (obj && obj.getProperty('scored')) {
       count++;
@@ -329,5 +359,5 @@ export function getScoredTreasureCount(state: GameState): number {
  * Get total number of treasures in the game
  */
 export function getTotalTreasureCount(): number {
-  return Object.keys(TREASURE_VALUES).length;
+  return Object.keys(TREASURE_CASE_VALUES).length;
 }
