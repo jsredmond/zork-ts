@@ -36,6 +36,9 @@ export interface SerializedGameState {
   moves: number;
   flags: GlobalFlags;
   pendingAction?: { type: 'SAVE' | 'RESTORE' };
+  // Scoring state fields (added for scoring system fix)
+  baseScore?: number;
+  scoredActions?: string[];
 }
 
 /**
@@ -153,17 +156,41 @@ export class Serializer {
    * Serialize GameState to SerializedGameState
    */
   private serializeGameState(state: GameState): SerializedGameState {
+    // Get scoredActions from globalVariables and convert Set to array
+    const scoredActionsSet = state.getGlobalVariable('SCORED_ACTIONS');
+    const scoredActions = scoredActionsSet instanceof Set 
+      ? Array.from(scoredActionsSet) as string[]
+      : [];
+
     return {
       currentRoom: state.currentRoom,
       objects: this.serializeObjects(state.objects),
       rooms: this.serializeRooms(state.rooms),
-      globalVariables: Array.from(state.globalVariables.entries()),
+      globalVariables: this.serializeGlobalVariables(state.globalVariables),
       inventory: state.inventory,
       score: state.score,
       moves: state.moves,
       flags: state.flags,
-      pendingAction: state.pendingAction
+      pendingAction: state.pendingAction,
+      // Scoring state
+      baseScore: state.getBaseScore(),
+      scoredActions: scoredActions
     };
+  }
+
+  /**
+   * Serialize globalVariables, excluding SCORED_ACTIONS (handled separately)
+   */
+  private serializeGlobalVariables(globalVariables: Map<string, any>): [string, any][] {
+    const entries: [string, any][] = [];
+    for (const [key, value] of globalVariables.entries()) {
+      // Skip SCORED_ACTIONS as it's serialized separately
+      if (key === 'SCORED_ACTIONS') {
+        continue;
+      }
+      entries.push([key, value]);
+    }
+    return entries;
   }
 
   /**
@@ -174,6 +201,11 @@ export class Serializer {
     const rooms = this.deserializeRooms(serialized.rooms);
     const globalVariables = new Map(serialized.globalVariables);
 
+    // Restore scoredActions as a Set
+    if (serialized.scoredActions && serialized.scoredActions.length > 0) {
+      globalVariables.set('SCORED_ACTIONS', new Set(serialized.scoredActions));
+    }
+
     return new GameState({
       currentRoom: serialized.currentRoom,
       objects,
@@ -183,7 +215,8 @@ export class Serializer {
       score: serialized.score,
       moves: serialized.moves,
       flags: serialized.flags,
-      pendingAction: serialized.pendingAction
+      pendingAction: serialized.pendingAction,
+      baseScore: serialized.baseScore || 0
     });
   }
 

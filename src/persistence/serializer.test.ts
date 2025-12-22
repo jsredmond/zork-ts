@@ -10,6 +10,7 @@ import { GameState } from '../game/state.js';
 import { GameObjectImpl } from '../game/objects.js';
 import { RoomImpl, Direction } from '../game/rooms.js';
 import { ObjectFlag, RoomFlag, INITIAL_GLOBAL_FLAGS } from '../game/data/flags.js';
+import { scoreAction } from '../game/scoring.js';
 
 /**
  * Generator for ObjectFlag values
@@ -625,6 +626,95 @@ describe('Serializer', () => {
       { numRuns: 100 }
     );
   });
+
+    /**
+     * Feature: scoring-system-fix, Property 4: Save/restore round-trip
+     * For any game state with scored actions and treasures, saving and then restoring
+     * should produce an equivalent scoring state where the same actions cannot be
+     * re-scored and the total score is identical.
+     * **Validates: Requirements 5.1, 5.2, 5.3**
+     */
+    it('should preserve scoring state through save/restore cycle', () => {
+      const serializer = new Serializer();
+      
+      // Generator for scored action IDs
+      const scoredActionArbitrary = fc.constantFrom(
+        'ENTER_KITCHEN',
+        'ENTER_CELLAR',
+        'ENTER_TREASURE_ROOM',
+        'ENTER_HADES',
+        'ENTER_LOWER_SHAFT_LIT',
+        'DEFEAT_TROLL',
+        'DEFEAT_THIEF',
+        'DEFEAT_CYCLOPS',
+        'OPEN_EGG',
+        'INFLATE_BOAT',
+        'RAISE_DAM',
+        'LOWER_DAM',
+        'PUT_COAL_IN_MACHINE',
+        'TURN_ON_MACHINE',
+        'WAVE_SCEPTRE',
+        'COMPLETE_EXORCISM'
+      );
+      
+      // Generator for scoring state
+      const scoringStateArbitrary = fc.record({
+        baseScore: fc.integer({ min: 0, max: 350 }),
+        scoredActions: fc.array(scoredActionArbitrary, { maxLength: 10 }),
+        wonFlag: fc.boolean()
+      });
+      
+      fc.assert(
+        fc.property(scoringStateArbitrary, (scoringState) => {
+          // Create a game state with scoring data
+          const scoredActionsSet = new Set(scoringState.scoredActions);
+          const globalVariables = new Map<string, any>();
+          globalVariables.set('SCORED_ACTIONS', scoredActionsSet);
+          
+          const state = new GameState({
+            currentRoom: 'WEST-OF-HOUSE',
+            objects: new Map(),
+            rooms: new Map(),
+            globalVariables,
+            inventory: [],
+            score: 0,
+            moves: 0,
+            flags: { ...INITIAL_GLOBAL_FLAGS, WON_FLAG: scoringState.wonFlag },
+            baseScore: scoringState.baseScore
+          });
+          
+          // Serialize the state
+          const serialized = serializer.serialize(state);
+          
+          // Deserialize it back
+          const restored = serializer.deserialize(serialized);
+          
+          // Verify baseScore is preserved
+          expect(restored.getBaseScore()).toBe(scoringState.baseScore);
+          
+          // Verify wonFlag is preserved
+          expect(restored.flags.WON_FLAG).toBe(scoringState.wonFlag);
+          
+          // Verify scoredActions is preserved
+          const restoredScoredActions = restored.getGlobalVariable('SCORED_ACTIONS');
+          if (scoredActionsSet.size > 0) {
+            expect(restoredScoredActions).toBeInstanceOf(Set);
+            expect(restoredScoredActions.size).toBe(scoredActionsSet.size);
+            for (const action of scoredActionsSet) {
+              expect(restoredScoredActions.has(action)).toBe(true);
+            }
+          }
+          
+          // Verify that re-scoring the same actions returns 0 (already scored)
+          // This tests Requirement 5.3: SHALL NOT allow re-scoring of already-scored actions
+          for (const action of scoringState.scoredActions) {
+            const points = scoreAction(restored, action);
+            expect(points).toBe(0); // Should return 0 because already scored
+          }
+        }),
+        { numRuns: 100 }
+      );
+    });
 
   // Feature: modern-zork-rewrite, Property 10: Save file validation
   it('should reject invalid or corrupted save files', () => {
