@@ -130,6 +130,170 @@ describe('Scoring System', () => {
     });
   });
 
+  describe('Room Entry Scoring', () => {
+    let state: GameState;
+
+    beforeEach(() => {
+      // Create a minimal game state with rooms needed for testing
+      const rooms = new Map<string, RoomImpl>();
+      
+      const westOfHouse = new RoomImpl({
+        id: 'WEST-OF-HOUSE',
+        name: 'West of House',
+        description: 'You are standing in an open field west of a white house.',
+        exits: new Map([['EAST', { direction: 'EAST', destination: 'LIVING-ROOM' }]])
+      });
+      rooms.set('WEST-OF-HOUSE', westOfHouse);
+      
+      const livingRoom = new RoomImpl({
+        id: 'LIVING-ROOM',
+        name: 'Living Room',
+        description: 'You are in the living room.',
+        exits: new Map([['WEST', { direction: 'WEST', destination: 'WEST-OF-HOUSE' }]])
+      });
+      rooms.set('LIVING-ROOM', livingRoom);
+      
+      const kitchen = new RoomImpl({
+        id: 'KITCHEN',
+        name: 'Kitchen',
+        description: 'You are in the kitchen.',
+        exits: new Map()
+      });
+      rooms.set('KITCHEN', kitchen);
+      
+      const cellar = new RoomImpl({
+        id: 'CELLAR',
+        name: 'Cellar',
+        description: 'You are in a dark and damp cellar.',
+        exits: new Map()
+      });
+      rooms.set('CELLAR', cellar);
+      
+      const treasureRoom = new RoomImpl({
+        id: 'TREASURE-ROOM',
+        name: 'Treasure Room',
+        description: 'This is a large room with a great door.',
+        exits: new Map()
+      });
+      rooms.set('TREASURE-ROOM', treasureRoom);
+      
+      const hades = new RoomImpl({
+        id: 'HADES',
+        name: 'Hades',
+        description: 'You are in Hades.',
+        exits: new Map()
+      });
+      rooms.set('HADES', hades);
+      
+      const lowerShaft = new RoomImpl({
+        id: 'LOWER-SHAFT',
+        name: 'Lower Shaft',
+        description: 'You are at the bottom of a shaft.',
+        exits: new Map()
+      });
+      rooms.set('LOWER-SHAFT', lowerShaft);
+
+      const objects = new Map<string, GameObjectImpl>();
+      
+      // Create lamp for lighting tests
+      const lamp = new GameObjectImpl({
+        id: 'LAMP',
+        name: 'brass lantern',
+        description: 'A brass lantern',
+        location: 'PLAYER',
+        flags: [ObjectFlag.TAKEBIT, ObjectFlag.LIGHTBIT, ObjectFlag.ONBIT],
+        size: 15
+      });
+      objects.set('LAMP', lamp);
+
+      state = new GameState({
+        currentRoom: 'WEST-OF-HOUSE',
+        objects,
+        rooms,
+        inventory: ['LAMP'],
+        score: 0,
+        moves: 0
+      });
+    });
+
+    it('should award 10 points for entering LIVING-ROOM first time', () => {
+      const initialScore = state.getBaseScore();
+      scoreAction(state, 'ENTER_KITCHEN');
+      expect(state.getBaseScore()).toBe(initialScore + 10);
+    });
+
+    it('should award 10 points for entering KITCHEN first time', () => {
+      const initialScore = state.getBaseScore();
+      scoreAction(state, 'ENTER_KITCHEN');
+      expect(state.getBaseScore()).toBe(initialScore + 10);
+    });
+
+    it('should not award points for entering KITCHEN/LIVING-ROOM second time', () => {
+      scoreAction(state, 'ENTER_KITCHEN');
+      const scoreAfterFirst = state.getBaseScore();
+      scoreAction(state, 'ENTER_KITCHEN');
+      expect(state.getBaseScore()).toBe(scoreAfterFirst);
+    });
+
+    it('should award 25 points for entering CELLAR first time', () => {
+      const initialScore = state.getBaseScore();
+      scoreAction(state, 'ENTER_CELLAR');
+      expect(state.getBaseScore()).toBe(initialScore + 25);
+    });
+
+    it('should not award points for entering CELLAR second time', () => {
+      scoreAction(state, 'ENTER_CELLAR');
+      const scoreAfterFirst = state.getBaseScore();
+      scoreAction(state, 'ENTER_CELLAR');
+      expect(state.getBaseScore()).toBe(scoreAfterFirst);
+    });
+
+    it('should award 25 points for entering TREASURE-ROOM first time', () => {
+      const initialScore = state.getBaseScore();
+      scoreAction(state, 'ENTER_TREASURE_ROOM');
+      expect(state.getBaseScore()).toBe(initialScore + 25);
+    });
+
+    it('should not award points for entering TREASURE-ROOM second time', () => {
+      scoreAction(state, 'ENTER_TREASURE_ROOM');
+      const scoreAfterFirst = state.getBaseScore();
+      scoreAction(state, 'ENTER_TREASURE_ROOM');
+      expect(state.getBaseScore()).toBe(scoreAfterFirst);
+    });
+
+    it('should award 4 points for entering HADES first time (after exorcism)', () => {
+      const initialScore = state.getBaseScore();
+      scoreAction(state, 'ENTER_HADES');
+      expect(state.getBaseScore()).toBe(initialScore + 4);
+    });
+
+    it('should not award points for entering HADES second time', () => {
+      scoreAction(state, 'ENTER_HADES');
+      const scoreAfterFirst = state.getBaseScore();
+      scoreAction(state, 'ENTER_HADES');
+      expect(state.getBaseScore()).toBe(scoreAfterFirst);
+    });
+
+    it('should award 5 points for entering LOWER-SHAFT with light first time', () => {
+      const initialScore = state.getBaseScore();
+      scoreAction(state, 'ENTER_LOWER_SHAFT_LIT');
+      expect(state.getBaseScore()).toBe(initialScore + 5);
+    });
+
+    it('should not award points for entering LOWER-SHAFT with light second time', () => {
+      scoreAction(state, 'ENTER_LOWER_SHAFT_LIT');
+      const scoreAfterFirst = state.getBaseScore();
+      scoreAction(state, 'ENTER_LOWER_SHAFT_LIT');
+      expect(state.getBaseScore()).toBe(scoreAfterFirst);
+    });
+
+    it('should track which actions have been scored', () => {
+      expect(isActionScored(state, 'ENTER_KITCHEN')).toBe(false);
+      scoreAction(state, 'ENTER_KITCHEN');
+      expect(isActionScored(state, 'ENTER_KITCHEN')).toBe(true);
+    });
+  });
+
   describe('Property-Based Tests', () => {
     // Feature: modern-zork-rewrite, Property 11: Action sequence equivalence
     it('should maintain scoring consistency across action sequences', () => {

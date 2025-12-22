@@ -7,7 +7,7 @@ import { GameState } from './state.js';
 import { GameObjectImpl } from './objects.js';
 import { ObjectFlag, RoomFlag } from './data/flags.js';
 import { Storage } from '../persistence/storage.js';
-import { scoreTreasure, TROPHY_CASE_ID, getRank, MAX_SCORE } from './scoring.js';
+import { scoreTreasure, TROPHY_CASE_ID, getRank, MAX_SCORE, scoreAction } from './scoring.js';
 import { Direction } from './rooms.js';
 import { 
   isRoomLit, 
@@ -583,6 +583,9 @@ export class MoveAction implements ActionHandler {
     // The grue only attacks if you try to move again while in darkness
     const isNowLit = isRoomLit(state);
     if (!isNowLit) {
+      // Award room entry points even when entering dark rooms
+      this.awardRoomEntryPoints(state, exit.destination);
+      
       // Show darkness warning message instead of immediate death
       const darknessMessage = entryMessage + '\nIt is pitch black. You are likely to be eaten by a grue.';
       
@@ -597,6 +600,9 @@ export class MoveAction implements ActionHandler {
       };
     }
 
+    // Award room entry points for lit rooms
+    this.awardRoomEntryPoints(state, exit.destination);
+
     // Format the room description
     const roomDescription = getRoomDescriptionAfterMovement(newRoom, state, false, wasVisited);
     const fullMessage = entryMessage + roomDescription;
@@ -610,6 +616,37 @@ export class MoveAction implements ActionHandler {
         newValue: exit.destination
       }]
     };
+  }
+
+  /**
+   * Award points for entering specific rooms
+   * Points are only awarded once per room
+   */
+  private awardRoomEntryPoints(state: GameState, roomId: string): void {
+    // Kitchen/Living Room entry (10 points)
+    if (roomId === 'KITCHEN' || roomId === 'LIVING-ROOM') {
+      scoreAction(state, 'ENTER_KITCHEN');
+    }
+    
+    // Cellar entry (25 points)
+    if (roomId === 'CELLAR') {
+      scoreAction(state, 'ENTER_CELLAR');
+    }
+    
+    // Treasure Room entry (25 points)
+    if (roomId === 'TREASURE-ROOM') {
+      scoreAction(state, 'ENTER_TREASURE_ROOM');
+    }
+    
+    // Hades entry (4 points) - only after exorcism is complete
+    if (roomId === 'HADES' && state.getFlag('LLD_FLAG')) {
+      scoreAction(state, 'ENTER_HADES');
+    }
+    
+    // Lower Shaft with light (5 points)
+    if (roomId === 'LOWER-SHAFT' && isRoomLit(state)) {
+      scoreAction(state, 'ENTER_LOWER_SHAFT_LIT');
+    }
   }
 }
 
