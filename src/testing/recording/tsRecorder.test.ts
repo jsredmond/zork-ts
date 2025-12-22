@@ -72,6 +72,8 @@ describe('TypeScriptRecorder', () => {
 
     it('should generate unique transcript IDs', async () => {
       const transcript1 = await recorder.record(['look']);
+      // Add a small delay to ensure different timestamps
+      await new Promise(resolve => setTimeout(resolve, 10));
       const transcript2 = await recorder.record(['look']);
 
       expect(transcript1.id).toBeTruthy();
