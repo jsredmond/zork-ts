@@ -57,14 +57,11 @@ function findDfrotz(): string | null {
 }
 
 describe('ZMachineRecorder Property Tests', () => {
-  let tsRecorder: TypeScriptRecorder;
-  let zmRecorder: ZMachineRecorder | null = null;
+  let interpreterPath: string | null = null;
   let zmAvailable = false;
 
   beforeAll(async () => {
-    tsRecorder = new TypeScriptRecorder();
-    
-    const interpreterPath = findDfrotz();
+    interpreterPath = findDfrotz();
     const gameFileExists = existsSync('COMPILED/zork1.z3');
     
     if (interpreterPath && gameFileExists) {
@@ -73,10 +70,24 @@ describe('ZMachineRecorder Property Tests', () => {
         gameFilePath: 'COMPILED/zork1.z3',
         timeout: 5000
       };
-      zmRecorder = new ZMachineRecorder(config);
-      zmAvailable = await zmRecorder.isAvailable();
+      const testRecorder = new ZMachineRecorder(config);
+      zmAvailable = await testRecorder.isAvailable();
     }
   });
+
+  /**
+   * Create fresh recorder instances for each property test iteration
+   * This ensures no state pollution between tests
+   */
+  function createRecorders(): { tsRecorder: TypeScriptRecorder; zmRecorder: ZMachineRecorder } {
+    const tsRecorder = new TypeScriptRecorder();
+    const zmRecorder = new ZMachineRecorder({
+      interpreterPath: interpreterPath!,
+      gameFilePath: 'COMPILED/zork1.z3',
+      timeout: 5000
+    });
+    return { tsRecorder, zmRecorder };
+  }
 
   /**
    * Feature: game-recording-comparison, Property 4: Cross-Platform Recording Consistency
@@ -89,18 +100,21 @@ describe('ZMachineRecorder Property Tests', () => {
    */
   it('Property 4: Cross-Platform Recording Consistency - transcripts have same structure', { timeout: ZM_TEST_TIMEOUT }, async () => {
     // Skip if Z-machine interpreter not available
-    if (!zmAvailable || !zmRecorder) {
+    if (!zmAvailable || !interpreterPath) {
       console.log('Skipping Property 4 test: Z-machine interpreter not available');
       return;
     }
 
     await fc.assert(
       fc.asyncProperty(shortCommandSequenceArb, async (commands) => {
+        // Create fresh recorders for each iteration
+        const { tsRecorder, zmRecorder } = createRecorders();
+        
         // Record with TypeScript engine
         const tsTranscript = await tsRecorder.record(commands);
         
         // Record with Z-machine interpreter
-        const zmTranscript = await zmRecorder!.record(commands);
+        const zmTranscript = await zmRecorder.record(commands);
 
         // Both transcripts should have the same number of entries
         // (initial state + one per command)
@@ -151,16 +165,19 @@ describe('ZMachineRecorder Property Tests', () => {
    */
   it('Property 4 (continued): Both recorders produce entries with required fields', { timeout: ZM_TEST_TIMEOUT }, async () => {
     // Skip if Z-machine interpreter not available
-    if (!zmAvailable || !zmRecorder) {
+    if (!zmAvailable || !interpreterPath) {
       console.log('Skipping Property 4 continued test: Z-machine interpreter not available');
       return;
     }
 
     await fc.assert(
       fc.asyncProperty(deterministicCommandArb, async (command) => {
+        // Create fresh recorders for each iteration
+        const { tsRecorder, zmRecorder } = createRecorders();
+        
         // Record single command with both recorders
         const tsTranscript = await tsRecorder.record([command]);
-        const zmTranscript = await zmRecorder!.record([command]);
+        const zmTranscript = await zmRecorder.record([command]);
 
         // Check TypeScript entry structure
         const tsEntry = tsTranscript.entries[1];
@@ -196,15 +213,18 @@ describe('ZMachineRecorder Property Tests', () => {
    */
   it('Property 4 (continued): Both recorders produce valid metadata', { timeout: ZM_TEST_TIMEOUT }, async () => {
     // Skip if Z-machine interpreter not available
-    if (!zmAvailable || !zmRecorder) {
+    if (!zmAvailable || !interpreterPath) {
       console.log('Skipping Property 4 metadata test: Z-machine interpreter not available');
       return;
     }
 
     await fc.assert(
       fc.asyncProperty(shortCommandSequenceArb, async (commands) => {
+        // Create fresh recorders for each iteration
+        const { tsRecorder, zmRecorder } = createRecorders();
+        
         const tsTranscript = await tsRecorder.record(commands);
-        const zmTranscript = await zmRecorder!.record(commands);
+        const zmTranscript = await zmRecorder.record(commands);
 
         // Both should have valid IDs
         if (!tsTranscript.id || tsTranscript.id.length === 0) return false;
