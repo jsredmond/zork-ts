@@ -1,121 +1,126 @@
-# Zork I: Complete Scoring Guide
+# Zork I: Complete Scoring Guide (from ZIL Source)
 
 **Maximum Score: 350 Points**
 
-Points in Zork I are earned by collecting treasures and placing them in the trophy case, as well as completing specific actions and solving puzzles throughout the game.
+Points in Zork I are earned through a two-part system:
+1. **VALUE** - Points awarded when you first TAKE a treasure (one-time only)
+2. **TVALUE** - Points awarded when you PUT a treasure in the trophy case
+
+Plus room entry bonuses and puzzle completion points.
 
 ---
 
-## Treasures
+## Treasure Scoring (from 1dungeon.zil)
 
-Place these items in the trophy case in the living room to earn points.
+| Treasure | VALUE (Take) | TVALUE (Case) | Total | Location |
+|----------|-------------|---------------|-------|----------|
+| Crystal skull | 10 | 10 | 20 | Land of the Dead |
+| Sceptre | 4 | 6 | 10 | Inside gold coffin |
+| Gold coffin | 10 | 5 | 15 | Egyptian room |
+| Crystal trident | 4 | 11 | 15 | Atlantis room |
+| Silver chalice | 10 | 15 | 25 | Treasure room |
+| Huge diamond | 10 | 10 | 20 | Machine room (from coal) |
+| Jade figurine | 5 | 5 | 10 | Bat room |
+| Bag of coins | 10 | 5 | 15 | Maze |
+| Large emerald | 5 | 10 | 15 | Inside buoy |
+| Painting | 4 | 6 | 10 | Gallery |
+| Platinum bar | 10 | 5 | 15 | Loud room |
+| Pot of gold | 10 | 10 | 20 | End of rainbow |
+| Sapphire bracelet | 5 | 5 | 10 | Gas room |
+| Jeweled scarab | 5 | 5 | 10 | Sandy cave |
+| Ivory torch | 14 | 6 | 20 | Torch room |
+| Trunk of jewels | 15 | 5 | 20 | Reservoir |
+| Jewel-encrusted egg | 5 | 5 | 10 | Bird's nest in tree |
+| Brass bauble | 1 | 1 | 2 | Dropped by songbird |
+| Clockwork canary | 6 | 4 | 10 | Inside egg |
+| Broken egg | - | 2 | 2 | (If egg is damaged) |
+| Broken canary | - | 1 | 1 | (If canary is damaged) |
 
-| Treasure | Points | Location/Notes |
-|----------|--------|----------------|
-| Bag of coins | 10 | Maze |
-| Beautiful painting | 4 | Gallery |
-| Brass/Gold bauble | 1 | Gas room (requires fixing leak) |
-| Canary (from egg) | 6 | Inside the jewel-encrusted egg |
-| Clockwork canary | 4 | Inside the jewel-encrusted egg |
-| Crystal skull | 10 | Land of the Dead |
-| Crystal trident | 11 | Atlantis room |
-| Gold coffin | 10 | Egyptian room (in the Thief's lair) |
-| Huge diamond | 10 | Created from coal in the machine room |
-| Ivory torch | 5 | Torch room |
-| Jade figurine | 5 | Bat room |
-| Jewel-encrusted egg | 5 | In the tree |
-| Jeweled scarab | 5 | Sandy cave |
-| Large emerald | 5 | Buoy (cut it open) |
-| Platinum bar | 5 | Loud room |
-| Pot of gold | 10 | End of the rainbow |
-| Sapphire bracelet | 5 | Gas room |
-| Sceptre | 4 | Inside the gold coffin |
-| Silver chalice | 10 | Treasure room (Thief's lair) |
-| Trunk of jewels | 15 | Reservoir (after draining) |
-
-**Treasure Subtotal: ~141 points**
-
----
-
-## Actions & Puzzle Solutions
-
-Points earned for completing specific tasks and defeating enemies.
-
-| Action | Points | Details |
-|--------|--------|---------|
-| Entering the white house | 10 | First time entry through the window or other means |
-| Opening the egg correctly | 2 | Use the thief's tools or let thief open it |
-| Raising the dam | 3 | Turn the bolt with the wrench |
-| Lowering the dam | 3 | Allows access to other areas |
-| Inflating the boat | 5 | Use the air pump on the pile of plastic |
-| Defeating the Troll | 10 | Kill or disable the troll in combat |
-| Defeating the Cyclops | 10 | Say "ODYSSEUS" or "ULYSSES" to scare him away |
-| Defeating the Thief | 25 | Kill the thief in combat (after weakening him) |
-| Exorcising the spirits | 4 | Ring the bell, light candles, read prayer in the temple |
-| Entering Hades | 4 | Successfully complete the exorcism ritual |
-| Putting coal in the machine | 5 | Place coal in the machine in the machine room |
-| Turning on the machine | 1 | Creates the diamond from coal |
-| Entering the treasure room | 25 | Access the thief's final treasure room |
-| Waving sceptre at rainbow | 5 | Creates the pot of gold |
-| Saying "ECHO" in Loud Room | 0 | Required to get platinum bar (no direct points) |
-
-**Action Subtotal: ~112 points**
+**Treasure Total: 190 points** (if all treasures intact)
 
 ---
 
-## Detailed Puzzle Breakdowns
+## Room Entry Points (from 1dungeon.zil VALUE property)
 
-### The Coal Mine/Diamond Puzzle
-1. Get the coal from the coal mine (0 points for pickup)
-2. Navigate to the machine room via the drafty room and shaft
-3. Put coal in the machine (+5 points)
-4. Turn the switch/machine on (+1 point)
-5. Take the huge diamond and deposit in trophy case (+10 points)
+| Room | Points | Notes |
+|------|--------|-------|
+| Kitchen/Living Room | 10 | First entry into the house |
+| Cellar | 25 | First descent into the dungeon |
+| Treasure Room | 25 | Thief's lair |
+| Lower Shaft (lit) | 5 | When LIGHT-SHAFT variable is set |
 
-### The Exorcism Puzzle
-1. Get the bell, candles, and black book
-2. Enter the temple entrance
-3. Ring the bell
-4. Light the candles
-5. Read the prayer from the black book
-6. Spirits are exorcised (+4 points)
-7. Enter Hades (+4 points)
-
-### The Rainbow/Pot of Gold Puzzle
-1. Get the sceptre from inside the gold coffin
-2. Go to the end of the rainbow location
-3. Wave the sceptre at the rainbow (+5 points)
-4. Take the pot of gold and deposit in trophy case (+10 points)
-
-### The Loud Room Puzzle
-1. Enter the Loud Room
-2. Type "ECHO" (the room repeats it and goes quiet)
-3. Take the platinum bar (+5 points when deposited)
+**Room Entry Total: 65 points**
 
 ---
 
-## Important Notes
+## Action/Puzzle Points (from ZIL routines)
 
-- **The Thief**: He wanders the map and can steal treasures from you. Deposit items in the trophy case frequently to protect your score.
-- **The Egg**: Opening it yourself with force destroys the contents. Let the thief open it, or use his tools after defeating him.
-- **Point Timing**: Most treasure points are awarded when placing items in the trophy case, not when picking them up.
-- **Combat**: Fighting before you're well-equipped can result in death. The sword glows blue when enemies are near.
+| Action | Points | Source |
+|--------|--------|--------|
+| Defeat Troll | 10 | TROLL-MELEE |
+| Defeat Thief | 25 | THIEF-MELEE |
+| Defeat Cyclops | 10 | CYCLOPS-F |
+| Inflate boat | 5 | INFLATE-F |
+| Raise dam | 3 | DAM-F |
+| Lower dam | 3 | DAM-F |
+| Put coal in machine | 5 | MACHINE-F |
+| Turn on machine | 1 | MACHINE-F |
+| Wave sceptre at rainbow | 5 | RAINBOW-F |
+| Complete exorcism | 4 | EXORCISE-F |
+| Enter Hades | 4 | HADES-F |
 
----
-
-## Rank Titles by Score
-
-| Score Range | Rank |
-|-------------|------|
-| 0-24 | Beginner |
-| 25-49 | Amateur Adventurer |
-| 50-99 | Novice Adventurer |
-| 100-199 | Junior Adventurer |
-| 200-299 | Adventurer |
-| 300-329 | Master Adventurer |
-| 330-349 | Wizard |
-| 350 | Master Adventurer (Winner) |
+**Action Total: ~85 points**
 
 ---
 
-*Good luck, Adventurer!*
+## Score Breakdown Summary
+
+| Category | Points |
+|----------|--------|
+| Treasure VALUE (taking) | ~110 |
+| Treasure TVALUE (trophy case) | ~80 |
+| Room entry bonuses | 65 |
+| Combat victories | 45 |
+| Puzzle completions | ~50 |
+| **Total** | **350** |
+
+---
+
+## Important Mechanics
+
+### The Egg Puzzle
+- **You cannot open the egg yourself** - "You have neither the tools nor the expertise."
+- The thief will open it if he has it (or you give it to him)
+- Opening it by force (dropping, throwing) damages it:
+  - Broken egg: TVALUE 2 (instead of 5)
+  - Broken canary: TVALUE 1 (instead of 4)
+
+### SCORE-OBJ Function (gverbs.zil)
+The `SCORE-OBJ` routine awards VALUE points when:
+1. Taking an object (`ITAKE`)
+2. Putting an object in a container (`V-PUT`)
+3. Entering a room (room's VALUE property)
+
+Points are awarded only once - the VALUE is set to 0 after scoring.
+
+### Death Penalty
+Each death costs 10 points (from `JIGS-UP` routine).
+
+---
+
+## Rank Titles (from V-SCORE in 1actions.zil)
+
+| Score | Rank |
+|-------|------|
+| 350 | Master Adventurer |
+| 331-349 | Wizard |
+| 301-330 | Master |
+| 201-300 | Adventurer |
+| 101-200 | Junior Adventurer |
+| 51-100 | Novice Adventurer |
+| 26-50 | Amateur Adventurer |
+| 0-25 | Beginner |
+
+---
+
+*Reference: Original ZIL source files (1dungeon.zil, 1actions.zil, gverbs.zil)*
