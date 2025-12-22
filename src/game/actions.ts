@@ -380,8 +380,10 @@ export class InventoryAction implements ActionHandler {
       
       message += `  ${itemDisplay}\n`;
       
-      // Show nested items (items inside this container)
-      if (obj.capacity && obj.capacity > 0) {
+      // Show nested items (items inside this container) only if container is open or transparent
+      const objImpl2 = obj as GameObjectImpl;
+      if (obj.capacity && obj.capacity > 0 && 
+          (objImpl2.hasFlag(ObjectFlag.OPENBIT) || objImpl2.hasFlag(ObjectFlag.TRANSBIT))) {
         const nestedItems = Array.from(state.objects.values()).filter(
           item => item.location === obj.id
         );
@@ -793,6 +795,12 @@ function startsWithVowel(word: string): boolean {
  */
 export class OpenAction implements ActionHandler {
   execute(state: GameState, objectId: string): ActionResult {
+    // Check for special behavior first (e.g., egg cannot be opened by player)
+    const specialResult = executeSpecialBehavior(objectId, 'OPEN', state);
+    if (specialResult) {
+      return specialResult;
+    }
+
     // Check for scenery handler first
     const sceneryResult = executeSceneryAction(objectId, 'OPEN', state);
     if (sceneryResult) {

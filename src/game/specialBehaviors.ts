@@ -981,10 +981,9 @@ const eggBehavior: SpecialBehavior = {
       return 'You have neither the tools nor the expertise.';
     }
     
+    // Player cannot open the egg - only the thief can
     if (verb === 'OPEN') {
-      if (indirectObject === 'HANDS' || !indirectObject) {
-        return 'I doubt you could do that without damaging it.';
-      }
+      return 'You have neither the tools nor the expertise.';
     }
     
     return null;
