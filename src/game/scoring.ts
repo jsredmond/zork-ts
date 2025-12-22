@@ -92,6 +92,16 @@ export const SCORED_ACTIONS_KEY = 'SCORED_ACTIONS';
 /**
  * Rank titles based on score
  * From V-SCORE routine in 1actions.zil
+ * 
+ * Thresholds:
+ * - 0-25: Beginner
+ * - 26-50: Amateur Adventurer
+ * - 51-100: Novice Adventurer
+ * - 101-200: Junior Adventurer
+ * - 201-300: Adventurer
+ * - 301-330: Master
+ * - 331-349: Wizard
+ * - 350: Master Adventurer
  */
 export function getRank(score: number): string {
   if (score === 350) {
@@ -102,7 +112,7 @@ export function getRank(score: number): string {
     return 'Master';
   } else if (score > 200) {
     return 'Adventurer';
-  } else if (score >= 100) {
+  } else if (score > 100) {
     return 'Junior Adventurer';
   } else if (score > 50) {
     return 'Novice Adventurer';

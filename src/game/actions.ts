@@ -7,7 +7,7 @@ import { GameState } from './state.js';
 import { GameObjectImpl } from './objects.js';
 import { ObjectFlag, RoomFlag } from './data/flags.js';
 import { Storage } from '../persistence/storage.js';
-import { scoreTreasure, TROPHY_CASE_ID, getRank, MAX_SCORE, scoreAction } from './scoring.js';
+import { scoreTreasure, TROPHY_CASE_ID, getRank, MAX_SCORE, scoreAction, calculateTotalScore } from './scoring.js';
 import { Direction } from './rooms.js';
 import { 
   isRoomLit, 
@@ -2061,10 +2061,11 @@ export class KillAction implements ActionHandler {
 /**
  * SCORE action handler
  * Displays the player's current score
+ * Uses calculateTotalScore() to compute BASE_SCORE + treasure points
  */
 export class ScoreAction implements ActionHandler {
   execute(state: GameState): ActionResult {
-    const score = state.score;
+    const score = calculateTotalScore(state);
     const moves = state.moves;
     
     // Get rank from scoring module

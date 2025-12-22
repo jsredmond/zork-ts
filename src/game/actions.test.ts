@@ -1576,9 +1576,22 @@ describe('ScoreAction', () => {
       })]
     ]);
 
+    const objects = new Map<string, GameObjectImpl>();
+    
+    // Create trophy case for treasure scoring tests
+    const trophyCase = new GameObjectImpl({
+      id: 'TROPHY-CASE',
+      name: 'trophy case',
+      description: 'A trophy case',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.CONTBIT, ObjectFlag.OPENBIT],
+      capacity: 10000
+    });
+    objects.set('TROPHY-CASE', trophyCase);
+
     state = new GameState({
       currentRoom: 'TEST-ROOM',
-      objects: new Map(),
+      objects,
       rooms,
       inventory: [],
       score: 0,
@@ -1589,7 +1602,7 @@ describe('ScoreAction', () => {
   });
 
   it('should display current score and rank', () => {
-    state.score = 100;
+    state.setBaseScore(100);
     state.moves = 50;
 
     const result = scoreAction.execute(state);
@@ -1597,24 +1610,128 @@ describe('ScoreAction', () => {
     expect(result.success).toBe(true);
     expect(result.message).toContain('100');
     expect(result.message).toContain('50');
-    expect(result.message).toContain('Junior Adventurer');
+    expect(result.message).toContain('Novice Adventurer');
   });
 
   it('should show correct rank for different scores', () => {
-    // Test Beginner rank
-    state.score = 0;
+    // Test Beginner rank (0-25)
+    state.setBaseScore(0);
     let result = scoreAction.execute(state);
     expect(result.message).toContain('Beginner');
 
-    // Test Amateur Adventurer rank
-    state.score = 50;
+    // Test Amateur Adventurer rank (26-50)
+    state.setBaseScore(50);
     result = scoreAction.execute(state);
     expect(result.message).toContain('Amateur Adventurer');
 
-    // Test Master Adventurer rank
-    state.score = 350;
+    // Test Master Adventurer rank (350)
+    state.setBaseScore(350);
     result = scoreAction.execute(state);
     expect(result.message).toContain('Master Adventurer');
+  });
+
+  it('should display score format matching original game', () => {
+    state.setBaseScore(42);
+    state.moves = 15;
+
+    const result = scoreAction.execute(state);
+
+    // Format: "Your score is X (total of 350 points), in Y moves."
+    expect(result.message).toContain('Your score is 42');
+    expect(result.message).toContain('total of 350 points');
+    expect(result.message).toContain('in 15 moves');
+    expect(result.message).toContain('This gives you the rank of');
+  });
+
+  it('should use singular "move" for 1 move', () => {
+    state.setBaseScore(10);
+    state.moves = 1;
+
+    const result = scoreAction.execute(state);
+
+    expect(result.message).toContain('in 1 move.');
+    expect(result.message).not.toContain('in 1 moves');
+  });
+
+  it('should use plural "moves" for multiple moves', () => {
+    state.setBaseScore(10);
+    state.moves = 5;
+
+    const result = scoreAction.execute(state);
+
+    expect(result.message).toContain('in 5 moves.');
+  });
+
+  it('should test all rank boundaries', () => {
+    // Beginner: 0-25
+    state.setBaseScore(25);
+    expect(scoreAction.execute(state).message).toContain('Beginner');
+    
+    // Amateur Adventurer: 26-50
+    state.setBaseScore(26);
+    expect(scoreAction.execute(state).message).toContain('Amateur Adventurer');
+    state.setBaseScore(50);
+    expect(scoreAction.execute(state).message).toContain('Amateur Adventurer');
+    
+    // Novice Adventurer: 51-100
+    state.setBaseScore(51);
+    expect(scoreAction.execute(state).message).toContain('Novice Adventurer');
+    state.setBaseScore(100);
+    expect(scoreAction.execute(state).message).toContain('Novice Adventurer');
+    
+    // Junior Adventurer: 101-200
+    state.setBaseScore(101);
+    expect(scoreAction.execute(state).message).toContain('Junior Adventurer');
+    state.setBaseScore(200);
+    expect(scoreAction.execute(state).message).toContain('Junior Adventurer');
+    
+    // Adventurer: 201-300
+    state.setBaseScore(201);
+    expect(scoreAction.execute(state).message).toContain('Adventurer');
+    state.setBaseScore(300);
+    let result = scoreAction.execute(state);
+    expect(result.message).toContain('Adventurer');
+    expect(result.message).not.toContain('Master');
+    
+    // Master: 301-330
+    state.setBaseScore(301);
+    expect(scoreAction.execute(state).message).toContain('Master');
+    state.setBaseScore(330);
+    result = scoreAction.execute(state);
+    expect(result.message).toContain('Master');
+    expect(result.message).not.toContain('Wizard');
+    
+    // Wizard: 331-349
+    state.setBaseScore(331);
+    expect(scoreAction.execute(state).message).toContain('Wizard');
+    state.setBaseScore(349);
+    expect(scoreAction.execute(state).message).toContain('Wizard');
+    
+    // Master Adventurer: 350
+    state.setBaseScore(350);
+    expect(scoreAction.execute(state).message).toContain('Master Adventurer');
+  });
+
+  it('should calculate total score from baseScore and treasure points', () => {
+    // Set base score
+    state.setBaseScore(50);
+    
+    // Create a treasure in the trophy case
+    const skull = new GameObjectImpl({
+      id: 'SKULL',
+      name: 'crystal skull',
+      description: 'A crystal skull',
+      location: 'TROPHY-CASE',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+    state.objects.set('SKULL', skull);
+    
+    const result = scoreAction.execute(state);
+    
+    // Total should be baseScore (50) + SKULL treasure value (10) = 60
+    expect(result.message).toContain('Your score is 60');
+    expect(result.message).toContain('Novice Adventurer');
   });
 });
 

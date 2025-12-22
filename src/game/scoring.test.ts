@@ -118,7 +118,7 @@ describe('Scoring System', () => {
       expect(getRank(26)).toBe('Amateur Adventurer');
       expect(getRank(50)).toBe('Amateur Adventurer');
       expect(getRank(51)).toBe('Novice Adventurer');
-      expect(getRank(100)).toBe('Junior Adventurer');
+      expect(getRank(100)).toBe('Novice Adventurer');
       expect(getRank(101)).toBe('Junior Adventurer');
       expect(getRank(200)).toBe('Junior Adventurer');
       expect(getRank(201)).toBe('Adventurer');
@@ -822,6 +822,8 @@ describe('Scoring System', () => {
             const rank = getRank(score);
             
             // Verify rank matches the correct threshold
+            // Thresholds: 0-25 Beginner, 26-50 Amateur, 51-100 Novice,
+            // 101-200 Junior, 201-300 Adventurer, 301-330 Master, 331-349 Wizard, 350 Master Adventurer
             if (score === 350) {
               expect(rank).toBe('Master Adventurer');
             } else if (score > 330) {
@@ -830,7 +832,7 @@ describe('Scoring System', () => {
               expect(rank).toBe('Master');
             } else if (score > 200) {
               expect(rank).toBe('Adventurer');
-            } else if (score >= 100) {
+            } else if (score > 100) {
               expect(rank).toBe('Junior Adventurer');
             } else if (score > 50) {
               expect(rank).toBe('Novice Adventurer');
