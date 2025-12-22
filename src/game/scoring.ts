@@ -120,6 +120,12 @@ export const TROPHY_CASE_ID = 'TROPHY-CASE';
 export const SCORED_ACTIONS_KEY = 'SCORED_ACTIONS';
 
 /**
+ * Key for storing VALUE-scored treasures in globalVariables
+ * Tracks which treasures have had their VALUE points awarded (on first take)
+ */
+export const VALUE_SCORED_TREASURES_KEY = 'VALUE_SCORED_TREASURES';
+
+/**
  * Rank titles based on score
  * From V-SCORE routine in 1actions.zil
  * 
@@ -214,6 +220,61 @@ export function scoreAction(state: GameState, actionId: string): number {
 export function isActionScored(state: GameState, actionId: string): boolean {
   const scoredActions = getScoredActions(state);
   return scoredActions.has(actionId);
+}
+
+/**
+ * Get the set of VALUE-scored treasures from game state
+ * These are treasures that have had their VALUE points awarded on first take
+ */
+function getValueScoredTreasures(state: GameState): Set<string> {
+  const existing = state.getGlobalVariable(VALUE_SCORED_TREASURES_KEY);
+  if (existing instanceof Set) {
+    return existing;
+  }
+  // Initialize if not present
+  const newSet = new Set<string>();
+  state.setGlobalVariable(VALUE_SCORED_TREASURES_KEY, newSet);
+  return newSet;
+}
+
+/**
+ * Check if a treasure has had its VALUE points awarded
+ * 
+ * @param state - The game state
+ * @param objectId - The treasure object ID
+ * @returns true if VALUE points have already been awarded for this treasure
+ */
+export function isTreasureTakeScored(state: GameState, objectId: string): boolean {
+  const valueScoredTreasures = getValueScoredTreasures(state);
+  return valueScoredTreasures.has(objectId);
+}
+
+/**
+ * Award VALUE points when taking a treasure for the first time
+ * Implements ZIL SCORE-OBJ behavior - awards VALUE points once per treasure
+ * 
+ * @param state - The game state
+ * @param objectId - The treasure object ID
+ * @returns The points awarded (0 if already scored, not a treasure, or VALUE is 0)
+ */
+export function scoreTreasureTake(state: GameState, objectId: string): number {
+  // Check if it's a treasure with VALUE > 0
+  const value = TREASURE_TAKE_VALUES[objectId];
+  if (value === undefined || value === 0) {
+    return 0;
+  }
+  
+  // Check if already scored
+  const valueScoredTreasures = getValueScoredTreasures(state);
+  if (valueScoredTreasures.has(objectId)) {
+    return 0;
+  }
+  
+  // Mark as scored and award points to BASE_SCORE
+  valueScoredTreasures.add(objectId);
+  state.addToBaseScore(value);
+  
+  return value;
 }
 
 /**
