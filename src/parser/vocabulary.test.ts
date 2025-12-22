@@ -101,6 +101,14 @@ describe('Vocabulary', () => {
         expect(vocabulary.lookupWord('southeast')).toBe(TokenType.DIRECTION);
         expect(vocabulary.lookupWord('southwest')).toBe(TokenType.DIRECTION);
       });
+
+      it('should recognize in/out directions', () => {
+        // Note: 'in' and 'enter' are handled as verbs, not directions
+        // This allows "put X in Y" to work with 'in' as a preposition
+        expect(vocabulary.lookupWord('out')).toBe(TokenType.DIRECTION);
+        expect(vocabulary.lookupWord('exit')).toBe(TokenType.DIRECTION);
+        expect(vocabulary.lookupWord('leave')).toBe(TokenType.DIRECTION);
+      });
     });
 
     describe('Articles', () => {

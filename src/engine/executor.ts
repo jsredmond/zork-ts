@@ -112,6 +112,8 @@ export class CommandExecutor {
     this.actionHandlers.set('DOWN', moveAction);
     this.actionHandlers.set('IN', moveAction);
     this.actionHandlers.set('OUT', moveAction);
+    this.actionHandlers.set('EXIT', moveAction);  // Synonym for OUT
+    this.actionHandlers.set('LEAVE', moveAction);  // Synonym for OUT
     this.actionHandlers.set('ENTER', moveAction);
     this.actionHandlers.set('N', moveAction);
     this.actionHandlers.set('S', moveAction);
@@ -592,7 +594,7 @@ export class CommandExecutor {
     const movementVerbs = [
       'NORTH', 'SOUTH', 'EAST', 'WEST', 
       'NORTHEAST', 'NORTHWEST', 'SOUTHEAST', 'SOUTHWEST',
-      'UP', 'DOWN', 'IN', 'OUT', 'ENTER',
+      'UP', 'DOWN', 'IN', 'OUT', 'ENTER', 'EXIT', 'LEAVE',
       'N', 'S', 'E', 'W', 
       'NE', 'NW', 'SE', 'SW',
       'U', 'D', 'GO'

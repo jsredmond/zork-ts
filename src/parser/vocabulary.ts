@@ -166,7 +166,7 @@ export class Vocabulary {
       'THANK',
       'YES', 'Y', 'NO',
       'TELL', 'ASK', 'ANSWER', 'REPLY',
-      'BOARD', 'ENTER', 'EXIT', 'LEAVE', 'DISEMBARK',
+      'BOARD', 'ENTER', 'DISEMBARK',  // Removed 'EXIT', 'LEAVE' - now directions
       'FILL', 'EMPTY', 'POUR', 'SPILL',
       'BREAK', 'SMASH', 'DESTROY', 'DAMAGE',
       'BURN', 'IGNITE', 'INCINERATE',
@@ -219,7 +219,7 @@ export class Vocabulary {
       'UNDER', 'UNDERNEATH', 'BENEATH', 'BELOW',
       'AT', 'TO', 'FROM',
       'FOR', 'ABOUT',
-      'OFF', 'OUT', 'OVER',
+      'OFF', 'OVER',  // Removed 'OUT' - now a direction
       'BEHIND',
       'ACROSS',
       'AROUND',
@@ -245,6 +245,7 @@ export class Vocabulary {
       'NORTHWEST', 'NW',
       'SOUTHEAST', 'SE',
       'SOUTHWEST', 'SW',
+      'OUT', 'EXIT', 'LEAVE',  // Exit/leave direction synonyms
     ];
 
     directions.forEach(dir => this.addWord(dir, TokenType.DIRECTION));

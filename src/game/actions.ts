@@ -442,10 +442,13 @@ export class MoveAction implements ActionHandler {
       };
     }
 
-    // Normalize direction to uppercase and map ENTER to IN
+    // Normalize direction to uppercase and map ENTER to IN, EXIT/LEAVE to OUT
     let normalizedDirection = direction.toUpperCase();
     if (normalizedDirection === 'ENTER') {
       normalizedDirection = 'IN';
+    }
+    if (normalizedDirection === 'EXIT' || normalizedDirection === 'LEAVE') {
+      normalizedDirection = 'OUT';
     }
     
     // Map abbreviations to full direction names for room exits
