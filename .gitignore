@@ -31,5 +31,4 @@ yarn-error.log*
 *.sav
 
 # Kiro
-.kiro/specs/
-.kiro/steering/
+.kiro/
