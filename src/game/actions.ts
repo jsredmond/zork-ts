@@ -7,7 +7,7 @@ import { GameState } from './state.js';
 import { GameObjectImpl } from './objects.js';
 import { ObjectFlag, RoomFlag } from './data/flags.js';
 import { Storage } from '../persistence/storage.js';
-import { scoreTreasure, TROPHY_CASE_ID, getRank, MAX_SCORE, scoreAction, calculateTotalScore } from './scoring.js';
+import { scoreTreasure, scoreTreasureTake, TROPHY_CASE_ID, getRank, MAX_SCORE, scoreAction, calculateTotalScore } from './scoring.js';
 import { Direction } from './rooms.js';
 import { 
   isRoomLit, 
@@ -166,6 +166,10 @@ export class TakeAction implements ActionHandler {
     // Take the object
     const oldLocation = obj.location;
     state.moveObject(objectId, 'PLAYER', 'HELD');
+
+    // Award VALUE points for taking treasures (first time only)
+    // Non-treasures return 0, already-scored treasures return 0
+    scoreTreasureTake(state, objectId);
 
     return {
       success: true,
