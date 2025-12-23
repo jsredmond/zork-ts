@@ -105,6 +105,10 @@ export interface ComparisonOptions {
   knownVariations?: string[];
   /** Similarity threshold (0-1) for considering outputs as "matching" */
   toleranceThreshold?: number;
+  /** Strip Z-Machine status bar lines before comparison */
+  stripStatusBar?: boolean;
+  /** Normalize line wrapping differences before comparison */
+  normalizeLineWrapping?: boolean;
 }
 
 /**

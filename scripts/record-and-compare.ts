@@ -36,7 +36,8 @@ import {
   ReportFormat, 
   RecordingOptions,
   CommandSequence,
-  Transcript
+  Transcript,
+  ComparisonOptions
 } from '../src/testing/recording/types.js';
 
 // ============================================================================
@@ -52,6 +53,7 @@ interface CLIOptions {
   seed?: number;
   batch: boolean;
   parallel: boolean;
+  normalize: boolean;
   help: boolean;
   input?: string;
 }
@@ -89,6 +91,11 @@ function parseArguments(): CLIOptions {
       parallel: {
         type: 'boolean',
         short: 'p',
+        default: false
+      },
+      normalize: {
+        type: 'boolean',
+        short: 'n',
         default: false
       },
       help: {
@@ -131,6 +138,7 @@ function parseArguments(): CLIOptions {
     seed,
     batch: values.batch as boolean,
     parallel: values.parallel as boolean,
+    normalize: values.normalize as boolean,
     help: values.help as boolean,
     input: positionals[0]
   };
@@ -163,6 +171,10 @@ Options:
 
   -p, --parallel              Run batch sequences in parallel
 
+  -n, --normalize             Enable content-focused comparison
+                              Strips status bar lines and normalizes line wrapping
+                              for more accurate content parity measurement
+
   -h, --help                  Show this help message
 
 Examples:
@@ -177,6 +189,12 @@ Examples:
 
   # Generate HTML report to file
   npx tsx scripts/record-and-compare.ts --format html --output report.html sequence.txt
+
+  # Compare with content normalization (ignores status bar and line wrapping)
+  npx tsx scripts/record-and-compare.ts --normalize scripts/sequences/basic-exploration.txt
+
+  # Batch compare with normalization
+  npx tsx scripts/record-and-compare.ts --batch --normalize --format text scripts/sequences/
 
 Environment Variables:
   ZORK_INTERPRETER_PATH   Path to dfrotz/frotz executable
@@ -229,7 +247,8 @@ async function recordZMachineOnly(
 async function recordAndCompare(
   sequence: CommandSequence,
   options: RecordingOptions,
-  reportFormat: ReportFormat
+  reportFormat: ReportFormat,
+  normalize: boolean = false
 ): Promise<string> {
   const config = await loadZMachineConfig();
   const validation = validateConfig(config);
@@ -266,9 +285,16 @@ async function recordAndCompare(
   console.error(`Recording Z-Machine: ${sequence.name}...`);
   const zmTranscript = await zmRecorder.record(sequence.commands, options);
 
-  // Compare
+  // Compare with normalization options if enabled
   console.error('Comparing transcripts...');
-  const comparator = new TranscriptComparator();
+  const comparisonOptions: ComparisonOptions = normalize
+    ? {
+        stripStatusBar: true,
+        normalizeLineWrapping: true,
+        normalizeWhitespace: true
+      }
+    : {};
+  const comparator = new TranscriptComparator(comparisonOptions);
   const diffReport = comparator.compare(zmTranscript, tsTranscript);
 
   // Generate report
@@ -294,9 +320,21 @@ async function runBatch(
     }
   }
 
-  const batchRunner = createBatchRunner(zmRecorder);
+  // Set up comparison options with normalization if enabled
+  const comparisonOptions: ComparisonOptions = cliOptions.normalize
+    ? {
+        stripStatusBar: true,
+        normalizeLineWrapping: true,
+        normalizeWhitespace: true
+      }
+    : {};
+
+  const batchRunner = createBatchRunner(zmRecorder, comparisonOptions);
   
   console.error(`Running batch with ${sequences.length} sequences...`);
+  if (cliOptions.normalize) {
+    console.error('Content normalization enabled (stripping status bar, normalizing line wrapping)');
+  }
   
   const result = await batchRunner.run(
     sequences,
@@ -370,7 +408,7 @@ async function main(): Promise<void> {
         }
         case 'both':
         default:
-          output = await recordAndCompare(sequence, recordingOptions, options.format);
+          output = await recordAndCompare(sequence, recordingOptions, options.format, options.normalize);
           break;
       }
     }

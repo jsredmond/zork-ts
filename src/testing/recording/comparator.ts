@@ -26,6 +26,8 @@ const DEFAULT_OPTIONS: Required<ComparisonOptions> = {
   ignoreCaseInMessages: false,
   knownVariations: [],
   toleranceThreshold: 0.95,
+  stripStatusBar: false,
+  normalizeLineWrapping: false,
 };
 
 /**
@@ -68,12 +70,25 @@ export class TranscriptComparator {
         continue;
       }
 
-      const outputA = opts.normalizeWhitespace
-        ? this.normalizeOutput(entryA.output)
-        : entryA.output;
-      const outputB = opts.normalizeWhitespace
-        ? this.normalizeOutput(entryB.output)
-        : entryB.output;
+      // Apply content normalization first (status bar, line wrapping)
+      let outputA = entryA.output;
+      let outputB = entryB.output;
+
+      if (opts.stripStatusBar) {
+        outputA = this.stripStatusBar(outputA);
+        outputB = this.stripStatusBar(outputB);
+      }
+
+      if (opts.normalizeLineWrapping) {
+        outputA = this.normalizeLineWrapping(outputA);
+        outputB = this.normalizeLineWrapping(outputB);
+      }
+
+      // Then apply whitespace normalization
+      if (opts.normalizeWhitespace) {
+        outputA = this.normalizeOutput(outputA);
+        outputB = this.normalizeOutput(outputB);
+      }
 
       // Check for exact match
       if (outputA === outputB) {

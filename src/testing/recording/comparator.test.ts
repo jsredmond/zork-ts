@@ -567,4 +567,129 @@ There is a small mailbox here.`);
       expect(comparator.getOptions().ignoreCaseInMessages).toBe(true);
     });
   });
+
+  describe('compare with normalization options', () => {
+    it('should strip status bar when stripStatusBar option is enabled', () => {
+      const comparator = new TranscriptComparator({
+        stripStatusBar: true,
+      });
+      
+      // Z-Machine output includes status bar, TypeScript doesn't
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', `West of House                                    Score: 0        Moves: 1
+You are standing in an open field.`),
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'You are standing in an open field.'),
+      ]);
+      
+      const report = comparator.compare(transcriptA, transcriptB);
+      
+      // Should match after stripping status bar
+      expect(report.exactMatches).toBe(1);
+      expect(report.differences).toHaveLength(0);
+      expect(report.parityScore).toBe(100);
+    });
+
+    it('should not strip status bar when stripStatusBar option is disabled', () => {
+      const comparator = new TranscriptComparator({
+        stripStatusBar: false,
+      });
+      
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', `West of House                                    Score: 0        Moves: 1
+You are standing in an open field.`),
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'You are standing in an open field.'),
+      ]);
+      
+      const report = comparator.compare(transcriptA, transcriptB);
+      
+      // Should NOT match because status bar is not stripped
+      expect(report.exactMatches).toBe(0);
+      expect(report.differences.length).toBeGreaterThan(0);
+    });
+
+    it('should normalize line wrapping when normalizeLineWrapping option is enabled', () => {
+      const comparator = new TranscriptComparator({
+        normalizeLineWrapping: true,
+      });
+      
+      // Z-Machine wraps at ~80 chars, TypeScript doesn't
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', `You are standing in an open field west of a white house, with a boarded
+front door.`),
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'You are standing in an open field west of a white house, with a boarded front door.'),
+      ]);
+      
+      const report = comparator.compare(transcriptA, transcriptB);
+      
+      // Should match after normalizing line wrapping
+      expect(report.exactMatches).toBe(1);
+      expect(report.differences).toHaveLength(0);
+      expect(report.parityScore).toBe(100);
+    });
+
+    it('should not normalize line wrapping when normalizeLineWrapping option is disabled', () => {
+      const comparator = new TranscriptComparator({
+        normalizeLineWrapping: false,
+        normalizeWhitespace: false, // Also disable whitespace normalization
+      });
+      
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', `You are standing in an open field west of a white house, with a boarded
+front door.`),
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'You are standing in an open field west of a white house, with a boarded front door.'),
+      ]);
+      
+      const report = comparator.compare(transcriptA, transcriptB);
+      
+      // Should NOT match because line wrapping is not normalized
+      expect(report.exactMatches).toBe(0);
+      expect(report.differences.length).toBeGreaterThan(0);
+    });
+
+    it('should apply both stripStatusBar and normalizeLineWrapping together', () => {
+      const comparator = new TranscriptComparator({
+        stripStatusBar: true,
+        normalizeLineWrapping: true,
+      });
+      
+      // Z-Machine output with status bar AND line wrapping
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', `West of House                                    Score: 0        Moves: 1
+You are standing in an open field west of a white house, with a boarded
+front door.`),
+      ]);
+      
+      // TypeScript output without status bar and without line wrapping
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'You are standing in an open field west of a white house, with a boarded front door.'),
+      ]);
+      
+      const report = comparator.compare(transcriptA, transcriptB);
+      
+      // Should match after both normalizations
+      expect(report.exactMatches).toBe(1);
+      expect(report.differences).toHaveLength(0);
+      expect(report.parityScore).toBe(100);
+    });
+
+    it('should have stripStatusBar and normalizeLineWrapping disabled by default', () => {
+      const comparator = new TranscriptComparator();
+      const options = comparator.getOptions();
+      
+      expect(options.stripStatusBar).toBe(false);
+      expect(options.normalizeLineWrapping).toBe(false);
+    });
+  });
 });
