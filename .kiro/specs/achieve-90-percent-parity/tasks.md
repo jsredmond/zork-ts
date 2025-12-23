@@ -104,7 +104,7 @@ Improve inventory management sequence from 84.2% to 90%+ parity.
 
 ---
 
-- [-] 3. Fix inventory management sequence
+- [x] 3. Fix inventory management sequence
   - Address inventory operation differences (6 differences)
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
@@ -133,7 +133,7 @@ Improve inventory management sequence from 84.2% to 90%+ parity.
   - Target: 90%+ parity (up from 84.2%)
   - _Requirements: 3.1_
 
-- [-] 3.5 Commit inventory management fixes
+- [x] 3.5 Commit inventory management fixes
   - Commit message: "fix: Improve inventory management sequence parity to 90%+"
   - Include inventory action fixes
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
@@ -147,23 +147,23 @@ Improve navigation directions sequence from 87.8% to 90%+ parity.
 
 ---
 
-- [ ] 4. Fix navigation directions sequence
+- [-] 4. Fix navigation directions sequence
   - Address navigation and movement differences (6 differences)
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 4.1 Analyze navigation directions differences
+- [x] 4.1 Analyze navigation directions differences
   - Run analysis tool on navigation directions sequence
   - Focus on movement commands and error messages
   - _Requirements: 4.1_
 
-- [ ] 4.2 Fix navigation error messages
+- [x] 4.2 Fix navigation error messages
   - File: `src/game/verbHandlers.ts`
   - Ensure "You can't go that way" message consistency
   - Fix directional synonym handling
   - Fix room transition descriptions
   - _Requirements: 4.2, 4.3, 4.4_
 
-- [ ] 4.3 Write property tests for navigation fixes
+- [x] 4.3 Write property tests for navigation fixes
   - File: `src/game/verbHandlers.test.ts`
   - **Property 6: Navigation Directions Parity Achievement**
   - **Validates: Requirements 4.1**
@@ -171,12 +171,12 @@ Improve navigation directions sequence from 87.8% to 90%+ parity.
   - **Validates: Requirements 4.2**
   - _Requirements: 4.1, 4.2_
 
-- [ ] 4.4 Verify navigation directions parity improvement
+- [x] 4.4 Verify navigation directions parity improvement
   - Run: `npx tsx scripts/record-and-compare.ts --normalize scripts/sequences/navigation-directions.txt`
   - Target: 90%+ parity (up from 87.8%)
   - _Requirements: 4.1_
 
-- [ ] 4.5 Commit navigation directions fixes
+- [-] 4.5 Commit navigation directions fixes
   - Commit message: "fix: Improve navigation directions sequence parity to 90%+"
   - Include navigation and movement fixes
   - _Requirements: 4.1, 4.2, 4.3, 4.4_

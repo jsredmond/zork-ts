@@ -90,8 +90,8 @@ export const ALL_ROOMS: Record<string, RoomData> = {
       { direction: 'SW', destination: 'SOUTH-OF-HOUSE' },
       { direction: 'NW', destination: 'NORTH-OF-HOUSE' },
       { direction: 'EAST', destination: 'CLEARING' },
-      { direction: 'WEST', destination: 'KITCHEN', condition: 'KITCHEN-WINDOW IS OPEN' },
-      { direction: 'IN', destination: 'KITCHEN', condition: 'KITCHEN-WINDOW IS OPEN' }
+      { direction: 'WEST', destination: 'KITCHEN', condition: 'KITCHEN-WINDOW IS OPEN', message: 'The kitchen window is closed.' },
+      { direction: 'IN', destination: 'KITCHEN', condition: 'KITCHEN-WINDOW IS OPEN', message: 'The kitchen window is closed.' }
     ],
     flags: ['RLANDBIT', 'ONBIT', 'SACREDBIT'],
     globalObjects: ['WHITE-HOUSE', 'KITCHEN-WINDOW', 'FOREST'],
