@@ -3946,7 +3946,8 @@ export class TakeAllAction implements ActionHandler {
 
 /**
  * DROP ALL action handler
- * Drops all objects from inventory
+ * Drops all objects from inventory in inventory order (first to last)
+ * Matches Z-Machine behavior for "drop all" command
  */
 export class DropAllAction implements ActionHandler {
   execute(state: GameState): ActionResult {
@@ -3963,6 +3964,7 @@ export class DropAllAction implements ActionHandler {
     const dropAction = new DropAction();
     
     // Copy inventory to avoid mutation during iteration
+    // Iterate in forward order (first to last) to match Z-Machine behavior
     const itemsToDrop = [...state.inventory];
 
     for (const objId of itemsToDrop) {

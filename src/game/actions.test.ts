@@ -2193,4 +2193,56 @@ describe('DropAllAction', () => {
     expect(result.success).toBe(false);
     expect(result.message).toContain('empty-handed');
   });
+
+  it('should drop items in inventory order (first to last)', async () => {
+    const { DropAllAction } = await import('./actions.js');
+    const dropAllAction = new DropAllAction();
+
+    // Create multiple objects to test order
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'sword',
+      description: 'A sharp sword',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    const lamp = new GameObjectImpl({
+      id: 'LAMP',
+      name: 'brass lantern',
+      description: 'A brass lantern',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 5
+    });
+
+    const knife = new GameObjectImpl({
+      id: 'KNIFE',
+      name: 'nasty knife',
+      description: 'A nasty knife',
+      location: 'PLAYER',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 3
+    });
+
+    state.objects.set('SWORD', sword);
+    state.objects.set('LAMP', lamp);
+    state.objects.set('KNIFE', knife);
+    
+    // Add in specific order: sword first, then lamp, then knife
+    state.addToInventory('SWORD');
+    state.addToInventory('LAMP');
+    state.addToInventory('KNIFE');
+
+    const result = dropAllAction.execute(state);
+
+    expect(result.success).toBe(true);
+    
+    // Verify items are listed in inventory order (first to last)
+    const lines = result.message.split('\n');
+    expect(lines[0]).toContain('sword');
+    expect(lines[1]).toContain('brass lantern');
+    expect(lines[2]).toContain('nasty knife');
+  });
 });
