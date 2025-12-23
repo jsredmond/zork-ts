@@ -3980,8 +3980,9 @@ export class DropAllAction implements ActionHandler {
     const dropAction = new DropAction();
     
     // Copy inventory to avoid mutation during iteration
-    // Iterate in forward order (first to last) to match Z-Machine behavior
-    const itemsToDrop = [...state.inventory];
+    // Iterate in REVERSE order (last acquired first) to match Z-Machine behavior
+    // Z-Machine drops items in reverse order of acquisition
+    const itemsToDrop = [...state.inventory].reverse();
 
     for (const objId of itemsToDrop) {
       const obj = state.getObject(objId);

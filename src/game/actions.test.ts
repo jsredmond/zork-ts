@@ -2251,7 +2251,7 @@ describe('DropAllAction', () => {
     expect(result.message).toContain('empty-handed');
   });
 
-  it('should drop items in inventory order (first to last)', async () => {
+  it('should drop items in reverse inventory order (last acquired first)', async () => {
     const { DropAllAction } = await import('./actions.js');
     const dropAllAction = new DropAllAction();
 
@@ -2296,13 +2296,113 @@ describe('DropAllAction', () => {
 
     expect(result.success).toBe(true);
     
-    // Verify items are listed in inventory order (first to last)
+    // Verify items are listed in REVERSE inventory order (last acquired first)
+    // Z-Machine drops items in reverse order: knife (last), lamp (middle), sword (first)
     const lines = result.message.split('\n');
-    expect(lines[0]).toContain('sword');
-    expect(lines[1]).toContain('brass lantern');
-    expect(lines[2]).toContain('nasty knife');
+    expect(lines[0]).toContain('nasty knife');  // Last acquired, dropped first
+    expect(lines[1]).toContain('brass lantern'); // Middle
+    expect(lines[2]).toContain('sword');         // First acquired, dropped last
   });
 });
+
+// Feature: parity-fixes-90-percent, Property 4: Drop All Reverse Order
+describe('Property Test: Drop All Reverse Order', () => {
+  it('should drop items in reverse order of acquisition for any inventory state', async () => {
+    fc.assert(
+      fc.asyncProperty(
+        // Generate random inventory configurations with 2-5 items
+        fc.array(
+          fc.record({
+            id: fc.string({ minLength: 1, maxLength: 15 }).map(s => s.toUpperCase().replace(/[^A-Z0-9]/g, '')),
+            name: fc.string({ minLength: 1, maxLength: 20 }).filter(s => s.trim().length > 0),
+            size: fc.integer({ min: 1, max: 20 })
+          }),
+          { minLength: 2, maxLength: 5 }
+        ),
+        async (itemsData) => {
+          // Filter out invalid items and ensure unique IDs
+          const validItems = itemsData.filter(item => 
+            item.id && item.id.length > 0 && item.name && item.name.trim().length > 0
+          );
+          
+          // Ensure we have unique IDs
+          const uniqueItems = validItems.filter((item, index, arr) => 
+            arr.findIndex(other => other.id === item.id) === index
+          );
+          
+          if (uniqueItems.length < 2) {
+            return true; // Skip if not enough valid unique items
+          }
+
+          // Create test state
+          const room = new RoomImpl({
+            id: 'TEST-ROOM',
+            name: 'Test Room',
+            description: 'A test room',
+            exits: new Map(),
+            flags: [RoomFlag.ONBIT]
+          });
+
+          const rooms = new Map([['TEST-ROOM', room]]);
+          const objects = new Map();
+          
+          // Create objects and add to state
+          uniqueItems.forEach(itemData => {
+            const obj = new GameObjectImpl({
+              id: itemData.id,
+              name: itemData.name,
+              description: `A ${itemData.name}`,
+              location: 'PLAYER',
+              flags: [ObjectFlag.TAKEBIT],
+              size: itemData.size
+            });
+            objects.set(itemData.id, obj);
+          });
+
+          const state = new GameState({
+            currentRoom: 'TEST-ROOM',
+            objects,
+            rooms,
+            inventory: [],
+            score: 0,
+            moves: 0
+          });
+
+          // Add items to inventory in order (simulating acquisition order)
+          const acquisitionOrder: string[] = [];
+          uniqueItems.forEach(itemData => {
+            state.addToInventory(itemData.id);
+            acquisitionOrder.push(itemData.id);
+          });
+
+          // Execute drop all
+          const { DropAllAction } = await import('./actions.js');
+          const dropAllAction = new DropAllAction();
+          const result = dropAllAction.execute(state);
+
+          expect(result.success).toBe(true);
+          
+          // Parse the result message to get drop order
+          const lines = result.message.split('\n').filter(line => line.trim().length > 0);
+          expect(lines.length).toBe(uniqueItems.length);
+          
+          // Verify items are dropped in reverse order of acquisition
+          // Last acquired should be dropped first
+          const expectedOrder = [...acquisitionOrder].reverse();
+          
+          lines.forEach((line, index) => {
+            const expectedItem = objects.get(expectedOrder[index]);
+            expect(line).toContain(expectedItem!.name);
+          });
+
+          return true;
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+});
+
 // Feature: parity-fixes-90-percent, Property 2: Dark Room Output Format
 describe('Property Test: Dark Room Output Format', () => {
   it('should show only darkness message without room name for any dark room', () => {
