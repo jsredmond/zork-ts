@@ -320,7 +320,7 @@ describe('InventoryAction', () => {
   it('should list all objects in inventory', () => {
     const sword = new GameObjectImpl({
       id: 'SWORD',
-      name: 'elvish sword',
+      name: 'sword',
       description: 'A sharp sword',
       location: 'PLAYER',
       flags: [ObjectFlag.TAKEBIT],
@@ -345,7 +345,7 @@ describe('InventoryAction', () => {
 
     expect(result.success).toBe(true);
     expect(result.message).toContain('carrying');
-    expect(result.message).toContain('elvish sword');
+    expect(result.message).toContain('sword');
     expect(result.message).toContain('brass lantern');
   });
 });
@@ -1260,7 +1260,7 @@ describe('Inventory Management Integration Tests', () => {
     // Create object in room (using lowercase name to match real game data)
     const sword = new GameObjectImpl({
       id: 'SWORD',
-      name: 'elvish sword',
+      name: 'sword',
       description: 'A sharp sword',
       location: 'TEST-ROOM',
       flags: [ObjectFlag.TAKEBIT],
@@ -1279,7 +1279,7 @@ describe('Inventory Management Integration Tests', () => {
 
     // Inventory should now show the sword
     result = inventoryAction.execute(state);
-    expect(result.message).toContain('elvish sword');
+    expect(result.message).toContain('sword');
 
     // Drop the sword
     result = dropAction.execute(state, 'SWORD');

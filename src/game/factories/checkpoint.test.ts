@@ -122,7 +122,7 @@ describe('Task 14.4 Checkpoint - Basic Navigation and Object Interaction', () =>
     // Check sword properties
     const sword = state.getObject('SWORD');
     expect(sword).toBeDefined();
-    expect(sword?.name).toBe('elvish sword');
+    expect(sword?.name).toBe('sword');
     expect(sword?.hasFlag).toBeDefined();
   });
 

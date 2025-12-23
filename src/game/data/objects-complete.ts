@@ -433,11 +433,12 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
 
   'SWORD': {
     id: 'SWORD',
-    name: 'elvish sword',
+    name: 'sword',
     synonyms: ['SWORD', 'ORCRIST', 'GLAMDRING', 'BLADE'],
     adjectives: ['ELVISH', 'OLD', 'ANTIQUE'],
     description: 'sword',
     firstDescription: 'Above the trophy case hangs an elvish sword of great antiquity.',
+    longDescription: 'There is a sword here.',
     initialLocation: 'LIVING-ROOM',
     flags: ['TAKEBIT', 'WEAPONBIT', 'TRYTAKEBIT'],
     action: 'SWORD-FCN',

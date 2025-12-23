@@ -2065,7 +2065,7 @@ export function initializeConditionalMessages(): void {
           const sword = state.getObject('SWORD');
           return sword?.location === 'PLAYER';
         },
-        message: 'You are armed with the elvish sword.'
+        message: 'You are armed with the sword.'
       }
     ],
     defaultMessage: 'You are unarmed.'

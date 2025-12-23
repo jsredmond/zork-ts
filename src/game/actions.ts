@@ -176,6 +176,10 @@ export class TakeAction implements ActionHandler {
     // Take the object
     const oldLocation = obj.location;
     state.moveObject(objectId, 'PLAYER', 'HELD');
+    
+    // Set TOUCHBIT to indicate object has been touched/taken
+    // This ensures dropped objects use longDescription instead of firstDescription
+    obj.addFlag(ObjectFlag.TOUCHBIT);
 
     // Award VALUE points for taking treasures (first time only)
     // Non-treasures return 0, already-scored treasures return 0
