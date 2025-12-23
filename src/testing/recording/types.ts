@@ -20,6 +20,8 @@ export interface RecordingOptions {
   captureTimestamps?: boolean;
   /** Preserve exact whitespace and formatting */
   preserveFormatting?: boolean;
+  /** Suppress random atmospheric messages for deterministic testing */
+  suppressRandomMessages?: boolean;
 }
 
 /**

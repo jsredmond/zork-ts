@@ -369,4 +369,36 @@ describe('Forest Room Daemon', () => {
     
     expect(messageDisplayed).toBe(false);
   });
+
+  /**
+   * Property 3: Song Bird Suppression in Testing Mode
+   * Validates: Requirements 4.1
+   * 
+   * For any forest room daemon execution with testing mode enabled,
+   * the daemon SHALL NOT produce any song bird messages.
+   */
+  it('should suppress song bird messages in testing mode', () => {
+    state.setCurrentRoom('FOREST-1');
+    state.setTestingMode(true);
+    enableForestRoomDaemon(state);
+    
+    let messageDisplayed = false;
+    const originalLog = console.log;
+    console.log = (msg: string) => {
+      if (msg.includes('chirping of a song bird')) {
+        messageDisplayed = true;
+      }
+    };
+    
+    // Run the daemon many times - should never display message in testing mode
+    for (let i = 0; i < 100; i++) {
+      const result = forestRoomDaemon(state);
+      expect(result).toBe(false); // Should always return false in testing mode
+    }
+    
+    console.log = originalLog;
+    
+    // No messages should be displayed in testing mode
+    expect(messageDisplayed).toBe(false);
+  });
 });

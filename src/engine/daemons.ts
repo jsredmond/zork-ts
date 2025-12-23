@@ -284,6 +284,11 @@ export function isForestRoom(state: GameState): boolean {
  * @returns true if a message was displayed
  */
 export function forestRoomDaemon(state: GameState): boolean {
+  // Skip random messages in testing mode
+  if (state.isTestingMode()) {
+    return false;
+  }
+
   // Check if player is in a forest room
   if (!isForestRoom(state)) {
     // Disable the daemon when not in forest

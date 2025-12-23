@@ -76,6 +76,12 @@ export class GameState {
    */
   private rng: SeededRandom | null = null;
 
+  /**
+   * Testing mode flag to suppress random atmospheric messages
+   * When true, random messages like song birds are suppressed
+   */
+  private testingMode: boolean = false;
+
   constructor(data?: {
     currentRoom?: string;
     objects?: Map<string, GameObject>;
@@ -459,5 +465,21 @@ export class GameState {
       return this.rng.nextInt(min, max);
     }
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  /**
+   * Set testing mode to suppress random atmospheric messages
+   * @param enabled - Whether to enable testing mode
+   */
+  setTestingMode(enabled: boolean): void {
+    this.testingMode = enabled;
+  }
+
+  /**
+   * Check if testing mode is enabled
+   * @returns true if testing mode is enabled
+   */
+  isTestingMode(): boolean {
+    return this.testingMode;
   }
 }

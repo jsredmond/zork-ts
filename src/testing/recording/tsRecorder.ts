@@ -73,6 +73,11 @@ export class TypeScriptRecorder extends GameRecorder {
       state.setSeed(options.seed);
     }
 
+    // Enable testing mode to suppress random messages
+    if (options?.suppressRandomMessages) {
+      state.setTestingMode(true);
+    }
+
     const parser = new Parser(this.vocabulary);
     const executor = new CommandExecutor();
 
