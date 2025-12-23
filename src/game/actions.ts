@@ -3890,11 +3890,12 @@ export class AgainAction implements ActionHandler {
  */
 export class TakeAllAction implements ActionHandler {
   execute(state: GameState): ActionResult {
-    // Check darkness first
+    // In darkness, return "nothing to take" message (matches Z-Machine behavior)
+    // The logic is: you can't see anything, so there's nothing to take
     if (!isRoomLit(state)) {
       return {
         success: false,
-        message: "It's too dark to see!",
+        message: "There's nothing here you can take.",
         stateChanges: []
       };
     }

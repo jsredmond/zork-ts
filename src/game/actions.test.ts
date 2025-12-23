@@ -2083,6 +2083,43 @@ describe('TakeAllAction', () => {
     expect(result.success).toBe(false);
     expect(state.isInInventory('SCENERY')).toBe(false);
   });
+
+  it('should return "There\'s nothing here you can take." in darkness', async () => {
+    const { TakeAllAction } = await import('./actions.js');
+    const takeAllAction = new TakeAllAction();
+
+    // Create a dark room (no ONBIT flag)
+    const darkRoom = new RoomImpl({
+      id: 'DARK-ROOM',
+      name: 'Dark Room',
+      description: 'A dark room',
+      exits: new Map(),
+      flags: [] // No ONBIT = dark room
+    });
+
+    state.rooms.set('DARK-ROOM', darkRoom);
+    state.setCurrentRoom('DARK-ROOM');
+
+    // Add a takeable object to the dark room
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'sword',
+      description: 'A sharp sword',
+      location: 'DARK-ROOM',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 10
+    });
+
+    state.objects.set('SWORD', sword);
+    darkRoom.addObject('SWORD');
+
+    const result = takeAllAction.execute(state);
+
+    // Should return the Z-Machine message, not "It's too dark to see!"
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("There's nothing here you can take.");
+    expect(state.isInInventory('SWORD')).toBe(false);
+  });
 });
 
 describe('DropAllAction', () => {
