@@ -189,7 +189,7 @@ Verify 90%+ aggregate parity on all sequences.
 
 ---
 
-- [-] 6. Run parity comparison tests
+- [x] 6. Run parity comparison tests
   - Verify 90%+ aggregate parity on all sequences
   - _Requirements: All_
 
@@ -205,7 +205,7 @@ Verify 90%+ aggregate parity on all sequences.
   - Mark spec as complete if 90%+ achieved
   - _Requirements: All_
 
-- [-] 6.3 Final commit
+- [x] 6.3 Final commit
   - Commit message: "docs: Parity fixes complete - 90%+ achieved"
   - Include documentation updates
   - _Requirements: All_

@@ -30,8 +30,8 @@ export enum CombatResult {
  */
 // Player starts with enough strength to survive at least one serious wound
 // Original ZIL had STRENGTH-MIN of 2, but this made early combat too deadly
-// Increased to 4 to allow survival of initial combat encounters
-export const STRENGTH_MIN = 4;
+// Increased to 6 to allow survival of troll combat encounters
+export const STRENGTH_MIN = 6;
 export const STRENGTH_MAX = 9;
 export const MAX_SCORE = 350;
 export const CURE_WAIT = 30;
@@ -300,6 +300,7 @@ export function executePlayerAttack(
   if (defenseStrength < 0) {
     // Villain is unconscious - kill them
     console.log(`The unconscious ${villain.name.toLowerCase()} cannot defend himself: He dies.`);
+    applyVillainDamage(state, villainId, CombatResult.KILLED, defenseStrength);
     return CombatResult.KILLED;
   } else if (defenseStrength === 0) {
     // Villain is already dead
@@ -309,6 +310,7 @@ export function executePlayerAttack(
     } else {
       console.log(`The ${villain.name.toLowerCase()} is already dead.`);
     }
+    applyVillainDamage(state, villainId, CombatResult.KILLED, defenseStrength);
     return CombatResult.KILLED;
   }
   
@@ -595,8 +597,9 @@ function applyVillainDamage(
   // Update villain strength
   villain.setProperty('strength', newDefense);
   
-  // Handle death
-  if (newDefense === 0) {
+  // Handle death and unconsciousness
+  if (result === CombatResult.KILLED || result === CombatResult.SITTING_DUCK) {
+    // Direct kill results
     villain.flags.delete(ObjectFlag.FIGHTBIT);
     console.log(`Almost as soon as the ${villain.name.toLowerCase()} breathes his last breath, a cloud of sinister black fog envelops him, and when the fog lifts, the carcass has disappeared.`);
     
@@ -607,7 +610,8 @@ function applyVillainDamage(
     if (state.actorManager.getActor(villainId)) {
       state.actorManager.transitionActorState(villainId, ActorState.DEAD, state);
     }
-  } else if (result === CombatResult.UNCONSCIOUS) {
+  } else if (result === CombatResult.UNCONSCIOUS || newDefense === 0) {
+    // Unconscious from direct result or strength reaching 0
     // Notify actor system
     if (state.actorManager.getActor(villainId)) {
       state.actorManager.transitionActorState(villainId, ActorState.UNCONSCIOUS, state);
