@@ -595,6 +595,7 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     synonyms: ['MAILBOX', 'BOX'],
     adjectives: ['SMALL'],
     description: 'small mailbox',
+    longDescription: 'There is a small mailbox here.',
     initialLocation: 'WEST-OF-HOUSE',
     flags: ['CONTBIT', 'TRYTAKEBIT'],
     capacity: 10

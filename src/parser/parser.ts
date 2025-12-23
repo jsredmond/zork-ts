@@ -98,6 +98,20 @@ export class Parser {
         .map(id => state.getObject(id))
         .filter((obj): obj is GameObject => obj !== undefined);
       availableObjects = [...availableObjects, ...inventoryObjects];
+      
+      // Also include objects inside open containers in the room
+      const containersInRoom = availableObjects.filter(obj => obj.isContainer() && obj.isOpen());
+      for (const container of containersInRoom) {
+        const contents = state.getObjectsInContainer(container.id);
+        availableObjects = [...availableObjects, ...contents];
+      }
+      
+      // Also include objects inside open containers in inventory
+      const containersInInventory = inventoryObjects.filter(obj => obj.isContainer() && obj.isOpen());
+      for (const container of containersInInventory) {
+        const contents = state.getObjectsInContainer(container.id);
+        availableObjects = [...availableObjects, ...contents];
+      }
     } else if (Array.isArray(availableObjectsOrState)) {
       availableObjects = availableObjectsOrState;
     } else {
