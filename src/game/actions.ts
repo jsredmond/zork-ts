@@ -776,35 +776,77 @@ export class ExamineAction implements ActionHandler {
       };
     }
 
-    // For light sources, show on/off state
-    if (obj.hasFlag(ObjectFlag.LIGHTBIT)) {
-      const state = obj.hasFlag(ObjectFlag.ONBIT) ? 'on' : 'off';
-      // Use the first synonym (usually the short name) if available, otherwise use full name
-      const displayName = obj.synonyms.length > 0 ? obj.synonyms[0] : obj.name;
+    // Check for examineText property first - this takes priority
+    if (obj.examineText) {
       return {
         success: true,
-        message: `The ${displayName.toLowerCase()} is turned ${state}.`,
+        message: obj.examineText,
+        stateChanges: []
+      };
+    }
+
+    // Special handling for match
+    if (objectId === 'MATCH') {
+      if (obj.hasFlag(ObjectFlag.ONBIT)) {
+        return {
+          success: true,
+          message: "The match is burning.",
+          stateChanges: []
+        };
+      } else {
+        return {
+          success: true,
+          message: "The matchbook isn't very interesting, except for what's written on it.",
+          stateChanges: []
+        };
+      }
+    }
+
+    // For light sources, show on/off state
+    if (obj.hasFlag(ObjectFlag.LIGHTBIT)) {
+      // Check if lamp has burned out (RMUNGBIT)
+      if (objectId === 'LAMP' && obj.hasFlag(ObjectFlag.RMUNGBIT)) {
+        return {
+          success: true,
+          message: "The lamp has burned out.",
+          stateChanges: []
+        };
+      }
+      
+      // Special handling for candles
+      if (objectId === 'CANDLES') {
+        const candleState = obj.hasFlag(ObjectFlag.ONBIT) ? 'burning' : 'out';
+        return {
+          success: true,
+          message: `The candles are ${candleState}.`,
+          stateChanges: []
+        };
+      }
+      
+      // Use the first synonym (usually the short name) if available, otherwise use full name
+      const displayName = obj.synonyms.length > 0 ? obj.synonyms[0] : obj.name;
+      const lightState = obj.hasFlag(ObjectFlag.ONBIT) ? 'is on' : 'is turned off';
+      return {
+        success: true,
+        message: `The ${displayName.toLowerCase()} ${lightState}.`,
         stateChanges: []
       };
     }
 
     // For containers, add state information (open/closed)
     if (obj.hasFlag(ObjectFlag.CONTBIT)) {
-      const article = startsWithVowel(obj.name) ? 'The' : 'The';
-      const state = obj.hasFlag(ObjectFlag.OPENBIT) ? 'open' : 'closed';
+      const containerState = obj.hasFlag(ObjectFlag.OPENBIT) ? 'open' : 'closed';
       return {
         success: true,
-        message: `${article} ${obj.name.toLowerCase()} is ${state}.`,
+        message: `The ${obj.name.toLowerCase()} is ${containerState}.`,
         stateChanges: []
       };
     }
 
-    // Return the object's description
-    const description = obj.description || `You see nothing special about the ${obj.name.toLowerCase()}.`;
-
+    // Default response - "There's nothing special about the <object>."
     return {
       success: true,
-      message: description,
+      message: `There's nothing special about the ${obj.name.toLowerCase()}.`,
       stateChanges: []
     };
   }

@@ -26,6 +26,7 @@ export interface GameObject {
   description: string;
   firstDescription?: string;  // Description when first seen in initial location
   longDescription?: string;   // Description after being moved/touched
+  examineText?: string;       // Specific text for EXAMINE command
   location: string | null;
   locationRelation?: LocationRelation;
   properties: Map<string, any>;
@@ -51,6 +52,7 @@ export class GameObjectImpl implements GameObject {
   description: string;
   firstDescription?: string;
   longDescription?: string;
+  examineText?: string;
   location: string | null;
   locationRelation?: LocationRelation;
   properties: Map<string, any>;
@@ -67,6 +69,7 @@ export class GameObjectImpl implements GameObject {
     description: string;
     firstDescription?: string;
     longDescription?: string;
+    examineText?: string;
     location?: string | null;
     locationRelation?: LocationRelation;
     flags?: ObjectFlag[];
@@ -82,6 +85,7 @@ export class GameObjectImpl implements GameObject {
     this.description = data.description;
     this.firstDescription = data.firstDescription;
     this.longDescription = data.longDescription;
+    this.examineText = data.examineText;
     this.location = data.location || null;
     this.locationRelation = data.locationRelation;
     this.flags = new Set(data.flags || []);

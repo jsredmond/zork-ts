@@ -259,6 +259,7 @@ export const ALL_OBJECTS: Record<string, ObjectData> = {
     adjectives: ['FLAMING', 'IVORY'],
     description: 'torch',
     firstDescription: 'Sitting on the pedestal is a flaming torch, made of ivory.',
+    examineText: 'The torch is burning.',
     initialLocation: 'PEDESTAL',
     flags: ['TAKEBIT', 'FLAMEBIT', 'ONBIT', 'LIGHTBIT'],
     action: 'TORCH-OBJECT',

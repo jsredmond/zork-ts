@@ -89,6 +89,7 @@ export function createObject(objectData: ObjectData): GameObjectImpl {
     description: objectData.description,
     firstDescription: objectData.firstDescription,
     longDescription: objectData.longDescription,
+    examineText: objectData.examineText,
     location,
     flags,
     capacity: objectData.capacity,

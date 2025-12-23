@@ -13,6 +13,7 @@ export interface ObjectData {
   description: string;
   longDescription?: string;
   firstDescription?: string;
+  examineText?: string;  // Specific text for EXAMINE command
   initialLocation: string;
   flags: string[];
   action?: string;

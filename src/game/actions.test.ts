@@ -678,8 +678,9 @@ describe('Property Test: Display consistency', () => {
         // Generate random objects and rooms with descriptions
         fc.record({
           objectId: fc.string({ minLength: 1, maxLength: 20 }).map(s => s.toUpperCase().replace(/[^A-Z0-9]/g, '')),
-          objectName: fc.string({ minLength: 1, maxLength: 30 }),
+          objectName: fc.string({ minLength: 1, maxLength: 30 }).filter(s => s.trim().length > 0),
           objectDescription: fc.string({ minLength: 1, maxLength: 200 }),
+          examineText: fc.option(fc.string({ minLength: 1, maxLength: 200 }), { nil: undefined }),
           roomId: fc.string({ minLength: 1, maxLength: 20 }).map(s => s.toUpperCase().replace(/[^A-Z0-9]/g, '')),
           roomName: fc.string({ minLength: 1, maxLength: 30 }),
           roomDescription: fc.string({ minLength: 1, maxLength: 200 })
@@ -690,6 +691,10 @@ describe('Property Test: Display consistency', () => {
             return true;
           }
           if (RESERVED_OBJECT_IDS.includes(data.objectId)) {
+            return true;
+          }
+          // Skip if object name is empty or whitespace only
+          if (!data.objectName || data.objectName.trim().length === 0) {
             return true;
           }
 
@@ -707,6 +712,7 @@ describe('Property Test: Display consistency', () => {
             id: data.objectId,
             name: data.objectName,
             description: data.objectDescription,
+            examineText: data.examineText,
             location: data.roomId,
             flags: [ObjectFlag.TAKEBIT],
             size: 10
@@ -733,12 +739,18 @@ describe('Property Test: Display consistency', () => {
           expect(lookResult.success).toBe(true);
           expect(lookResult.message).toContain(data.roomDescription);
 
-          // Test 2: EXAMINE should display object description
+          // Test 2: EXAMINE should display examineText if present, otherwise default message
           const examineAction = new ExamineAction();
           const examineResult = examineAction.execute(state, data.objectId);
           
           expect(examineResult.success).toBe(true);
-          expect(examineResult.message).toContain(data.objectDescription);
+          if (data.examineText) {
+            // If examineText is set, it should be returned
+            expect(examineResult.message).toBe(data.examineText);
+          } else {
+            // Otherwise, default message should be returned
+            expect(examineResult.message).toBe(`There's nothing special about the ${data.objectName.toLowerCase()}.`);
+          }
 
           return true;
         }
@@ -775,7 +787,7 @@ describe('ExamineAction', () => {
     examineAction = new ExamineAction();
   });
 
-  it('should display object description when examining an object in the room', () => {
+  it('should display default message when examining an object without examineText', () => {
     const sword = new GameObjectImpl({
       id: 'SWORD',
       name: 'Sword',
@@ -791,7 +803,27 @@ describe('ExamineAction', () => {
     const result = examineAction.execute(state, 'SWORD');
 
     expect(result.success).toBe(true);
-    expect(result.message).toContain('finely crafted elvish blade');
+    expect(result.message).toBe("There's nothing special about the sword.");
+  });
+
+  it('should display examineText when examining an object with examineText', () => {
+    const book = new GameObjectImpl({
+      id: 'BOOK',
+      name: 'Book',
+      description: 'A dusty old book.',
+      examineText: 'The book is filled with ancient runes.',
+      location: 'TEST-ROOM',
+      flags: [ObjectFlag.TAKEBIT],
+      size: 5
+    });
+
+    state.objects.set('BOOK', book);
+    state.rooms.get('TEST-ROOM')!.addObject('BOOK');
+
+    const result = examineAction.execute(state, 'BOOK');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toBe('The book is filled with ancient runes.');
   });
 
   it('should display object description when examining an object in inventory', () => {
