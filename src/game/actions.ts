@@ -1177,15 +1177,7 @@ export class LookAction implements ActionHandler {
       };
     }
 
-    // Check if room is lit
-    if (!isRoomLit(state)) {
-      return {
-        success: true,
-        message: getDarknessMessage(),
-        stateChanges: []
-      };
-    }
-
+    // formatRoomDescription handles darkness - shows room name then darkness message
     const description = formatRoomDescription(currentRoom, state);
 
     return {
@@ -1201,15 +1193,15 @@ export class LookAction implements ActionHandler {
  * Handles visited/unvisited room descriptions
  */
 export function formatRoomDescription(room: any, state: GameState): string {
-  // Check if room is lit
-  if (!isRoomLit(state)) {
-    return getDarknessMessage();
-  }
-
   let output = '';
 
-  // Room name
+  // Always show room name first, even in darkness
   output += room.name + '\n';
+
+  // Check if room is lit - if dark, show darkness message after room name
+  if (!isRoomLit(state)) {
+    return output + getDarknessMessage();
+  }
 
   // Room description (check for conditional description first)
   const conditionalDesc = getConditionalRoomDescription(room.id, state);
@@ -1288,15 +1280,15 @@ export function formatRoomDescription(room: any, state: GameState): string {
  * Shows brief description for visited rooms, full for unvisited
  */
 export function getRoomDescriptionAfterMovement(room: any, state: GameState, verbose: boolean = false, wasVisited: boolean = false): string {
-  // Check if room is lit
-  if (!isRoomLit(state)) {
-    return getDarknessMessage();
-  }
-
   let output = '';
 
-  // Room name
+  // Always show room name first, even in darkness
   output += room.name + '\n';
+
+  // Check if room is lit - if dark, show darkness message after room name
+  if (!isRoomLit(state)) {
+    return output + getDarknessMessage();
+  }
 
   // Get verbosity settings
   const isVerbose = state.getGlobalVariable('VERBOSE');

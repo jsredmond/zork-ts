@@ -641,6 +641,30 @@ describe('LookAction', () => {
     // Should not mention sword since it's in inventory, not in room
     expect(result.message).not.toContain('sword');
   });
+
+  it('should show room name even in dark rooms', () => {
+    // Create a dark room (no ONBIT flag)
+    const darkRoom = new RoomImpl({
+      id: 'DARK-ROOM',
+      name: 'Dark Room',
+      description: 'A dark room',
+      exits: new Map()
+      // No ONBIT flag = dark room
+    });
+    state.rooms.set('DARK-ROOM', darkRoom);
+    state.setCurrentRoom('DARK-ROOM');
+
+    const result = lookAction.execute(state);
+
+    expect(result.success).toBe(true);
+    // Room name should appear before darkness message
+    expect(result.message).toContain('Dark Room');
+    expect(result.message).toContain('pitch black');
+    // Room name should come first
+    const roomNameIndex = result.message.indexOf('Dark Room');
+    const darknessIndex = result.message.indexOf('pitch black');
+    expect(roomNameIndex).toBeLessThan(darknessIndex);
+  });
 });
 
 // Feature: modern-zork-rewrite, Property 15: Display consistency
