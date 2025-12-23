@@ -185,9 +185,10 @@ export function initializeConditionalMessages(): void {
     defaultMessage: 'You are in the kitchen of the white house. A table seems to have been used recently for the preparation of food. A passage leads to the west and a dark staircase can be seen leading upward. A dark chimney leads down and to the east is a small window which is slightly ajar.'
   });
 
-  // CLEARING conditional description (grate state)
+  // GRATING-CLEARING conditional description (grate state)
+  // Note: This is for GRATING-CLEARING room (north of PATH), not CLEARING room (east of house)
   registerConditionalMessage({
-    messageId: 'ROOM-DESC-CLEARING',
+    messageId: 'ROOM-DESC-GRATING-CLEARING',
     variants: [
       {
         condition: (state) => {
