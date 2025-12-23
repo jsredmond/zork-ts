@@ -6,6 +6,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { triggerDeath, triggerGrueDeath, getDeathCount, isGameOver } from './death.js';
 import { GameState } from './state.js';
 import { createInitialGameState } from './factories/gameFactory.js';
+import { ObjectFlag } from './data/flags.js';
 
 describe('Death and Resurrection', () => {
   let state: GameState;
@@ -184,6 +185,102 @@ describe('Death and Resurrection', () => {
       // Second death - score goes to 80
       triggerDeath(state, 'Second death');
       expect(state.getBaseScore()).toBe(80);
+    });
+  });
+
+  describe('Resurrection State Handling', () => {
+    it('should move lamp to LIVING-ROOM when in inventory', () => {
+      // Add lamp to inventory
+      const lamp = state.getObject('LAMP');
+      if (lamp) {
+        lamp.location = 'PLAYER';
+        state.addToInventory('LAMP');
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      // Lamp should be in LIVING-ROOM
+      expect(lamp?.location).toBe('LIVING-ROOM');
+      expect(state.isInInventory('LAMP')).toBe(false);
+    });
+
+    it('should move coffin to EGYPT-ROOM when in inventory', () => {
+      // Add coffin to inventory
+      const coffin = state.getObject('COFFIN');
+      if (coffin) {
+        coffin.location = 'PLAYER';
+        state.addToInventory('COFFIN');
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      // Coffin should be in EGYPT-ROOM
+      expect(coffin?.location).toBe('EGYPT-ROOM');
+      expect(state.isInInventory('COFFIN')).toBe(false);
+    });
+
+    it('should reset sword treasure value to 0', () => {
+      const sword = state.getObject('SWORD');
+      if (sword) {
+        sword.tvalue = 10;
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      expect(sword?.tvalue).toBe(0);
+    });
+
+    it('should clear trap door TOUCHBIT flag', () => {
+      const trapDoor = state.getObject('TRAP-DOOR');
+      if (trapDoor) {
+        trapDoor.flags.add(ObjectFlag.TOUCHBIT);
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      expect(trapDoor?.flags.has(ObjectFlag.TOUCHBIT)).toBe(false);
+    });
+
+    it('should not set DEAD flag on automatic resurrection', () => {
+      triggerDeath(state, 'Test death');
+      
+      // DEAD flag should not be set for automatic resurrection
+      expect(state.getGlobalVariable('DEAD')).toBeFalsy();
+    });
+
+    it('should allow game to continue after resurrection', () => {
+      // Die once
+      triggerDeath(state, 'First death');
+      
+      // Player should be in FOREST-1 and game should not be over
+      expect(state.currentRoom).toBe('FOREST-1');
+      expect(isGameOver(state)).toBe(false);
+      
+      // Player should be able to move (game continues)
+      const forestRoom = state.getCurrentRoom();
+      expect(forestRoom).toBeDefined();
+      expect(forestRoom?.name).toBeDefined();
+    });
+
+    it('should scatter non-treasure items to above-ground rooms', () => {
+      // Add a non-treasure item to inventory
+      const sword = state.getObject('SWORD');
+      if (sword) {
+        sword.location = 'PLAYER';
+        sword.tvalue = 0; // Make it non-treasure
+        state.addToInventory('SWORD');
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      // Sword should be in an above-ground room
+      const aboveGroundRooms = [
+        'WEST-OF-HOUSE', 'NORTH-OF-HOUSE', 'EAST-OF-HOUSE', 'SOUTH-OF-HOUSE',
+        'FOREST-1', 'FOREST-2', 'FOREST-3', 'PATH', 'CLEARING',
+        'GRATING-CLEARING', 'CANYON-VIEW'
+      ];
+      expect(aboveGroundRooms).toContain(sword?.location);
+      expect(state.isInInventory('SWORD')).toBe(false);
     });
   });
 });
