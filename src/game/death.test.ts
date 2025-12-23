@@ -204,6 +204,23 @@ describe('Death and Resurrection', () => {
       expect(state.isInInventory('LAMP')).toBe(false);
     });
 
+    it('should turn off lamp if lit when dying', () => {
+      // Add lit lamp to inventory
+      const lamp = state.getObject('LAMP');
+      if (lamp) {
+        lamp.location = 'PLAYER';
+        lamp.flags.add(ObjectFlag.ONBIT); // Turn on lamp
+        state.addToInventory('LAMP');
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      // Lamp should be off after death
+      expect(lamp?.flags.has(ObjectFlag.ONBIT)).toBe(false);
+      // And in LIVING-ROOM
+      expect(lamp?.location).toBe('LIVING-ROOM');
+    });
+
     it('should move coffin to EGYPT-ROOM when in inventory', () => {
       // Add coffin to inventory
       const coffin = state.getObject('COFFIN');
@@ -239,6 +256,51 @@ describe('Death and Resurrection', () => {
       triggerDeath(state, 'Test death');
       
       expect(trapDoor?.flags.has(ObjectFlag.TOUCHBIT)).toBe(false);
+    });
+
+    it('should preserve trap door OPENBIT flag (open/closed state)', () => {
+      const trapDoor = state.getObject('TRAP-DOOR');
+      if (trapDoor) {
+        trapDoor.flags.add(ObjectFlag.OPENBIT); // Open the trap door
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      // OPENBIT should be preserved (trap door stays open)
+      expect(trapDoor?.flags.has(ObjectFlag.OPENBIT)).toBe(true);
+    });
+
+    it('should preserve rug state after death', () => {
+      // Set rug as moved
+      state.setGlobalVariable('RUG_MOVED', true);
+      
+      triggerDeath(state, 'Test death');
+      
+      // Rug state should be preserved
+      expect(state.getGlobalVariable('RUG_MOVED')).toBe(true);
+    });
+
+    it('should preserve defeated enemy states after death', () => {
+      // Set troll as defeated (different from TROLL_FLAG which is for death state)
+      state.setGlobalVariable('TROLL_DEAD', true);
+      
+      triggerDeath(state, 'Test death');
+      
+      // Troll dead state should be preserved
+      expect(state.getGlobalVariable('TROLL_DEAD')).toBe(true);
+    });
+
+    it('should preserve treasures in trophy case after death', () => {
+      // Put a treasure in the trophy case
+      const egg = state.getObject('EGG');
+      if (egg) {
+        egg.location = 'TROPHY-CASE';
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      // Treasure should still be in trophy case
+      expect(egg?.location).toBe('TROPHY-CASE');
     });
 
     it('should not set DEAD flag on automatic resurrection', () => {
@@ -281,6 +343,25 @@ describe('Death and Resurrection', () => {
       ];
       expect(aboveGroundRooms).toContain(sword?.location);
       expect(state.isInInventory('SWORD')).toBe(false);
+    });
+
+    it('should empty inventory completely after resurrection', () => {
+      // Add multiple items to inventory
+      const lamp = state.getObject('LAMP');
+      const sword = state.getObject('SWORD');
+      if (lamp) {
+        lamp.location = 'PLAYER';
+        state.addToInventory('LAMP');
+      }
+      if (sword) {
+        sword.location = 'PLAYER';
+        state.addToInventory('SWORD');
+      }
+      
+      triggerDeath(state, 'Test death');
+      
+      // Inventory should be empty
+      expect(state.inventory.length).toBe(0);
     });
   });
 });

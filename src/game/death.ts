@@ -131,13 +131,30 @@ export function triggerDeath(state: GameState, deathMessage: string): string {
  * Resurrect player after death
  * Based on JIGS-UP routine from 1actions.zil
  * 
+ * Key behaviors from ZIL:
+ * 1. Move player to FOREST-1
+ * 2. Clear trap door TOUCHBIT (allows re-entry to cellar)
+ * 3. Clear P-CONT (parser continuation)
+ * 4. Randomize objects (scatter inventory items)
+ * 5. Kill all interrupts/daemons
+ * 
+ * Note: Puzzle state (trap door open/closed, rug moved, defeated enemies)
+ * is preserved - only TOUCHBIT is cleared.
+ * 
  * @param state - Current game state
  */
 function resurrectPlayer(state: GameState): void {
   // Move player to FOREST-1
   state.setCurrentRoom('FOREST-1');
   
+  // Turn off lamp if lit (before scattering to prevent lit lamp in wrong location)
+  const lamp = state.getObject('LAMP');
+  if (lamp && lamp.flags.has(ObjectFlag.ONBIT)) {
+    lamp.flags.delete(ObjectFlag.ONBIT);
+  }
+  
   // Clear trap door TOUCHBIT (using ObjectFlag, not RoomFlag)
+  // This allows re-entry to cellar, but does NOT change open/closed state
   const trapDoor = state.getObject('TRAP-DOOR');
   if (trapDoor) {
     trapDoor.flags.delete(ObjectFlag.TOUCHBIT);
