@@ -52,23 +52,23 @@ Remove room name from dark room look output.
 
 ---
 
-- [ ] 2. Fix dark room display
+- [x] 2. Fix dark room display
   - Show only darkness message without room name
   - _Requirements: 2.1, 2.2_
 
-- [ ] 2.1 Update formatRoomDescription function
+- [x] 2.1 Update formatRoomDescription function
   - File: `src/game/actions.ts`
   - Check lighting FIRST before adding room name
   - Return only darkness message for dark rooms
   - _Requirements: 2.1, 2.2_
 
-- [ ] 2.2 Write property test for dark room output
+- [x] 2.2 Write property test for dark room output
   - File: `src/game/actions.test.ts`
   - **Property 2: Dark Room Output Format**
   - **Validates: Requirements 2.1, 2.2**
   - _Requirements: 2.1, 2.2_
 
-- [ ] 2.3 Commit to Git
+- [x] 2.3 Commit to Git
   - Commit message: "fix: Dark room look shows only darkness message without room name"
   - Include actions.ts changes
   - _Requirements: 2.1, 2.2_
@@ -82,23 +82,23 @@ Update trap door close message to match Z-Machine.
 
 ---
 
-- [ ] 3. Fix trap door close message
+- [x] 3. Fix trap door close message
   - Show "The door swings shut and closes." from living room
   - _Requirements: 3.1_
 
-- [ ] 3.1 Add special case for trap door in CloseAction
+- [x] 3.1 Add special case for trap door in CloseAction
   - File: `src/game/actions.ts`
   - Check if closing trap door from LIVING-ROOM
   - Return "The door swings shut and closes." message
   - _Requirements: 3.1_
 
-- [ ] 3.2 Write unit test for trap door close message
+- [x] 3.2 Write unit test for trap door close message
   - File: `src/game/actions.test.ts`
   - Test close from living room shows correct message
   - Test close from cellar shows different message
   - _Requirements: 3.1_
 
-- [ ] 3.3 Commit to Git
+- [x] 3.3 Commit to Git
   - Commit message: "fix: Trap door close message matches Z-Machine"
   - Include actions.ts changes
   - _Requirements: 3.1_
@@ -112,41 +112,41 @@ Add testing mode to suppress random atmospheric messages.
 
 ---
 
-- [ ] 4. Add song bird message suppression for testing
+- [x] 4. Add song bird message suppression for testing
   - Enable deterministic testing by suppressing random messages
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 4.1 Add testingMode to GameState
+- [x] 4.1 Add testingMode to GameState
   - File: `src/game/state.ts`
   - Add private testingMode: boolean = false
   - Add setTestingMode(enabled: boolean) method
   - Add isTestingMode(): boolean method
   - _Requirements: 4.1_
 
-- [ ] 4.2 Update forest room daemon to check testing mode
+- [x] 4.2 Update forest room daemon to check testing mode
   - File: `src/engine/daemons.ts`
   - Check state.isTestingMode() at start of forestRoomDaemon
   - Return false immediately if testing mode enabled
   - _Requirements: 4.1_
 
-- [ ] 4.3 Add suppressRandomMessages to RecordingOptions
+- [x] 4.3 Add suppressRandomMessages to RecordingOptions
   - File: `src/testing/recording/types.ts`
   - Add suppressRandomMessages?: boolean to RecordingOptions interface
   - _Requirements: 4.4_
 
-- [ ] 4.4 Update TypeScript recorder to enable testing mode
+- [x] 4.4 Update TypeScript recorder to enable testing mode
   - File: `src/testing/recording/tsRecorder.ts`
   - Check options.suppressRandomMessages in record method
   - Call state.setTestingMode(true) when option is enabled
   - _Requirements: 4.2_
 
-- [ ] 4.5 Write property test for song bird suppression
+- [x] 4.5 Write property test for song bird suppression
   - File: `src/engine/daemons.test.ts`
   - **Property 3: Song Bird Suppression in Testing Mode**
   - **Validates: Requirements 4.1**
   - _Requirements: 4.1_
 
-- [ ] 4.6 Commit to Git
+- [x] 4.6 Commit to Git
   - Commit message: "feat: Add testing mode to suppress random song bird messages"
   - Include state.ts, daemons.ts, types.ts, tsRecorder.ts changes
   - _Requirements: 4.1, 4.2, 4.3, 4.4_
@@ -160,22 +160,22 @@ Fix inventory ordering for drop all command.
 
 ---
 
-- [ ] 5. Fix drop all inventory order
+- [x] 5. Fix drop all inventory order
   - Drop items in reverse order (last acquired first)
   - _Requirements: 5.1_
 
-- [ ] 5.1 Update DropAllAction to reverse inventory order
+- [x] 5.1 Update DropAllAction to reverse inventory order
   - File: `src/game/actions.ts`
   - Change `[...state.inventory]` to `[...state.inventory].reverse()`
   - _Requirements: 5.1_
 
-- [ ] 5.2 Write property test for drop all order
+- [x] 5.2 Write property test for drop all order
   - File: `src/game/actions.test.ts`
   - **Property 4: Drop All Reverse Order**
   - **Validates: Requirements 5.1**
   - _Requirements: 5.1_
 
-- [ ] 5.3 Commit to Git
+- [x] 5.3 Commit to Git
   - Commit message: "fix: Drop all uses reverse inventory order to match Z-Machine"
   - Include actions.ts changes
   - _Requirements: 5.1_
@@ -189,23 +189,23 @@ Verify 90%+ aggregate parity on all sequences.
 
 ---
 
-- [ ] 6. Run parity comparison tests
+- [-] 6. Run parity comparison tests
   - Verify 90%+ aggregate parity on all sequences
   - _Requirements: All_
 
-- [ ] 6.1 Run batch comparison with all fixes
+- [x] 6.1 Run batch comparison with all fixes
   - Execute: `npx tsx scripts/record-and-compare.ts --batch --normalize --format text scripts/sequences/`
   - Verify all 10 sequences execute successfully (no 0% timeout failures)
   - Target: 90%+ aggregate parity
   - _Requirements: All_
 
-- [ ] 6.2 Document final parity results
+- [x] 6.2 Document final parity results
   - Update PARITY_DIFFERENCES.md with final scores
   - List any remaining differences
   - Mark spec as complete if 90%+ achieved
   - _Requirements: All_
 
-- [ ] 6.3 Final commit
+- [-] 6.3 Final commit
   - Commit message: "docs: Parity fixes complete - 90%+ achieved"
   - Include documentation updates
   - _Requirements: All_

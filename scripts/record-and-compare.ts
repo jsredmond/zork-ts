@@ -378,7 +378,8 @@ async function main(): Promise<void> {
   const recordingOptions: RecordingOptions = {
     seed: options.seed,
     captureTimestamps: true,
-    preserveFormatting: false
+    preserveFormatting: false,
+    suppressRandomMessages: true  // Always suppress random messages for consistent comparisons
   };
 
   let output: string;

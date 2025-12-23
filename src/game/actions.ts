@@ -804,6 +804,15 @@ export class ExamineAction implements ActionHandler {
       };
     }
 
+    // For readable objects, show their text content when examined
+    if (obj.hasFlag(ObjectFlag.READBIT) && obj.getProperty('text')) {
+      return {
+        success: true,
+        message: obj.getProperty('text'),
+        stateChanges: []
+      };
+    }
+
     // Special handling for match
     if (objectId === 'MATCH') {
       if (obj.hasFlag(ObjectFlag.ONBIT)) {
