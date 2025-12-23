@@ -1140,6 +1140,66 @@ describe('CloseAction', () => {
     expect(result.success).toBe(false);
     expect(result.message).toContain("can't close");
   });
+
+  it('should show special message when closing trap door from living room', () => {
+    // Set up living room
+    const livingRoom = new RoomImpl({
+      id: 'LIVING-ROOM',
+      name: 'Living Room',
+      description: 'You are in the living room of a white house.',
+      exits: new Map()
+    });
+    state.rooms.set('LIVING-ROOM', livingRoom);
+    state.setCurrentRoom('LIVING-ROOM');
+
+    // Create open trap door
+    const trapDoor = new GameObjectImpl({
+      id: 'TRAP-DOOR',
+      name: 'trap door',
+      description: 'A trap door.',
+      location: 'LIVING-ROOM',
+      flags: [ObjectFlag.DOORBIT, ObjectFlag.OPENBIT]
+    });
+
+    state.objects.set('TRAP-DOOR', trapDoor);
+    livingRoom.addObject('TRAP-DOOR');
+
+    const result = closeAction.execute(state, 'TRAP-DOOR');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toBe('The door swings shut and closes.');
+    expect(trapDoor.hasFlag(ObjectFlag.OPENBIT)).toBe(false);
+  });
+
+  it('should show different message when closing trap door from cellar', () => {
+    // Set up cellar
+    const cellar = new RoomImpl({
+      id: 'CELLAR',
+      name: 'Cellar',
+      description: 'You are in a dark and damp cellar.',
+      exits: new Map()
+    });
+    state.rooms.set('CELLAR', cellar);
+    state.setCurrentRoom('CELLAR');
+
+    // Create open trap door
+    const trapDoor = new GameObjectImpl({
+      id: 'TRAP-DOOR',
+      name: 'trap door',
+      description: 'A trap door.',
+      location: 'CELLAR',
+      flags: [ObjectFlag.DOORBIT, ObjectFlag.OPENBIT]
+    });
+
+    state.objects.set('TRAP-DOOR', trapDoor);
+    cellar.addObject('TRAP-DOOR');
+
+    const result = closeAction.execute(state, 'TRAP-DOOR');
+
+    expect(result.success).toBe(true);
+    expect(result.message).toBe('The door closes and locks.');
+    expect(trapDoor.hasFlag(ObjectFlag.OPENBIT)).toBe(false);
+  });
 });
 
 describe('ReadAction', () => {

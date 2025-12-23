@@ -1060,6 +1060,22 @@ export class CloseAction implements ActionHandler {
       };
     }
 
+    // Special handling for trap door from living room
+    if (objectId === 'TRAP-DOOR' && currentRoom && currentRoom.id === 'LIVING-ROOM') {
+      obj.removeFlag(ObjectFlag.OPENBIT);
+      
+      return {
+        success: true,
+        message: "The door swings shut and closes.",
+        stateChanges: [{
+          type: 'FLAG_CHANGED',
+          objectId: objectId,
+          oldValue: true,
+          newValue: false
+        }]
+      };
+    }
+
     // Special handling for trap door from cellar
     if (objectId === 'TRAP-DOOR' && currentRoom && currentRoom.id === 'CELLAR') {
       obj.removeFlag(ObjectFlag.OPENBIT);
