@@ -11,6 +11,7 @@ import { Parser } from '../../parser/parser.js';
 import { Vocabulary } from '../../parser/vocabulary.js';
 import { CommandExecutor } from '../../engine/executor.js';
 import { createInitialGameState } from '../../game/factories/gameFactory.js';
+import { formatRoomDescription } from '../../game/actions.js';
 import { 
   Transcript, 
   TranscriptEntry, 
@@ -148,8 +149,10 @@ export class TypeScriptRecorder extends GameRecorder {
     lines.push('ZORK is a registered trademark of Infocom, Inc.');
     lines.push('Revision 88 / Serial number 840726');
     lines.push('');
-    lines.push(room.name);
-    lines.push(room.description);
+    
+    // Use formatRoomDescription to get the full room description including objects
+    const roomDescription = formatRoomDescription(room, state);
+    lines.push(roomDescription);
 
     return lines.join('\n');
   }
