@@ -875,3 +875,290 @@ front door.`),
     });
   });
 });
+
+describe('Enhanced Normalization Property Tests', () => {
+  describe('Property 1: Song Bird Message Filtering', () => {
+    it('should filter song bird messages from any transcript', () => {
+      const comparator = new TranscriptComparator({
+        filterSongBirdMessages: true,
+      });
+      
+      // Property: For any transcript containing song bird messages,
+      // filtering should remove them completely
+      const testCases = [
+        {
+          input: 'You hear in the distance the chirping of a song bird.\nWest of House',
+          expectedContent: 'West of House'
+        },
+        {
+          input: 'West of House\nYou hear in the distance the chirping of a song bird.',
+          expectedContent: 'West of House'
+        },
+        {
+          input: 'You hear in the distance the chirping of a song bird.\nYou hear in the distance the chirping of a song bird.\nWest of House',
+          expectedContent: 'West of House'
+        },
+        {
+          input: 'Normal text\nYou hear in the distance the chirping of a song bird.\nMore normal text',
+          expectedContent: 'Normal text'
+        },
+      ];
+      
+      for (const testCase of testCases) {
+        const filtered = comparator.filterSongBirdMessages(testCase.input);
+        
+        // Property: Song bird messages should be completely removed
+        expect(filtered).not.toContain('You hear in the distance the chirping of a song bird.');
+        
+        // Property: Other content should be preserved
+        expect(filtered).toContain(testCase.expectedContent);
+      }
+    });
+
+    it('should achieve higher parity when song bird messages are filtered', () => {
+      // Property: Filtering song bird messages should improve parity scores
+      // when one transcript has them and the other doesn't
+      
+      const transcriptWithSongBird = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', 'West of House\nYou hear in the distance the chirping of a song bird.'),
+      ]);
+      
+      const transcriptWithoutSongBird = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'West of House'),
+      ]);
+      
+      // Without filtering
+      const comparatorNoFilter = new TranscriptComparator({
+        filterSongBirdMessages: false,
+      });
+      const reportNoFilter = comparatorNoFilter.compare(transcriptWithSongBird, transcriptWithoutSongBird);
+      
+      // With filtering
+      const comparatorWithFilter = new TranscriptComparator({
+        filterSongBirdMessages: true,
+      });
+      const reportWithFilter = comparatorWithFilter.compare(transcriptWithSongBird, transcriptWithoutSongBird);
+      
+      // Property: Filtering should improve parity score
+      expect(reportWithFilter.parityScore).toBeGreaterThan(reportNoFilter.parityScore);
+      
+      // **Validates: Requirements 2.1**
+    });
+  });
+
+  describe('Property 2: Enhanced Normalization Effectiveness', () => {
+    it('should improve parity scores when enhanced normalization is applied', () => {
+      // Property: For any pair of transcripts with acceptable differences,
+      // enhanced normalization should improve parity scores
+      
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', `ZORK I: The Great Underground Empire
+West of House                                    Score: 0        Moves: 1
+You hear in the distance the chirping of a song bird.
+You are standing in an open field.
+Using normal formatting.`),
+        createEntry(1, 'inventory', `You can't see any items here!`),
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'You are standing in an open field.'),
+        createEntry(1, 'inventory', 'OBJECT_NOT_VISIBLE'),
+      ]);
+      
+      // Without enhanced normalization
+      const basicComparator = new TranscriptComparator({
+        stripStatusBar: false,
+        stripGameHeader: false,
+        filterSongBirdMessages: false,
+        filterLoadingMessages: false,
+        normalizeErrorMessages: false,
+      });
+      const basicReport = basicComparator.compare(transcriptA, transcriptB);
+      
+      // With enhanced normalization
+      const enhancedComparator = new TranscriptComparator({
+        stripStatusBar: true,
+        stripGameHeader: true,
+        filterSongBirdMessages: true,
+        filterLoadingMessages: true,
+        normalizeErrorMessages: true,
+      });
+      const enhancedReport = enhancedComparator.compare(transcriptA, transcriptB);
+      
+      // Property: Enhanced normalization should improve parity
+      expect(enhancedReport.parityScore).toBeGreaterThan(basicReport.parityScore);
+      
+      // Property: Enhanced normalization should reduce differences
+      expect(enhancedReport.differences.length).toBeLessThanOrEqual(basicReport.differences.length);
+      
+      // **Validates: Requirements 2.4**
+    });
+
+    it('should preserve core content differences while filtering acceptable ones', () => {
+      // Property: Enhanced normalization should filter acceptable differences
+      // but preserve actual content differences
+      
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', 'You hear in the distance the chirping of a song bird.\nYou are in a forest.'),
+        createEntry(1, 'north', 'You are in a different room entirely.'), // Real content difference
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'You are in a forest.'),
+        createEntry(1, 'north', 'You are in a cave.'), // Real content difference
+      ]);
+      
+      const enhancedComparator = new TranscriptComparator({
+        filterSongBirdMessages: true,
+        filterAtmosphericMessages: true,
+      });
+      const report = enhancedComparator.compare(transcriptA, transcriptB);
+      
+      // Property: Should have exact match for first command (after filtering)
+      expect(report.exactMatches).toBeGreaterThanOrEqual(1);
+      
+      // Property: Should still detect real content difference in second command
+      const realDifference = report.differences.find(d => d.command === 'north');
+      expect(realDifference).toBeDefined();
+      expect(realDifference?.severity).not.toBe('formatting');
+      
+      // **Validates: Requirements 2.4**
+    });
+
+    it('should handle all enhanced normalization options together', () => {
+      // Property: All enhanced normalization options should work together
+      // without interfering with each other
+      
+      const complexTranscript = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', `ZORK I: The Great Underground Empire
+Loading zork1.z3.
+West of House                                    Score: 0        Moves: 1
+You hear in the distance the chirping of a song bird.
+You are standing in an open field.
+Using normal formatting.`),
+        createEntry(1, 'take lamp', `You can't see any lamp here!`),
+        createEntry(2, 'north', `You can't go that way.`),
+      ]);
+      
+      const cleanTranscript = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'You are standing in an open field.'),
+        createEntry(1, 'take lamp', 'OBJECT_NOT_VISIBLE'),
+        createEntry(2, 'north', 'INVALID_DIRECTION'),
+      ]);
+      
+      const fullyEnhancedComparator = new TranscriptComparator({
+        stripStatusBar: true,
+        stripGameHeader: true,
+        filterSongBirdMessages: true,
+        filterAtmosphericMessages: true,
+        filterLoadingMessages: true,
+        normalizeErrorMessages: true,
+        strictContentOnly: true,
+      });
+      
+      const report = fullyEnhancedComparator.compare(complexTranscript, cleanTranscript);
+      
+      // Property: Should achieve high parity with all enhancements
+      expect(report.parityScore).toBeGreaterThan(90);
+      
+      // Property: Should have mostly exact matches
+      expect(report.exactMatches).toBeGreaterThanOrEqual(2);
+      
+      // **Validates: Requirements 2.1, 2.2, 2.3, 2.4**
+    });
+  });
+
+  describe('Enhanced Normalization Methods', () => {
+    it('should filter atmospheric messages correctly', () => {
+      const comparator = new TranscriptComparator();
+      
+      const testCases = [
+        'You hear a distant sound.\nWest of House',
+        'You can hear footsteps.\nNorth of House',
+        'The wind howls.\nForest',
+        'A gentle breeze blows.\nClearing',
+      ];
+      
+      for (const testCase of testCases) {
+        const filtered = comparator.filterAtmosphericMessages(testCase);
+        
+        // Should remove atmospheric messages
+        expect(filtered).not.toMatch(/You hear.*?\./);
+        expect(filtered).not.toMatch(/You can hear.*?\./);
+        expect(filtered).not.toMatch(/The wind.*?\./);
+        expect(filtered).not.toMatch(/A gentle breeze.*?\./);
+        
+        // Should preserve location names
+        expect(filtered).toMatch(/(West of House|North of House|Forest|Clearing)/);
+      }
+    });
+
+    it('should normalize error messages correctly', () => {
+      const comparator = new TranscriptComparator();
+      
+      const errorVariations = [
+        "You can't see any lamp here!",
+        "I don't see any lamp here.",
+        "There is no lamp here.",
+        "You can't go that way.",
+        "You can't go north.",
+        "I don't understand that.",
+        'I don\'t know the word "xyzzy".',
+      ];
+      
+      for (const error of errorVariations) {
+        const normalized = comparator.normalizeErrorMessages(error);
+        
+        // Should normalize to standard tokens
+        expect(normalized).toMatch(/(OBJECT_NOT_VISIBLE|INVALID_DIRECTION|PARSE_ERROR)/);
+      }
+    });
+
+    it('should filter loading messages correctly', () => {
+      const comparator = new TranscriptComparator();
+      
+      const loadingMessages = [
+        'Using normal formatting.\nWest of House',
+        'Loading zork1.z3.\nGame starts',
+        'Restore failed.\nContinuing',
+        'Save failed.\nTry again',
+      ];
+      
+      for (const message of loadingMessages) {
+        const filtered = comparator.filterLoadingMessages(message);
+        
+        // Should remove loading messages
+        expect(filtered).not.toContain('Using normal formatting.');
+        expect(filtered).not.toContain('Loading zork1.z3.');
+        expect(filtered).not.toContain('Restore failed.');
+        expect(filtered).not.toContain('Save failed.');
+        
+        // Should preserve game content
+        expect(filtered).toMatch(/(West of House|Game starts|Continuing|Try again)/);
+      }
+    });
+
+    it('should apply strict content filtering comprehensively', () => {
+      const comparator = new TranscriptComparator();
+      
+      const noisyContent = `Loading zork1.z3.
+You hear in the distance the chirping of a song bird.
+West of House
+You can't see any lamp here!
+[System message]
+Time: 1.23s`;
+      
+      const filtered = comparator.applyStrictContentFilter(noisyContent);
+      
+      // Should remove all noise
+      expect(filtered).not.toContain('Loading');
+      expect(filtered).not.toContain('You hear');
+      expect(filtered).not.toContain('[System message]');
+      expect(filtered).not.toContain('Time:');
+      
+      // Should preserve core content
+      expect(filtered).toContain('West of House');
+      expect(filtered).toContain('OBJECT_NOT_VISIBLE');
+    });
+  });
+});

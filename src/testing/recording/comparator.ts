@@ -12,6 +12,7 @@ import {
   Transcript,
   TranscriptEntry,
   ComparisonOptions,
+  EnhancedComparisonOptions,
   DiffEntry,
   DiffReport,
   DiffSeverity,
@@ -32,13 +33,25 @@ const DEFAULT_OPTIONS: Required<ComparisonOptions> = {
 };
 
 /**
+ * Default enhanced comparison options
+ */
+const DEFAULT_ENHANCED_OPTIONS: Required<EnhancedComparisonOptions> = {
+  ...DEFAULT_OPTIONS,
+  filterSongBirdMessages: false,
+  filterAtmosphericMessages: false,
+  normalizeErrorMessages: false,
+  filterLoadingMessages: false,
+  strictContentOnly: false,
+};
+
+/**
  * Compares two transcripts and produces diff reports
  */
 export class TranscriptComparator {
-  private options: Required<ComparisonOptions>;
+  private options: Required<EnhancedComparisonOptions>;
 
-  constructor(options?: ComparisonOptions) {
-    this.options = { ...DEFAULT_OPTIONS, ...options };
+  constructor(options?: ComparisonOptions | EnhancedComparisonOptions) {
+    this.options = { ...DEFAULT_ENHANCED_OPTIONS, ...options };
   }
 
   /**
@@ -48,7 +61,7 @@ export class TranscriptComparator {
   compare(
     transcriptA: Transcript,
     transcriptB: Transcript,
-    options?: ComparisonOptions
+    options?: ComparisonOptions | EnhancedComparisonOptions
   ): DiffReport {
     const opts = { ...this.options, ...options };
     const differences: DiffEntry[] = [];
@@ -88,6 +101,32 @@ export class TranscriptComparator {
       if (opts.normalizeLineWrapping) {
         outputA = this.normalizeLineWrapping(outputA);
         outputB = this.normalizeLineWrapping(outputB);
+      }
+
+      // Apply enhanced normalization
+      if (opts.filterLoadingMessages) {
+        outputA = this.filterLoadingMessages(outputA);
+        outputB = this.filterLoadingMessages(outputB);
+      }
+
+      if (opts.filterSongBirdMessages) {
+        outputA = this.filterSongBirdMessages(outputA);
+        outputB = this.filterSongBirdMessages(outputB);
+      }
+
+      if (opts.filterAtmosphericMessages) {
+        outputA = this.filterAtmosphericMessages(outputA);
+        outputB = this.filterAtmosphericMessages(outputB);
+      }
+
+      if (opts.normalizeErrorMessages) {
+        outputA = this.normalizeErrorMessages(outputA);
+        outputB = this.normalizeErrorMessages(outputB);
+      }
+
+      if (opts.strictContentOnly) {
+        outputA = this.applyStrictContentFilter(outputA);
+        outputB = this.applyStrictContentFilter(outputB);
       }
 
       // Then apply whitespace normalization
@@ -286,6 +325,86 @@ export class TranscriptComparator {
   }
 
   /**
+   * Filter out song bird atmospheric messages
+   * Requirements: 2.1
+   */
+  filterSongBirdMessages(output: string): string {
+    return output.replace(/You hear in the distance the chirping of a song bird\.\s*/g, '');
+  }
+
+  /**
+   * Filter out all atmospheric messages (sounds, etc.)
+   * Requirements: 2.1
+   */
+  filterAtmosphericMessages(output: string): string {
+    return output
+      // Remove "You hear..." messages
+      .replace(/You hear.*?\.\s*/g, '')
+      // Remove other atmospheric sounds
+      .replace(/A grue sound echoes.*?\.\s*/g, '')
+      .replace(/You can hear.*?\.\s*/g, '')
+      // Remove wind/weather messages
+      .replace(/The wind.*?\.\s*/g, '')
+      .replace(/A gentle breeze.*?\.\s*/g, '');
+  }
+
+  /**
+   * Normalize error message variations
+   * Requirements: 2.3
+   */
+  normalizeErrorMessages(output: string): string {
+    return output
+      // Normalize "You can't see" variations
+      .replace(/You can't see any \w+ here!/g, 'OBJECT_NOT_VISIBLE')
+      .replace(/I don't see any \w+ here\./g, 'OBJECT_NOT_VISIBLE')
+      .replace(/There is no \w+ here\./g, 'OBJECT_NOT_VISIBLE')
+      // Normalize "You can't go" variations
+      .replace(/You can't go that way\.?/g, 'INVALID_DIRECTION')
+      .replace(/You can't go \w+\.?/g, 'INVALID_DIRECTION')
+      // Normalize "I don't understand" variations
+      .replace(/I don't understand that\./g, 'PARSE_ERROR')
+      .replace(/I don't know the word ".*?"\./g, 'PARSE_ERROR');
+  }
+
+  /**
+   * Filter out Z-Machine loading messages
+   * Requirements: 2.2
+   */
+  filterLoadingMessages(output: string): string {
+    return output
+      .replace(/Using normal formatting\.\s*/g, '')
+      .replace(/Loading .*?\.z3\.\s*/g, '')
+      .replace(/Restore failed\.\s*/g, '')
+      .replace(/Save failed\.\s*/g, '');
+  }
+
+  /**
+   * Apply strict content-only filtering
+   * Combines all filters for maximum content focus
+   * Requirements: 2.4
+   */
+  applyStrictContentFilter(output: string): string {
+    let filtered = output;
+    
+    // Apply all filters
+    filtered = this.filterLoadingMessages(filtered);
+    filtered = this.filterSongBirdMessages(filtered);
+    filtered = this.filterAtmosphericMessages(filtered);
+    filtered = this.normalizeErrorMessages(filtered);
+    
+    // Additional strict filtering
+    filtered = filtered
+      // Remove empty lines that might be left after filtering
+      .replace(/\n\s*\n/g, '\n')
+      // Remove any remaining system messages
+      .replace(/\[.*?\]\s*/g, '')
+      // Remove timing/performance messages
+      .replace(/Time: .*?\s*/g, '');
+    
+    return filtered;
+  }
+
+  /**
    * Calculate character-level similarity between two strings
    * Uses Levenshtein distance normalized to 0-1 range
    */
@@ -338,7 +457,7 @@ export class TranscriptComparator {
     expected: string,
     actual: string,
     similarity: number,
-    opts: Required<ComparisonOptions>
+    opts: Required<EnhancedComparisonOptions>
   ): DiffSeverity {
     // Check if this is a known variation
     for (const pattern of opts.knownVariations) {
@@ -417,7 +536,7 @@ export class TranscriptComparator {
     expected: string,
     actual: string,
     similarity: number,
-    opts: Required<ComparisonOptions>
+    opts: Required<EnhancedComparisonOptions>
   ): DiffEntry {
     return {
       index,
@@ -485,14 +604,14 @@ export class TranscriptComparator {
   /**
    * Get the current options
    */
-  getOptions(): Required<ComparisonOptions> {
+  getOptions(): Required<EnhancedComparisonOptions> {
     return { ...this.options };
   }
 
   /**
    * Update options
    */
-  setOptions(options: ComparisonOptions): void {
+  setOptions(options: ComparisonOptions | EnhancedComparisonOptions): void {
     this.options = { ...this.options, ...options };
   }
 }
@@ -500,6 +619,6 @@ export class TranscriptComparator {
 /**
  * Factory function to create a comparator with default options
  */
-export function createComparator(options?: ComparisonOptions): TranscriptComparator {
+export function createComparator(options?: ComparisonOptions | EnhancedComparisonOptions): TranscriptComparator {
   return new TranscriptComparator(options);
 }

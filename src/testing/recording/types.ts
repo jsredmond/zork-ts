@@ -116,6 +116,23 @@ export interface ComparisonOptions {
 }
 
 /**
+ * Enhanced comparison options with additional filtering capabilities
+ * for achieving higher parity scores by focusing on core game content
+ */
+export interface EnhancedComparisonOptions extends ComparisonOptions {
+  /** Filter out song bird atmospheric messages */
+  filterSongBirdMessages?: boolean;
+  /** Filter out all atmospheric messages (sounds, etc.) */
+  filterAtmosphericMessages?: boolean;
+  /** Normalize error message variations */
+  normalizeErrorMessages?: boolean;
+  /** Filter out Z-Machine loading messages */
+  filterLoadingMessages?: boolean;
+  /** Only compare core game content, filter all non-essential differences */
+  strictContentOnly?: boolean;
+}
+
+/**
  * A single difference found between two transcripts
  */
 export interface DiffEntry {
