@@ -63,7 +63,7 @@ Improve puzzle solutions sequence from 77.9% to 90%+ parity.
 
 ---
 
-- [-] 2. Fix puzzle solutions sequence
+- [x] 2. Fix puzzle solutions sequence
   - Address the worst-performing sequence (16 differences)
   - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
@@ -90,7 +90,7 @@ Improve puzzle solutions sequence from 77.9% to 90%+ parity.
   - Target: 90%+ parity (up from 77.9%)
   - _Requirements: 1.1_
 
-- [-] 2.5 Commit puzzle solutions fixes
+- [x] 2.5 Commit puzzle solutions fixes
   - Commit message: "fix: Improve puzzle solutions sequence parity to 90%+"
   - Include all puzzle-related fixes
   - _Requirements: 1.1, 1.2, 1.3, 1.4_
@@ -104,23 +104,23 @@ Improve inventory management sequence from 84.2% to 90%+ parity.
 
 ---
 
-- [ ] 3. Fix inventory management sequence
+- [-] 3. Fix inventory management sequence
   - Address inventory operation differences (6 differences)
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 3.1 Analyze inventory management differences
+- [x] 3.1 Analyze inventory management differences
   - Run analysis tool on inventory management sequence
   - Focus on take/drop/inventory command responses
   - _Requirements: 3.1_
 
-- [ ] 3.2 Fix inventory action messages
+- [x] 3.2 Fix inventory action messages
   - File: `src/game/actions.ts`
   - Ensure "Taken." vs "You take the X." consistency
   - Fix inventory limit handling messages
   - Fix drop action response consistency
   - _Requirements: 3.2, 3.3_
 
-- [ ] 3.3 Write property tests for inventory fixes
+- [x] 3.3 Write property tests for inventory fixes
   - File: `src/game/actions.test.ts`
   - **Property 4: Inventory Management Parity Achievement**
   - **Validates: Requirements 3.1**
@@ -128,12 +128,12 @@ Improve inventory management sequence from 84.2% to 90%+ parity.
   - **Validates: Requirements 3.2**
   - _Requirements: 3.1, 3.2_
 
-- [ ] 3.4 Verify inventory management parity improvement
+- [x] 3.4 Verify inventory management parity improvement
   - Run: `npx tsx scripts/record-and-compare.ts --normalize scripts/sequences/inventory-management.txt`
   - Target: 90%+ parity (up from 84.2%)
   - _Requirements: 3.1_
 
-- [ ] 3.5 Commit inventory management fixes
+- [-] 3.5 Commit inventory management fixes
   - Commit message: "fix: Improve inventory management sequence parity to 90%+"
   - Include inventory action fixes
   - _Requirements: 3.1, 3.2, 3.3, 3.4_

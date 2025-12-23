@@ -182,6 +182,15 @@ export class TakeAction implements ActionHandler {
     // This ensures dropped objects use longDescription instead of firstDescription
     obj.addFlag(ObjectFlag.TOUCHBIT);
 
+    // Handle object-specific actions
+    if (objectId === 'KNIFE') {
+      // KNIFE-F action: Clear NDESCBIT from ATTIC-TABLE when knife is taken
+      const atticTable = state.getObject('ATTIC-TABLE');
+      if (atticTable) {
+        (atticTable as GameObjectImpl).removeFlag(ObjectFlag.NDESCBIT);
+      }
+    }
+
     // Award VALUE points for taking treasures (first time only)
     // Non-treasures return 0, already-scored treasures return 0
     scoreTreasureTake(state, objectId);
@@ -3951,11 +3960,14 @@ export class TakeAllAction implements ActionHandler {
       };
     }
 
+    // Sort objects by display order to match Z-Machine behavior
+    const sortedTakeableObjects = sortObjectsByDisplayOrder(takeableObjects);
+
     const messages: string[] = [];
     const stateChanges: StateChange[] = [];
     const takeAction = new TakeAction();
 
-    for (const obj of takeableObjects) {
+    for (const obj of sortedTakeableObjects) {
       const result = takeAction.execute(state, obj.id);
       messages.push(`${obj.name}: ${result.message}`);
       stateChanges.push(...result.stateChanges);

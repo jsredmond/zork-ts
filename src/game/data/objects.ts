@@ -381,6 +381,18 @@ export const OBJECTS: Record<string, ObjectData> = {
     size: 10
   },
 
+  'ATTIC-TABLE': {
+    id: 'ATTIC-TABLE',
+    name: 'table',
+    synonyms: ['TABLE'],
+    adjectives: [],
+    description: 'table',
+    longDescription: 'It\'s a small wooden table.',
+    initialLocation: 'ATTIC',
+    flags: ['SURFACEBIT', 'CONTBIT', 'NDESCBIT'],
+    capacity: 50
+  },
+
   'LOWERED-BASKET': {
     id: 'LOWERED-BASKET',
     name: 'basket',

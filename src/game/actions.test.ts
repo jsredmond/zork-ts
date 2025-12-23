@@ -2455,3 +2455,168 @@ describe('Property Test: Dark Room Output Format', () => {
     );
   });
 });
+
+// Feature: achieve-90-percent-parity, Property 4: Inventory Management Parity Achievement
+describe('Property Test: Inventory Management Parity Achievement', () => {
+  it('should maintain consistent object ordering in inventory display for any set of objects', () => {
+    fc.assert(
+      fc.property(
+        // Generate a set of objects that could be in inventory
+        fc.array(
+          fc.record({
+            id: fc.constantFrom('LEAFLET', 'LAMP', 'SWORD', 'ROPE', 'KNIFE'),
+            name: fc.constantFrom('leaflet', 'brass lantern', 'sword', 'rope', 'nasty knife')
+          }),
+          { minLength: 1, maxLength: 5 }
+        ).map(objects => {
+          // Remove duplicates by id
+          const uniqueObjects = objects.filter((obj, index, arr) => 
+            arr.findIndex(o => o.id === obj.id) === index
+          );
+          return uniqueObjects;
+        }),
+        (objectData) => {
+          if (objectData.length === 0) return true;
+
+          // Create test room
+          const testRoom = new RoomImpl({
+            id: 'TEST-ROOM',
+            name: 'Test Room',
+            description: 'A test room',
+            exits: new Map(),
+            flags: [RoomFlag.ONBIT]
+          });
+
+          // Create objects and add to inventory
+          const objects = new Map();
+          const inventory: string[] = [];
+          
+          objectData.forEach(objData => {
+            const obj = new GameObjectImpl({
+              id: objData.id,
+              name: objData.name,
+              synonyms: [objData.id],
+              adjectives: [],
+              description: objData.name,
+              initialLocation: 'INVENTORY',
+              flags: ['TAKEBIT']
+            });
+            objects.set(objData.id, obj);
+            inventory.push(objData.id);
+          });
+
+          const state = new GameState({
+            currentRoom: 'TEST-ROOM',
+            objects,
+            rooms: new Map([['TEST-ROOM', testRoom]]),
+            inventory,
+            score: 0,
+            moves: 0
+          });
+
+          const inventoryAction = new InventoryAction();
+          const result = inventoryAction.execute(state);
+
+          // Should succeed
+          expect(result.success).toBe(true);
+          
+          // Should contain "You are carrying:"
+          expect(result.message).toContain('You are carrying:');
+          
+          // Should list all objects in inventory
+          objectData.forEach(objData => {
+            expect(result.message).toContain(objData.name);
+          });
+
+          // Objects should appear in display order (leaflet first, knife last)
+          const lines = result.message.split('\n').slice(1); // Skip "You are carrying:" line
+          const objectNames = lines.map(line => line.trim()).filter(line => line.length > 0);
+          
+          // Verify ordering is consistent with object display order
+          if (objectNames.length > 1) {
+            const expectedOrder = ['leaflet', 'brass lantern', 'sword', 'rope', 'nasty knife'];
+            const actualOrder = objectNames.map(line => {
+              // Extract object name from "A/An object name" format
+              const match = line.match(/^An? (.+?)( \(.*\))?$/);
+              return match ? match[1] : line;
+            });
+            
+            // Check that objects appear in the expected relative order
+            for (let i = 0; i < actualOrder.length - 1; i++) {
+              const currentIndex = expectedOrder.indexOf(actualOrder[i]);
+              const nextIndex = expectedOrder.indexOf(actualOrder[i + 1]);
+              if (currentIndex !== -1 && nextIndex !== -1) {
+                expect(currentIndex).toBeLessThan(nextIndex);
+              }
+            }
+          }
+
+          return true;
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+});
+
+// Feature: achieve-90-percent-parity, Property 5: Inventory Message Consistency
+describe('Property Test: Inventory Message Consistency', () => {
+  it('should use consistent article format (A/An) for any object in inventory', () => {
+    fc.assert(
+      fc.property(
+        // Generate object with various name patterns
+        fc.record({
+          id: fc.string({ minLength: 1, maxLength: 10 }).map(s => s.toUpperCase().replace(/[^A-Z]/g, '')).filter(s => s.length > 0),
+          name: fc.string({ minLength: 1, maxLength: 20 }).filter(s => s.trim().length > 0)
+        }),
+        (objData) => {
+          if (!objData.id || !objData.name) return true;
+
+          // Create test room
+          const testRoom = new RoomImpl({
+            id: 'TEST-ROOM',
+            name: 'Test Room',
+            description: 'A test room',
+            exits: new Map(),
+            flags: [RoomFlag.ONBIT]
+          });
+
+          // Create object and add to inventory
+          const obj = new GameObjectImpl({
+            id: objData.id,
+            name: objData.name,
+            synonyms: [objData.id],
+            adjectives: [],
+            description: objData.name,
+            initialLocation: 'INVENTORY',
+            flags: ['TAKEBIT']
+          });
+
+          const state = new GameState({
+            currentRoom: 'TEST-ROOM',
+            objects: new Map([[objData.id, obj]]),
+            rooms: new Map([['TEST-ROOM', testRoom]]),
+            inventory: [objData.id],
+            score: 0,
+            moves: 0
+          });
+
+          const inventoryAction = new InventoryAction();
+          const result = inventoryAction.execute(state);
+
+          // Should succeed
+          expect(result.success).toBe(true);
+          
+          // Should use correct article based on first letter
+          const firstChar = objData.name.charAt(0).toLowerCase();
+          const expectedArticle = ['a', 'e', 'i', 'o', 'u'].includes(firstChar) ? 'An' : 'A';
+          
+          expect(result.message).toContain(`${expectedArticle} ${objData.name}`);
+
+          return true;
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+});
