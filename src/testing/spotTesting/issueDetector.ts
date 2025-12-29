@@ -33,7 +33,20 @@ export class IssueDetector {
    */
   analyzeIssues(differences: CommandDifference[]): IssueAnalysis {
     const patterns = this.detectPatterns(differences);
-    const overallSeverity = this.assessOverallSeverity(patterns);
+    let overallSeverity = this.assessOverallSeverity(patterns);
+    
+    // If no patterns detected but we have critical individual differences, 
+    // elevate overall severity accordingly
+    if (patterns.length === 0 && differences.length > 0) {
+      let maxIndividualSeverity = IssueSeverity.LOW;
+      for (const diff of differences) {
+        if (this.compareSeverity(diff.severity, maxIndividualSeverity) > 0) {
+          maxIndividualSeverity = diff.severity;
+        }
+      }
+      overallSeverity = maxIndividualSeverity;
+    }
+    
     const recommendDeepAnalysis = this.shouldRecommendDeepAnalysis(differences, patterns);
     const recommendations = this.generateRecommendations(differences, patterns);
 
@@ -304,14 +317,14 @@ export class IssueDetector {
   }
 
   /**
-   * Assess overall severity from all patterns
+   * Assess overall severity from all patterns and individual differences
    */
   private assessOverallSeverity(patterns: IssuePattern[]): IssueSeverity {
     if (patterns.length === 0) {
       return IssueSeverity.LOW;
     }
 
-    // Find highest severity
+    // Find highest severity from patterns
     let maxSeverity = IssueSeverity.LOW;
     for (const pattern of patterns) {
       if (this.compareSeverity(pattern.severity, maxSeverity) > 0) {
@@ -345,7 +358,13 @@ export class IssueDetector {
       return true;
     }
 
-    // Recommend if we have any critical issues
+    // Recommend if we have any critical issues (even individual ones)
+    const criticalDifferences = differences.filter(d => d.severity === IssueSeverity.CRITICAL);
+    if (criticalDifferences.length >= this.thresholds.criticalIssueThreshold) {
+      return true;
+    }
+
+    // Recommend if we have any critical patterns
     const criticalPatterns = patterns.filter(p => p.severity === IssueSeverity.CRITICAL);
     if (criticalPatterns.length >= this.thresholds.criticalIssueThreshold) {
       return true;
