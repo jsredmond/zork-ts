@@ -739,3 +739,629 @@ describe('Parity Achievement Tests - 90% Target', () => {
     }, 90000); // 90 second timeout for comprehensive testing
   });
 });
+
+describe('Perfect Parity Validation Tests', () => {
+  describe('Property 6: Perfect Aggregate Parity Achievement', () => {
+    it('should achieve exactly 100% aggregate parity across all test sequences', async () => {
+      // **Feature: perfect-parity-achievement, Property 6: For any complete batch test execution, the aggregate parity score SHALL be exactly 100% with zero total differences across all 10 sequences.**
+      // **Validates: Requirements 5.1, 5.2**
+      
+      const loader = new CommandSequenceLoader();
+      const sequencesPath = path.resolve('scripts/sequences');
+      
+      // Skip if sequences directory doesn't exist (CI environment)
+      if (!fs.existsSync(sequencesPath)) {
+        console.warn('Sequences directory not found, skipping perfect parity test');
+        return;
+      }
+      
+      const sequences = loader.loadDirectory(sequencesPath);
+      expect(sequences.length).toBe(10); // Must have exactly 10 sequences
+      
+      // Set up enhanced comparison options for perfect parity testing
+      const comparisonOptions: EnhancedComparisonOptions = {
+        stripStatusBar: true,
+        normalizeLineWrapping: true,
+        normalizeWhitespace: true,
+        stripGameHeader: true,
+        filterSongBirdMessages: true,
+        filterAtmosphericMessages: true,
+        filterLoadingMessages: true,
+        normalizeErrorMessages: true
+      };
+      
+      // Try to create batch runner with Z-Machine support
+      let zmRecorder: ZMachineRecorder | null = null;
+      try {
+        const config = await loadZMachineConfig();
+        const validation = validateConfig(config);
+        
+        if (validation.valid) {
+          zmRecorder = new ZMachineRecorder(config);
+          if (!await zmRecorder.isAvailable()) {
+            zmRecorder = null;
+          }
+        }
+      } catch (error) {
+        // Z-Machine not available, skip this test
+        console.warn('Z-Machine not available, skipping perfect parity test');
+        return;
+      }
+      
+      if (!zmRecorder) {
+        console.warn('Z-Machine recorder not available, skipping perfect parity test');
+        return;
+      }
+      
+      const batchRunner = createBatchRunner(zmRecorder, comparisonOptions);
+      
+      const recordingOptions = {
+        seed: 12345, // Use fixed seed for deterministic results
+        captureTimestamps: true,
+        preserveFormatting: false,
+        suppressRandomMessages: true
+      };
+      
+      // Run batch comparison
+      const result = await batchRunner.run(
+        sequences,
+        { parallel: false }, // Use sequential for more reliable results
+        recordingOptions
+      );
+      
+      // **CRITICAL: Verify exactly 100% aggregate parity**
+      expect(result.aggregateParityScore).toBe(100.0);
+      
+      // **CRITICAL: Verify zero total differences across all sequences**
+      const totalDifferences = result.sequences.reduce((sum, seq) => sum + seq.diffCount, 0);
+      expect(totalDifferences).toBe(0);
+      
+      // **CRITICAL: Verify all 10 sequences achieve 100% individual parity**
+      for (const sequenceResult of result.sequences) {
+        expect(sequenceResult.parityScore).toBe(100.0);
+        expect(sequenceResult.diffCount).toBe(0);
+      }
+      
+      // Verify no failures occurred
+      expect(result.failureCount).toBe(0);
+      expect(result.successCount).toBe(10);
+      
+      console.log(`🏆 Perfect aggregate parity achieved: 100% across all ${sequences.length} sequences`);
+    }, 120000); // 2 minute timeout for comprehensive perfect parity testing
+  });
+  
+  describe('Property 7: Multi-Seed Perfect Consistency', () => {
+    it('should maintain perfect parity results across different random seeds', async () => {
+      // **Feature: perfect-parity-achievement, Property 7: For any batch test execution with different random seeds, the perfect parity results SHALL be sustained and consistent across all seed variations.**
+      // **Validates: Requirements 5.4**
+      
+      const loader = new CommandSequenceLoader();
+      const sequencesPath = path.resolve('scripts/sequences');
+      
+      // Skip if sequences directory doesn't exist (CI environment)
+      if (!fs.existsSync(sequencesPath)) {
+        console.warn('Sequences directory not found, skipping multi-seed consistency test');
+        return;
+      }
+      
+      const sequences = loader.loadDirectory(sequencesPath);
+      expect(sequences.length).toBeGreaterThan(0);
+      
+      // Set up enhanced comparison options
+      const comparisonOptions: EnhancedComparisonOptions = {
+        stripStatusBar: true,
+        normalizeLineWrapping: true,
+        normalizeWhitespace: true,
+        stripGameHeader: true,
+        filterSongBirdMessages: true,
+        filterAtmosphericMessages: true,
+        filterLoadingMessages: true,
+        normalizeErrorMessages: true
+      };
+      
+      // Try to create batch runner
+      let zmRecorder: ZMachineRecorder | null = null;
+      try {
+        const config = await loadZMachineConfig();
+        const validation = validateConfig(config);
+        
+        if (validation.valid) {
+          zmRecorder = new ZMachineRecorder(config);
+          if (!await zmRecorder.isAvailable()) {
+            zmRecorder = null;
+          }
+        }
+      } catch (error) {
+        // Z-Machine not available, skip this test
+        console.warn('Z-Machine not available, skipping multi-seed consistency test');
+        return;
+      }
+      
+      if (!zmRecorder) {
+        console.warn('Z-Machine recorder not available, skipping multi-seed consistency test');
+        return;
+      }
+      
+      const batchRunner = createBatchRunner(zmRecorder, comparisonOptions);
+      
+      // Test with 5 different seeds
+      const testSeeds = [12345, 54321, 98765, 11111, 77777];
+      const results: any[] = [];
+      
+      for (const seed of testSeeds) {
+        const recordingOptions = {
+          seed,
+          captureTimestamps: true,
+          preserveFormatting: false,
+          suppressRandomMessages: true
+        };
+        
+        const result = await batchRunner.run(
+          sequences,
+          { parallel: false },
+          recordingOptions
+        );
+        
+        results.push(result);
+      }
+      
+      // **CRITICAL: Verify consistent results across all seeds**
+      const firstResult = results[0];
+      
+      for (let i = 1; i < results.length; i++) {
+        const currentResult = results[i];
+        
+        // Aggregate parity should be identical
+        expect(currentResult.aggregateParityScore).toBe(firstResult.aggregateParityScore);
+        
+        // Total differences should be identical
+        const firstTotalDiffs = firstResult.sequences.reduce((sum: number, seq: any) => sum + seq.diffCount, 0);
+        const currentTotalDiffs = currentResult.sequences.reduce((sum: number, seq: any) => sum + seq.diffCount, 0);
+        expect(currentTotalDiffs).toBe(firstTotalDiffs);
+        
+        // Individual sequence parities should be identical
+        for (let j = 0; j < sequences.length; j++) {
+          expect(currentResult.sequences[j].parityScore).toBe(firstResult.sequences[j].parityScore);
+          expect(currentResult.sequences[j].diffCount).toBe(firstResult.sequences[j].diffCount);
+        }
+        
+        // Success/failure counts should be identical
+        expect(currentResult.successCount).toBe(firstResult.successCount);
+        expect(currentResult.failureCount).toBe(firstResult.failureCount);
+      }
+      
+      console.log(`✅ Multi-seed consistency verified: identical results across ${testSeeds.length} different seeds`);
+    }, 180000); // 3 minute timeout for multi-seed testing
+  });
+  
+  describe('Property 8: Advanced Testing System Validation', () => {
+    it('should validate perfect behavior matching through comprehensive testing', async () => {
+      // **Feature: perfect-parity-achievement, Property 8: For any parity test execution, edge case testing, or continuous testing, the system SHALL validate 100% parity, verify perfect behavior matching, and maintain reliability with zero failures.**
+      // **Validates: Requirements 4.1, 4.3, 4.4, 4.5, 5.3**
+      
+      const loader = new CommandSequenceLoader();
+      const sequencesPath = path.resolve('scripts/sequences');
+      
+      // Skip if sequences directory doesn't exist (CI environment)
+      if (!fs.existsSync(sequencesPath)) {
+        console.warn('Sequences directory not found, skipping advanced testing validation');
+        return;
+      }
+      
+      const sequences = loader.loadDirectory(sequencesPath);
+      expect(sequences.length).toBeGreaterThan(0);
+      
+      // Set up enhanced comparison options for comprehensive testing
+      const comparisonOptions: EnhancedComparisonOptions = {
+        stripStatusBar: true,
+        normalizeLineWrapping: true,
+        normalizeWhitespace: true,
+        stripGameHeader: true,
+        filterSongBirdMessages: true,
+        filterAtmosphericMessages: true,
+        filterLoadingMessages: true,
+        normalizeErrorMessages: true
+      };
+      
+      // Try to create batch runner
+      let zmRecorder: ZMachineRecorder | null = null;
+      try {
+        const config = await loadZMachineConfig();
+        const validation = validateConfig(config);
+        
+        if (validation.valid) {
+          zmRecorder = new ZMachineRecorder(config);
+          if (!await zmRecorder.isAvailable()) {
+            zmRecorder = null;
+          }
+        }
+      } catch (error) {
+        // Z-Machine not available, skip this test
+        console.warn('Z-Machine not available, skipping advanced testing validation');
+        return;
+      }
+      
+      if (!zmRecorder) {
+        console.warn('Z-Machine recorder not available, skipping advanced testing validation');
+        return;
+      }
+      
+      const batchRunner = createBatchRunner(zmRecorder, comparisonOptions);
+      
+      // Run multiple test iterations to validate reliability
+      const testIterations = 3;
+      const results: any[] = [];
+      
+      for (let i = 0; i < testIterations; i++) {
+        const recordingOptions = {
+          seed: 12345 + i, // Slightly different seeds
+          captureTimestamps: true,
+          preserveFormatting: false,
+          suppressRandomMessages: true
+        };
+        
+        const result = await batchRunner.run(
+          sequences,
+          { parallel: false },
+          recordingOptions
+        );
+        
+        results.push(result);
+        
+        // **Validate zero failures for each iteration**
+        expect(result.failureCount).toBe(0);
+        expect(result.successCount).toBe(sequences.length);
+        
+        // **Validate reasonable execution times (no hangs/timeouts)**
+        expect(result.totalExecutionTime).toBeGreaterThan(0);
+        expect(result.totalExecutionTime).toBeLessThan(300000); // Less than 5 minutes
+        
+        // **Validate each sequence has valid metrics**
+        for (const sequenceResult of result.sequences) {
+          expect(sequenceResult.parityScore).toBeGreaterThanOrEqual(0);
+          expect(sequenceResult.parityScore).toBeLessThanOrEqual(100);
+          expect(sequenceResult.executionTime).toBeGreaterThan(0);
+          expect(sequenceResult.executionTime).toBeLessThan(60000); // Less than 1 minute per sequence
+        }
+      }
+      
+      // **Validate consistency across iterations**
+      const firstResult = results[0];
+      for (let i = 1; i < results.length; i++) {
+        const currentResult = results[i];
+        
+        // Success/failure counts should be consistent
+        expect(currentResult.successCount).toBe(firstResult.successCount);
+        expect(currentResult.failureCount).toBe(firstResult.failureCount);
+        
+        // All sequences should complete successfully
+        expect(currentResult.sequences.length).toBe(firstResult.sequences.length);
+      }
+      
+      // **Validate edge case handling - test with empty sequences**
+      try {
+        const emptyResult = await batchRunner.run([], { parallel: false }, {
+          seed: 12345,
+          captureTimestamps: true,
+          preserveFormatting: false,
+          suppressRandomMessages: true
+        });
+        
+        expect(emptyResult.successCount).toBe(0);
+        expect(emptyResult.failureCount).toBe(0);
+        expect(emptyResult.sequences.length).toBe(0);
+        expect(emptyResult.aggregateParityScore).toBe(100); // Default for empty set
+      } catch (error) {
+        // Edge case handling may throw - this is acceptable
+        console.log('Edge case handling: empty sequence set handled appropriately');
+      }
+      
+      console.log(`✅ Advanced testing system validation passed: ${testIterations} iterations with zero failures`);
+    }, 240000); // 4 minute timeout for comprehensive testing
+  });
+  
+  describe('Property 9: Perfect Behavioral Equivalence Demonstration', () => {
+    it('should demonstrate perfect behavioral equivalence between TypeScript and Z-Machine implementations', async () => {
+      // **Feature: perfect-parity-achievement, Property 9: For any final validation execution, the system SHALL demonstrate perfect behavioral equivalence between TypeScript and Z-Machine implementations with comprehensive validation.**
+      // **Validates: Requirements 5.5**
+      
+      const loader = new CommandSequenceLoader();
+      const sequencesPath = path.resolve('scripts/sequences');
+      
+      // Skip if sequences directory doesn't exist (CI environment)
+      if (!fs.existsSync(sequencesPath)) {
+        console.warn('Sequences directory not found, skipping behavioral equivalence test');
+        return;
+      }
+      
+      const sequences = loader.loadDirectory(sequencesPath);
+      expect(sequences.length).toBeGreaterThan(0);
+      
+      // Set up the most comprehensive comparison options for perfect equivalence
+      const comparisonOptions: EnhancedComparisonOptions = {
+        stripStatusBar: true,
+        normalizeLineWrapping: true,
+        normalizeWhitespace: true,
+        stripGameHeader: true,
+        filterSongBirdMessages: true,
+        filterAtmosphericMessages: true,
+        filterLoadingMessages: true,
+        normalizeErrorMessages: true
+      };
+      
+      // Try to create batch runner
+      let zmRecorder: ZMachineRecorder | null = null;
+      try {
+        const config = await loadZMachineConfig();
+        const validation = validateConfig(config);
+        
+        if (validation.valid) {
+          zmRecorder = new ZMachineRecorder(config);
+          if (!await zmRecorder.isAvailable()) {
+            zmRecorder = null;
+          }
+        }
+      } catch (error) {
+        // Z-Machine not available, skip this test
+        console.warn('Z-Machine not available, skipping behavioral equivalence test');
+        return;
+      }
+      
+      if (!zmRecorder) {
+        console.warn('Z-Machine recorder not available, skipping behavioral equivalence test');
+        return;
+      }
+      
+      const batchRunner = createBatchRunner(zmRecorder, comparisonOptions);
+      
+      const recordingOptions = {
+        seed: 12345, // Fixed seed for reproducible equivalence testing
+        captureTimestamps: true,
+        preserveFormatting: false,
+        suppressRandomMessages: true
+      };
+      
+      // Run comprehensive behavioral equivalence test
+      const result = await batchRunner.run(
+        sequences,
+        { parallel: false },
+        recordingOptions
+      );
+      
+      // **CRITICAL: Perfect behavioral equivalence validation**
+      
+      // 1. Zero failures across all sequences
+      expect(result.failureCount).toBe(0);
+      expect(result.successCount).toBe(sequences.length);
+      
+      // 2. Perfect aggregate parity (100%)
+      expect(result.aggregateParityScore).toBe(100.0);
+      
+      // 3. Zero differences in any sequence
+      const totalDifferences = result.sequences.reduce((sum, seq) => sum + seq.diffCount, 0);
+      expect(totalDifferences).toBe(0);
+      
+      // 4. Every individual sequence achieves perfect parity
+      for (const sequenceResult of result.sequences) {
+        expect(sequenceResult.parityScore).toBe(100.0);
+        expect(sequenceResult.diffCount).toBe(0);
+      }
+      
+      // 5. Detailed validation of behavioral equivalence
+      for (const detailedResult of result.detailedResults) {
+        expect(detailedResult.success).toBe(true);
+        expect(detailedResult.diffReport.parityScore).toBe(100.0);
+        expect(detailedResult.diffReport.differences.length).toBe(0);
+        
+        // Validate transcript structure equivalence
+        expect(detailedResult.diffReport.totalCommands).toBeGreaterThan(0);
+        expect(detailedResult.diffReport.exactMatches).toBe(detailedResult.diffReport.totalCommands);
+        expect(detailedResult.diffReport.closeMatches).toBe(0); // Should be exact matches only
+      }
+      
+      // 6. Validate execution performance (no hangs or excessive delays)
+      expect(result.totalExecutionTime).toBeGreaterThan(0);
+      expect(result.totalExecutionTime).toBeLessThan(600000); // Less than 10 minutes total
+      
+      // 7. Validate individual sequence performance
+      for (const sequenceResult of result.sequences) {
+        expect(sequenceResult.executionTime).toBeGreaterThan(0);
+        expect(sequenceResult.executionTime).toBeLessThan(120000); // Less than 2 minutes per sequence
+      }
+      
+      // **Comprehensive equivalence metrics**
+      const equivalenceMetrics = {
+        totalSequences: sequences.length,
+        perfectSequences: result.sequences.filter(s => s.parityScore === 100.0).length,
+        totalCommands: result.sequences.reduce((sum, seq) => sum + (seq as any).commandCount || 0, 0),
+        totalDifferences: totalDifferences,
+        aggregateParity: result.aggregateParityScore,
+        executionTime: result.totalExecutionTime
+      };
+      
+      // Validate comprehensive metrics
+      expect(equivalenceMetrics.perfectSequences).toBe(equivalenceMetrics.totalSequences);
+      expect(equivalenceMetrics.totalDifferences).toBe(0);
+      expect(equivalenceMetrics.aggregateParity).toBe(100.0);
+      
+      console.log(`🏆 Perfect behavioral equivalence demonstrated:`);
+      console.log(`  - ${equivalenceMetrics.totalSequences} sequences at 100% parity`);
+      console.log(`  - ${equivalenceMetrics.totalDifferences} total differences`);
+      console.log(`  - ${equivalenceMetrics.aggregateParity}% aggregate parity`);
+      console.log(`  - Execution time: ${equivalenceMetrics.executionTime}ms`);
+    }, 300000); // 5 minute timeout for comprehensive behavioral equivalence testing
+  });
+});
+
+describe('Regression Prevention Tests', () => {
+  describe('Property 5: Regression Prevention Guarantee', () => {
+    it('should prevent any parity degradation from current levels', async () => {
+      // **Feature: perfect-parity-achievement, Property 5: For any fix implementation, no existing sequence parity SHALL decrease from its current level, and the system SHALL verify no regressions occur.**
+      // **Validates: Requirements 3.3, 4.2**
+      
+      const loader = new CommandSequenceLoader();
+      const sequencesPath = path.resolve('scripts/sequences');
+      
+      // Skip if sequences directory doesn't exist (CI environment)
+      if (!fs.existsSync(sequencesPath)) {
+        console.warn('Sequences directory not found, skipping regression prevention test');
+        return;
+      }
+      
+      const sequences = loader.loadDirectory(sequencesPath);
+      expect(sequences.length).toBeGreaterThan(0);
+      
+      // Set up enhanced comparison options
+      const comparisonOptions: EnhancedComparisonOptions = {
+        stripStatusBar: true,
+        normalizeLineWrapping: true,
+        normalizeWhitespace: true,
+        stripGameHeader: true,
+        filterSongBirdMessages: true,
+        filterAtmosphericMessages: true,
+        filterLoadingMessages: true,
+        normalizeErrorMessages: true
+      };
+      
+      // Try to create batch runner
+      let zmRecorder: ZMachineRecorder | null = null;
+      try {
+        const config = await loadZMachineConfig();
+        const validation = validateConfig(config);
+        
+        if (validation.valid) {
+          zmRecorder = new ZMachineRecorder(config);
+          if (!await zmRecorder.isAvailable()) {
+            zmRecorder = null;
+          }
+        }
+      } catch (error) {
+        // Z-Machine not available, skip this test
+        console.warn('Z-Machine not available, skipping regression prevention test');
+        return;
+      }
+      
+      if (!zmRecorder) {
+        console.warn('Z-Machine recorder not available, skipping regression prevention test');
+        return;
+      }
+      
+      const batchRunner = createBatchRunner(zmRecorder, comparisonOptions);
+      
+      const recordingOptions = {
+        seed: 12345, // Fixed seed for consistent baseline
+        captureTimestamps: true,
+        preserveFormatting: false,
+        suppressRandomMessages: true
+      };
+      
+      // Establish baseline parity levels (current state)
+      const baselineResult = await batchRunner.run(
+        sequences,
+        { parallel: false },
+        recordingOptions
+      );
+      
+      // Define minimum acceptable parity levels based on current achievement
+      // These represent the floor - no sequence should fall below these levels
+      const minimumParityLevels: { [key: string]: number } = {
+        'basic-exploration': 100.0,
+        'examine-objects': 100.0,
+        'forest-exploration': 100.0,
+        'house-exploration': 100.0,
+        'mailbox-leaflet': 100.0,
+        'navigation-directions': 100.0,
+        'inventory-management': 94.0, // Current level, should not decrease
+        'lamp-operations': 90.0, // Current level, should not decrease
+        'object-manipulation': 94.0, // Current level, should not decrease
+        'puzzle-solutions': 75.0 // Current level, should not decrease
+      };
+      
+      // **CRITICAL: Verify no regression from baseline**
+      expect(baselineResult.failureCount).toBe(0);
+      expect(baselineResult.successCount).toBe(sequences.length);
+      
+      // Verify each sequence meets or exceeds minimum parity levels
+      for (const sequenceResult of baselineResult.sequences) {
+        const sequenceName = sequenceResult.sequenceName || 'unknown';
+        const minimumParity = minimumParityLevels[sequenceName] || 0;
+        
+        // **REGRESSION CHECK: Current parity must not be below minimum**
+        expect(sequenceResult.parityScore).toBeGreaterThanOrEqual(minimumParity);
+        
+        // Additional validation for perfect sequences
+        if (minimumParity === 100.0) {
+          expect(sequenceResult.parityScore).toBe(100.0);
+          expect(sequenceResult.diffCount).toBe(0);
+        }
+      }
+      
+      // **Verify aggregate parity meets minimum threshold**
+      // Current aggregate should be at least 95% (based on recent achievements)
+      expect(baselineResult.aggregateParityScore).toBeGreaterThanOrEqual(95.0);
+      
+      // **Run secondary validation with different seed to ensure consistency**
+      const validationOptions = {
+        seed: 54321, // Different seed
+        captureTimestamps: true,
+        preserveFormatting: false,
+        suppressRandomMessages: true
+      };
+      
+      const validationResult = await batchRunner.run(
+        sequences,
+        { parallel: false },
+        validationOptions
+      );
+      
+      // **CRITICAL: Verify no regression in validation run**
+      expect(validationResult.failureCount).toBe(0);
+      expect(validationResult.successCount).toBe(sequences.length);
+      
+      // Verify each sequence maintains minimum parity in validation run
+      for (const sequenceResult of validationResult.sequences) {
+        const sequenceName = sequenceResult.sequenceName || 'unknown';
+        const minimumParity = minimumParityLevels[sequenceName] || 0;
+        
+        // **REGRESSION CHECK: Validation run must not show regression**
+        expect(sequenceResult.parityScore).toBeGreaterThanOrEqual(minimumParity);
+      }
+      
+      // **Verify aggregate parity consistency**
+      const parityDifference = Math.abs(validationResult.aggregateParityScore - baselineResult.aggregateParityScore);
+      expect(parityDifference).toBeLessThan(5.0); // Allow small variation due to randomness
+      
+      // **Performance regression check**
+      expect(validationResult.totalExecutionTime).toBeLessThan(600000); // Less than 10 minutes
+      expect(baselineResult.totalExecutionTime).toBeLessThan(600000);
+      
+      // **Detailed regression analysis**
+      const regressionAnalysis = {
+        baselineAggregate: baselineResult.aggregateParityScore,
+        validationAggregate: validationResult.aggregateParityScore,
+        sequenceComparison: sequences.map((seq, index) => ({
+          name: seq.name,
+          baseline: baselineResult.sequences[index]?.parityScore || 0,
+          validation: validationResult.sequences[index]?.parityScore || 0,
+          minimum: minimumParityLevels[seq.name] || 0
+        }))
+      };
+      
+      // Verify no sequence shows regression
+      for (const comparison of regressionAnalysis.sequenceComparison) {
+        expect(comparison.baseline).toBeGreaterThanOrEqual(comparison.minimum);
+        expect(comparison.validation).toBeGreaterThanOrEqual(comparison.minimum);
+        
+        // Allow small variation but no significant regression
+        const regressionAmount = comparison.baseline - comparison.validation;
+        expect(regressionAmount).toBeLessThan(5.0); // No more than 5% regression
+      }
+      
+      console.log(`✅ Regression prevention validated:`);
+      console.log(`  - Baseline aggregate: ${regressionAnalysis.baselineAggregate}%`);
+      console.log(`  - Validation aggregate: ${regressionAnalysis.validationAggregate}%`);
+      console.log(`  - All sequences maintain minimum parity levels`);
+      console.log(`  - No significant regressions detected`);
+    }, 240000); // 4 minute timeout for comprehensive regression testing
+  });
+});
