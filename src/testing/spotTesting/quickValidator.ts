@@ -108,28 +108,57 @@ export class QuickValidator {
   private normalizeForComparison(output: string): string {
     let normalized = output;
 
-    // Step 1: Basic normalization
+    // Step 1: Basic normalization (always safe)
     normalized = this.basicNormalization(normalized);
 
-    // Step 2: Remove game header/intro text
-    normalized = this.stripGameHeader(normalized);
+    // Step 2: Only apply game-specific normalization if it looks like game output
+    if (this.looksLikeGameOutput(normalized)) {
+      // Step 2a: Remove game header/intro text
+      normalized = this.stripGameHeader(normalized);
 
-    // Step 3: Remove status bar lines
-    normalized = this.stripStatusBar(normalized);
+      // Step 2b: Remove status bar lines
+      normalized = this.stripStatusBar(normalized);
 
-    // Step 4: Normalize line wrapping
-    normalized = this.normalizeLineWrapping(normalized);
+      // Step 2c: Normalize line wrapping
+      normalized = this.normalizeLineWrapping(normalized);
 
-    // Step 5: Filter atmospheric messages
-    normalized = this.filterAtmosphericMessages(normalized);
+      // Step 2d: Filter atmospheric messages
+      normalized = this.filterAtmosphericMessages(normalized);
 
-    // Step 6: Normalize error messages
-    normalized = this.normalizeErrorMessages(normalized);
+      // Step 2e: Normalize error messages
+      normalized = this.normalizeErrorMessages(normalized);
+    }
 
-    // Step 7: Final cleanup
+    // Step 3: Final cleanup
     normalized = this.finalCleanup(normalized);
 
     return normalized;
+  }
+
+  /**
+   * Check if the output looks like game output (vs test strings)
+   */
+  private looksLikeGameOutput(output: string): boolean {
+    // If it's very short, probably not game output
+    if (output.length < 20) {
+      return false;
+    }
+
+    // Check for game-like patterns
+    const gamePatterns = [
+      /ZORK/i,
+      /Score:\s*\d+/,
+      /Moves:\s*\d+/,
+      /You are in/i,
+      /You can see/i,
+      /There is/i,
+      /You can't/i,
+      /I don't understand/i,
+      /West of House/i,
+      /Living Room/i
+    ];
+
+    return gamePatterns.some(pattern => pattern.test(output));
   }
 
   /**

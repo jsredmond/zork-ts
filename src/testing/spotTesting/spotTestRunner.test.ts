@@ -236,6 +236,7 @@ describe('SpotTestRunner Property Tests', () => {
         normalizeOutput: true,
         ignoreMinorDifferences: false // Don't ignore differences for this test
       });
+      
       expect(result.isMatch).toBe(false);
       expect([IssueSeverity.HIGH, IssueSeverity.CRITICAL]).toContain(result.severity);
     });
