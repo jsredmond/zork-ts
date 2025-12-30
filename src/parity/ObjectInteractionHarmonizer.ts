@@ -4,10 +4,12 @@
  * This module standardizes error messages and object interaction patterns
  * to match the original Z-Machine implementation exactly.
  * 
- * Requirements: 3.1, 3.2
+ * Requirements: 3.1, 3.2, 3.3
  */
 
 import { GameState } from '../game/state.js';
+
+// Note: GameObject type is used in interface definitions and method signatures
 
 /**
  * Error message mappings from TypeScript to Z-Machine format
@@ -26,6 +28,20 @@ export interface HarmonizedResult {
   wasHarmonized: boolean;
   originalMessage?: string;
   harmonizationType?: string;
+}
+
+/**
+ * Container interaction context for alignment
+ */
+export interface ContainerInteractionContext {
+  verb: string;
+  directObjectName?: string;
+  indirectObjectName?: string;
+  isDirectObjectInInventory: boolean;
+  isDirectObjectVisible: boolean;
+  isDirectObjectKnown: boolean;
+  isIndirectObjectContainer: boolean;
+  isIndirectObjectOpen: boolean;
 }
 
 /**
@@ -99,7 +115,7 @@ export class ObjectInteractionHarmonizer {
   harmonizeResponse(
     message: string, 
     command: string, 
-    state: GameState
+    _state: GameState
   ): HarmonizedResult {
     const verb = this.extractVerb(command);
     
@@ -145,7 +161,7 @@ export class ObjectInteractionHarmonizer {
    */
   harmonizeObjectVisibility(
     message: string, 
-    objectName: string, 
+    _objectName: string, 
     isInPossession: boolean,
     verb: string
   ): string {
@@ -170,7 +186,7 @@ export class ObjectInteractionHarmonizer {
   /**
    * Check if the context matches the command
    */
-  private contextMatches(context: string, verb: string, command: string): boolean {
+  private contextMatches(context: string, verb: string, _command: string): boolean {
     switch (context) {
       case 'drop':
         return verb === 'drop';
@@ -244,6 +260,285 @@ export class ObjectInteractionHarmonizer {
     }
     
     return message;
+  }
+
+  /**
+   * Align container interaction error messages with Z-Machine behavior
+   * 
+   * Key difference: Z-Machine says "You don't have that!" when trying to PUT
+   * an object the player doesn't possess, while TypeScript says "You can't see any X here!"
+   * 
+   * Requirements: 3.3
+   */
+  alignContainerInteractions(
+    message: string,
+    context: ContainerInteractionContext
+  ): HarmonizedResult {
+    const verb = context.verb.toLowerCase();
+    
+    // Handle PUT/PLACE/INSERT commands
+    if (verb === 'put' || verb === 'place' || verb === 'insert') {
+      return this.alignPutCommandError(message, context);
+    }
+    
+    // Handle REMOVE/TAKE FROM commands
+    if (verb === 'remove' || (verb === 'take' && context.indirectObjectName)) {
+      return this.alignRemoveCommandError(message, context);
+    }
+    
+    return {
+      message,
+      wasHarmonized: false
+    };
+  }
+
+  /**
+   * Align PUT command error messages with Z-Machine behavior
+   * 
+   * Z-Machine behavior for PUT X IN Y:
+   * - If X is not a known word: "I don't know the word 'X'."
+   * - If X is known but player doesn't have it: "You don't have that!"
+   * - If X is visible but not in inventory: "You don't have the X."
+   * - If Y is not a container: "You can't do that."
+   * - If Y is closed: "The Y isn't open."
+   */
+  private alignPutCommandError(
+    message: string,
+    context: ContainerInteractionContext
+  ): HarmonizedResult {
+    // Case 1: Direct object not visible but is a known object type
+    // Z-Machine says "You don't have that!" not "You can't see any X here!"
+    if (message.includes("can't see any") && context.isDirectObjectKnown && !context.isDirectObjectInInventory) {
+      return {
+        message: "You don't have that!",
+        wasHarmonized: true,
+        originalMessage: message,
+        harmonizationType: 'put_possession'
+      };
+    }
+    
+    // Case 2: Direct object visible but not in inventory
+    // Z-Machine says "You don't have the X."
+    if (context.isDirectObjectVisible && !context.isDirectObjectInInventory) {
+      const objectName = context.directObjectName?.toLowerCase() || 'that';
+      return {
+        message: `You don't have the ${objectName}.`,
+        wasHarmonized: true,
+        originalMessage: message,
+        harmonizationType: 'put_not_holding'
+      };
+    }
+    
+    return {
+      message,
+      wasHarmonized: false
+    };
+  }
+
+  /**
+   * Align REMOVE/TAKE FROM command error messages with Z-Machine behavior
+   */
+  private alignRemoveCommandError(
+    message: string,
+    context: ContainerInteractionContext
+  ): HarmonizedResult {
+    // If container is closed, Z-Machine says "The X is closed."
+    if (!context.isIndirectObjectOpen && context.isIndirectObjectContainer) {
+      const containerName = context.indirectObjectName?.toLowerCase() || 'container';
+      return {
+        message: `The ${containerName} is closed.`,
+        wasHarmonized: true,
+        originalMessage: message,
+        harmonizationType: 'container_closed'
+      };
+    }
+    
+    return {
+      message,
+      wasHarmonized: false
+    };
+  }
+
+  /**
+   * Check if an object name is a known game object
+   * This helps distinguish between "unknown word" and "object not possessed" errors
+   */
+  isKnownObjectName(objectName: string, state: GameState): boolean {
+    const normalizedName = objectName.toLowerCase();
+    
+    // Check all objects in the game
+    for (const [_id, obj] of state.objects.entries()) {
+      // Check main name
+      if (obj.name.toLowerCase() === normalizedName) {
+        return true;
+      }
+      
+      // Check synonyms
+      if (obj.synonyms.some(syn => syn.toLowerCase() === normalizedName)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Get the appropriate error message for a PUT command based on context
+   */
+  getPutCommandError(
+    directObjectName: string | undefined,
+    _indirectObjectName: string | undefined,
+    state: GameState
+  ): string {
+    if (!directObjectName) {
+      return "What do you want to put?";
+    }
+    
+    // Check if the direct object is a known game object
+    const isKnown = directObjectName ? this.isKnownObjectName(directObjectName, state) : false;
+    
+    if (isKnown) {
+      // Object is known but player doesn't have it
+      return "You don't have that!";
+    }
+    
+    // Object is not known - use visibility error
+    return `You can't see any ${directObjectName.toLowerCase()} here!`;
+  }
+
+  /**
+   * Synchronize inventory state with Z-Machine behavior
+   * Ensures inventory operations produce identical results
+   * 
+   * Requirements: 3.4
+   */
+  synchronizeInventoryState(
+    state: GameState,
+    operation: 'add' | 'remove' | 'check',
+    objectId: string
+  ): { success: boolean; message: string } {
+    switch (operation) {
+      case 'add':
+        if (state.isInInventory(objectId)) {
+          return {
+            success: false,
+            message: "You're already carrying that!"
+          };
+        }
+        state.addToInventory(objectId);
+        return {
+          success: true,
+          message: "Taken."
+        };
+        
+      case 'remove':
+        if (!state.isInInventory(objectId)) {
+          return {
+            success: false,
+            message: "You're not carrying that!"
+          };
+        }
+        state.removeFromInventory(objectId);
+        return {
+          success: true,
+          message: "Dropped."
+        };
+        
+      case 'check':
+        return {
+          success: state.isInInventory(objectId),
+          message: state.isInInventory(objectId) 
+            ? "You have it." 
+            : "You don't have that!"
+        };
+        
+      default:
+        return {
+          success: false,
+          message: "Invalid operation."
+        };
+    }
+  }
+
+  /**
+   * Get the Z-Machine error message for inventory operations
+   * 
+   * Requirements: 3.4
+   */
+  getInventoryOperationError(
+    operation: string,
+    objectName?: string,
+    state?: GameState
+  ): string {
+    const operationLower = operation.toLowerCase();
+    
+    // Check if inventory is empty for drop operations
+    if ((operationLower === 'drop' || operationLower === 'drop all') && state?.isInventoryEmpty()) {
+      // Z-Machine uses context-aware message based on prominent objects in room
+      const currentRoom = state.getCurrentRoom();
+      if (currentRoom?.globalObjects?.includes('FOREST')) {
+        return "You don't have the forest.";
+      }
+      if (currentRoom?.globalObjects?.includes('WHITE-HOUSE')) {
+        return "You don't have the white house.";
+      }
+      return "You are empty-handed.";
+    }
+    
+    // Standard inventory error messages
+    const inventoryErrors: Record<string, string> = {
+      'take': objectName 
+        ? `You can't see any ${objectName.toLowerCase()} here!`
+        : "What do you want to take?",
+      'drop': objectName
+        ? `You don't have the ${objectName.toLowerCase()}.`
+        : "What do you want to drop?",
+      'put': objectName
+        ? "You don't have that!"
+        : "What do you want to put?",
+      'give': objectName
+        ? `You don't have the ${objectName.toLowerCase()}.`
+        : "What do you want to give?"
+    };
+    
+    return inventoryErrors[operationLower] || "You can't do that.";
+  }
+
+  /**
+   * Validate inventory state against Z-Machine expectations
+   * 
+   * Requirements: 3.4
+   */
+  validateInventoryState(state: GameState): { isValid: boolean; issues: string[] } {
+    const issues: string[] = [];
+    
+    // Check for orphaned inventory items (items in inventory but not in objects map)
+    for (const itemId of state.inventory) {
+      const obj = state.getObject(itemId);
+      if (!obj) {
+        issues.push(`Orphaned inventory item: ${itemId}`);
+      }
+    }
+    
+    // Check for items with PLAYER location but not in inventory array
+    for (const [objId, obj] of state.objects.entries()) {
+      if (obj.location === 'PLAYER' && !state.isInInventory(objId)) {
+        issues.push(`Item has PLAYER location but not in inventory: ${objId}`);
+      }
+    }
+    
+    // Check for items in inventory array but with wrong location
+    for (const itemId of state.inventory) {
+      const obj = state.getObject(itemId);
+      if (obj && obj.location !== 'PLAYER') {
+        issues.push(`Item in inventory but location is ${obj.location}: ${itemId}`);
+      }
+    }
+    
+    return {
+      isValid: issues.length === 0,
+      issues
+    };
   }
 
   /**

@@ -309,4 +309,294 @@ describe('ObjectInteractionHarmonizer', () => {
       expect(result.message).toBe("Dropped.");
     });
   });
+
+  describe('Container Interaction Alignment - Requirements 3.3', () => {
+    it('should align PUT command error when object is known but not possessed', () => {
+      const context = {
+        verb: 'put',
+        directObjectName: 'box',
+        indirectObjectName: 'board',
+        isDirectObjectInInventory: false,
+        isDirectObjectVisible: false,
+        isDirectObjectKnown: true,
+        isIndirectObjectContainer: true,
+        isIndirectObjectOpen: true
+      };
+      
+      const result = harmonizer.alignContainerInteractions(
+        "You can't see any box here!",
+        context
+      );
+      
+      expect(result.wasHarmonized).toBe(true);
+      expect(result.message).toBe("You don't have that!");
+      expect(result.harmonizationType).toBe('put_possession');
+    });
+
+    it('should align PUT command error when object is visible but not in inventory', () => {
+      const context = {
+        verb: 'put',
+        directObjectName: 'sword',
+        indirectObjectName: 'chest',
+        isDirectObjectInInventory: false,
+        isDirectObjectVisible: true,
+        isDirectObjectKnown: true,
+        isIndirectObjectContainer: true,
+        isIndirectObjectOpen: true
+      };
+      
+      const result = harmonizer.alignContainerInteractions(
+        "You don't have the sword.",
+        context
+      );
+      
+      expect(result.wasHarmonized).toBe(true);
+      expect(result.message).toBe("You don't have the sword.");
+      expect(result.harmonizationType).toBe('put_not_holding');
+    });
+
+    it('should not harmonize PUT command when object is in inventory', () => {
+      const context = {
+        verb: 'put',
+        directObjectName: 'lamp',
+        indirectObjectName: 'chest',
+        isDirectObjectInInventory: true,
+        isDirectObjectVisible: true,
+        isDirectObjectKnown: true,
+        isIndirectObjectContainer: true,
+        isIndirectObjectOpen: true
+      };
+      
+      const result = harmonizer.alignContainerInteractions(
+        "Done.",
+        context
+      );
+      
+      expect(result.wasHarmonized).toBe(false);
+      expect(result.message).toBe("Done.");
+    });
+
+    it('should align REMOVE command error when container is closed', () => {
+      const context = {
+        verb: 'remove',
+        directObjectName: 'key',
+        indirectObjectName: 'chest',
+        isDirectObjectInInventory: false,
+        isDirectObjectVisible: false,
+        isDirectObjectKnown: true,
+        isIndirectObjectContainer: true,
+        isIndirectObjectOpen: false
+      };
+      
+      const result = harmonizer.alignContainerInteractions(
+        "The chest is closed.",
+        context
+      );
+      
+      expect(result.wasHarmonized).toBe(true);
+      expect(result.message).toBe("The chest is closed.");
+      expect(result.harmonizationType).toBe('container_closed');
+    });
+
+    it('should handle PLACE as synonym for PUT', () => {
+      const context = {
+        verb: 'place',
+        directObjectName: 'coin',
+        indirectObjectName: 'box',
+        isDirectObjectInInventory: false,
+        isDirectObjectVisible: false,
+        isDirectObjectKnown: true,
+        isIndirectObjectContainer: true,
+        isIndirectObjectOpen: true
+      };
+      
+      const result = harmonizer.alignContainerInteractions(
+        "You can't see any coin here!",
+        context
+      );
+      
+      expect(result.wasHarmonized).toBe(true);
+      expect(result.message).toBe("You don't have that!");
+    });
+
+    it('should handle INSERT as synonym for PUT', () => {
+      const context = {
+        verb: 'insert',
+        directObjectName: 'key',
+        indirectObjectName: 'lock',
+        isDirectObjectInInventory: false,
+        isDirectObjectVisible: false,
+        isDirectObjectKnown: true,
+        isIndirectObjectContainer: true,
+        isIndirectObjectOpen: true
+      };
+      
+      const result = harmonizer.alignContainerInteractions(
+        "You can't see any key here!",
+        context
+      );
+      
+      expect(result.wasHarmonized).toBe(true);
+      expect(result.message).toBe("You don't have that!");
+    });
+  });
+
+  describe('Property 8: Object Interaction Parity - Container Operations', () => {
+    /**
+     * Property: PUT command errors are consistent with Z-Machine
+     * For any PUT command where player doesn't have the object,
+     * error should be "You don't have that!" not "You can't see any X here!"
+     */
+    it('should produce consistent PUT command errors for missing objects', () => {
+      fc.assert(
+        fc.property(
+          fc.string({ minLength: 1, maxLength: 15 }).filter(s => /^[a-z]+$/i.test(s)),
+          fc.string({ minLength: 1, maxLength: 15 }).filter(s => /^[a-z]+$/i.test(s)),
+          (objectName, containerName) => {
+            const context = {
+              verb: 'put',
+              directObjectName: objectName,
+              indirectObjectName: containerName,
+              isDirectObjectInInventory: false,
+              isDirectObjectVisible: false,
+              isDirectObjectKnown: true,
+              isIndirectObjectContainer: true,
+              isIndirectObjectOpen: true
+            };
+            
+            const result = harmonizer.alignContainerInteractions(
+              `You can't see any ${objectName} here!`,
+              context
+            );
+            
+            // Z-Machine says "You don't have that!" for known objects not in inventory
+            expect(result.message).toBe("You don't have that!");
+            expect(result.wasHarmonized).toBe(true);
+            
+            return true;
+          }
+        ),
+        { numRuns: 50 }
+      );
+    });
+
+    /**
+     * Property: Container interaction alignment is idempotent
+     * Aligning an already-aligned message should not change it
+     */
+    it('should be idempotent for container interactions', () => {
+      fc.assert(
+        fc.property(
+          fc.constantFrom('put', 'place', 'insert'),
+          fc.string({ minLength: 1, maxLength: 10 }).filter(s => /^[a-z]+$/i.test(s)),
+          (verb, objectName) => {
+            const context = {
+              verb,
+              directObjectName: objectName,
+              indirectObjectName: 'container',
+              isDirectObjectInInventory: false,
+              isDirectObjectVisible: false,
+              isDirectObjectKnown: true,
+              isIndirectObjectContainer: true,
+              isIndirectObjectOpen: true
+            };
+            
+            const result1 = harmonizer.alignContainerInteractions(
+              `You can't see any ${objectName} here!`,
+              context
+            );
+            
+            const result2 = harmonizer.alignContainerInteractions(
+              result1.message,
+              context
+            );
+            
+            expect(result1.message).toBe(result2.message);
+            
+            return true;
+          }
+        ),
+        { numRuns: 30 }
+      );
+    });
+  });
+
+  describe('Inventory State Management - Requirements 3.4', () => {
+    it('should synchronize inventory add operation', () => {
+      const testState = new GameState();
+      
+      const result = harmonizer.synchronizeInventoryState(testState, 'add', 'TEST_ITEM');
+      
+      expect(result.success).toBe(true);
+      expect(result.message).toBe('Taken.');
+      expect(testState.isInInventory('TEST_ITEM')).toBe(true);
+    });
+
+    it('should prevent duplicate inventory add', () => {
+      const testState = new GameState();
+      testState.addToInventory('TEST_ITEM');
+      
+      const result = harmonizer.synchronizeInventoryState(testState, 'add', 'TEST_ITEM');
+      
+      expect(result.success).toBe(false);
+      expect(result.message).toBe("You're already carrying that!");
+    });
+
+    it('should synchronize inventory remove operation', () => {
+      const testState = new GameState();
+      testState.addToInventory('TEST_ITEM');
+      
+      const result = harmonizer.synchronizeInventoryState(testState, 'remove', 'TEST_ITEM');
+      
+      expect(result.success).toBe(true);
+      expect(result.message).toBe('Dropped.');
+      expect(testState.isInInventory('TEST_ITEM')).toBe(false);
+    });
+
+    it('should prevent removing non-existent item', () => {
+      const testState = new GameState();
+      
+      const result = harmonizer.synchronizeInventoryState(testState, 'remove', 'TEST_ITEM');
+      
+      expect(result.success).toBe(false);
+      expect(result.message).toBe("You're not carrying that!");
+    });
+
+    it('should check inventory state correctly', () => {
+      const testState = new GameState();
+      testState.addToInventory('TEST_ITEM');
+      
+      const hasResult = harmonizer.synchronizeInventoryState(testState, 'check', 'TEST_ITEM');
+      expect(hasResult.success).toBe(true);
+      expect(hasResult.message).toBe('You have it.');
+      
+      const notHasResult = harmonizer.synchronizeInventoryState(testState, 'check', 'OTHER_ITEM');
+      expect(notHasResult.success).toBe(false);
+      expect(notHasResult.message).toBe("You don't have that!");
+    });
+
+    it('should get correct inventory operation error for drop', () => {
+      const error = harmonizer.getInventoryOperationError('drop', 'sword');
+      expect(error).toBe("You don't have the sword.");
+    });
+
+    it('should get correct inventory operation error for take', () => {
+      const error = harmonizer.getInventoryOperationError('take', 'lamp');
+      expect(error).toBe("You can't see any lamp here!");
+    });
+
+    it('should get correct inventory operation error for put', () => {
+      const error = harmonizer.getInventoryOperationError('put', 'coin');
+      expect(error).toBe("You don't have that!");
+    });
+
+    it('should validate inventory state correctly', () => {
+      const testState = new GameState();
+      
+      // Valid state
+      const validResult = harmonizer.validateInventoryState(testState);
+      expect(validResult.isValid).toBe(true);
+      expect(validResult.issues.length).toBe(0);
+    });
+  });
 });

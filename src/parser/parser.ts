@@ -283,6 +283,17 @@ export class Parser {
     if (directObjectTokens.length > 0) {
       const result = this.findObject(directObjectTokens, availableObjects);
       if ('type' in result) {
+        // Special handling for PUT/PLACE/INSERT commands
+        // Z-Machine says "You don't have that!" instead of "You can't see any X here!"
+        // when the player tries to put an object they don't possess
+        if ((verb === 'PUT' || verb === 'PLACE' || verb === 'INSERT') && 
+            result.type === 'OBJECT_NOT_FOUND' &&
+            preposition && (preposition === 'IN' || preposition === 'ON' || preposition === 'INTO' || preposition === 'ONTO')) {
+          return {
+            type: 'OBJECT_NOT_FOUND',
+            message: "You don't have that!"
+          };
+        }
         return result; // Return error
       }
       directObject = result.object;
