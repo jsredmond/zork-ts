@@ -4,7 +4,11 @@
  * Property 3: Status Bar Formatting Consistency
  * Tests that for any game state, status bar formatting matches Z-Machine exactly
  * 
- * Validates: Requirements 2.1, 2.5
+ * Property 6: Status Bar Normalization Round-Trip
+ * Tests that normalizing output removes status bars while preserving content,
+ * and that normalization is idempotent
+ * 
+ * Validates: Requirements 4.1, 4.2, 4.3
  */
 
 import { describe, it, expect } from 'vitest';
@@ -12,6 +16,202 @@ import * as fc from 'fast-check';
 import { StatusBarNormalizer } from './StatusBarNormalizer.js';
 
 describe('StatusBarNormalizer', () => {
+  describe('Property 6: Status Bar Normalization Round-Trip', () => {
+    /**
+     * Property 6a: Idempotent Normalization
+     * For any output, normalizing twice should produce the same result as normalizing once
+     * 
+     * **Feature: achieve-99-percent-parity, Property 6: Status Bar Normalization Round-Trip**
+     * **Validates: Requirements 4.1, 4.2, 4.3**
+     */
+    it('should be idempotent - normalizing twice equals normalizing once', () => {
+      const normalizer = new StatusBarNormalizer();
+
+      fc.assert(
+        fc.property(
+          // Generate random output that may or may not contain status bars
+          fc.oneof(
+            // Clean output without status bars
+            fc.string({ minLength: 1, maxLength: 200 }).filter(s => 
+              !s.includes('Score:') && !s.includes('Moves:')
+            ),
+            // Output with status bar contamination
+            fc.tuple(
+              fc.string({ minLength: 1, maxLength: 30 }).filter(s => !s.includes('\n') && s.trim().length > 0),
+              fc.integer({ min: -99, max: 999 }),
+              fc.integer({ min: 0, max: 9999 }),
+              fc.string({ minLength: 1, maxLength: 100 }).filter(s => !s.includes('Score:') && !s.includes('Moves:'))
+            ).map(([room, score, moves, content]) => {
+              const statusBar = normalizer.formatStatusBarExactly(room.trim(), score, moves);
+              return `${statusBar}\n\n${content}`;
+            })
+          ),
+          (output) => {
+            const idempotenceResult = normalizer.verifyIdempotence(output);
+            
+            expect(idempotenceResult.isIdempotent).toBe(true);
+            expect(idempotenceResult.firstPass).toBe(idempotenceResult.secondPass);
+            
+            return true;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    /**
+     * Property 6b: Content Preservation
+     * For any output with status bar contamination, normalization should preserve all non-status-bar content
+     * 
+     * **Feature: achieve-99-percent-parity, Property 6: Status Bar Normalization Round-Trip**
+     * **Validates: Requirements 4.1, 4.2, 4.3**
+     */
+    it('should preserve all non-status-bar content after normalization', () => {
+      const normalizer = new StatusBarNormalizer();
+
+      fc.assert(
+        fc.property(
+          fc.string({ minLength: 1, maxLength: 30 }).filter(s => !s.includes('\n') && s.trim().length > 0),
+          fc.integer({ min: -99, max: 999 }),
+          fc.integer({ min: 0, max: 9999 }),
+          fc.array(
+            fc.string({ minLength: 5, maxLength: 50 }).filter(s => 
+              !s.includes('Score:') && !s.includes('Moves:') && s.trim().length > 0
+            ),
+            { minLength: 1, maxLength: 5 }
+          ),
+          (room, score, moves, contentLines) => {
+            const statusBar = normalizer.formatStatusBarExactly(room.trim(), score, moves);
+            const content = contentLines.join('\n');
+            const contaminatedOutput = `${statusBar}\n\n${content}`;
+            
+            const result = normalizer.normalizeStatusBarOutput(contaminatedOutput);
+            const preservation = normalizer.validateContentPreservation(contaminatedOutput, result.normalizedOutput);
+            
+            expect(preservation.preserved).toBe(true);
+            expect(preservation.missingContent).toHaveLength(0);
+            
+            return true;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    /**
+     * Property 6c: Complete Status Bar Removal
+     * For any output containing status bars, normalization should remove ALL status bar lines
+     * 
+     * **Feature: achieve-99-percent-parity, Property 6: Status Bar Normalization Round-Trip**
+     * **Validates: Requirements 4.1, 4.2, 4.3**
+     */
+    it('should remove all status bar lines from any output', () => {
+      const normalizer = new StatusBarNormalizer();
+
+      fc.assert(
+        fc.property(
+          fc.array(
+            fc.record({
+              room: fc.string({ minLength: 1, maxLength: 20 }).filter(s => !s.includes('\n') && s.trim().length > 0),
+              score: fc.integer({ min: -99, max: 999 }),
+              moves: fc.integer({ min: 1, max: 9999 })
+            }),
+            { minLength: 1, maxLength: 5 }
+          ),
+          fc.string({ minLength: 5, maxLength: 50 }).filter(s => !s.includes('Score:') && !s.includes('Moves:')),
+          (statusBars, content) => {
+            // Create output with multiple status bars interspersed with content
+            const lines: string[] = [];
+            for (const sb of statusBars) {
+              lines.push(normalizer.formatStatusBarExactly(sb.room.trim(), sb.score, sb.moves));
+              lines.push(content);
+            }
+            const multiStatusOutput = lines.join('\n');
+            
+            const result = normalizer.normalizeStatusBarOutput(multiStatusOutput);
+            
+            // Verify no status bars remain
+            expect(normalizer.hasStatusBarContamination(result.normalizedOutput)).toBe(false);
+            expect(result.normalizedOutput).not.toMatch(/Score:\s*-?\d+/i);
+            expect(result.normalizedOutput).not.toMatch(/Moves:\s*\d+/i);
+            
+            return true;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    /**
+     * Property 6d: Edge Case Handling - Negative Scores
+     * For any status bar with negative score, detection and removal should work correctly
+     * 
+     * **Feature: achieve-99-percent-parity, Property 6: Status Bar Normalization Round-Trip**
+     * **Validates: Requirements 4.1, 4.2, 4.3, 4.4**
+     */
+    it('should handle negative scores correctly', () => {
+      const normalizer = new StatusBarNormalizer();
+
+      fc.assert(
+        fc.property(
+          fc.string({ minLength: 1, maxLength: 30 }).filter(s => !s.includes('\n') && s.trim().length > 0),
+          fc.integer({ min: -999, max: -1 }), // Negative scores only
+          fc.integer({ min: 1, max: 9999 }),
+          fc.string({ minLength: 5, maxLength: 50 }).filter(s => !s.includes('Score:') && !s.includes('Moves:')),
+          (room, negativeScore, moves, content) => {
+            const statusBar = normalizer.formatStatusBarExactly(room.trim(), negativeScore, moves);
+            const contaminatedOutput = `${statusBar}\n\n${content}`;
+            
+            // Detection should work
+            const detection = normalizer.detectStatusBar(statusBar);
+            expect(detection.hasStatusBar).toBe(true);
+            expect(detection.score).toBe(negativeScore);
+            
+            // Normalization should remove it
+            const result = normalizer.normalizeStatusBarOutput(contaminatedOutput);
+            expect(result.statusBarRemoved).toBe(true);
+            expect(result.normalizedOutput).not.toContain('Score:');
+            
+            return true;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    /**
+     * Property 6e: Edge Case Handling - Long Room Names
+     * For any room name exceeding 49 characters, it should be truncated correctly
+     * 
+     * **Feature: achieve-99-percent-parity, Property 6: Status Bar Normalization Round-Trip**
+     * **Validates: Requirements 4.1, 4.2, 4.3, 4.4**
+     */
+    it('should handle long room names by truncating to 49 characters', () => {
+      const normalizer = new StatusBarNormalizer();
+
+      fc.assert(
+        fc.property(
+          fc.string({ minLength: 50, maxLength: 100 }).filter(s => !s.includes('\n') && s.trim().length > 0),
+          fc.integer({ min: 0, max: 999 }),
+          fc.integer({ min: 1, max: 9999 }),
+          (longRoom, score, moves) => {
+            const statusBar = normalizer.formatStatusBarExactly(longRoom.trim(), score, moves);
+            
+            // Room part should be exactly 49 characters
+            const roomPart = statusBar.split('Score:')[0];
+            expect(roomPart.length).toBe(49);
+            
+            // Detection should still work
+            const detection = normalizer.detectStatusBar(statusBar);
+            expect(detection.hasStatusBar).toBe(true);
+            
+            return true;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
   describe('Property 3: Status Bar Formatting Consistency', () => {
     /**
      * Property: Status bar detection is accurate
@@ -287,6 +487,86 @@ You are in a forest.`;
       
       expect(validation.isValid).toBe(false);
       expect(validation.issues.length).toBeGreaterThan(0);
+    });
+
+    it('should verify idempotence correctly', () => {
+      const normalizer = new StatusBarNormalizer();
+      
+      const contaminated = `West of House                                    Score: 0        Moves: 1
+
+You are standing in an open field.`;
+      
+      const idempotenceResult = normalizer.verifyIdempotence(contaminated);
+      
+      expect(idempotenceResult.isIdempotent).toBe(true);
+      expect(idempotenceResult.firstPass).toBe(idempotenceResult.secondPass);
+    });
+
+    it('should validate content preservation correctly', () => {
+      const normalizer = new StatusBarNormalizer();
+      
+      const original = `Forest                                           Score: 10       Moves: 5
+
+You are in a forest.
+There is a path to the north.`;
+      
+      const result = normalizer.normalizeStatusBarOutput(original);
+      const preservation = normalizer.validateContentPreservation(original, result.normalizedOutput);
+      
+      expect(preservation.preserved).toBe(true);
+      expect(preservation.missingContent).toHaveLength(0);
+      expect(preservation.extraContent).toHaveLength(0);
+    });
+
+    it('should handle malformed status bar with tabs', () => {
+      const normalizer = new StatusBarNormalizer();
+      
+      const malformedStatusBar = 'West of House\tScore: 0\tMoves: 1';
+      const detection = normalizer.detectStatusBar(malformedStatusBar);
+      
+      expect(detection.hasStatusBar).toBe(true);
+    });
+
+    it('should handle status bar with very large negative score', () => {
+      const normalizer = new StatusBarNormalizer();
+      
+      // Score should be clamped to -999
+      const statusBar = normalizer.formatStatusBarExactly('Cellar', -5000, 25);
+      const detection = normalizer.detectStatusBar(statusBar);
+      
+      expect(detection.hasStatusBar).toBe(true);
+      expect(detection.score).toBe(-999); // Clamped
+    });
+
+    it('should handle status bar with very long room name', () => {
+      const normalizer = new StatusBarNormalizer();
+      
+      const longRoomName = 'This is a very long room name that exceeds the maximum allowed length';
+      const statusBar = normalizer.formatStatusBarExactly(longRoomName, 0, 1);
+      
+      // Room part should be exactly 49 characters
+      const roomPart = statusBar.split('Score:')[0];
+      expect(roomPart.length).toBe(49);
+      
+      const detection = normalizer.detectStatusBar(statusBar);
+      expect(detection.hasStatusBar).toBe(true);
+    });
+
+    it('should use normalizeIdempotent for guaranteed stable output', () => {
+      const normalizer = new StatusBarNormalizer();
+      
+      const contaminated = `West of House                                    Score: 0        Moves: 1
+
+You are standing in an open field.`;
+      
+      const result = normalizer.normalizeIdempotent(contaminated);
+      
+      expect(result.statusBarRemoved).toBe(true);
+      expect(result.normalizedOutput).toBe('You are standing in an open field.');
+      
+      // Verify the result is stable
+      const secondPass = normalizer.normalizeStatusBarOutput(result.normalizedOutput);
+      expect(secondPass.normalizedOutput).toBe(result.normalizedOutput);
     });
   });
 });
