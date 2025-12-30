@@ -19,7 +19,7 @@ export class ZMachineParserErrors implements ParserErrorHandler {
     }],
     ['drop', { 
       requiresObject: true, 
-      message: 'There seems to be a noun missing in that sentence!' 
+      message: 'What do you want to drop?' 
     }],
     ['take', { 
       requiresObject: true, 

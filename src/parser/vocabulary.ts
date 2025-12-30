@@ -303,7 +303,6 @@ export class Vocabulary {
       'FLOOR', 'GROUND',
       'CEILING',
       'SKY',
-      'ROOM', 'ROOMS',
       'HOUSE', 'BUILDING',
       'TREE', 'TREES',
       'FOREST',

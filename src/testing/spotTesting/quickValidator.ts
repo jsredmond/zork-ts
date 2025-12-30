@@ -104,8 +104,9 @@ export class QuickValidator {
 
   /**
    * Normalize output for comparison using same techniques as comprehensive tests
+   * Made public for use in reporting
    */
-  private normalizeForComparison(output: string): string {
+  normalizeForComparison(output: string): string {
     let normalized = output;
 
     // Step 1: Basic normalization (always safe)
@@ -215,7 +216,8 @@ export class QuickValidator {
         }
         
         // First non-header, non-empty line ends header section
-        if (trimmedLine !== '' && /^[A-Z][a-zA-Z\s]*$/.test(trimmedLine)) {
+        // Look for actual game content (not just capital letters and spaces)
+        if (trimmedLine !== '' && !this.isHeaderLine(trimmedLine)) {
           inHeader = false;
         }
       }
@@ -226,6 +228,52 @@ export class QuickValidator {
     }
 
     return filtered.join('\n');
+  }
+
+  /**
+   * Check if a line looks like header content
+   */
+  private isHeaderLine(line: string): boolean {
+    const trimmed = line.trim();
+    
+    // Known header patterns
+    if (
+      trimmed.includes('ZORK I:') ||
+      trimmed.includes('Copyright') ||
+      trimmed.includes('Infocom') ||
+      /^Release\s+\d+/.test(trimmed) ||
+      /^Serial number/.test(trimmed) ||
+      /^Revision\s+\d+/.test(trimmed) ||
+      trimmed.includes('interactive fiction') ||
+      trimmed.includes('Loading') ||
+      trimmed.includes('formatting') ||
+      /^The Great Underground Empire/.test(trimmed) ||
+      /^All rights reserved/.test(trimmed) ||
+      trimmed.includes('registered trademark') ||
+      trimmed.includes('ZORK is a registered') ||
+      trimmed.includes('fantasy story')
+    ) {
+      return true;
+    }
+    
+    // Room names (typical game content start)
+    const roomNames = [
+      'West of House', 'East of House', 'North of House', 'South of House',
+      'Behind House', 'Living Room', 'Kitchen', 'Attic', 'Cellar',
+      'Forest', 'Clearing', 'Canyon View'
+    ];
+    
+    if (roomNames.some(room => trimmed.includes(room))) {
+      return false; // This is game content, not header
+    }
+    
+    // If it's a short line with only letters and spaces, might be header
+    // But if it contains punctuation or is a sentence, it's probably game content
+    if (trimmed.length < 50 && /^[A-Z][a-zA-Z\s]*$/.test(trimmed)) {
+      return true; // Likely header
+    }
+    
+    return false; // Assume it's game content
   }
 
   /**

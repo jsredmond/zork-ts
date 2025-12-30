@@ -319,11 +319,15 @@ export class SpotTestRunner {
 
       // If validation shows a mismatch, record the difference
       if (!validationResult.isMatch) {
+        // Get normalized outputs for cleaner difference reporting
+        const normalizedTs = this.validator.normalizeForComparison(mergedResult.tsOutput);
+        const normalizedZm = this.validator.normalizeForComparison(mergedResult.zmOutput);
+        
         differences.push({
           commandIndex: i,
           command: mergedResult.command,
-          tsOutput: mergedResult.tsOutput,
-          zmOutput: mergedResult.zmOutput,
+          tsOutput: normalizedTs,
+          zmOutput: normalizedZm,
           differenceType: validationResult.differenceType || DifferenceType.MESSAGE_INCONSISTENCY,
           severity: validationResult.severity
         });

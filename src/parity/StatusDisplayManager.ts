@@ -11,23 +11,13 @@ export class ZMachineStatusDisplay implements StatusDisplayManager {
 
   /**
    * Formats a response with Z-Machine compatible status line
+   * NOTE: For parity testing, status should NOT be included in response text
    */
   formatResponse(message: string, gameState: GameState): string {
-    if (!this.shouldIncludeStatus('default')) {
-      return message;
-    }
-
-    // Get the current room object to access its name
-    const currentRoom = gameState.getCurrentRoom();
-    const roomName = currentRoom?.name || 'Unknown';
-
-    const statusLine = this.formatStatusLine(
-      roomName,
-      gameState.score || 0,
-      gameState.moves || 0
-    );
-
-    return `${statusLine}\n\n${message}`;
+    // For parity testing, we should NOT include status in the response message
+    // Status display should be handled separately by the UI layer
+    // This prevents status line differences in parity comparisons
+    return message;
   }
 
   /**
