@@ -34,6 +34,7 @@ import { triggerGrueDeath } from './death.js';
 import { TrapDoorPuzzle, GratingPuzzle, CoffinPuzzle, MagicWordPuzzle, BellPuzzle, RainbowPuzzle, MirrorPuzzle, DamPuzzle, RopeBasketPuzzle, BoatPuzzle } from './puzzles.js';
 import { executePlayerAttack, executeVillainAttack } from '../engine/combat.js';
 import { getVillainData } from '../engine/villainData.js';
+import { ZMachineObjectInteraction } from '../parity/ObjectInteractionManager.js';
 
 export interface StateChange {
   type: string;
@@ -4076,11 +4077,10 @@ export class TakeAllAction implements ActionHandler {
 export class DropAllAction implements ActionHandler {
   execute(state: GameState): ActionResult {
     if (state.isInventoryEmpty()) {
-      return {
-        success: false,
-        message: "You are empty-handed.",
-        stateChanges: []
-      };
+      // Use ObjectInteractionManager for context-aware empty-handed message
+      const objectManager = new ZMachineObjectInteraction();
+      const result = objectManager.handleDropAllCommand(state);
+      return result;
     }
 
     const messages: string[] = [];

@@ -9,25 +9,26 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
   
   /**
    * Validates an object action and returns appropriate result
+   * Follows Z-Machine error checking order: possession first, then visibility
    */
   validateObjectAction(action: string, object: string, gameState: GameState): ActionResult {
     const context = this.analyzeObjectContext(object, gameState);
     
-    // Check visibility first
-    if (!context.isVisible) {
+    // Z-Machine checks possession FIRST for actions that require it
+    if (this.actionRequiresPossession(action) && !context.isPossessed) {
+      return {
+        success: false,
+        message: "You don't have that!",
+        errorType: ObjectErrorType.NOT_POSSESSED
+      };
+    }
+    
+    // Then check visibility for actions that need visible objects
+    if (!context.isVisible && !this.actionRequiresPossession(action)) {
       return {
         success: false,
         message: this.generateErrorMessage(ObjectErrorType.NOT_VISIBLE, context),
         errorType: ObjectErrorType.NOT_VISIBLE
-      };
-    }
-    
-    // Check possession for actions that require it
-    if (this.actionRequiresPossession(action) && !context.isPossessed) {
-      return {
-        success: false,
-        message: this.generateErrorMessage(ObjectErrorType.NOT_POSSESSED, context),
-        errorType: ObjectErrorType.NOT_POSSESSED
       };
     }
     
@@ -40,6 +41,7 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
 
   /**
    * Generates context-appropriate error messages
+   * Follows Z-Machine error message patterns with proper article usage
    */
   generateErrorMessage(errorType: ObjectErrorType, context: ObjectContext): string {
     switch (errorType) {
@@ -48,22 +50,26 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
         if (context.impliedObject) {
           return `You don't have the ${context.impliedObject}.`;
         }
+        // If no implied object, use generic empty-handed message
         return "You are empty-handed.";
       
       case ObjectErrorType.NOT_VISIBLE:
         if (context.object) {
+          // Use proper article for visibility errors
           return `You can't see any ${context.object} here!`;
         }
         return "You can't see that here!";
       
       case ObjectErrorType.CANNOT_MANIPULATE:
         if (context.object) {
+          // Use "the" for manipulation errors (object is known to exist)
           return `You can't do that to the ${context.object}.`;
         }
         return "You can't do that.";
       
       case ObjectErrorType.INVALID_OBJECT:
         if (context.object) {
+          // Use "any" for invalid object errors (object doesn't exist)
           return `I don't see any ${context.object} here.`;
         }
         return "I don't understand that.";
@@ -183,20 +189,100 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
 
   /**
    * Attempts to determine implied object from game context
+   * Based on Z-Machine behavior for "drop all" when empty-handed
    */
   private getImpliedObjectFromContext(gameState: GameState): string | undefined {
-    // This would need to be enhanced based on parser context
-    // For now, return undefined to use generic message
+    const currentRoom = gameState.getCurrentRoom();
+    if (!currentRoom || !currentRoom.globalObjects) {
+      return undefined;
+    }
+
+    // Priority order for prominent objects based on Z-Machine behavior
+    const prominentObjectPriority = [
+      'FOREST',      // Forest areas - highest priority
+      'WHITE-HOUSE', // House areas - second priority
+      'TREE',        // Tree areas - third priority
+    ];
+
+    // Find the first prominent object that exists in this room
+    for (const objectName of prominentObjectPriority) {
+      if (currentRoom.globalObjects.includes(objectName)) {
+        // Convert object ID to display name
+        return this.getObjectDisplayName(objectName);
+      }
+    }
+
     return undefined;
   }
 
   /**
+   * Converts object ID to display name for error messages
+   * Handles proper article usage and formatting
+   */
+  private getObjectDisplayName(objectId: string): string {
+    const displayNames: Record<string, string> = {
+      'FOREST': 'forest',
+      'WHITE-HOUSE': 'white house',
+      'TREE': 'tree',
+      'BOARD': 'board',
+      'BOARDED-WINDOW': 'window',
+      'KITCHEN-WINDOW': 'window',
+      'SONGBIRD': 'songbird'
+    };
+
+    return displayNames[objectId] || objectId.toLowerCase().replace('-', ' ');
+  }
+
+  /**
+   * Gets the appropriate article for an object name
+   */
+  private getArticle(objectName: string): string {
+    const vowels = ['a', 'e', 'i', 'o', 'u'];
+    const firstLetter = objectName.charAt(0).toLowerCase();
+    
+    // Special cases for specific objects
+    const specialArticles: Record<string, string> = {
+      'white house': 'the',
+      'forest': 'the',
+      'tree': 'the',
+      'window': 'the',
+      'board': 'the'
+    };
+
+    if (specialArticles[objectName]) {
+      return specialArticles[objectName];
+    }
+
+    // Default article rules
+    return vowels.includes(firstLetter) ? 'an' : 'a';
+  }
+
+  /**
+   * Formats object name with appropriate article for error messages
+   */
+  private formatObjectWithArticle(objectName: string): string {
+    const article = this.getArticle(objectName);
+    return `${article} ${objectName}`;
+  }
+
+  /**
    * Validates object manipulation based on object properties
+   * Uses proper Z-Machine error checking order
    */
   validateObjectManipulation(object: string, action: string, gameState: GameState): ActionResult {
     const context = this.analyzeObjectContext(object, gameState);
     
-    if (!context.isVisible) {
+    // Z-Machine order: Check possession first for possession-requiring actions
+    if (this.actionRequiresPossession(action) && !context.isPossessed) {
+      return {
+        success: false,
+        message: "You don't have that!",
+        errorType: ObjectErrorType.NOT_POSSESSED
+      };
+    }
+
+    // Then check visibility for non-possession actions
+    if (!context.isVisible && !this.actionRequiresPossession(action)) {
       return {
         success: false,
         message: this.generateErrorMessage(ObjectErrorType.NOT_VISIBLE, context),
@@ -225,7 +311,7 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
   private canManipulateObject(object: string, action: string, gameState: GameState): boolean {
     // This would need to check object properties from the game data
     // For now, assume most objects can be manipulated unless they're scenery
-    const currentRoom = gameState.currentRoom;
+    const currentRoom = gameState.getCurrentRoom();
     
     // Check if it's scenery (usually can't be manipulated)
     if (currentRoom?.scenery?.some(scenery => 
@@ -235,5 +321,23 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
     }
 
     return true;
+  }
+
+  /**
+   * Generates context-sensitive success messages for object interactions
+   */
+  generateSuccessMessage(action: string, object: string, context: ObjectContext): string {
+    const actionMessages: Record<string, string> = {
+      'take': `Taken.`,
+      'drop': `Dropped.`,
+      'examine': `You see nothing special about the ${object}.`,
+      'look': `You see nothing special about the ${object}.`,
+      'touch': `You feel nothing unexpected.`,
+      'move': `Moving the ${object} reveals nothing.`,
+      'push': `Nothing happens.`,
+      'pull': `Nothing happens.`
+    };
+
+    return actionMessages[action.toLowerCase()] || `You ${action} the ${object}.`;
   }
 }

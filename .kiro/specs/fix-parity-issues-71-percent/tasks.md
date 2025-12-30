@@ -133,7 +133,7 @@
 
 ---
 
-- [-] 4. Fix Parser Differences (2 occurrences)
+- [x] 4. Fix Parser Differences (2 occurrences)
   - Resolve command interpretation inconsistencies
   - _Requirements: R1.1, R1.2, R1.3, R1.4_
 
@@ -155,7 +155,7 @@
   - Confirm no regression in other parser functionality
   - _Requirements: R1.1, R1.2, R1.3, R1.4_
 
-- [-] 4.4 Commit to Git
+- [x] 4.4 Commit to Git
   - Commit message: "fix: Resolve 2 parser differences with proper error handling"
   - Include parser error handler updates
   - _Requirements: R1.1, R1.2, R1.3, R1.4_
@@ -164,35 +164,35 @@
 
 ## Phase 3: Object Behavior and Message Fixes (Week 3)
 
-- [ ] 5. Fix Object Behavior Differences (11 occurrences)
+- [-] 5. Fix Object Behavior Differences (11 occurrences)
   - Resolve object interaction inconsistencies
   - _Requirements: R3.1, R3.2, R3.3, R3.4_
 
-- [ ] 5.1 Fix "drop all" when empty-handed behavior
+- [x] 5.1 Fix "drop all" when empty-handed behavior
   - Implement context-aware response for drop all command
   - Change from "You are empty-handed" to "You don't have the X" when appropriate
   - Add implied object detection for drop all commands
   - _Requirements: R3.1, R3.4_
 
-- [ ] 5.2 Fix object visibility checking
+- [x] 5.2 Fix object visibility checking
   - Implement proper "You can't see any X here!" vs "You don't have that!" logic
   - Add object location validation for commands
   - Ensure consistent visibility error messages
   - _Requirements: R3.2, R3.4_
 
-- [ ] 5.3 Fix object manipulation responses
+- [x] 5.3 Fix object manipulation responses
   - Align object interaction messages with Z-Machine
   - Implement proper context-sensitive object responses
   - Fix article usage in object-related messages
   - _Requirements: R3.1, R3.3_
 
-- [ ] 5.4 Test object behavior fixes
+- [x] 5.4 Test object behavior fixes
   - Run targeted tests for object interaction scenarios
   - Validate drop all behavior in various contexts
   - Confirm object visibility checking works correctly
   - _Requirements: R3.1, R3.2, R3.3, R3.4_
 
-- [ ] 5.5 Commit to Git
+- [-] 5.5 Commit to Git
   - Commit message: "fix: Resolve 11 object behavior differences"
   - Include object interaction manager updates
   - _Requirements: R3.1, R3.2, R3.3, R3.4_
