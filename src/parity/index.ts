@@ -105,3 +105,36 @@ export {
   synchronizeDaemonTiming
 } from './DaemonTimingSynchronizer';
 export type { LampTimingStage, CandleTimingStage, DaemonTimingState } from './DaemonTimingSynchronizer';
+
+// Atmospheric message alignment
+export {
+  // Probability constants
+  FOREST_MESSAGE_PROBABILITY,
+  UNDERGROUND_MESSAGE_PROBABILITY,
+  THIEF_ANNOUNCEMENT_PROBABILITY,
+  // Message definitions
+  FOREST_BIRD_MESSAGE,
+  ATMOSPHERIC_MESSAGES,
+  // Location detection
+  FOREST_ROOMS,
+  SURFACE_ROOMS,
+  isForestRoom,
+  isUndergroundRoom,
+  // Deterministic generation
+  setAtmosphericSeed,
+  getAtmosphericSeed,
+  getAtmosphericRandom,
+  getMessageForSeed,
+  generateAtmosphericMessage,
+  isMessageValidForRoom,
+  // Class
+  AtmosphericMessageAligner,
+  // Utility functions
+  filterAtmosphericMessages,
+  containsAtmosphericMessage,
+  extractAtmosphericMessage,
+  // Default instance
+  getAtmosphericMessageAligner,
+  resetAtmosphericMessageAligner
+} from './AtmosphericMessageAligner';
+export type { AtmosphericMessage } from './AtmosphericMessageAligner';
