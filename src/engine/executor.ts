@@ -74,6 +74,7 @@ import {
   WakeAction,
   YellAction,
   FindAction,
+  SearchAction,
   HelloAction,
   GoodbyeAction,
   ThankAction,
@@ -83,6 +84,7 @@ import {
 } from '../game/actions.js';
 import { handleDeadStateVerb, isPlayerDead } from '../game/deadState.js';
 import { handleSelfReferenceVerb, isSelfReference } from '../game/selfReference.js';
+import { ZMachineParserErrors } from '../parity/ParserErrorHandler.js';
 
 /**
  * CommandExecutor routes parsed commands to appropriate action handlers
@@ -90,9 +92,11 @@ import { handleSelfReferenceVerb, isSelfReference } from '../game/selfReference.
  */
 export class CommandExecutor {
   private actionHandlers: Map<string, ActionHandler>;
+  private parserErrorHandler: ZMachineParserErrors;
 
   constructor() {
     this.actionHandlers = new Map();
+    this.parserErrorHandler = new ZMachineParserErrors();
     this.registerDefaultHandlers();
   }
 
@@ -231,6 +235,7 @@ export class CommandExecutor {
     this.actionHandlers.set('YELL', new YellAction());
     this.actionHandlers.set('SCREAM', new YellAction());
     this.actionHandlers.set('FIND', new FindAction());
+    this.actionHandlers.set('SEARCH', new SearchAction());
     
     // Destructive actions
     this.actionHandlers.set('BREAK', new BreakAction());
@@ -523,6 +528,25 @@ export class CommandExecutor {
 
     // Commands that require a direct object
     if (!command.directObject) {
+      // Use parser error handler for specific verbs that have custom messages
+      if (this.parserErrorHandler.verbRequiresObject(verb)) {
+        const parseContext = {
+          verb: verb.toLowerCase(),
+          directObject: undefined,
+          indirectObject: undefined,
+          preposition: undefined,
+          hasDirectObject: false,
+          hasIndirectObject: false
+        };
+        const errorMessage = this.parserErrorHandler.handleIncompleteCommand(verb.toLowerCase(), parseContext);
+        return {
+          success: false,
+          message: errorMessage,
+          stateChanges: []
+        };
+      }
+      
+      // Default message for other verbs
       return {
         success: false,
         message: `What do you want to ${verb.toLowerCase()}?`,
@@ -540,8 +564,8 @@ export class CommandExecutor {
       );
     }
 
-    // Single object commands (TAKE, DROP, OPEN, CLOSE, READ, RING)
-    if (['TAKE', 'GET', 'PICK', 'DROP', 'OPEN', 'CLOSE', 'READ', 'RING'].includes(verb)) {
+    // Single object commands (TAKE, DROP, OPEN, CLOSE, READ, RING, SEARCH)
+    if (['TAKE', 'GET', 'PICK', 'DROP', 'OPEN', 'CLOSE', 'READ', 'RING', 'SEARCH'].includes(verb)) {
       return handler.execute(state, command.directObject.id);
     }
 

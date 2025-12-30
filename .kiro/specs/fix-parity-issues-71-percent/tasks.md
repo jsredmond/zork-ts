@@ -92,7 +92,7 @@
 
 ## Phase 2: Status Display and Timing Fixes (Week 2)
 
-- [-] 3. Fix Timing Differences (32 occurrences - highest priority)
+- [x] 3. Fix Timing Differences (32 occurrences - highest priority)
   - Resolve status bar display inconsistencies
   - _Requirements: R2.1, R2.2, R2.3, R2.4_
 
@@ -126,36 +126,36 @@
   - Confirm move and score synchronization
   - _Requirements: R2.1, R2.2, R2.3, R2.4_
 
-- [-] 3.6 Commit to Git
+- [x] 3.6 Commit to Git
   - Commit message: "fix: Resolve 32 timing differences with status display system"
   - Include status display implementation and integration
   - _Requirements: R2.1, R2.2, R2.3, R2.4_
 
 ---
 
-- [ ] 4. Fix Parser Differences (2 occurrences)
+- [-] 4. Fix Parser Differences (2 occurrences)
   - Resolve command interpretation inconsistencies
   - _Requirements: R1.1, R1.2, R1.3, R1.4_
 
-- [ ] 4.1 Fix "search" command handling
+- [x] 4.1 Fix "search" command handling
   - Change from "I don't know how to search" to "What do you want to search?"
   - Implement proper incomplete command detection for search verb
   - Add search to verb requirements mapping
   - _Requirements: R1.1, R1.2_
 
-- [ ] 4.2 Fix "drop" command error handling
+- [x] 4.2 Fix "drop" command error handling
   - Change from "What do you want to drop?" to "There seems to be a noun missing in that sentence!"
   - Update incomplete command handling for drop verb
   - Ensure consistent error message selection
   - _Requirements: R1.1, R1.2, R1.3_
 
-- [ ] 4.3 Test parser fixes
+- [x] 4.3 Test parser fixes
   - Validate search and drop command error messages
   - Run targeted tests for parser difference resolution
   - Confirm no regression in other parser functionality
   - _Requirements: R1.1, R1.2, R1.3, R1.4_
 
-- [ ] 4.4 Commit to Git
+- [-] 4.4 Commit to Git
   - Commit message: "fix: Resolve 2 parser differences with proper error handling"
   - Include parser error handler updates
   - _Requirements: R1.1, R1.2, R1.3, R1.4_

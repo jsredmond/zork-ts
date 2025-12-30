@@ -3785,6 +3785,87 @@ export class WakeAction implements ActionHandler {
 }
 
 /**
+ * SEARCH action handler
+ * Player searches objects or locations
+ */
+export class SearchAction implements ActionHandler {
+  execute(state: GameState, objectId?: string): ActionResult {
+    // If no object specified, this should not happen as parser should catch it
+    // But handle gracefully just in case
+    if (!objectId) {
+      return {
+        success: false,
+        message: "What do you want to search?",
+        stateChanges: []
+      };
+    }
+
+    // Check darkness FIRST - before any object lookup
+    if (!isRoomLit(state)) {
+      return {
+        success: false,
+        message: "It's too dark to see!",
+        stateChanges: []
+      };
+    }
+
+    // Check for special behavior first
+    const specialResult = executeSpecialBehavior(objectId, 'SEARCH', state);
+    if (specialResult) {
+      return specialResult;
+    }
+
+    // Check for scenery handler
+    const sceneryResult = executeSceneryAction(objectId, 'SEARCH', state);
+    if (sceneryResult) {
+      return sceneryResult;
+    }
+
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    if (!obj) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object is visible (in current room or inventory)
+    const currentRoom = state.getCurrentRoom();
+    const isInInventory = state.isInInventory(objectId);
+    const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
+    const isInVisibleContainer = obj.location && state.isInInventory(obj.location);
+    
+    if (!isInInventory && !isInCurrentRoom && !isInVisibleContainer) {
+      return {
+        success: false,
+        message: "You can't see that here.",
+        stateChanges: []
+      };
+    }
+
+    // Check if object can be searched (has SEARCHBIT flag)
+    if (obj.hasFlag(ObjectFlag.SEARCHBIT)) {
+      // Objects with SEARCHBIT can be searched but may have special behavior
+      // Default search behavior for searchable objects
+      return {
+        success: true,
+        message: "You find nothing unusual.",
+        stateChanges: []
+      };
+    }
+
+    // Default response for non-searchable objects
+    return {
+      success: false,
+      message: `You can't search the ${obj.name.toLowerCase()}.`,
+      stateChanges: []
+    };
+  }
+}
+
+/**
  * FIND action handler
  * Player tries to find something - special case for "find myself"
  */
