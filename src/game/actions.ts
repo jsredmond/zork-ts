@@ -89,6 +89,21 @@ export class TakeAction implements ActionHandler {
     }
 
     const obj = state.getObject(objectId) as GameObjectImpl;
+    const currentRoom = state.getCurrentRoom();
+    
+    // Check visibility BEFORE scenery handlers (Z-Machine behavior)
+    const isInInventory = obj && state.isInInventory(objectId);
+    const isInCurrentRoom = obj && currentRoom && obj.location === currentRoom.id;
+    const isInContainer = obj && obj.location && state.getObject(obj.location);
+    const isGlobalObject = currentRoom && currentRoom.globalObjects?.includes(objectId);
+    
+    if (!isInInventory && !isInCurrentRoom && !isInContainer && !isGlobalObject) {
+      return {
+        success: false,
+        message: `You can't see any ${objectId.toLowerCase().replace(/-/g, ' ')} here!`,
+        stateChanges: []
+      };
+    }
     
     if (!obj) {
       return {
@@ -106,7 +121,7 @@ export class TakeAction implements ActionHandler {
       }
     }
 
-    // Check for scenery handler first
+    // Check for scenery handler
     const sceneryResult = executeSceneryAction(objectId, 'TAKE', state);
     if (sceneryResult) {
       return sceneryResult;
@@ -136,23 +151,10 @@ export class TakeAction implements ActionHandler {
       };
     }
 
-    // Check if object is in current room or inventory
-    const currentRoom = state.getCurrentRoom();
     if (!currentRoom) {
       return {
         success: false,
         message: "Something went wrong.",
-        stateChanges: []
-      };
-    }
-
-    const isInCurrentRoom = obj.location === currentRoom.id;
-    const isInContainer = obj.location && state.getObject(obj.location);
-    
-    if (!isInCurrentRoom && !isInContainer) {
-      return {
-        success: false,
-        message: "You can't see that here.",
         stateChanges: []
       };
     }
@@ -910,13 +912,30 @@ function startsWithVowel(word: string): boolean {
  */
 export class OpenAction implements ActionHandler {
   execute(state: GameState, objectId: string): ActionResult {
+    // Check if object is visible FIRST (Z-Machine behavior)
+    const currentRoom = state.getCurrentRoom();
+    const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    // Check visibility before any other processing
+    const isInInventory = obj && state.isInInventory(objectId);
+    const isInCurrentRoom = obj && currentRoom && obj.location === currentRoom.id;
+    const isGlobalObject = currentRoom && currentRoom.globalObjects?.includes(objectId);
+    
+    if (!isInInventory && !isInCurrentRoom && !isGlobalObject) {
+      return {
+        success: false,
+        message: `You can't see any ${objectId.toLowerCase().replace(/-/g, ' ')} here!`,
+        stateChanges: []
+      };
+    }
+
     // Check for special behavior first (e.g., egg cannot be opened by player)
     const specialResult = executeSpecialBehavior(objectId, 'OPEN', state);
     if (specialResult) {
       return specialResult;
     }
 
-    // Check for scenery handler first
+    // Check for scenery handler
     const sceneryResult = executeSceneryAction(objectId, 'OPEN', state);
     if (sceneryResult) {
       return sceneryResult;
@@ -929,24 +948,8 @@ export class OpenAction implements ActionHandler {
         return TrapDoorPuzzle.openTrapDoor(state);
       }
     }
-
-    const obj = state.getObject(objectId) as GameObjectImpl;
     
     if (!obj) {
-      return {
-        success: false,
-        message: "You can't see that here.",
-        stateChanges: []
-      };
-    }
-
-    // Check if object is visible
-    const currentRoom = state.getCurrentRoom();
-    const isInInventory = state.isInInventory(objectId);
-    const isInCurrentRoom = currentRoom && obj.location === currentRoom.id;
-    const isGlobalObject = currentRoom && currentRoom.globalObjects?.includes(objectId);
-    
-    if (!isInInventory && !isInCurrentRoom && !isGlobalObject) {
       return {
         success: false,
         message: "You can't see that here.",
@@ -2650,7 +2653,22 @@ export class PullAction implements ActionHandler {
  */
 export class TurnAction implements ActionHandler {
   execute(state: GameState, objectId: string, toolId?: string): ActionResult {
+    // Check if object is visible FIRST (Z-Machine behavior)
+    const currentRoom = state.getCurrentRoom();
     const obj = state.getObject(objectId) as GameObjectImpl;
+    
+    // Check visibility before any other processing
+    const isInInventory = obj && state.isInInventory(objectId);
+    const isInCurrentRoom = obj && currentRoom && obj.location === currentRoom.id;
+    const isGlobalObject = currentRoom && currentRoom.globalObjects?.includes(objectId);
+    
+    if (!isInInventory && !isInCurrentRoom && !isGlobalObject) {
+      return {
+        success: false,
+        message: `You can't see any ${objectId.toLowerCase().replace(/-/g, ' ')} here!`,
+        stateChanges: []
+      };
+    }
     
     if (!obj) {
       return {
@@ -2662,9 +2680,10 @@ export class TurnAction implements ActionHandler {
 
     // Check if object has TURNBIT flag
     if (!obj.hasFlag(ObjectFlag.TURNBIT)) {
+      // Z-Machine returns "Your bare hands don't appear to be enough." for non-turnable objects
       return {
         success: false,
-        message: "This has no effect.",
+        message: "Your bare hands don't appear to be enough.",
         stateChanges: []
       };
     }
@@ -2676,7 +2695,7 @@ export class TurnAction implements ActionHandler {
 
     return {
       success: false,
-      message: "This has no effect.",
+      message: "Your bare hands don't appear to be enough.",
       stateChanges: []
     };
   }
@@ -4009,6 +4028,8 @@ export class AgainAction implements ActionHandler {
 /**
  * TAKE ALL action handler
  * Takes all takeable objects in the current room
+ * Z-Machine behavior: Lists ALL visible objects and attempts to take each one,
+ * reporting success or failure for each object
  */
 export class TakeAllAction implements ActionHandler {
   execute(state: GameState): ActionResult {
@@ -4031,16 +4052,13 @@ export class TakeAllAction implements ActionHandler {
       };
     }
 
-    // Get all objects in the room
-    const objectsInRoom = state.getObjectsInCurrentRoom();
-    
-    // Filter to only takeable objects (have TAKEBIT, not NDESCBIT)
-    const takeableObjects = objectsInRoom.filter(obj => {
+    // Get all objects in the room (excluding hidden/NDESCBIT objects)
+    const objectsInRoom = state.getObjectsInCurrentRoom().filter(obj => {
       const objImpl = obj as GameObjectImpl;
-      return objImpl.hasFlag(ObjectFlag.TAKEBIT) && !objImpl.hasFlag(ObjectFlag.NDESCBIT);
+      return !objImpl.hasFlag(ObjectFlag.NDESCBIT);
     });
 
-    if (takeableObjects.length === 0) {
+    if (objectsInRoom.length === 0) {
       return {
         success: false,
         message: "There is nothing here to take.",
@@ -4049,13 +4067,29 @@ export class TakeAllAction implements ActionHandler {
     }
 
     // Sort objects by display order to match Z-Machine behavior
-    const sortedTakeableObjects = sortObjectsByDisplayOrder(takeableObjects);
+    const sortedObjects = sortObjectsByDisplayOrder(objectsInRoom);
 
     const messages: string[] = [];
     const stateChanges: StateChange[] = [];
     const takeAction = new TakeAction();
 
-    for (const obj of sortedTakeableObjects) {
+    for (const obj of sortedObjects) {
+      const objImpl = obj as GameObjectImpl;
+      
+      // Check if object is takeable
+      if (!objImpl.hasFlag(ObjectFlag.TAKEBIT)) {
+        // Z-Machine reports non-takeable objects with specific messages
+        // Check for scenery-specific messages first
+        const sceneryResult = executeSceneryAction(obj.id, 'TAKE', state);
+        if (sceneryResult) {
+          messages.push(`${obj.name}: ${sceneryResult.message}`);
+        } else {
+          // Default message for non-takeable objects
+          messages.push(`${obj.name}: It is securely anchored.`);
+        }
+        continue;
+      }
+      
       const result = takeAction.execute(state, obj.id);
       messages.push(`${obj.name}: ${result.message}`);
       stateChanges.push(...result.stateChanges);
