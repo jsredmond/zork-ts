@@ -12,6 +12,29 @@ export { ZMachineObjectInteraction } from './ObjectInteractionManager';
 export { ZMachineMessageStandards } from './MessageConsistencyManager';
 export { ZMachineStateSync } from './StateSynchronizationManager';
 
+// Error message standardization
+export { 
+  ErrorMessageStandardizer,
+  ErrorType,
+  unknownWord,
+  objectNotVisible,
+  verbNeedsObject,
+  dontHave,
+  emptyInput,
+  malformedInput,
+  containerClosed,
+  takeConcept,
+  takeInteresting,
+  turnBareHands,
+  pushNotHelpful,
+  pullCantMove,
+  openCantGetIn,
+  cantDoThat,
+  nothingHappens,
+  getSceneryError
+} from './ErrorMessageStandardizer';
+export type { ErrorContext, SceneryErrorMapping } from './ErrorMessageStandardizer';
+
 // Main engine
 export { ParityEnhancementEngine } from './ParityEnhancementEngine';
 export type { CommandResult, ParityEnhancementConfig } from './ParityEnhancementEngine';
