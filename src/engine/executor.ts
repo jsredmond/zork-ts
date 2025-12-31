@@ -484,11 +484,19 @@ export class CommandExecutor {
       return handler.execute(state);
     }
 
-    // Look command (no arguments or LOOK IN container)
+    // Look command (no arguments, LOOK IN container, or LOOK AT object)
     if (verb === 'LOOK' || verb === 'L') {
       // Handle "LOOK IN container" - show container contents
       if (command.preposition === 'IN' && command.indirectObject) {
         return this.handleLookIn(state, command.indirectObject.id);
+      }
+      // Handle "LOOK AT object" - treat as EXAMINE
+      // Z-Machine parity: "look at X" is equivalent to "examine X"
+      if (command.preposition === 'AT' && command.indirectObject) {
+        const examineHandler = this.actionHandlers.get('EXAMINE');
+        if (examineHandler) {
+          return examineHandler.execute(state, command.indirectObject.id);
+        }
       }
       return handler.execute(state);
     }

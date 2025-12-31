@@ -156,6 +156,21 @@ describe('CommandExecutor', () => {
       expect(result).toBeDefined();
       expect(result.message).toBeDefined();
     });
+
+    it('should handle LOOK AT as EXAMINE (Z-Machine parity)', () => {
+      const obj = state.getObject('TEST-OBJECT');
+      const command: ParsedCommand = {
+        verb: 'LOOK',
+        preposition: 'AT',
+        indirectObject: obj
+      };
+
+      const result = executor.execute(command, state);
+      expect(result).toBeDefined();
+      expect(result.success).toBe(true);
+      // Should return the object's description (same as EXAMINE)
+      expect(result.message).toBeDefined();
+    });
   });
 
   describe('Property Tests', () => {
