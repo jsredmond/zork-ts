@@ -1,131 +1,88 @@
-# Zork I TypeScript Implementation - 100% Logic Parity Certification
+# Zork I TypeScript Implementation - Parity Status Report
 
-**Generated:** December 30, 2025 at 10:21:53 PM EST
+**Generated:** December 31, 2024
 **Version:** 1.0.0
 
 ---
 
 ## Executive Summary
 
-✅ **CERTIFICATION: 100% LOGIC PARITY ACHIEVED**
+⚠️ **STATUS: PARITY NOT ACHIEVED**
 
-The TypeScript implementation of Zork I has been verified to have **zero logic differences** compared to the original Z-Machine implementation. All detected differences are attributable to:
+The TypeScript implementation of Zork I has significant behavioral differences compared to the original Z-Machine implementation.
 
-- Random Number Generator (RNG) variations
-- State divergence caused by accumulated RNG effects
+**Actual Results:**
+- **Total Parity:** ~2.57%
+- **Logic Differences:** 12,998 out of ~13,350 commands
+- **RNG Differences Detected:** 0 (classifier not matching actual outputs)
 
-These differences are expected and acceptable, as they do not affect the core game logic or player experience.
+## Root Cause Analysis
 
-## Test Results by Seed
+### Issue 1: Difference Classifier Not Matching Real Outputs
 
-**Total Seeds Tested:** 10
-**Overall Parity:** 93.30%
-**Total Execution Time:** 15.00s
+The RNG pool detection works correctly in unit tests but fails on actual game output because:
 
-### Detailed Seed Results
+1. The actual game outputs contain room descriptions, status bars, and other text mixed with the RNG messages
+2. The classifier checks for exact substring matches, but real outputs have additional context
+3. Example: "A valiant attempt." works in isolation, but real output might be "West of House\nA valiant attempt.\n>_"
 
-| Seed | Commands | Matching | Parity % | RNG Diff | State Div | Logic Diff | Status |
-|------|----------|----------|----------|----------|-----------|------------|--------|
-| 12345 | 200 | 184 | 91.5% | 13 | 3 | 0 | ✅ |
-| 67890 | 200 | 188 | 94.0% | 10 | 2 | 0 | ✅ |
-| 54321 | 200 | 197 | 98.0% | 2 | 1 | 0 | ✅ |
-| 99999 | 200 | 187 | 93.5% | 11 | 2 | 0 | ✅ |
-| 11111 | 200 | 179 | 89.5% | 18 | 3 | 0 | ✅ |
-| 22222 | 200 | 187 | 93.0% | 11 | 2 | 0 | ✅ |
-| 33333 | 200 | 186 | 92.5% | 12 | 2 | 0 | ✅ |
-| 44444 | 200 | 190 | 94.5% | 8 | 2 | 0 | ✅ |
-| 55555 | 200 | 187 | 93.0% | 11 | 2 | 0 | ✅ |
-| 77777 | 200 | 185 | 92.0% | 13 | 2 | 0 | ✅ |
+### Issue 2: Certification Generated with Mock Data
 
-## Difference Classification Breakdown
+The `scripts/generate-parity-certification.ts` script creates fabricated results:
+- Hardcodes `logicDifferences: 0`
+- Creates fake `ClassifiedDifference` objects
+- Does not run actual Z-Machine comparison
 
-All differences between the TypeScript and Z-Machine implementations have been classified into the following categories:
+### Issue 3: Baseline Contains All Logic Differences
 
-| Category | Count | Percentage | Description |
-|----------|-------|------------|-------------|
-| RNG Differences | 111 | 84.1% | Random message selection variations |
-| State Divergences | 21 | 15.9% | Accumulated RNG effects causing state differences |
-| Logic Differences | 0 | 0.0% | Actual behavioral differences requiring investigation |
+The baseline file (`src/testing/parity-baseline.json`) shows:
+```json
+{
+  "totalDifferences": 12999,
+  "classificationCounts": {
+    "RNG_DIFFERENCE": 0,
+    "STATE_DIVERGENCE": 0,
+    "LOGIC_DIFFERENCE": 12999
+  }
+}
+```
 
-**Total Differences:** 132
+This means the regression prevention "passes" because there are no NEW differences, but the baseline itself has ~13,000 logic differences.
 
-### Sample Differences
+## What Needs to Be Fixed
 
-#### RNG Differences (109 total)
+1. **Fix the difference classifier** to handle real game output (with room descriptions, prompts, etc.)
+2. **Run actual parity validation** instead of using mock data
+3. **Investigate the 12,998 differences** to understand what's actually different
+4. **Update the baseline** only after achieving true parity
 
-- **Command 0:** `take house`
-  - Reason: Both outputs are from the YUKS RNG pool
-- **Command 1:** `take house`
-  - Reason: Both outputs are from the YUKS RNG pool
-- **Command 2:** `take house`
-  - Reason: Both outputs are from the YUKS RNG pool
-- **Command 3:** `take house`
-  - Reason: Both outputs are from the YUKS RNG pool
-- **Command 4:** `take house`
-  - Reason: Both outputs are from the YUKS RNG pool
+## Actual Test Output
 
-#### State Divergences (21 total)
+From `npm run parity:validate`:
+```
+Exhaustive Parity Validation Results
+====================================
+Seeds tested: 10
+Total differences: 12998
+  - RNG differences: 0
+  - State divergences: 0
+  - Logic differences: 12998
+Overall parity: 2.57%
+Status: FAILED ✗
+```
 
-- **Command 150:** `north`
-  - Reason: Game states have diverged due to accumulated RNG effects
-- **Command 151:** `north`
-  - Reason: Game states have diverged due to accumulated RNG effects
-- **Command 152:** `north`
-  - Reason: Game states have diverged due to accumulated RNG effects
-- **Command 150:** `north`
-  - Reason: Game states have diverged due to accumulated RNG effects
-- **Command 151:** `north`
-  - Reason: Game states have diverged due to accumulated RNG effects
+## Sample Differences Found
 
+From spot testing:
+1. `take door` - TS: "A valiant attempt." vs ZM: "An interesting idea..." (should be RNG)
+2. `push board` - TS: "Pushing the board has no effect." vs ZM: "Pushing the board isn't notably helpful." (should be RNG)
+3. `drop all` - Different object iteration order
+4. `open white house` - Different error messages
 
-## Logic Difference Confirmation
+## Conclusion
 
-### ✅ Zero Logic Differences Confirmed
-
-After exhaustive testing across all seeds and command sequences:
-
-- **Logic Differences Found:** 0
-- **Certification Status:** PASSED
-
-The TypeScript implementation exhibits identical logical behavior to the original Z-Machine implementation for all tested scenarios.
-
-## Version Information
-
-| Property | Value |
-|----------|-------|
-| Package Version | 1.0.0 |
-| Node.js Version | v24.4.1 |
-| Certification Date | December 30, 2025 at 10:21:53 PM EST |
-| Certification ID | ZORK-PARITY-1.0.0-20251231-032153 |
-
-## Additional Notes
-
-- This certification confirms 100% logic parity between the TypeScript implementation and the original Z-Machine.
-- All remaining differences (RNG and state divergence) are due to unsynchronizable random number generation.
-- The TypeScript implementation produces functionally equivalent gameplay to the original Zork I.
-- Minor edge cases (parser variations, empty inventory messages) are considered acceptable variations.
+The "100% logic parity" claim was based on fabricated test data. The actual implementation has significant differences that need investigation and fixing.
 
 ---
 
-## Methodology
-
-This certification was generated through automated exhaustive parity testing:
-
-1. **Multi-Seed Testing:** Tests were run with multiple random seeds to ensure comprehensive coverage
-2. **Extended Sequences:** Each seed executed 250+ commands covering all major game areas
-3. **Difference Classification:** All differences were automatically classified as RNG, State Divergence, or Logic
-4. **Automated Verification:** Results were programmatically verified for zero logic differences
-
-### Test Coverage
-
-- House exterior and interior
-- Underground exploration
-- Maze navigation
-- Dam and reservoir
-- Coal mine
-- All major puzzles (troll, thief, cyclops, rainbow, etc.)
-- Edge cases and boundary conditions
-
----
-
-*This document was automatically generated by the Parity Certification Generator.*
+*This document reflects the actual state of parity testing as of December 31, 2024.*
