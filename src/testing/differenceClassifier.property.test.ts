@@ -381,21 +381,37 @@ describe('DifferenceClassifier Property Tests', () => {
   /**
    * Feature: final-100-percent-parity, Property 2: All Differences Get Classified
    * 
-   * Non-RNG differences without state divergence are classified as LOGIC_DIFFERENCE.
+   * Non-RNG differences without state divergence are classified as LOGIC_DIFFERENCE,
+   * unless they trigger special cases like lighting state divergence or game intro text.
    * 
    * **Validates: Requirements 2.3**
    */
   it('Property 2d: Non-RNG differences without divergence are LOGIC_DIFFERENCE', () => {
+    // Use messages that won't trigger special classification rules
+    // (exclude darkness messages and game intro patterns)
+    const nonSpecialMessageArb = fc.constantFrom(
+      'Taken.',
+      'Dropped.',
+      'Opened.',
+      'Closed.',
+      "You can't go that way.",
+      'The door is locked.',
+      'The lamp is now on.',
+      'You are empty-handed.',
+      'There is a small mailbox here.'
+    );
+    
+    // Use command index > 0 to avoid game intro text detection
     const cleanContextArb = fc.record({
       command: fc.constantFrom('look', 'take lamp', 'open door'),
-      commandIndex: fc.integer({ min: 0, max: 100 }),
+      commandIndex: fc.integer({ min: 1, max: 100 }),
       hasStateDiverged: fc.constant(false)
     });
 
     fc.assert(
       fc.property(
-        nonRngMessageArb,
-        nonRngMessageArb,
+        nonSpecialMessageArb,
+        nonSpecialMessageArb,
         cleanContextArb,
         (tsOutput, zmOutput, context) => {
           // Skip if outputs are identical
