@@ -22,6 +22,12 @@ const DEFAULT_TIMEOUT = 5000;
 /** Prompt pattern to detect when interpreter is ready for input */
 const PROMPT_PATTERN = />/;
 
+/** 
+ * Status bar pattern - matches Z-Machine status line format
+ * Example: "West of House                                    Score: 0        Moves: 1"
+ */
+const STATUS_BAR_PATTERN = /^\s*\S.*\s+Score:\s*-?\d+\s+Moves:\s*\d+\s*$/;
+
 /**
  * ZMachineRecorder records sessions from the original z3 file via external interpreter.
  * 
@@ -302,12 +308,27 @@ export class ZMachineRecorder extends GameRecorder {
     cleaned = cleaned.replace(/\r\n/g, '\n');
     cleaned = cleaned.replace(/\r/g, '\n');
 
+    // Strip status bar lines to match TypeScript output format
+    // The Z-Machine outputs status bar as part of the text stream,
+    // but TypeScript uses a separate fixed status bar at the top
+    cleaned = this.stripStatusBar(cleaned);
+
     if (!preserveFormatting) {
       // Trim leading/trailing whitespace
       cleaned = cleaned.trim();
     }
 
     return cleaned;
+  }
+
+  /**
+   * Strip status bar lines from output
+   * Removes lines matching "Room Name    Score: X    Moves: Y" format
+   */
+  private stripStatusBar(output: string): string {
+    const lines = output.split('\n');
+    const filtered = lines.filter(line => !STATUS_BAR_PATTERN.test(line));
+    return filtered.join('\n');
   }
 
   /**

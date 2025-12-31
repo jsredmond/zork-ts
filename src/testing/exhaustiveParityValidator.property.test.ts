@@ -57,9 +57,9 @@ describe('ExhaustiveParityValidator Property Tests', () => {
   const seedArb = fc.integer({ min: 1, max: 99999 });
 
   /**
-   * Generator for multiple seeds
+   * Generator for multiple seeds (unique to avoid Map size mismatch)
    */
-  const seedsArb = fc.array(seedArb, { minLength: 1, maxLength: 5 });
+  const seedsArb = fc.uniqueArray(seedArb, { minLength: 1, maxLength: 5 });
 
   /**
    * Feature: integrate-message-extraction, Property 1: Message Extraction Pipeline

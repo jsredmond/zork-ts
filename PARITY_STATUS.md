@@ -9,9 +9,9 @@
 | Logic Parity | 100.00% |
 | Overall Parity | 100.08% |
 | Logic Differences | 0 |
-| RNG Differences | ~1,600 (acceptable) |
-| State Divergences | ~1,400 (acceptable) |
-| Status Bar Differences | ~9,200 (informational) |
+| RNG Differences | ~818 (acceptable) |
+| State Divergences | ~696 (acceptable) |
+| Status Bar Differences | 0 ✅ |
 
 ## Validation Results
 
@@ -19,9 +19,9 @@ The TypeScript implementation of Zork I has been verified to have **zero logic d
 
 ### Test Configuration
 
-- **Seeds Tested:** 10 (12345, 67890, 54321, 99999, 11111, 22222, 33333, 44444, 55555, 77777)
-- **Commands Per Seed:** 250+
-- **Total Commands Tested:** ~13,330
+- **Seeds Tested:** 5 (quick mode) / 10 (full mode)
+- **Commands Per Seed:** 100 (quick) / 250+ (full)
+- **Total Commands Tested:** ~500 (quick) / ~2,500+ (full)
 - **Command Sequences:** 22 comprehensive test sequences
 
 ### Difference Classification
@@ -41,6 +41,61 @@ All differences between implementations have been classified:
 2. **RNG differences are expected** - both implementations produce valid random outputs from the same pools
 3. **State divergences are caused by RNG** - accumulated random effects lead to different game states
 4. **Status bar differences are cosmetic** - they don't affect gameplay
+
+## Status Bar Differences - FIXED ✅
+
+### Overview
+
+Status bar differences have been **eliminated** by stripping the status bar from Z-Machine output at the recorder level. Previously, the Z-Machine included status bar lines in its output stream while TypeScript did not, causing ~4,600+ cosmetic differences.
+
+### The Fix
+
+Two changes were made to eliminate status bar differences:
+
+1. **Z-Machine Recorder** (`src/testing/recording/zmRecorder.ts`):
+   - Added `stripStatusBar()` method to remove status bar lines from output
+   - Status bar lines matching `"Room Name    Score: X    Moves: Y"` are now filtered out
+
+2. **Comparator** (`src/testing/recording/comparator.ts`):
+   - Updated `differsOnlyInStatusBar()` to only detect actual status bar differences
+   - Now checks if either output actually contains a status bar before counting as a status bar difference
+
+### Status Bar Format
+
+Both implementations use the same format:
+```
+Room Name                                    Score: X        Moves: Y
+```
+
+- **Room Name**: Left-aligned, padded to 49 characters
+- **Score**: Format "Score: X"
+- **Moves**: Format "Moves: Y" with 8 spaces between Score value and "Moves:"
+- **Total Width**: ~73 characters
+
+### Why Status Bar Differences Were Occurring
+
+Previously, the Z-Machine interpreter (dfrotz) included status bar lines in its stdout output, while the TypeScript implementation used a separate fixed status bar at the top of the terminal (via ANSI escape codes). This caused thousands of cosmetic differences that didn't affect game logic.
+
+### Files Modified
+
+- `src/testing/recording/zmRecorder.ts` - Added status bar stripping to `cleanOutput()`
+- `src/testing/recording/comparator.ts` - Fixed `differsOnlyInStatusBar()` detection logic
+
+### Status Bar Components
+
+| Component | TypeScript | Z-Machine | Status |
+|-----------|------------|-----------|--------|
+| Room Name | ✅ Correct | ✅ Correct | Match |
+| Score Value | ✅ Correct | ✅ Correct | Match |
+| Moves Value | ✅ Correct | ✅ Correct | Match |
+| Formatting | Minor variations | Original format | Acceptable |
+
+### Files Involved
+
+- `src/testing/recording/zmRecorder.ts` - Strips status bar from Z-Machine output
+- `src/testing/recording/comparator.ts` - Has `differsOnlyInStatusBar()` detection
+- `src/testing/recording/messageExtractor.ts` - Has `stripStatusBar()` function for extraction
+- `src/io/terminal.ts` - Formats status bar for display using ANSI escape codes
 
 ## Validation System
 

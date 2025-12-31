@@ -301,6 +301,16 @@ export class TranscriptComparator {
    * @returns true if outputs differ only in status bar
    */
   private differsOnlyInStatusBar(outputA: string, outputB: string): boolean {
+    // First check if either output actually contains a status bar
+    const statusBarPattern = /^\s*\S.*\s+Score:\s*-?\d+\s+Moves:\s*\d+\s*$/im;
+    const hasStatusBarA = statusBarPattern.test(outputA);
+    const hasStatusBarB = statusBarPattern.test(outputB);
+    
+    // If neither has a status bar, this can't be a status bar difference
+    if (!hasStatusBarA && !hasStatusBarB) {
+      return false;
+    }
+    
     // Strip status bars from both outputs
     const strippedA = this.stripStatusBar(outputA);
     const strippedB = this.stripStatusBar(outputB);
