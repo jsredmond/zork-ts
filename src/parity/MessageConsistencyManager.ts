@@ -2,7 +2,7 @@
  * MessageConsistencyManager implementation for Z-Machine compatible message standardization
  */
 
-import { MessageConsistencyManager, MessageType, MessageContext } from './interfaces';
+import { MessageConsistencyManager, MessageType, MessageContext } from './interfaces.js';
 
 interface MessageTemplate {
   template: string;

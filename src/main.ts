@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Main entry point for Zork I rewrite
  */

@@ -5,7 +5,7 @@
  * Total: 100+ objects including treasures, tools, containers, NPCs, and scenery
  */
 
-import { ObjectData } from './objects';
+import { ObjectData } from './objects.js';
 
 /**
  * Complete object database for Zork I

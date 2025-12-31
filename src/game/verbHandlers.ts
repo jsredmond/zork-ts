@@ -6,7 +6,7 @@
  * implementations of V-object message handlers from gverbs.zil.
  */
 
-import { GameState } from './state';
+import { GameState } from './state.js';
 
 /**
  * V-object message handler function type

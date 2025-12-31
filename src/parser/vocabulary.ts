@@ -3,7 +3,7 @@
  * Manages game vocabulary and word lookup
  */
 
-import { TokenType } from './lexer';
+import { TokenType } from './lexer.js';
 
 /**
  * Word entry in the vocabulary

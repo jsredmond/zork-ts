@@ -2,7 +2,7 @@
  * ParserErrorHandler implementation for Z-Machine compatible parser errors
  */
 
-import { ParserErrorHandler, ParseContext } from './interfaces';
+import { ParserErrorHandler, ParseContext } from './interfaces.js';
 
 interface VerbRequirement {
   requiresObject: boolean;

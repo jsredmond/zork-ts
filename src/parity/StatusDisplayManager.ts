@@ -3,7 +3,7 @@
  */
 
 import { GameState } from '../game/state';
-import { StatusDisplayManager } from './interfaces';
+import { StatusDisplayManager } from './interfaces.js';
 
 export class ZMachineStatusDisplay implements StatusDisplayManager {
   private readonly STATUS_LINE_WIDTH = 80;

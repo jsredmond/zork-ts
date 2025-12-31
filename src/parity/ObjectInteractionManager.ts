@@ -3,7 +3,7 @@
  */
 
 import { GameState } from '../game/state';
-import { ObjectInteractionManager, ObjectErrorType, ObjectContext, ActionResult } from './interfaces';
+import { ObjectInteractionManager, ObjectErrorType, ObjectContext, ActionResult } from './interfaces.js';
 
 export class ZMachineObjectInteraction implements ObjectInteractionManager {
   

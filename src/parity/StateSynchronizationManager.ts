@@ -3,7 +3,7 @@
  */
 
 import { GameState } from '../game/state';
-import { StateSynchronizationManager, ValidationResult, StateIssue } from './interfaces';
+import { StateSynchronizationManager, ValidationResult, StateIssue } from './interfaces.js';
 
 export enum ActionRequirement {
   REQUIRES_POSSESSION = 'requires_possession',    // put, drop, throw, etc.

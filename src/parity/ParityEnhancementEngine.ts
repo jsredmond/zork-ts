@@ -2,7 +2,7 @@
  * ParityEnhancementEngine - Core class that integrates all parity enhancement components
  */
 
-import { GameState } from '../game/state';
+import { GameState } from '../game/state.js';
 import { 
   StatusDisplayManager, 
   ParserErrorHandler, 
@@ -15,13 +15,13 @@ import {
   ParseContext,
   MessageType,
   ObjectErrorType
-} from './interfaces';
+} from './interfaces.js';
 
-import { ZMachineStatusDisplay } from './StatusDisplayManager';
-import { ZMachineParserErrors } from './ParserErrorHandler';
-import { ZMachineObjectInteraction } from './ObjectInteractionManager';
-import { ZMachineMessageStandards } from './MessageConsistencyManager';
-import { ZMachineStateSync } from './StateSynchronizationManager';
+import { ZMachineStatusDisplay } from './StatusDisplayManager.js';
+import { ZMachineParserErrors } from './ParserErrorHandler.js';
+import { ZMachineObjectInteraction } from './ObjectInteractionManager.js';
+import { ZMachineMessageStandards } from './MessageConsistencyManager.js';
+import { ZMachineStateSync } from './StateSynchronizationManager.js';
 
 export interface CommandResult {
   message: string;

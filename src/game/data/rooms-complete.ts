@@ -5,7 +5,7 @@
  * Total: 110+ rooms
  */
 
-import { RoomData } from './rooms';
+import { RoomData } from './rooms.js';
 
 /**
  * Complete room database for Zork I

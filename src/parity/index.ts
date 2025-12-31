@@ -3,14 +3,14 @@
  */
 
 // Core interfaces
-export * from './interfaces';
+export * from './interfaces.js';
 
 // Component implementations
-export { ZMachineStatusDisplay } from './StatusDisplayManager';
-export { ZMachineParserErrors } from './ParserErrorHandler';
-export { ZMachineObjectInteraction } from './ObjectInteractionManager';
-export { ZMachineMessageStandards } from './MessageConsistencyManager';
-export { ZMachineStateSync } from './StateSynchronizationManager';
+export { ZMachineStatusDisplay } from './StatusDisplayManager.js';
+export { ZMachineParserErrors } from './ParserErrorHandler.js';
+export { ZMachineObjectInteraction } from './ObjectInteractionManager.js';
+export { ZMachineMessageStandards } from './MessageConsistencyManager.js';
+export { ZMachineStateSync } from './StateSynchronizationManager.js';
 
 // Error message standardization
 export { 
@@ -32,8 +32,8 @@ export {
   cantDoThat,
   nothingHappens,
   getSceneryError
-} from './ErrorMessageStandardizer';
-export type { ErrorContext, SceneryErrorMapping } from './ErrorMessageStandardizer';
+} from './ErrorMessageStandardizer.js';
+export type { ErrorContext, SceneryErrorMapping } from './ErrorMessageStandardizer.js';
 
 // Vocabulary alignment
 export {
@@ -41,12 +41,12 @@ export {
   isZMachineWord,
   getUnknownWordError,
   getCanonicalForm
-} from './VocabularyAligner';
-export type { VocabularyValidationResult, WordCheckResult } from './VocabularyAligner';
+} from './VocabularyAligner.js';
+export type { VocabularyValidationResult, WordCheckResult } from './VocabularyAligner.js';
 
 // Main engine
-export { ParityEnhancementEngine } from './ParityEnhancementEngine';
-export type { CommandResult, ParityEnhancementConfig } from './ParityEnhancementEngine';
+export { ParityEnhancementEngine } from './ParityEnhancementEngine.js';
+export type { CommandResult, ParityEnhancementConfig } from './ParityEnhancementEngine.js';
 
 // Daemon timing synchronization
 export {
@@ -103,8 +103,8 @@ export {
   // State management
   createInitialTimingState,
   synchronizeDaemonTiming
-} from './DaemonTimingSynchronizer';
-export type { LampTimingStage, CandleTimingStage, DaemonTimingState } from './DaemonTimingSynchronizer';
+} from './DaemonTimingSynchronizer.js';
+export type { LampTimingStage, CandleTimingStage, DaemonTimingState } from './DaemonTimingSynchronizer.js';
 
 // Atmospheric message alignment
 export {
@@ -136,8 +136,8 @@ export {
   // Default instance
   getAtmosphericMessageAligner,
   resetAtmosphericMessageAligner
-} from './AtmosphericMessageAligner';
-export type { AtmosphericMessage } from './AtmosphericMessageAligner';
+} from './AtmosphericMessageAligner.js';
+export type { AtmosphericMessage } from './AtmosphericMessageAligner.js';
 
 // Parity validation threshold enforcement
 export {
@@ -145,9 +145,9 @@ export {
   MINIMUM_PARITY_THRESHOLD,
   validateParityThreshold,
   detectRegression
-} from './ParityValidationThreshold';
+} from './ParityValidationThreshold.js';
 export type {
   ParityValidationResult,
   RegressionDetectionResult,
   ParityHistoryEntry
-} from './ParityValidationThreshold';
+} from './ParityValidationThreshold.js';
