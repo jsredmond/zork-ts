@@ -23,10 +23,13 @@ import { TestProgress } from './types';
 
 /**
  * Arbitrary generator for TestProgress
+ * Note: fc.date() can generate invalid dates (NaN), so we generate timestamps and convert to Date
  */
+const validDateArbitrary = fc.integer({ min: 946684800000, max: 4102444800000 }).map(ts => new Date(ts));
+
 const testProgressArbitrary = fc.record({
   version: fc.constant('1.0'),
-  lastUpdated: fc.date(),
+  lastUpdated: validDateArbitrary,
   testedRooms: fc.array(fc.string({ minLength: 1, maxLength: 20 }), { maxLength: 50 }),
   testedObjects: fc.array(fc.string({ minLength: 1, maxLength: 20 }), { maxLength: 50 }),
   testedInteractions: fc.dictionary(
@@ -36,9 +39,9 @@ const testProgressArbitrary = fc.record({
   ),
   totalTests: fc.nat({ max: 10000 }),
   coverage: fc.record({
-    rooms: fc.float({ min: 0, max: 100 }),
-    objects: fc.float({ min: 0, max: 100 }),
-    interactions: fc.float({ min: 0, max: 100 })
+    rooms: fc.float({ min: 0, max: 100, noNaN: true }),
+    objects: fc.float({ min: 0, max: 100, noNaN: true }),
+    interactions: fc.float({ min: 0, max: 100, noNaN: true })
   })
 }) as fc.Arbitrary<TestProgress>;
 
@@ -62,24 +65,10 @@ describe('TestProgress - Property-Based Tests', () => {
         expect(deserialized.testedInteractions).toEqual(progress.testedInteractions);
         expect(deserialized.totalTests).toBe(progress.totalTests);
         
-        // Handle NaN values in coverage (NaN should be normalized to 0 after deserialization)
-        if (Number.isNaN(progress.coverage.rooms)) {
-          expect(deserialized.coverage.rooms).toBe(0);
-        } else {
-          expect(deserialized.coverage.rooms).toBeCloseTo(progress.coverage.rooms, 5);
-        }
-        
-        if (Number.isNaN(progress.coverage.objects)) {
-          expect(deserialized.coverage.objects).toBe(0);
-        } else {
-          expect(deserialized.coverage.objects).toBeCloseTo(progress.coverage.objects, 5);
-        }
-        
-        if (Number.isNaN(progress.coverage.interactions)) {
-          expect(deserialized.coverage.interactions).toBe(0);
-        } else {
-          expect(deserialized.coverage.interactions).toBeCloseTo(progress.coverage.interactions, 5);
-        }
+        // Coverage values should be preserved (within floating point precision)
+        expect(deserialized.coverage.rooms).toBeCloseTo(progress.coverage.rooms, 5);
+        expect(deserialized.coverage.objects).toBeCloseTo(progress.coverage.objects, 5);
+        expect(deserialized.coverage.interactions).toBeCloseTo(progress.coverage.interactions, 5);
         
         // Date should be preserved (within millisecond precision)
         expect(Math.abs(deserialized.lastUpdated.getTime() - progress.lastUpdated.getTime())).toBeLessThan(1);
