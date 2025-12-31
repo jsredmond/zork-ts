@@ -6,7 +6,7 @@
  */
 
 import { GameState } from '../game/state.js';
-import { GameObject, GameObjectImpl } from '../game/objects.js';
+import { GameObjectImpl } from '../game/objects.js';
 import { ObjectFlag } from '../game/data/flags.js';
 import { ActorState } from './actors.js';
 

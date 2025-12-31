@@ -114,7 +114,7 @@ export abstract class BaseActorBehavior implements ActorBehavior {
    * Called when state changes
    * Override to handle state-specific logic
    */
-  protected onStateChanged(oldState: ActorState, newState: ActorState, state: GameState): void {
+  protected onStateChanged(_oldState: ActorState, newState: ActorState, state: GameState): void {
     const actor = state.getObject(this.actorId);
     if (!actor) return;
 
@@ -131,14 +131,14 @@ export abstract class BaseActorBehavior implements ActorBehavior {
     return this.state !== ActorState.DEAD;
   }
 
-  onAttacked(state: GameState, weapon?: GameObject): void {
+  onAttacked(_state: GameState, _weapon?: GameObject): void {
     // Default: become hostile
     if (this.state === ActorState.NORMAL) {
-      this.transitionState(ActorState.FIGHTING, state);
+      this.transitionState(ActorState.FIGHTING, _state);
     }
   }
 
-  onReceiveItem(state: GameState, item: GameObject): boolean {
+  onReceiveItem(_state: GameState, _item: GameObject): boolean {
     // Default: don't accept items
     return false;
   }

@@ -146,6 +146,7 @@ export interface GlobalFlags {
   TROLL_FLAG: boolean;
   WON_FLAG: boolean;
   COFFIN_CURE: boolean;
+  PLAYER_STAGGERED: boolean;
 }
 
 /**
@@ -211,5 +212,6 @@ export const INITIAL_GLOBAL_FLAGS: GlobalFlags = {
   RAINBOW_FLAG: false,
   TROLL_FLAG: false,
   WON_FLAG: false,
-  COFFIN_CURE: false
+  COFFIN_CURE: false,
+  PLAYER_STAGGERED: false
 };
