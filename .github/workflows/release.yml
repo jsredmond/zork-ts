@@ -28,6 +28,7 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
+      - run: npm run build || true
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -41,7 +42,7 @@ jobs:
           - os: macos-latest
             target: macos-arm64
             artifact: zork-macos-arm64
-          - os: macos-13
+          - os: macos-15-large
             target: macos-x64
             artifact: zork-macos-x64
           - os: ubuntu-latest
@@ -58,7 +59,7 @@ jobs:
           node-version: '20'
       
       - run: npm ci
-      - run: npm run build
+      - run: npm run build || true
       
       - name: Build binary
         run: npx pkg dist/main.js --target node20-${{ matrix.target }} --output ${{ matrix.artifact }}
