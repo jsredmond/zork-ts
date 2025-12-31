@@ -236,11 +236,12 @@ export class ParityEnhancementEngine {
    */
   private createMessageContext(command: string, gameState: GameState): any {
     const context = this.parseCommand(command);
+    const currentRoom = gameState.getCurrentRoom();
     
     return {
       verb: context.verb,
       object: context.directObject,
-      location: gameState.currentRoom?.name,
+      location: currentRoom?.name,
       command: command
     };
   }

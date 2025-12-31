@@ -88,19 +88,25 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
     }
 
     // Check if object is in current room
-    const currentRoom = gameState.currentRoom;
-    if (currentRoom?.objects?.some(obj => 
-      obj.name.toLowerCase() === object.toLowerCase() || 
-      obj.synonyms?.some(syn => syn.toLowerCase() === object.toLowerCase())
-    )) {
+    const currentRoom = gameState.getCurrentRoom();
+    if (currentRoom?.objects?.some(objId => {
+      const obj = gameState.getObject(objId);
+      return obj && (
+        obj.name.toLowerCase() === object.toLowerCase() || 
+        obj.synonyms?.some(syn => syn.toLowerCase() === object.toLowerCase())
+      );
+    })) {
       return true;
     }
 
     // Check if object is in inventory
-    if (gameState.inventory?.some(obj => 
-      obj.name.toLowerCase() === object.toLowerCase() ||
-      obj.synonyms?.some(syn => syn.toLowerCase() === object.toLowerCase())
-    )) {
+    if (gameState.inventory?.some(objId => {
+      const obj = gameState.getObject(objId);
+      return obj && (
+        obj.name.toLowerCase() === object.toLowerCase() ||
+        obj.synonyms?.some(syn => syn.toLowerCase() === object.toLowerCase())
+      );
+    })) {
       return true;
     }
 
@@ -132,16 +138,19 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
     context.isVisible = this.checkObjectVisibility(object, gameState);
 
     // Check possession
-    context.isPossessed = gameState.inventory?.some(obj => 
-      obj.name.toLowerCase() === object.toLowerCase() ||
-      obj.synonyms?.some(syn => syn.toLowerCase() === object.toLowerCase())
-    ) || false;
+    context.isPossessed = gameState.inventory?.some(objId => {
+      const obj = gameState.getObject(objId);
+      return obj && (
+        obj.name.toLowerCase() === object.toLowerCase() ||
+        obj.synonyms?.some(syn => syn.toLowerCase() === object.toLowerCase())
+      );
+    }) || false;
 
     // Set location context
     if (context.isPossessed) {
       context.location = 'inventory';
     } else if (context.isVisible) {
-      context.location = gameState.currentRoom?.name || 'unknown';
+      context.location = gameState.getCurrentRoom()?.name || 'unknown';
     } else {
       context.location = 'unknown';
     }

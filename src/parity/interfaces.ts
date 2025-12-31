@@ -98,6 +98,7 @@ export interface ParserErrorHandler {
   handleIncompleteCommand(verb: string, context: ParseContext): string;
   handleUnknownVerb(input: string): string;
   handleMalformedCommand(input: string): string;
+  verbRequiresObject(verb: string): boolean;
 }
 
 /**
@@ -116,6 +117,7 @@ export interface MessageConsistencyManager {
   standardizeMessage(messageType: MessageType, context: MessageContext): string;
   validateMessageFormat(message: string): boolean;
   getCanonicalMessage(messageType: MessageType, context: MessageContext): string;
+  formatErrorMessage(message: string): string;
 }
 
 /**
@@ -126,4 +128,5 @@ export interface StateSynchronizationManager {
   synchronizeObjectLocations(state: GameState): void;
   ensureInventoryConsistency(state: GameState): void;
   validateObjectAction?(action: string, objectId: string, gameState: GameState): any;
+  repairStateInconsistencies(state: GameState): ValidationResult;
 }

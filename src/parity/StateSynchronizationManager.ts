@@ -821,8 +821,8 @@ export class ZMachineStateSync implements StateSynchronizationManager {
         
         const differences: string[] = [];
 
-        const prevInventory = new Set(previous.inventory);
-        const currInventory = new Set(current.inventory);
+        const prevInventory = new Set<string>(previous.inventory);
+        const currInventory = new Set<string>(current.inventory);
         
         const added = Array.from(currInventory).filter(id => !prevInventory.has(id));
         const removed = Array.from(prevInventory).filter(id => !currInventory.has(id));
