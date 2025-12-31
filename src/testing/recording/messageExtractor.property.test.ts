@@ -30,7 +30,7 @@ const actionResponseArb = fc.oneof(
   fc.constant('A valiant attempt.'),
   fc.constant("You can't be serious."),
   fc.constant('What a concept!'),
-  fc.stringOf(fc.constantFrom('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' ', '.', '!', '?', "'"), { minLength: 5, maxLength: 100 })
+  fc.string({ unit: fc.constantFrom('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' ', '.', '!', '?', "'"), minLength: 5, maxLength: 100 })
 );
 
 /**
@@ -51,7 +51,7 @@ const gameHeaderArb = fc.oneof(
  * Generator for status bar lines
  */
 const statusBarArb = fc.tuple(
-  fc.stringOf(fc.constantFrom('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' '), { minLength: 5, maxLength: 20 }),
+  fc.string({ unit: fc.constantFrom('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' '), minLength: 5, maxLength: 20 }),
   fc.integer({ min: -10, max: 350 }),
   fc.integer({ min: 1, max: 1000 })
 ).map(([room, score, moves]) => 

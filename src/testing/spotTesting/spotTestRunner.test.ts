@@ -87,12 +87,12 @@ describe('SpotTestRunner Property Tests', () => {
         fc.oneof(
           fc.constant(''), // empty string
           fc.string({ minLength: 1, maxLength: 5 }), // very short
-          fc.stringOf(fc.constantFrom('\n', '\r', '\t', ' ')), // whitespace only
+          fc.string({ unit: fc.constantFrom('\n', '\r', '\t', ' ') }), // whitespace only
         ),
         fc.oneof(
           fc.constant(''),
           fc.string({ minLength: 1, maxLength: 5 }),
-          fc.stringOf(fc.constantFrom('\n', '\r', '\t', ' ')),
+          fc.string({ unit: fc.constantFrom('\n', '\r', '\t', ' ') }),
         ),
         (tsOutput, zmOutput) => {
           // Should not throw errors on edge cases

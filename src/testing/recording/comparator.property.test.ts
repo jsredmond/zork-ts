@@ -15,7 +15,7 @@ import { Transcript, TranscriptEntry } from './types';
 const transcriptEntryArb = (index: number): fc.Arbitrary<TranscriptEntry> =>
   fc.record({
     index: fc.constant(index),
-    command: fc.stringOf(fc.constantFrom('a', 'b', 'c', 'd', 'e', ' '), { minLength: 1, maxLength: 20 }),
+    command: fc.string({ unit: fc.constantFrom('a', 'b', 'c', 'd', 'e', ' '), minLength: 1, maxLength: 20 }),
     output: fc.string({ minLength: 0, maxLength: 200 }),
     turnNumber: fc.constant(index),
   });
@@ -49,7 +49,7 @@ const transcriptPairArb: fc.Arbitrary<[Transcript, Transcript]> = fc
   .chain(length => {
     // Generate shared commands
     const commandsArb = fc.array(
-      fc.stringOf(fc.constantFrom('a', 'b', 'c', 'd', 'e', ' '), { minLength: 1, maxLength: 20 }),
+      fc.string({ unit: fc.constantFrom('a', 'b', 'c', 'd', 'e', ' '), minLength: 1, maxLength: 20 }),
       { minLength: length, maxLength: length }
     );
     

@@ -29,10 +29,10 @@ vi.mock('./zmRecorder.js', () => ({
  * Generator for command sequences
  */
 const commandSequenceArb: fc.Arbitrary<CommandSequence> = fc.record({
-  id: fc.stringOf(fc.constantFrom('a', 'b', 'c', '1', '2', '3', '-'), { minLength: 3, maxLength: 10 }),
+  id: fc.string({ unit: fc.constantFrom('a', 'b', 'c', '1', '2', '3', '-'), minLength: 3, maxLength: 10 }),
   name: fc.string({ minLength: 1, maxLength: 30 }),
   commands: fc.array(
-    fc.stringOf(fc.constantFrom('l', 'o', 'k', 'n', 's', 'e', 'w', ' '), { minLength: 1, maxLength: 15 }),
+    fc.string({ unit: fc.constantFrom('l', 'o', 'k', 'n', 's', 'e', 'w', ' '), minLength: 1, maxLength: 15 }),
     { minLength: 1, maxLength: 5 }
   ),
   description: fc.option(fc.string({ minLength: 0, maxLength: 50 }), { nil: undefined }),

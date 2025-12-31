@@ -17,14 +17,14 @@ import { CommandSequence } from './types';
  * Generator for valid command strings
  * Commands should not contain newlines or start with # or @
  */
-const validCommandArb = fc.stringOf(
-  fc.constantFrom(
+const validCommandArb = fc.string({
+  unit: fc.constantFrom(
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
     ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
   ),
-  { minLength: 1, maxLength: 50 }
-).filter(s => {
+  minLength: 1, maxLength: 50
+}).filter(s => {
   const trimmed = s.trim();
   // Must have content after trimming
   if (trimmed.length === 0) return false;
@@ -41,39 +41,39 @@ const commandArrayArb = fc.array(validCommandArb, { minLength: 0, maxLength: 30 
 /**
  * Generator for valid sequence IDs (alphanumeric with hyphens)
  */
-const sequenceIdArb = fc.stringOf(
-  fc.constantFrom('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+const sequenceIdArb = fc.string({
+  unit: fc.constantFrom('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
     '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'),
-  { minLength: 1, maxLength: 20 }
-).filter(s => /^[a-z]/.test(s)); // Must start with a letter
+  minLength: 1, maxLength: 20
+}).filter(s => /^[a-z]/.test(s)); // Must start with a letter
 
 /**
  * Generator for valid sequence names (can include spaces)
  */
-const sequenceNameArb = fc.stringOf(
-  fc.constantFrom(
+const sequenceNameArb = fc.string({
+  unit: fc.constantFrom(
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
     'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
     'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
     ' ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
   ),
-  { minLength: 1, maxLength: 50 }
-).filter(s => s.trim().length > 0).map(s => s.trim());
+  minLength: 1, maxLength: 50
+}).filter(s => s.trim().length > 0).map(s => s.trim());
 
 /**
  * Generator for optional descriptions
  */
 const descriptionArb = fc.option(
-  fc.stringOf(
-    fc.constantFrom(
+  fc.string({
+    unit: fc.constantFrom(
       'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
       'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
       ' ', '.', ',', '!', '?'
     ),
-    { minLength: 1, maxLength: 100 }
-  ).filter(s => s.trim().length > 0).map(s => s.trim()),
+    minLength: 1, maxLength: 100
+  }).filter(s => s.trim().length > 0).map(s => s.trim()),
   { nil: undefined }
 );
 
@@ -219,7 +219,7 @@ describe('CommandSequenceLoader Property Tests', () => {
     fc.assert(
       fc.property(
         commandArrayArb,
-        fc.array(fc.stringOf(fc.constantFrom('a', 'b', 'c', ' '), { minLength: 1, maxLength: 20 }), { minLength: 0, maxLength: 5 }),
+        fc.array(fc.string({ unit: fc.constantFrom('a', 'b', 'c', ' '), minLength: 1, maxLength: 20 }), { minLength: 0, maxLength: 5 }),
         (commands, comments) => {
           // Create content with commands
           const withoutComments = commands.join('\n');

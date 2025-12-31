@@ -338,9 +338,9 @@ describe('Room Reachability Properties', () => {
         // Generate a random room graph structure
         fc.array(
           fc.record({
-            id: fc.stringOf(fc.constantFrom('A', 'B', 'C', 'D', 'E', 'F'), { minLength: 1, maxLength: 3 }),
+            id: fc.string({ unit: fc.constantFrom('A', 'B', 'C', 'D', 'E', 'F'), minLength: 1, maxLength: 3 }),
             exits: fc.array(
-              fc.stringOf(fc.constantFrom('A', 'B', 'C', 'D', 'E', 'F'), { minLength: 1, maxLength: 3 }),
+              fc.string({ unit: fc.constantFrom('A', 'B', 'C', 'D', 'E', 'F'), minLength: 1, maxLength: 3 }),
               { maxLength: 4 }
             )
           }),

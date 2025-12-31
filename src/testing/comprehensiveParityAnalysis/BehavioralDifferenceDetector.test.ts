@@ -219,7 +219,7 @@ describe('BehavioralDifferenceDetector', () => {
     it('should extract problematic word from ZM output', () => {
       fc.assert(
         fc.property(
-          fc.stringOf(fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz'.split('')), { minLength: 3, maxLength: 15 }),
+          fc.string({ unit: fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz'.split('')), minLength: 3, maxLength: 15 }),
           (word) => {
             const tsOutput = `You can't see any ${word} here!`;
             const zmOutput = `I don't know the word "${word}".`;

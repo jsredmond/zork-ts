@@ -22,7 +22,7 @@ const validCommandArb = fc.oneof(
   // Invalid but parseable commands (should produce error messages, not crashes)
   fc.constantFrom('take', 'drop', 'examine'),
   // Unknown commands (should be handled gracefully)
-  fc.stringOf(fc.constantFrom('a', 'b', 'c', 'd', 'e'), { minLength: 1, maxLength: 10 })
+  fc.string({ unit: fc.constantFrom('a', 'b', 'c', 'd', 'e'), minLength: 1, maxLength: 10 })
 );
 
 /**

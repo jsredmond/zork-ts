@@ -585,7 +585,7 @@ describe('DifferenceClassifier Property Tests', () => {
   /**
    * Generator for whitespace variations
    */
-  const whitespaceArb = fc.stringOf(fc.constantFrom(' ', '\t', '\n', '\r\n'), { minLength: 0, maxLength: 5 });
+  const whitespaceArb = fc.string({ unit: fc.constantFrom(' ', '\t', '\n', '\r\n'), minLength: 0, maxLength: 5 });
 
   /**
    * Feature: fix-parity-validation, Property 5: Whitespace Handling in Classification

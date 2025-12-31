@@ -76,7 +76,7 @@ describe('ComprehensiveParityAnalyzer', () => {
     const commandDifferenceArb = (type: DifferenceType): fc.Arbitrary<CommandDifference> => {
       return fc.record({
         commandIndex: fc.nat(199),
-        command: fc.stringOf(fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz '.split('')), { minLength: 1, maxLength: 30 }),
+        command: fc.string({ unit: fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz '.split('')), minLength: 1, maxLength: 30 }),
         tsOutput: fc.string({ minLength: 1, maxLength: 200 }),
         zmOutput: fc.string({ minLength: 1, maxLength: 200 }),
         differenceType: fc.constant(type),
