@@ -117,28 +117,39 @@ export class Terminal {
 
   /**
    * Draw the status bar on line 1 (internal helper)
+   * Matches Z-Machine format exactly:
+   * - Room name padded to 49 characters (left-aligned)
+   * - "Score: X" followed by 8 spaces, then "Moves: Y"
+   * 
    * @param location - Location name for left side
    * @param score - Score value
    * @param moves - Moves count
    */
   private drawStatusBar(location: string, score: number, moves: number): void {
-    const scoreMovesText = `Score: ${score}  Moves: ${moves}`;
-    const availableWidth = this.terminalWidth - scoreMovesText.length - 2;
+    // Z-Machine format constants
+    const ROOM_NAME_WIDTH = 49;
+    const SCORE_MOVES_SPACING = 8; // 8 spaces between Score value and "Moves:"
     
-    // Truncate location if too long
+    // Truncate or pad room name to exactly 49 characters
     let displayLocation = location;
-    if (displayLocation.length > availableWidth) {
-      displayLocation = displayLocation.substring(0, availableWidth - 3) + '...';
+    if (displayLocation.length >= ROOM_NAME_WIDTH) {
+      // Truncate to 48 chars to leave room for at least one space before Score:
+      displayLocation = displayLocation.substring(0, ROOM_NAME_WIDTH - 1) + ' ';
+    } else {
+      displayLocation = displayLocation.padEnd(ROOM_NAME_WIDTH);
     }
     
-    // Calculate padding between location and score/moves
-    const padding = Math.max(this.terminalWidth - displayLocation.length - scoreMovesText.length, 1);
+    // Format score and moves sections with fixed spacing (Z-Machine format)
+    const scoreSection = `Score: ${score}`;
+    const movesSection = `Moves: ${moves}`;
+    const fixedSpacing = ' '.repeat(SCORE_MOVES_SPACING);
     
     // Build status bar with reverse video
     const statusBar = ANSI.REVERSE_VIDEO + 
       displayLocation + 
-      ' '.repeat(padding) + 
-      scoreMovesText + 
+      scoreSection + 
+      fixedSpacing + 
+      movesSection + 
       ANSI.RESET;
     
     this.write(statusBar);
@@ -173,22 +184,35 @@ export class Terminal {
   /**
    * Format status bar content for testing/verification
    * Returns the text that would appear in the status bar
+   * Matches Z-Machine format exactly:
+   * - Room name padded to 49 characters (left-aligned)
+   * - "Score: X" followed by 8 spaces, then "Moves: Y"
+   * 
    * @param location - Room name
    * @param score - Score value
    * @param moves - Move count
    * @returns Formatted status bar string (without ANSI codes)
    */
   formatStatusBar(location: string, score: number, moves: number): string {
-    const scoreMovesText = `Score: ${score}  Moves: ${moves}`;
-    const availableWidth = this.terminalWidth - scoreMovesText.length - 2;
+    // Z-Machine format constants
+    const ROOM_NAME_WIDTH = 49;
+    const SCORE_MOVES_SPACING = 8; // 8 spaces between Score value and "Moves:"
     
+    // Truncate or pad room name to exactly 49 characters
     let displayLocation = location;
-    if (displayLocation.length > availableWidth) {
-      displayLocation = displayLocation.substring(0, availableWidth - 3) + '...';
+    if (displayLocation.length >= ROOM_NAME_WIDTH) {
+      // Truncate to 48 chars to leave room for at least one space before Score:
+      displayLocation = displayLocation.substring(0, ROOM_NAME_WIDTH - 1) + ' ';
+    } else {
+      displayLocation = displayLocation.padEnd(ROOM_NAME_WIDTH);
     }
     
-    const padding = Math.max(this.terminalWidth - displayLocation.length - scoreMovesText.length, 1);
-    return displayLocation + ' '.repeat(padding) + scoreMovesText;
+    // Format score and moves sections with fixed spacing (Z-Machine format)
+    const scoreSection = `Score: ${score}`;
+    const movesSection = `Moves: ${moves}`;
+    const fixedSpacing = ' '.repeat(SCORE_MOVES_SPACING);
+    
+    return displayLocation + scoreSection + fixedSpacing + movesSection;
   }
 
   /**
@@ -281,21 +305,37 @@ export class Terminal {
   /**
    * Display status bar with location, score and moves
    * Shows status inline before the prompt for readline compatibility
+   * Matches Z-Machine format exactly:
+   * - Room name padded to 49 characters (left-aligned)
+   * - "Score: X" followed by 8 spaces, then "Moves: Y"
+   * 
    * @param score - Current score
    * @param moves - Number of moves
    * @param location - Optional location name to display
    */
   showStatusBar(score: number, moves: number, location?: string): void {
-    // For readline-based terminals, we show status inline
-    // A true fixed status bar would require a full TUI library
-    // Format: "Location                    Score: X  Moves: Y"
+    // Z-Machine format constants
+    const ROOM_NAME_WIDTH = 49;
+    const SCORE_MOVES_SPACING = 8; // 8 spaces between Score value and "Moves:"
+    
     if (location) {
-      const scoreMovesText = `Score: ${score}  Moves: ${moves}`;
-      // Pad location to create spacing similar to original
-      const padding = Math.max(40 - location.length, 4);
-      const statusText = `${location}${' '.repeat(padding)}${scoreMovesText}`;
+      // Truncate or pad room name to exactly 49 characters
+      let displayLocation = location;
+      if (displayLocation.length >= ROOM_NAME_WIDTH) {
+        displayLocation = displayLocation.substring(0, ROOM_NAME_WIDTH - 1) + ' ';
+      } else {
+        displayLocation = displayLocation.padEnd(ROOM_NAME_WIDTH);
+      }
+      
+      // Format score and moves sections with fixed spacing (Z-Machine format)
+      const scoreSection = `Score: ${score}`;
+      const movesSection = `Moves: ${moves}`;
+      const fixedSpacing = ' '.repeat(SCORE_MOVES_SPACING);
+      
+      const statusText = displayLocation + scoreSection + fixedSpacing + movesSection;
       this.writeLine(statusText);
     } else {
+      // Fallback format when no location provided
       const statusText = `[Score: ${score}  Moves: ${moves}]`;
       this.writeLine(statusText);
     }

@@ -174,7 +174,7 @@ The approach prioritizes high-impact fixes and verifies each change doesn't intr
 
 ## Iteration N: Repeat Until 100% Logic Parity
 
-- [-] 8. Continue iterations until 100% logic parity
+- [x] 8. Continue iterations until 100% logic parity
   - Repeat the analyze-fix-verify cycle until 0 logic differences
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
@@ -195,7 +195,7 @@ The approach prioritizes high-impact fixes and verifies each change doesn't intr
   - Record final results to `parity-final-results.json`
   - _Requirements: 7.3, 7.4_
 
-- [-] 8.4 Commit to Git
+- [x] 8.4 Commit to Git
   - Commit message: "feat: Achieve 100% logic parity with Z-Machine"
   - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
@@ -203,38 +203,38 @@ The approach prioritizes high-impact fixes and verifies each change doesn't intr
 
 ## Status Bar Parity (After 100% Logic Parity)
 
-- [ ] 9. Fix status bar formatting
+- [-] 9. Fix status bar formatting
   - Match Z-Machine status bar format exactly
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
 
-- [ ] 9.1 Analyze status bar differences
+- [x] 9.1 Analyze status bar differences
   - Compare TS status bar format with ZM format
   - Document exact formatting differences
   - _Requirements: 8.1_
 
-- [ ] 9.2 Update StatusBarNormalizer
+- [x] 9.2 Update StatusBarNormalizer
   - Update `src/parity/StatusBarNormalizer.ts`
   - Match Z-Machine format (Score: X Moves: Y)
   - _Requirements: 8.1, 8.2_
 
-- [ ] 9.3 Update terminal output
+- [x] 9.3 Update terminal output
   - Update `src/io/terminal.ts` for status bar display
   - Ensure correct positioning
   - _Requirements: 8.3_
 
-- [ ] 9.4 Run parity validation and record results
+- [x] 9.4 Run parity validation and record results
   - Run `npm run parity:validate`
   - Export results to `parity-status-bar-results.json`
   - Confirm status bar differences reduced
   - _Requirements: 8.4_
 
-- [ ] 9.5 If status bar differences remain, add fix tasks
+- [x] 9.5 If status bar differences remain, add fix tasks
   - Analyze remaining status bar differences
   - Apply additional fixes as needed
   - Repeat until status bar difference count is 0
   - _Requirements: 8.4_
 
-- [ ] 9.6 Commit to Git
+- [-] 9.6 Commit to Git
   - Commit message: "fix: Match Z-Machine status bar formatting"
   - _Requirements: 8.1, 8.2, 8.3, 8.4_
 
