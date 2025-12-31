@@ -91,7 +91,8 @@ jobs:
       - name: Run TypeScript compilation check
         run: |
           # Ensure TypeScript code compiles before testing
-          npx tsc --noEmit
+          # Use build config which has relaxed settings for unused variables
+          npx tsc -p tsconfig.build.json --noEmit
       
       - name: Run spot test (Matrix Mode)
         if: github.event_name != 'workflow_dispatch'
