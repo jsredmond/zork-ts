@@ -43,7 +43,8 @@
       "node20-macos-arm64",
       "node20-win-x64"
     ],
-    "outputPath": "releases"
+    "outputPath": "releases",
+    "_securityNote": "pkg has GHSA-22r3-9w55-cj54 (moderate, local privilege escalation). Risk accepted: dev-only, local access required, no fix available. See dev-artifacts/docs/PACKAGING.md"
   },
   "engines": {
     "node": ">=18.0.0"
