@@ -1264,4 +1264,80 @@ describe('Parser', () => {
       );
     });
   });
+
+  /**
+   * Z-Machine Parity Tests: White House Vocabulary
+   * 
+   * These tests verify that "white house" commands return proper visibility errors
+   * rather than unknown word errors. This is critical for Z-Machine parity.
+   * 
+   * Validates: Requirements 6.1, 6.2
+   */
+  describe('White House Vocabulary Parity', () => {
+    it('should return visibility error for "push white house" when house is not visible', () => {
+      // Create a parser with vocabulary
+      const testParser = new Parser(vocabulary);
+      
+      // Parse "push white house" with no objects available
+      const result = testParser.parse('push white house', []);
+      
+      // Should return an OBJECT_NOT_FOUND error, not UNKNOWN_WORD
+      expect('type' in result).toBe(true);
+      if ('type' in result) {
+        expect(result.type).toBe('OBJECT_NOT_FOUND');
+        expect(result.message).toBe("You can't see any white house here!");
+        // Should NOT be "I don't know the word 'white'."
+        expect(result.message).not.toContain("don't know the word");
+      }
+    });
+
+    it('should return visibility error for "take white house" when house is not visible', () => {
+      const testParser = new Parser(vocabulary);
+      
+      const result = testParser.parse('take white house', []);
+      
+      expect('type' in result).toBe(true);
+      if ('type' in result) {
+        expect(result.type).toBe('OBJECT_NOT_FOUND');
+        expect(result.message).toBe("You can't see any white house here!");
+      }
+    });
+
+    it('should return visibility error for "examine white house" when house is not visible', () => {
+      const testParser = new Parser(vocabulary);
+      
+      const result = testParser.parse('examine white house', []);
+      
+      expect('type' in result).toBe(true);
+      if ('type' in result) {
+        expect(result.type).toBe('OBJECT_NOT_FOUND');
+        expect(result.message).toBe("You can't see any white house here!");
+      }
+    });
+
+    it('should successfully parse "push white house" when WHITE-HOUSE object is available', () => {
+      const testParser = new Parser(vocabulary);
+      
+      // Create a WHITE-HOUSE object with WHITE adjective
+      const whiteHouse = new GameObjectImpl({
+        id: 'WHITE-HOUSE',
+        name: 'HOUSE',
+        synonyms: [],
+        adjectives: ['WHITE'],
+        description: 'A white house',
+        location: 'WEST-OF-HOUSE',
+        flags: []
+      });
+      
+      const result = testParser.parse('push white house', [whiteHouse]);
+      
+      // Should successfully parse
+      expect('type' in result).toBe(false);
+      if (!('type' in result)) {
+        expect(result.verb).toBe('PUSH');
+        expect(result.directObject?.id).toBe('WHITE-HOUSE');
+        expect(result.directObjectName).toBe('WHITE HOUSE');
+      }
+    });
+  });
 });

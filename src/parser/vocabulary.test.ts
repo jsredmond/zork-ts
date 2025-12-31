@@ -245,5 +245,31 @@ describe('Vocabulary', () => {
       const expanded = vocabulary.expandAbbreviation('x');
       expect(vocabulary.lookupWord(expanded)).toBe(TokenType.VERB);
     });
+
+    /**
+     * Z-Machine Parity Test: "push white house" from room where house is not visible
+     * Should return "You can't see any white house here!" not "I don't know the word 'white'."
+     * 
+     * This test verifies that "white" is recognized as a known word (adjective),
+     * so the parser returns an object visibility error rather than an unknown word error.
+     * 
+     * Validates: Requirements 6.1, 6.2
+     */
+    it('should recognize "white house" as valid adjective-noun combination (Z-Machine parity)', () => {
+      // Verify "white" is recognized as an adjective
+      expect(vocabulary.lookupWord('white')).toBe(TokenType.ADJECTIVE);
+      expect(vocabulary.lookupWord('WHITE')).toBe(TokenType.ADJECTIVE);
+      
+      // Verify "house" is recognized as a noun
+      expect(vocabulary.lookupWord('house')).toBe(TokenType.NOUN);
+      expect(vocabulary.lookupWord('HOUSE')).toBe(TokenType.NOUN);
+      
+      // Verify both words are known (not unknown)
+      expect(vocabulary.hasWord('white')).toBe(true);
+      expect(vocabulary.hasWord('house')).toBe(true);
+      
+      // Verify "push" is recognized as a verb
+      expect(vocabulary.lookupWord('push')).toBe(TokenType.VERB);
+    });
   });
 });
