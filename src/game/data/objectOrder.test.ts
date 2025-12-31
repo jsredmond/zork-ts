@@ -10,8 +10,9 @@ describe('Object Display Order', () => {
     it('should return defined order for known objects', () => {
       expect(getObjectDisplayOrder('BOTTLE')).toBe(1);
       expect(getObjectDisplayOrder('SANDWICH-BAG')).toBe(2);
-      expect(getObjectDisplayOrder('ROPE')).toBe(1);
-      expect(getObjectDisplayOrder('KNIFE')).toBe(2);
+      // ROPE and KNIFE have fractional values to match Z-Machine attic order
+      expect(getObjectDisplayOrder('ROPE')).toBe(0.8);
+      expect(getObjectDisplayOrder('KNIFE')).toBe(0.9);
     });
 
     it('should return high number for unknown objects', () => {
@@ -44,7 +45,8 @@ describe('Object Display Order', () => {
       expect(sorted[1].id).toBe('KNIFE');
     });
 
-    it('should sort living room objects correctly (sword before lamp)', () => {
+    it('should sort living room objects correctly (lamp before sword)', () => {
+      // In Z-Machine, lamp (0.6) comes before sword (0.7) in the attic/living room
       const objects = [
         { id: 'LAMP', name: 'brass lantern' },
         { id: 'SWORD', name: 'sword' },
@@ -53,8 +55,9 @@ describe('Object Display Order', () => {
       
       const sorted = sortObjectsByDisplayOrder(objects);
       
-      expect(sorted[0].id).toBe('SWORD');
-      expect(sorted[1].id).toBe('LAMP');
+      // Z-Machine order: lamp (0.6), sword (0.7), trophy-case (7)
+      expect(sorted[0].id).toBe('LAMP');
+      expect(sorted[1].id).toBe('SWORD');
       expect(sorted[2].id).toBe('TROPHY-CASE');
     });
 
