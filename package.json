@@ -51,12 +51,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zork-ts/zork-ts.git"
+    "url": "git+https://github.com/jsredmond/zork-ts.git"
   },
   "bugs": {
-    "url": "https://github.com/zork-ts/zork-ts/issues"
+    "url": "https://github.com/jsredmond/zork-ts/issues"
   },
-  "homepage": "https://github.com/zork-ts/zork-ts#readme",
+  "homepage": "https://github.com/jsredmond/zork-ts#readme",
   "keywords": [
     "zork",
     "interactive-fiction",
