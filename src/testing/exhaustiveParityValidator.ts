@@ -228,11 +228,17 @@ export class ExhaustiveParityValidator {
     }
 
     const totalExecutionTime = Date.now() - startTime;
+    
+    // Calculate overall parity percentage
+    // Requirements: 6.3 - Formula: (exactMatches + closeMatches + rngDifferences + stateDivergences) / totalCommands * 100
+    // Since matchingResponses = totalCommands - logicDifferences, only LOGIC_DIFFERENCE reduces parity
     const overallParityPercentage = totalCommands > 0
       ? (totalMatching / totalCommands) * 100
       : 0;
 
     // Calculate logic parity percentage (excluding status bar differences)
+    // Requirements: 6.4 - Separate metric: (totalCommands - logicDifferences) / totalCommands * 100
+    // This is the "true" parity excluding all non-logic differences
     const logicParityPercentage = totalCommands > 0
       ? ((totalCommands - logicDifferences) / totalCommands) * 100
       : 0;
@@ -315,18 +321,30 @@ export class ExhaustiveParityValidator {
       const zmTranscript = await this.zmRecorder.record(commands, recordingOptions);
 
       // Compare and classify differences using message extraction
-      // Requirements: 1.1, 1.2, 1.3, 2.1, 2.2
-      const { matchingResponses, differences, statusBarDifferences } = this.compareAndClassify(
+      // Requirements: 1.1, 1.2, 1.3, 2.1, 2.2, 5.1, 5.2, 6.1, 6.2
+      const { 
+        matchingResponses, 
+        differences, 
+        statusBarDifferences,
+        rngDifferences,
+        stateDivergences,
+      } = this.compareAndClassify(
         tsTranscript,
         zmTranscript,
         commands
       );
 
+      // Calculate parity percentage
+      // Requirements: 6.3 - Formula: (exactMatches + closeMatches + rngDifferences + stateDivergences) / totalCommands * 100
+      // Only LOGIC_DIFFERENCE reduces parity
+      // Since matchingResponses = totalCommands - logicDifferences, this is equivalent to:
+      // parityPercentage = matchingResponses / totalCommands * 100
       const parityPercentage = commands.length > 0
         ? (matchingResponses / commands.length) * 100
         : 100;
 
-      // Calculate logic parity (excluding status bar differences)
+      // Calculate logic parity percentage (excluding status bar differences)
+      // Requirements: 6.4 - Separate metric: (totalCommands - logicDifferences) / totalCommands * 100
       const logicDiffs = differences.filter(d => d.classification === 'LOGIC_DIFFERENCE').length;
       const logicParityPercentage = commands.length > 0
         ? ((commands.length - logicDiffs) / commands.length) * 100
@@ -545,13 +563,19 @@ export class ExhaustiveParityValidator {
    * Delegates to TranscriptComparator.compareAndClassify() for message extraction
    * and accurate difference classification.
    * 
-   * Requirements: 1.1, 1.2, 1.3, 2.1, 2.2
+   * Requirements: 1.1, 1.2, 1.3, 2.1, 2.2, 5.1, 5.2, 6.1, 6.2
    */
   private compareAndClassify(
     tsTranscript: Transcript,
     zmTranscript: Transcript,
     _commands: string[]
-  ): { matchingResponses: number; differences: ClassifiedDifference[]; statusBarDifferences: number } {
+  ): { 
+    matchingResponses: number; 
+    differences: ClassifiedDifference[]; 
+    statusBarDifferences: number;
+    rngDifferences: number;
+    stateDivergences: number;
+  } {
     // Delegate to TranscriptComparator.compareAndClassify() which uses message extraction
     // Requirements: 2.1, 2.2 - Use TranscriptComparator for comparison
     const report = this.comparator.compareAndClassify(tsTranscript, zmTranscript);
@@ -560,17 +584,49 @@ export class ExhaustiveParityValidator {
     // Requirements: 2.2 - Map results to internal format
     const differences: ClassifiedDifference[] = report.classifiedDifferences ?? [];
     
+    // Count RNG and state divergence differences from classified differences
+    // Requirements: 5.1, 5.2, 6.1, 6.2 - Count RNG_DIFFERENCE and STATE_DIVERGENCE as matching
+    let rngDifferences = 0;
+    let stateDivergences = 0;
+    let logicDifferences = 0;
+    
+    for (const diff of differences) {
+      switch (diff.classification) {
+        case 'RNG_DIFFERENCE':
+          rngDifferences++;
+          break;
+        case 'STATE_DIVERGENCE':
+          stateDivergences++;
+          break;
+        case 'LOGIC_DIFFERENCE':
+          logicDifferences++;
+          break;
+      }
+    }
+    
     // Calculate matching responses
-    // exactMatches + closeMatches = responses that are considered matching
-    // Requirements: 1.1, 1.2, 1.3 - Use extracted responses for comparison
-    const matchingResponses = report.exactMatches + report.closeMatches;
+    // Requirements: 5.1, 6.1, 6.2 - Count responses as matching if:
+    // 1. Extracted responses are identical (exactMatches)
+    // 2. Responses are close matches (closeMatches) 
+    // 3. Differences are RNG_DIFFERENCE or STATE_DIVERGENCE (these count as matching)
+    // 
+    // The formula: matchingResponses = totalCommands - logicDifferences
+    // This ensures only LOGIC_DIFFERENCE reduces parity
+    const totalCommands = report.totalCommands;
+    const matchingResponses = totalCommands - logicDifferences;
     
     // Track statusBarDifferences from the report's statusBarDifferences count
     // Requirements: 4.2, 4.3 - Track status bar differences separately
     // Status bar differences are tracked separately and don't affect logic parity
     const statusBarDifferences = report.statusBarDifferences;
     
-    return { matchingResponses, differences, statusBarDifferences };
+    return { 
+      matchingResponses, 
+      differences, 
+      statusBarDifferences,
+      rngDifferences,
+      stateDivergences,
+    };
   }
 
   /**
