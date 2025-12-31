@@ -565,9 +565,10 @@ export class ExhaustiveParityValidator {
     // Requirements: 1.1, 1.2, 1.3 - Use extracted responses for comparison
     const matchingResponses = report.exactMatches + report.closeMatches;
     
-    // Track statusBarDifferences from the report's structuralDifferences count
+    // Track statusBarDifferences from the report's statusBarDifferences count
     // Requirements: 4.2, 4.3 - Track status bar differences separately
-    const statusBarDifferences = report.structuralDifferences;
+    // Status bar differences are tracked separately and don't affect logic parity
+    const statusBarDifferences = report.statusBarDifferences;
     
     return { matchingResponses, differences, statusBarDifferences };
   }

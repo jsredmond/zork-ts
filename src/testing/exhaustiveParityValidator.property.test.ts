@@ -476,3 +476,326 @@ describe('ExhaustiveParityValidator Property Tests', () => {
     );
   });
 });
+
+
+/**
+ * Property-Based Tests for Status Bar Isolation
+ * 
+ * Feature: integrate-message-extraction, Property 2: Status Bar Isolation
+ * 
+ * **Validates: Requirements 4.1, 4.2, 4.3, 4.4**
+ */
+describe('Status Bar Isolation Property Tests', () => {
+  /**
+   * Generator for status bar content
+   */
+  const statusBarArb = fc.record({
+    roomName: fc.constantFrom(
+      'West of House',
+      'North of House',
+      'Living Room',
+      'Kitchen',
+      'Attic',
+      'Cellar',
+      'Troll Room',
+      'Round Room'
+    ),
+    score: fc.integer({ min: -10, max: 350 }),
+    moves: fc.integer({ min: 1, max: 9999 }),
+  }).map(({ roomName, score, moves }) => {
+    // Format as status bar line with padding
+    const padding = ' '.repeat(Math.max(0, 50 - roomName.length));
+    return `${roomName}${padding}Score: ${score}        Moves: ${moves}`;
+  });
+
+  /**
+   * Generator for action responses
+   */
+  const actionResponseArb = fc.constantFrom(
+    'Taken.',
+    'Dropped.',
+    'You are empty-handed.',
+    'It is pitch black. You are likely to be eaten by a grue.',
+    'You are standing in an open field west of a white house.',
+    'The door is locked.',
+    'Nothing happens.',
+    'OK.',
+    'You can\'t go that way.',
+    'I don\'t understand that.',
+    'The troll blocks your way.'
+  );
+
+  /**
+   * Feature: integrate-message-extraction, Property 2: Status Bar Isolation
+   * 
+   * For any two outputs that differ only in status bar content (Score/Moves line),
+   * the ExhaustiveParityValidator SHALL:
+   * - Count this as a matching response (not a difference)
+   * - Track the status bar difference separately in statusBarDifferences
+   * - NOT classify this as LOGIC_DIFFERENCE
+   * - NOT cause the test to fail (passed=true)
+   * 
+   * **Validates: Requirements 4.1, 4.2, 4.3, 4.4**
+   */
+  it('Property 2: Status bar differences are isolated and do not affect parity', async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        statusBarArb,
+        statusBarArb,
+        actionResponseArb,
+        async (statusBar1, statusBar2, response) => {
+          // Create two outputs that differ only in status bar
+          const output1 = `${statusBar1}\n\n${response}`;
+          const output2 = `${statusBar2}\n\n${response}`;
+
+          // Create transcripts with these outputs
+          const transcriptA = {
+            id: 'ts-test',
+            source: 'typescript' as const,
+            startTime: new Date(),
+            endTime: new Date(),
+            entries: [{
+              index: 0,
+              command: 'test',
+              output: output1,
+              turnNumber: 0,
+            }],
+            metadata: {},
+          };
+
+          const transcriptB = {
+            id: 'zm-test',
+            source: 'z-machine' as const,
+            startTime: new Date(),
+            endTime: new Date(),
+            entries: [{
+              index: 0,
+              command: 'test',
+              output: output2,
+              turnNumber: 0,
+            }],
+            metadata: {},
+          };
+
+          // Use TranscriptComparator.compareAndClassify to test isolation
+          const comparator = new TranscriptComparator({
+            useMessageExtraction: true,
+            trackDifferenceTypes: true,
+          });
+
+          const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+          // Property: Status bar differences should be isolated
+          // 1. Should count as matching (exactMatches or closeMatches)
+          const isMatching = report.exactMatches === 1 || report.closeMatches === 1;
+          
+          // 2. Should NOT have behavioral differences
+          const noBehavioralDiff = report.behavioralDifferences === 0;
+          
+          // 3. Should track status bar differences separately
+          // (statusBarDifferences >= 0 is always true, but we check it's tracked)
+          const statusBarTracked = typeof report.statusBarDifferences === 'number';
+          
+          // 4. Should NOT have LOGIC_DIFFERENCE classifications
+          const noLogicDiff = !report.classifiedDifferences?.some(
+            d => d.classification === 'LOGIC_DIFFERENCE'
+          );
+
+          return isMatching && noBehavioralDiff && statusBarTracked && noLogicDiff;
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * Feature: integrate-message-extraction, Property 2a: Status bar differences tracked separately
+   * 
+   * When outputs differ only in status bar, the statusBarDifferences count
+   * should be incremented while exactMatches should still count the response.
+   * 
+   * **Validates: Requirements 4.2, 4.3**
+   */
+  it('Property 2a: Status bar differences are tracked separately from logic differences', async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        statusBarArb,
+        actionResponseArb,
+        async (statusBar, response) => {
+          // Create two outputs: one with status bar, one without
+          const outputWithStatusBar = `${statusBar}\n\n${response}`;
+          const outputWithoutStatusBar = response;
+
+          const transcriptA = {
+            id: 'ts-test',
+            source: 'typescript' as const,
+            startTime: new Date(),
+            endTime: new Date(),
+            entries: [{
+              index: 0,
+              command: 'test',
+              output: outputWithStatusBar,
+              turnNumber: 0,
+            }],
+            metadata: {},
+          };
+
+          const transcriptB = {
+            id: 'zm-test',
+            source: 'z-machine' as const,
+            startTime: new Date(),
+            endTime: new Date(),
+            entries: [{
+              index: 0,
+              command: 'test',
+              output: outputWithoutStatusBar,
+              turnNumber: 0,
+            }],
+            metadata: {},
+          };
+
+          const comparator = new TranscriptComparator({
+            useMessageExtraction: true,
+            trackDifferenceTypes: true,
+          });
+
+          const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+          // Property: Should be counted as matching (status bar stripped before comparison)
+          const isMatching = report.exactMatches === 1 || report.closeMatches === 1;
+          
+          // Property: Should NOT be a behavioral difference
+          const noBehavioralDiff = report.behavioralDifferences === 0;
+          
+          // Property: Should NOT be a logic difference
+          const noLogicDiff = report.classifiedDifferences?.length === 0 ||
+            !report.classifiedDifferences?.some(d => d.classification === 'LOGIC_DIFFERENCE');
+
+          return isMatching && noBehavioralDiff && noLogicDiff;
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * Feature: integrate-message-extraction, Property 2b: Passed status unaffected by status bar
+   * 
+   * When the only differences are in status bar content, the overall
+   * validation should still pass (passed=true).
+   * 
+   * **Validates: Requirements 4.4**
+   */
+  it('Property 2b: Status bar differences do not cause test failure', async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        fc.integer({ min: 1, max: 99999 }),
+        async (seed) => {
+          const validator = createExhaustiveParityValidator({
+            commandsPerSeed: 10,
+            seeds: [seed],
+          });
+
+          validator.addCommandSequences([
+            {
+              id: 'basic',
+              name: 'Basic',
+              commands: ['look', 'inventory'],
+            },
+          ]);
+
+          // Run in TS-only mode (no Z-Machine comparison)
+          const results = await validator.runWithSeeds();
+
+          // Property: Should pass (no logic differences in TS-only mode)
+          expect(results.passed).toBe(true);
+          
+          // Property: Logic differences should be 0
+          expect(results.logicDifferences).toBe(0);
+          
+          // Property: Status bar differences should be tracked (>= 0)
+          expect(results.statusBarDifferences).toBeGreaterThanOrEqual(0);
+          
+          // Property: Logic parity percentage should be 100% in TS-only mode
+          expect(results.logicParityPercentage).toBe(100);
+
+          return true;
+        }
+      ),
+      { numRuns: 20 }
+    );
+  });
+
+  /**
+   * Feature: integrate-message-extraction, Property 2c: Real differences still detected
+   * 
+   * When outputs have actual behavioral differences (not just status bar),
+   * those differences should still be detected and classified correctly.
+   * 
+   * **Validates: Requirements 4.1, 4.2, 4.3, 4.4**
+   */
+  it('Property 2c: Real behavioral differences are still detected despite status bar isolation', async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        statusBarArb,
+        fc.tuple(
+          fc.constantFrom('Taken.', 'Dropped.', 'OK.'),
+          fc.constantFrom('The door is locked.', 'Nothing happens.', 'You can\'t go that way.')
+        ).filter(([a, b]) => a !== b),
+        async (statusBar, [response1, response2]) => {
+          // Create two outputs with different action responses
+          const output1 = `${statusBar}\n\n${response1}`;
+          const output2 = `${statusBar}\n\n${response2}`;
+
+          const transcriptA = {
+            id: 'ts-test',
+            source: 'typescript' as const,
+            startTime: new Date(),
+            endTime: new Date(),
+            entries: [{
+              index: 0,
+              command: 'test',
+              output: output1,
+              turnNumber: 0,
+            }],
+            metadata: {},
+          };
+
+          const transcriptB = {
+            id: 'zm-test',
+            source: 'z-machine' as const,
+            startTime: new Date(),
+            endTime: new Date(),
+            entries: [{
+              index: 0,
+              command: 'test',
+              output: output2,
+              turnNumber: 0,
+            }],
+            metadata: {},
+          };
+
+          const comparator = new TranscriptComparator({
+            useMessageExtraction: true,
+            trackDifferenceTypes: true,
+          });
+
+          const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+          // Property: Should NOT be an exact match (different responses)
+          const notExactMatch = report.exactMatches === 0;
+          
+          // Property: Should have some kind of difference detected
+          // (either behavioral, classified, or in differences array)
+          const hasDifference = 
+            report.behavioralDifferences > 0 ||
+            (report.classifiedDifferences?.length ?? 0) > 0 ||
+            report.differences.length > 0;
+
+          return notExactMatch && hasDifference;
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+});

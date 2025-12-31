@@ -128,11 +128,14 @@ export interface ExtendedDiffReport extends DiffReport {
   behavioralDifferences: number;
   /** Number of RNG differences */
   rngDifferences: number;
+  /** Number of status bar differences (tracked separately from logic) */
+  statusBarDifferences: number;
   /** Breakdown by difference type */
   differenceBreakdown: {
     rng: number;
     structural: number;
     behavioral: number;
+    statusBar: number;
   };
   /** Classified differences with type information */
   classifiedDifferences?: ClassifiedDifference[];
@@ -290,11 +293,32 @@ export class TranscriptComparator {
   }
 
   /**
+   * Check if two outputs differ only in status bar content
+   * Requirements: 4.1, 4.2
+   * 
+   * @param outputA - First output
+   * @param outputB - Second output
+   * @returns true if outputs differ only in status bar
+   */
+  private differsOnlyInStatusBar(outputA: string, outputB: string): boolean {
+    // Strip status bars from both outputs
+    const strippedA = this.stripStatusBar(outputA);
+    const strippedB = this.stripStatusBar(outputB);
+    
+    // Normalize both
+    const normalizedA = this.normalizeOutput(strippedA);
+    const normalizedB = this.normalizeOutput(strippedB);
+    
+    // If they're equal after stripping status bars, the difference was only in status bar
+    return normalizedA === normalizedB;
+  }
+
+  /**
    * Compare two transcripts using message extraction and classification
    * This method extracts action responses before comparison and classifies
    * differences as RNG, structural, or behavioral.
    * 
-   * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5
+   * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 4.1, 4.2, 4.3, 4.4
    * 
    * @param transcriptA - First transcript (typically TypeScript implementation)
    * @param transcriptB - Second transcript (typically Z-Machine implementation)
@@ -318,6 +342,7 @@ export class TranscriptComparator {
     let structuralDifferences = 0;
     let behavioralDifferences = 0;
     let rngDifferences = 0;
+    let statusBarDifferences = 0;
 
     // Get the maximum length to compare
     const maxLength = Math.max(
@@ -333,6 +358,15 @@ export class TranscriptComparator {
         // One transcript is shorter - this is a critical difference
         differences.push(this.createMissingEntryDiff(i, entryA, entryB));
         behavioralDifferences++;
+        continue;
+      }
+
+      // Check if the raw outputs differ only in status bar content
+      // Requirements: 4.1, 4.2, 4.3 - Track status bar differences separately
+      if (this.differsOnlyInStatusBar(entryA.output, entryB.output)) {
+        // Status bar only difference - count as exact match, track separately
+        exactMatches++;
+        statusBarDifferences++;
         continue;
       }
 
@@ -429,10 +463,12 @@ export class TranscriptComparator {
       structuralDifferences,
       behavioralDifferences,
       rngDifferences,
+      statusBarDifferences,
       differenceBreakdown: {
         rng: rngDifferences,
         structural: structuralDifferences,
         behavioral: behavioralDifferences,
+        statusBar: statusBarDifferences,
       },
       classifiedDifferences,
     };
