@@ -22,6 +22,17 @@ export class Storage {
   }
 
   /**
+   * Sanitize filename to prevent path traversal attacks
+   * Removes path separators and parent directory references
+   * @param filename The filename to sanitize
+   * @returns Sanitized filename safe for file operations
+   */
+  private sanitizeFilename(filename: string): string {
+    // Remove path separators and parent directory references
+    return filename.replace(/[\/\\]/g, '').replace(/\.\./g, '');
+  }
+
+  /**
    * Ensure the save directory exists
    */
   private ensureSaveDirectoryExists(): void {
@@ -38,6 +49,9 @@ export class Storage {
    */
   save(state: GameState, filename: string): string {
     try {
+      // Sanitize filename to prevent path traversal
+      filename = this.sanitizeFilename(filename);
+      
       // Ensure filename has .sav extension
       if (!filename.endsWith('.sav')) {
         filename = filename + '.sav';
@@ -64,6 +78,9 @@ export class Storage {
    */
   restore(filename: string): GameState {
     try {
+      // Sanitize filename to prevent path traversal
+      filename = this.sanitizeFilename(filename);
+      
       // Ensure filename has .sav extension
       if (!filename.endsWith('.sav')) {
         filename = filename + '.sav';
@@ -118,6 +135,9 @@ export class Storage {
    */
   deleteSave(filename: string): string {
     try {
+      // Sanitize filename to prevent path traversal
+      filename = this.sanitizeFilename(filename);
+      
       // Ensure filename has .sav extension
       if (!filename.endsWith('.sav')) {
         filename = filename + '.sav';
@@ -146,6 +166,9 @@ export class Storage {
    * @returns True if file exists, false otherwise
    */
   saveExists(filename: string): boolean {
+    // Sanitize filename to prevent path traversal
+    filename = this.sanitizeFilename(filename);
+    
     if (!filename.endsWith('.sav')) {
       filename = filename + '.sav';
     }
