@@ -422,3 +422,283 @@ describe('EXIT_CODES', () => {
     expect(EXIT_CODES.TIMEOUT).toBe(4);
   });
 });
+
+/**
+ * Tests for updated baseline generation with proper classification
+ * Requirements: 6.1, 6.2
+ */
+describe('Baseline Generation with Proper Classification', () => {
+  it('should include usesExtractedMessages flag', () => {
+    const results = createMockParityResults();
+    const baseline = establishBaseline(results, undefined, true);
+    
+    expect(baseline.usesExtractedMessages).toBe(true);
+  });
+
+  it('should default usesExtractedMessages to true', () => {
+    const results = createMockParityResults();
+    const baseline = establishBaseline(results);
+    
+    expect(baseline.usesExtractedMessages).toBe(true);
+  });
+
+  it('should include differenceBreakdown with separate counts', () => {
+    const rngDiff = createMockDifference({ classification: 'RNG_DIFFERENCE' });
+    const stateDiff = createMockDifference({ classification: 'STATE_DIVERGENCE' });
+    const logicDiff = createMockDifference({ classification: 'LOGIC_DIFFERENCE' });
+    
+    const seedResults = new Map();
+    seedResults.set(12345, {
+      seed: 12345,
+      totalCommands: 100,
+      matchingResponses: 97,
+      differences: [rngDiff, stateDiff, logicDiff],
+      parityPercentage: 97,
+      executionTime: 1000,
+      success: true,
+    });
+
+    const results = createMockParityResults({
+      totalDifferences: 3,
+      rngDifferences: 1,
+      stateDivergences: 1,
+      logicDifferences: 1,
+      seedResults,
+    });
+
+    const baseline = establishBaseline(results);
+    
+    expect(baseline.differenceBreakdown).toBeDefined();
+    expect(baseline.differenceBreakdown?.rng).toBe(1);
+    expect(baseline.differenceBreakdown?.state).toBe(1);
+    expect(baseline.differenceBreakdown?.logic).toBe(1);
+    expect(baseline.differenceBreakdown?.structural).toBe(0);
+  });
+
+  it('should use version 2.0.0 for new baselines', () => {
+    const results = createMockParityResults();
+    const baseline = establishBaseline(results);
+    
+    expect(baseline.version).toBe('2.0.0');
+  });
+});
+
+/**
+ * Tests for regression detection with RNG variance allowed
+ * Requirements: 6.3, 6.4
+ */
+describe('Regression Detection with RNG Variance', () => {
+  it('should pass when RNG differences vary from baseline', () => {
+    // Create baseline with 3 RNG differences
+    const rngDiffs = [
+      createMockDifference({ command: 'hello', classification: 'RNG_DIFFERENCE' }),
+      createMockDifference({ command: 'jump', classification: 'RNG_DIFFERENCE' }),
+      createMockDifference({ command: 'wave', classification: 'RNG_DIFFERENCE' }),
+    ];
+    
+    const baselineSeedResults = new Map();
+    baselineSeedResults.set(12345, {
+      seed: 12345,
+      totalCommands: 100,
+      matchingResponses: 97,
+      differences: rngDiffs,
+      parityPercentage: 97,
+      executionTime: 1000,
+      success: true,
+    });
+
+    const baselineResults = createMockParityResults({
+      totalDifferences: 3,
+      rngDifferences: 3,
+      stateDivergences: 0,
+      logicDifferences: 0,
+      seedResults: baselineSeedResults,
+    });
+    const baseline = establishBaseline(baselineResults);
+
+    // Create new results with 5 RNG differences (variance of +2)
+    const newRngDiffs = [
+      createMockDifference({ command: 'hello', classification: 'RNG_DIFFERENCE' }),
+      createMockDifference({ command: 'jump', classification: 'RNG_DIFFERENCE' }),
+      createMockDifference({ command: 'wave', classification: 'RNG_DIFFERENCE' }),
+      createMockDifference({ command: 'push', classification: 'RNG_DIFFERENCE' }),
+      createMockDifference({ command: 'pull', classification: 'RNG_DIFFERENCE' }),
+    ];
+    
+    const newSeedResults = new Map();
+    newSeedResults.set(12345, {
+      seed: 12345,
+      totalCommands: 100,
+      matchingResponses: 95,
+      differences: newRngDiffs,
+      parityPercentage: 95,
+      executionTime: 1000,
+      success: true,
+    });
+
+    const newResults = createMockParityResults({
+      totalDifferences: 5,
+      rngDifferences: 5,
+      stateDivergences: 0,
+      logicDifferences: 0,
+      seedResults: newSeedResults,
+    });
+
+    const result = detectRegressions(newResults, baseline);
+    
+    // Should pass because RNG variance is allowed
+    expect(result.passed).toBe(true);
+    expect(result.newLogicDifferences).toHaveLength(0);
+  });
+
+  it('should pass when state divergences vary from baseline', () => {
+    // Create baseline with 2 state divergences
+    const stateDiffs = [
+      createMockDifference({ command: 'north', classification: 'STATE_DIVERGENCE' }),
+      createMockDifference({ command: 'south', classification: 'STATE_DIVERGENCE' }),
+    ];
+    
+    const baselineSeedResults = new Map();
+    baselineSeedResults.set(12345, {
+      seed: 12345,
+      totalCommands: 100,
+      matchingResponses: 98,
+      differences: stateDiffs,
+      parityPercentage: 98,
+      executionTime: 1000,
+      success: true,
+    });
+
+    const baselineResults = createMockParityResults({
+      totalDifferences: 2,
+      rngDifferences: 0,
+      stateDivergences: 2,
+      logicDifferences: 0,
+      seedResults: baselineSeedResults,
+    });
+    const baseline = establishBaseline(baselineResults);
+
+    // Create new results with 4 state divergences (variance of +2)
+    const newStateDiffs = [
+      createMockDifference({ command: 'north', classification: 'STATE_DIVERGENCE' }),
+      createMockDifference({ command: 'south', classification: 'STATE_DIVERGENCE' }),
+      createMockDifference({ command: 'east', classification: 'STATE_DIVERGENCE' }),
+      createMockDifference({ command: 'west', classification: 'STATE_DIVERGENCE' }),
+    ];
+    
+    const newSeedResults = new Map();
+    newSeedResults.set(12345, {
+      seed: 12345,
+      totalCommands: 100,
+      matchingResponses: 96,
+      differences: newStateDiffs,
+      parityPercentage: 96,
+      executionTime: 1000,
+      success: true,
+    });
+
+    const newResults = createMockParityResults({
+      totalDifferences: 4,
+      rngDifferences: 0,
+      stateDivergences: 4,
+      logicDifferences: 0,
+      seedResults: newSeedResults,
+    });
+
+    const result = detectRegressions(newResults, baseline);
+    
+    // Should pass because state divergence variance is allowed
+    expect(result.passed).toBe(true);
+    expect(result.newLogicDifferences).toHaveLength(0);
+  });
+
+  it('should fail only on new logic differences', () => {
+    // Create baseline with RNG differences but no logic differences
+    const baselineDiffs = [
+      createMockDifference({ command: 'hello', classification: 'RNG_DIFFERENCE' }),
+    ];
+    
+    const baselineSeedResults = new Map();
+    baselineSeedResults.set(12345, {
+      seed: 12345,
+      totalCommands: 100,
+      matchingResponses: 99,
+      differences: baselineDiffs,
+      parityPercentage: 99,
+      executionTime: 1000,
+      success: true,
+    });
+
+    const baselineResults = createMockParityResults({
+      totalDifferences: 1,
+      rngDifferences: 1,
+      stateDivergences: 0,
+      logicDifferences: 0,
+      seedResults: baselineSeedResults,
+    });
+    const baseline = establishBaseline(baselineResults);
+
+    // Create new results with a new logic difference
+    const newDiffs = [
+      createMockDifference({ command: 'hello', classification: 'RNG_DIFFERENCE' }),
+      createMockDifference({ command: 'new-cmd', classification: 'LOGIC_DIFFERENCE' }),
+    ];
+    
+    const newSeedResults = new Map();
+    newSeedResults.set(12345, {
+      seed: 12345,
+      totalCommands: 100,
+      matchingResponses: 98,
+      differences: newDiffs,
+      parityPercentage: 98,
+      executionTime: 1000,
+      success: true,
+    });
+
+    const newResults = createMockParityResults({
+      totalDifferences: 2,
+      rngDifferences: 1,
+      stateDivergences: 0,
+      logicDifferences: 1,
+      seedResults: newSeedResults,
+    });
+
+    const result = detectRegressions(newResults, baseline);
+    
+    // Should fail because of the new logic difference
+    expect(result.passed).toBe(false);
+    expect(result.newLogicDifferences).toHaveLength(1);
+    expect(result.newLogicDifferences[0].command).toBe('new-cmd');
+  });
+
+  it('should include variance analysis in summary', () => {
+    const baselineResults = createMockParityResults({
+      rngDifferences: 3,
+      stateDivergences: 2,
+      logicDifferences: 0,
+    });
+    const baseline = establishBaseline(baselineResults);
+
+    const newResults = createMockParityResults({
+      rngDifferences: 5,
+      stateDivergences: 1,
+      logicDifferences: 0,
+    });
+
+    const result = detectRegressions(newResults, baseline);
+    
+    expect(result.summary).toContain('Variance Analysis');
+    expect(result.summary).toContain('RNG variance');
+    expect(result.summary).toContain('allowed');
+    expect(result.summary).toContain('State variance');
+  });
+
+  it('should include note about RNG variance being allowed when passed', () => {
+    const results = createMockParityResults({ logicDifferences: 0 });
+    const baseline = establishBaseline(results);
+    
+    const result = detectRegressions(results, baseline);
+    
+    expect(result.summary).toContain('RNG and state divergence variance is expected and allowed');
+  });
+});

@@ -3,9 +3,9 @@
  * 
  * These tests verify universal properties that should hold for all valid inputs.
  * 
- * Feature: final-100-percent-parity
+ * Feature: fix-parity-validation
  * 
- * **Validates: Requirements 4.2**
+ * **Validates: Requirements 4.2, 6.3, 6.4**
  */
 
 import { describe, it, expect } from 'vitest';
@@ -415,6 +415,89 @@ describe('RegressionPrevention Property Tests', () => {
             baseline.classificationCounts['RNG_DIFFERENCE'] === rngCount &&
             baseline.classificationCounts['STATE_DIVERGENCE'] === stateCount &&
             baseline.classificationCounts['LOGIC_DIFFERENCE'] === logicCount
+          );
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * Feature: fix-parity-validation, Property 7: Regression Detection Fails on New Logic Differences
+   * 
+   * *For any* baseline with zero logic differences, when a new logic difference
+   * is introduced in the current results, the regression detection SHALL fail.
+   * 
+   * **Validates: Requirements 6.3**
+   */
+  it('Property 7: Regression Detection Fails on New Logic Differences', () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 0, max: 10 }), // RNG differences in baseline
+        fc.integer({ min: 0, max: 5 }),  // State divergences in baseline
+        fc.integer({ min: 1, max: 5 }),  // Number of new logic differences to inject
+        fc.integer({ min: 0, max: 15 }), // RNG differences in new results (can vary)
+        fc.integer({ min: 0, max: 8 }),  // State divergences in new results (can vary)
+        (baselineRng, baselineState, newLogicCount, newRng, newState) => {
+          // Create baseline with no logic differences
+          const baselineResultsArb = parityResultsArb(baselineRng, baselineState, 0);
+          const baselineResults = fc.sample(baselineResultsArb, 1)[0];
+          const baseline = establishBaseline(baselineResults);
+
+          // Create new results with injected logic differences
+          // RNG and state can vary freely
+          const newResultsArb = parityResultsArb(newRng, newState, newLogicCount);
+          const newResults = fc.sample(newResultsArb, 1)[0];
+
+          // Detect regressions
+          const result = detectRegressions(newResults, baseline);
+
+          // Should fail because of the new logic differences
+          // Regardless of RNG/state variance
+          return (
+            result.passed === false &&
+            result.newLogicDifferences.length === newLogicCount
+          );
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  /**
+   * Feature: fix-parity-validation, Property 8: Regression Detection Allows RNG Variance
+   * 
+   * *For any* baseline, when the current results have different RNG or state
+   * divergence counts but no new logic differences, the regression detection
+   * SHALL pass.
+   * 
+   * **Validates: Requirements 6.4**
+   */
+  it('Property 8: Regression Detection Allows RNG Variance', () => {
+    fc.assert(
+      fc.property(
+        fc.integer({ min: 0, max: 10 }), // RNG differences in baseline
+        fc.integer({ min: 0, max: 5 }),  // State divergences in baseline
+        fc.integer({ min: 0, max: 20 }), // RNG differences in new results (can be any value)
+        fc.integer({ min: 0, max: 10 }), // State divergences in new results (can be any value)
+        (baselineRng, baselineState, newRng, newState) => {
+          // Create baseline with no logic differences
+          const baselineResultsArb = parityResultsArb(baselineRng, baselineState, 0);
+          const baselineResults = fc.sample(baselineResultsArb, 1)[0];
+          const baseline = establishBaseline(baselineResults);
+
+          // Create new results with different RNG/state counts but no logic differences
+          const newResultsArb = parityResultsArb(newRng, newState, 0);
+          const newResults = fc.sample(newResultsArb, 1)[0];
+
+          // Detect regressions
+          const result = detectRegressions(newResults, baseline);
+
+          // Should pass because no new logic differences
+          // Even if RNG and state counts are completely different
+          return (
+            result.passed === true &&
+            result.newLogicDifferences.length === 0
           );
         }
       ),

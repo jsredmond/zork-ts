@@ -29,7 +29,7 @@ export interface BaselineDifference {
 
 /**
  * Baseline data structure stored in JSON
- * Requirements: 4.1
+ * Requirements: 4.1, 6.1, 6.2
  */
 export interface ParityBaseline {
   /** Version of the baseline format */
@@ -54,6 +54,25 @@ export interface ParityBaseline {
     stateDivergences: number;
     logicDifferences: number;
     overallParityPercentage: number;
+  };
+  /** 
+   * Whether this baseline uses extracted message classification
+   * Requirements: 6.1
+   */
+  usesExtractedMessages?: boolean;
+  /**
+   * Separate counts for RNG vs logic differences
+   * Requirements: 6.2
+   */
+  differenceBreakdown?: {
+    /** RNG differences that are acceptable variance */
+    rng: number;
+    /** State divergences from accumulated RNG effects */
+    state: number;
+    /** Logic differences that indicate actual bugs */
+    logic: number;
+    /** Structural differences (formatting only) */
+    structural: number;
   };
 }
 
@@ -84,7 +103,7 @@ export const DEFAULT_BASELINE_PATH = 'src/testing/parity-baseline.json';
 /**
  * Current baseline format version
  */
-export const BASELINE_VERSION = '1.0.0';
+export const BASELINE_VERSION = '2.0.0';
 
 /**
  * Generate a hash for a difference to enable comparison
@@ -116,22 +135,45 @@ export function createBaselineDifference(diff: ClassifiedDifference): BaselineDi
 
 /**
  * Establish a baseline from parity results
- * Requirements: 4.1
+ * Requirements: 4.1, 6.1, 6.2
  * 
  * @param results - Parity results to create baseline from
  * @param commitHash - Optional git commit hash
+ * @param usesExtractedMessages - Whether the results use extracted message classification
  * @returns The created baseline
  */
 export function establishBaseline(
   results: ParityResults,
-  commitHash?: string
+  commitHash?: string,
+  usesExtractedMessages: boolean = true
 ): ParityBaseline {
   const allDifferences: BaselineDifference[] = [];
+  
+  // Track difference breakdown separately
+  // Requirements: 6.2
+  let rngCount = 0;
+  let stateCount = 0;
+  let logicCount = 0;
+  let structuralCount = 0;
   
   // Collect all differences from all seeds
   for (const [, seedResult] of results.seedResults) {
     for (const diff of seedResult.differences) {
       allDifferences.push(createBaselineDifference(diff));
+      
+      // Count by classification type
+      // Requirements: 6.2
+      switch (diff.classification) {
+        case 'RNG_DIFFERENCE':
+          rngCount++;
+          break;
+        case 'STATE_DIVERGENCE':
+          stateCount++;
+          break;
+        case 'LOGIC_DIFFERENCE':
+          logicCount++;
+          break;
+      }
     }
   }
 
@@ -156,6 +198,15 @@ export function establishBaseline(
       stateDivergences: results.stateDivergences,
       logicDifferences: results.logicDifferences,
       overallParityPercentage: results.overallParityPercentage,
+    },
+    // New fields for proper classification
+    // Requirements: 6.1, 6.2
+    usesExtractedMessages,
+    differenceBreakdown: {
+      rng: rngCount,
+      state: stateCount,
+      logic: logicCount,
+      structural: structuralCount,
     },
   };
 }
@@ -211,7 +262,10 @@ export function baselineExists(filePath: string = DEFAULT_BASELINE_PATH): boolea
 
 /**
  * Detect regressions by comparing current results against baseline
- * Requirements: 4.2
+ * Requirements: 4.2, 6.3, 6.4
+ * 
+ * This function allows RNG differences to vary without failing,
+ * and only fails when new logic differences are detected.
  * 
  * @param results - Current parity results
  * @param baseline - Baseline to compare against
@@ -224,6 +278,7 @@ export function detectRegressions(
   const newLogicDifferences: ClassifiedDifference[] = [];
   
   // Collect all current logic differences
+  // Requirements: 6.3 - Only fail on new logic differences
   for (const [, seedResult] of results.seedResults) {
     for (const diff of seedResult.differences) {
       if (diff.classification === 'LOGIC_DIFFERENCE') {
@@ -237,6 +292,8 @@ export function detectRegressions(
           newLogicDifferences.push(diff);
         }
       }
+      // Requirements: 6.4 - RNG differences are allowed to vary
+      // We don't track RNG_DIFFERENCE or STATE_DIVERGENCE as regressions
     }
   }
 
@@ -303,6 +360,7 @@ function formatRegressionError(newDifferences: ClassifiedDifference[]): string {
 
 /**
  * Generate a summary of the regression comparison
+ * Requirements: 6.3, 6.4
  */
 function generateRegressionSummary(
   results: ParityResults,
@@ -310,12 +368,19 @@ function generateRegressionSummary(
   newLogicDifferences: ClassifiedDifference[],
   passed: boolean
 ): string {
+  // Calculate RNG variance (allowed to vary)
+  // Requirements: 6.4
+  const rngVariance = results.rngDifferences - baseline.summary.rngDifferences;
+  const stateVariance = results.stateDivergences - baseline.summary.stateDivergences;
+  
   const lines: string[] = [
     'Regression Detection Summary',
     '============================',
     '',
     `Baseline created: ${baseline.createdAt}`,
     `Baseline commit: ${baseline.commitHash || 'N/A'}`,
+    `Baseline version: ${baseline.version}`,
+    `Uses extracted messages: ${baseline.usesExtractedMessages ?? 'unknown'}`,
     '',
     'Baseline Statistics:',
     `  - Total differences: ${baseline.totalDifferences}`,
@@ -329,10 +394,19 @@ function generateRegressionSummary(
     `  - State divergences: ${results.stateDivergences}`,
     `  - Logic differences: ${results.logicDifferences}`,
     '',
-    `New logic differences: ${newLogicDifferences.length}`,
+    'Variance Analysis:',
+    `  - RNG variance: ${rngVariance >= 0 ? '+' : ''}${rngVariance} (allowed)`,
+    `  - State variance: ${stateVariance >= 0 ? '+' : ''}${stateVariance} (allowed)`,
+    `  - New logic differences: ${newLogicDifferences.length} (NOT allowed)`,
     '',
     `Status: ${passed ? 'PASSED ✓' : 'FAILED ✗'}`,
   ];
+
+  if (passed) {
+    lines.push('');
+    lines.push('Note: RNG and state divergence variance is expected and allowed.');
+    lines.push('Only new logic differences cause test failure.');
+  }
 
   return lines.join('\n');
 }
