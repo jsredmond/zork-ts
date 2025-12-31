@@ -1014,6 +1014,24 @@ describe('Parser', () => {
       }
     });
 
+    it('should return "You don\'t have that!" for DROP command when object not in inventory', () => {
+      // Z-Machine parity: DROP command should return "You don't have that!"
+      // instead of "You can't see any X here!" when the object is not in inventory
+      const tokens = lexer.tokenize('DROP BOTTLE');
+      const classified = tokens.map(t => ({
+        ...t,
+        type: vocabulary.lookupWord(t.word)
+      }));
+
+      const result = parser.parse(classified, testObjects);
+
+      expect('type' in result).toBe(true);
+      if ('type' in result) {
+        expect(result.type).toBe('OBJECT_NOT_FOUND');
+        expect(result.message).toBe("You don't have that!");
+      }
+    });
+
     it('should return error when object is missing after verb', () => {
       const tokens = lexer.tokenize('TAKE');
       const classified = tokens.map(t => ({

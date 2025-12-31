@@ -297,6 +297,15 @@ export class Parser {
             message: "You don't have that!"
           };
         }
+        // Special handling for DROP command
+        // Z-Machine says "You don't have that!" instead of "You can't see any X here!"
+        // when the player tries to drop an object they don't possess
+        if (verb === 'DROP' && result.type === 'OBJECT_NOT_FOUND') {
+          return {
+            type: 'OBJECT_NOT_FOUND',
+            message: "You don't have that!"
+          };
+        }
         return result; // Return error
       }
       directObject = result.object;
