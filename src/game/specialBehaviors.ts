@@ -6,7 +6,7 @@
 import { GameState } from './state.js';
 import { ActionResult } from './actions.js';
 import { GameObjectImpl } from './objects.js';
-import { ObjectFlag } from './data/flags.js';
+import { ObjectFlag, RoomFlag } from './data/flags.js';
 import { initializeCandleTimer } from '../engine/daemons.js';
 
 /**
@@ -852,7 +852,7 @@ const buttonBehavior: SpecialBehavior = {
       }
       if (directObject === 'YELLOW-BUTTON' && yellowButton) {
         const room = state.getCurrentRoom();
-        if (room?.hasFlag('ONBIT')) {
+        if (room?.hasFlag(RoomFlag.ONBIT)) {
           return 'The chests are already open.';
         }
       }

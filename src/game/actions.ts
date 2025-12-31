@@ -4,7 +4,7 @@
  */
 
 import { GameState } from './state.js';
-import { GameObjectImpl } from './objects.js';
+import { GameObject, GameObjectImpl } from './objects.js';
 import { ObjectFlag, RoomFlag } from './data/flags.js';
 import { Storage } from '../persistence/storage.js';
 import { scoreTreasure, scoreTreasureTake, TROPHY_CASE_ID, getRank, MAX_SCORE, scoreAction, calculateTotalScore } from './scoring.js';
@@ -1293,8 +1293,8 @@ export class ReadAction implements ActionHandler {
       stateChanges: takenMessage ? [{
         type: 'OBJECT_MOVED',
         objectId: objectId,
-        oldLocation: obj.location,
-        newLocation: 'PLAYER'
+        oldValue: obj.location,
+        newValue: 'PLAYER'
       }] : []
     };
   }
@@ -2559,7 +2559,7 @@ export class ClimbAction implements ActionHandler {
       if (upExit && upExit.destination) {
         // Track if room was visited before
         const newRoom = state.rooms.get(upExit.destination);
-        const wasVisited = newRoom?.hasFlag('TOUCHBIT') || false;
+        const wasVisited = newRoom?.hasFlag(RoomFlag.TOUCHBIT) || false;
         
         // Move up
         state.setCurrentRoom(upExit.destination);
@@ -4273,7 +4273,11 @@ export class DropAllAction implements ActionHandler {
       // Use ObjectInteractionManager for context-aware empty-handed message
       const objectManager = new ZMachineObjectInteraction();
       const result = objectManager.handleDropAllCommand(state);
-      return result;
+      return {
+        success: result.success,
+        message: result.message,
+        stateChanges: []
+      };
     }
 
     const messages: string[] = [];

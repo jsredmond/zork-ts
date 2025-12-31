@@ -227,7 +227,7 @@ function randomizeObjects(state: GameState): void {
   // Reset SWORD treasure value to 0
   const sword = state.getObject('SWORD');
   if (sword) {
-    sword.tvalue = 0;
+    sword.value = 0;
   }
   
   // Get all objects in inventory
@@ -246,8 +246,8 @@ function randomizeObjects(state: GameState): void {
       continue;
     }
     
-    // Treasures (tvalue > 0) go to random RLANDBIT rooms
-    if (obj.tvalue && obj.tvalue > 0) {
+    // Treasures (value > 0) go to random RLANDBIT rooms
+    if (obj.value && obj.value > 0) {
       // Pick a random RLANDBIT room using 50% probability per room
       if (rlandRooms.length > 0) {
         let placed = false;
