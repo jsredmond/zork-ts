@@ -1,0 +1,89 @@
+#!name: Edge Cases - Invalid Commands
+#!description: Tests handling of invalid and malformed commands
+
+# Start at West of House
+look
+
+# Invalid verbs
+xyzzy
+plugh
+frobnicate
+asdfgh
+qwerty
+
+# Invalid directions
+northeast
+northwest
+southeast
+southwest
+ne
+nw
+se
+sw
+
+# Invalid objects
+take unicorn
+examine dragon
+drop phoenix
+get nothing
+take everything
+
+# Malformed commands
+take
+drop
+examine
+open
+close
+put
+give
+
+# Commands with invalid prepositions
+take lamp from sky
+put sword in air
+give leaflet to nobody
+attack with nothing
+
+# Repeated words
+look look
+take take take
+go go go
+
+# Very long commands
+take the very large and extremely heavy brass lantern from the dusty old wooden table
+
+# Empty-ish commands
+.
+,
+!
+?
+
+# Numbers
+1
+123
+999
+
+# Special characters
+@
+#
+$
+%
+
+# Mixed case
+LOOK
+Look
+lOoK
+TAKE LAMP
+Take Lamp
+
+# Commands with extra spaces
+look   around
+take    lamp
+go      north
+
+# Valid commands to verify game still works
+look
+inventory
+n
+look
+s
+look

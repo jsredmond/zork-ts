@@ -1,0 +1,107 @@
+#!name: Coal Mine
+#!description: Tests the coal mine area and related puzzles
+
+# Setup - get essential items
+n
+e
+open window
+enter
+w
+take lamp
+take sword
+turn on lamp
+e
+u
+take rope
+d
+w
+move rug
+open trap door
+d
+look
+
+# Navigate to troll room and defeat troll
+n
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+
+# Navigate to coal mine entrance
+e
+n
+ne
+n
+e
+n
+look
+
+# Explore mine entrance
+examine timber
+examine basket
+examine shaft
+look
+
+# Put lamp in basket
+put lamp in basket
+look
+inventory
+
+# Lower basket
+lower basket
+look
+
+# Navigate down shaft
+n
+look
+examine coal
+take coal
+inventory
+
+# Navigate through mine
+e
+look
+ne
+look
+se
+look
+sw
+look
+d
+look
+
+# Explore ladder area
+u
+look
+w
+look
+
+# Navigate to gas room
+e
+d
+s
+look
+examine gas
+inventory
+
+# Navigate back up
+n
+u
+w
+look
+
+# Raise basket
+raise basket
+look
+take lamp
+inventory
+
+# Return to surface
+s
+look

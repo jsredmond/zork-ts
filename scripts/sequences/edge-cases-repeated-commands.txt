@@ -1,0 +1,101 @@
+#!name: Edge Cases - Repeated Commands
+#!description: Tests handling of repeated commands
+
+# Start at West of House
+look
+look
+look
+look
+look
+
+# Repeated inventory
+inventory
+inventory
+inventory
+
+# Repeated movement (should stay in same place)
+n
+n
+n
+n
+n
+
+# Go back
+s
+s
+s
+s
+s
+
+# Repeated examine
+e
+open window
+enter
+look
+examine trophy case
+examine trophy case
+examine trophy case
+
+# Repeated take (should fail after first)
+w
+take lamp
+take lamp
+take lamp
+
+# Repeated drop
+drop lamp
+drop lamp
+drop lamp
+
+# Take and drop cycle
+take lamp
+drop lamp
+take lamp
+drop lamp
+take lamp
+drop lamp
+take lamp
+
+# Repeated open/close
+e
+u
+d
+w
+move rug
+open trap door
+close trap door
+open trap door
+close trap door
+open trap door
+close trap door
+open trap door
+
+# Repeated turn on/off
+turn on lamp
+turn off lamp
+turn on lamp
+turn off lamp
+turn on lamp
+turn off lamp
+turn on lamp
+
+# Repeated wait
+wait
+wait
+wait
+wait
+wait
+
+# Repeated score
+score
+score
+score
+
+# Repeated help
+help
+help
+help
+
+# Final state check
+look
+inventory

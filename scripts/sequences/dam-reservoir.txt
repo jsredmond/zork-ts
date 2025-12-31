@@ -1,0 +1,112 @@
+#!name: Dam and Reservoir
+#!description: Tests the dam area and reservoir puzzle
+
+# Setup - get essential items
+n
+e
+open window
+enter
+w
+take lamp
+take sword
+turn on lamp
+e
+u
+take rope
+d
+w
+move rug
+open trap door
+d
+look
+
+# Navigate to troll room and defeat troll
+n
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+
+# Navigate to dam
+e
+n
+ne
+look
+examine dam
+examine control panel
+examine bolt
+examine bubble
+turn bolt
+look
+
+# Go to dam base
+n
+look
+examine pile
+take matchbook
+examine matchbook
+inventory
+
+# Go to dam lobby
+s
+e
+look
+examine guidebook
+take guidebook
+read guidebook
+inventory
+
+# Go to maintenance room
+n
+look
+examine wrench
+take wrench
+examine screwdriver
+take screwdriver
+inventory
+
+# Return to dam
+s
+w
+look
+
+# Use wrench on bolt
+turn bolt with wrench
+look
+
+# Wait for reservoir to drain
+wait
+wait
+wait
+wait
+wait
+look
+
+# Navigate to reservoir
+n
+n
+look
+examine trunk
+take trunk
+open trunk
+examine trunk
+inventory
+
+# Navigate to stream
+s
+s
+s
+look
+examine stream
+examine water
+inventory
+
+# Return to dam
+n
+look

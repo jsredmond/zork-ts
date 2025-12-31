@@ -1,0 +1,65 @@
+#!name: Troll Combat
+#!description: Tests troll combat mechanics
+
+# Setup - get essential items
+n
+e
+open window
+enter
+w
+take lamp
+take sword
+turn on lamp
+e
+u
+take rope
+d
+w
+move rug
+open trap door
+d
+look
+
+# Navigate to troll room
+n
+look
+examine troll
+examine axe
+
+# Try various combat commands
+attack troll
+attack troll with sword
+kill troll
+kill troll with sword
+hit troll
+hit troll with sword
+fight troll
+fight troll with sword
+
+# Continue attacking
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+
+# Check if troll is defeated
+look
+examine troll
+inventory
+
+# Try to take axe
+take axe
+examine axe
+inventory
+
+# Navigate past troll
+e
+look
+w
+look

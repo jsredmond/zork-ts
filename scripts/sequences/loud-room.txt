@@ -1,0 +1,116 @@
+#!name: Loud Room
+#!description: Tests the loud room puzzle
+
+# Setup - get essential items
+n
+e
+open window
+enter
+w
+take lamp
+take sword
+turn on lamp
+e
+u
+take rope
+d
+w
+move rug
+open trap door
+d
+look
+
+# Navigate to troll room and defeat troll
+n
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+attack troll with sword
+
+# Navigate to dam
+e
+n
+ne
+n
+e
+n
+look
+
+# Get wrench from maintenance room
+s
+e
+n
+take wrench
+s
+w
+look
+
+# Turn bolt to drain reservoir
+turn bolt with wrench
+look
+
+# Wait for reservoir to drain
+wait
+wait
+wait
+wait
+wait
+look
+
+# Navigate to loud room
+s
+w
+s
+w
+s
+e
+s
+w
+w
+s
+w
+look
+
+# Navigate to loud room entrance
+e
+n
+e
+n
+look
+
+# Enter loud room
+e
+look
+
+# Try various commands in loud room
+say echo
+look
+shout
+look
+yell
+look
+
+# Say echo to solve puzzle
+echo
+look
+
+# Take platinum bar
+take bar
+examine bar
+inventory
+
+# Exit loud room
+w
+look
+
+# Return to check
+e
+look
+w
+look
