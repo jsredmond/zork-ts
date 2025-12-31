@@ -119,7 +119,9 @@ describe('Comprehensive Parity Validation Tests', () => {
       );
 
       expect(result.success).toBe(false);
-      expect(result.message).toContain('You are empty-handed');
+      // Z-Machine returns "You don't have the [first object in scope]." when inventory is empty
+      // If no objects in scope, falls back to "You are empty-handed."
+      expect(result.message).toMatch(/You don't have the|You are empty-handed/);
       expect(result.parityEnhanced).toBe(true);
     });
 
@@ -477,7 +479,7 @@ describe('Specific Parity Issue Regression Tests', () => {
     {
       name: 'empty-handed "drop all" command',
       command: 'drop all',
-      expectedPattern: /You are empty-handed/
+      expectedPattern: /You don't have the|You are empty-handed/
     }
   ];
 

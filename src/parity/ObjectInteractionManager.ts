@@ -190,27 +190,28 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
   /**
    * Determines implied object from game context for enhanced error messages
    * Based on Z-Machine behavior for "drop all" when empty-handed
+   * 
+   * Z-Machine parser finds the first object in scope when no held objects match.
+   * The order is based on the room's globalObjects array order.
    */
   private getImpliedObjectFromContext(gameState: GameState): string | undefined {
     const currentRoom = gameState.getCurrentRoom();
-    if (!currentRoom || !currentRoom.globalObjects) {
+    if (!currentRoom) {
       return undefined;
     }
 
-    // Priority order for prominent objects based on Z-Machine behavior
-    const prominentObjectPriority = [
-      'FOREST',      // Forest areas - highest priority
-      'WHITE-HOUSE', // House areas - second priority
-      'TREE',        // Tree areas - third priority
-      'BOARD',       // Boarded areas
-      'BOARDED-WINDOW' // Window areas
-    ];
+    // Z-Machine returns the first object in scope
+    // Check globalObjects first (scenery objects)
+    if (currentRoom.globalObjects && currentRoom.globalObjects.length > 0) {
+      // Return the first global object's display name
+      return this.getObjectDisplayName(currentRoom.globalObjects[0]);
+    }
 
-    // Find the first prominent object that exists in this room
-    for (const objectName of prominentObjectPriority) {
-      if (currentRoom.globalObjects.includes(objectName)) {
-        // Convert object ID to display name
-        return this.getObjectDisplayName(objectName);
+    // If no global objects, check room objects
+    if (currentRoom.objects && currentRoom.objects.length > 0) {
+      const firstObj = currentRoom.objects[0];
+      if (typeof firstObj === 'string') {
+        return this.getObjectDisplayName(firstObj);
       }
     }
 
@@ -229,10 +230,32 @@ export class ZMachineObjectInteraction implements ObjectInteractionManager {
       'BOARD': 'board',
       'BOARDED-WINDOW': 'window',
       'KITCHEN-WINDOW': 'window',
-      'SONGBIRD': 'songbird'
+      'SONGBIRD': 'songbird',
+      'STAIRS': 'stairs',
+      'CHIMNEY': 'chimney',
+      'TRAP-DOOR': 'trap door',
+      'SLIDE': 'slide',
+      'GLOBAL-WATER': 'water',
+      'CRACK': 'crack',
+      'LADDER': 'ladder',
+      'RAINBOW': 'rainbow',
+      'RIVER': 'river',
+      'STREAM': 'stream',
+      'NAILS': 'nails',
+      'DOOR': 'door',
+      'GATE': 'gate',
+      'GRATING': 'grating',
+      'LEAVES': 'leaves',
+      'PILE-OF-LEAVES': 'pile of leaves',
+      'MOUNTAINS': 'mountains',
+      'PATH': 'path',
+      'CLEARING': 'clearing',
+      'HOUSE': 'house',
+      'MAILBOX': 'mailbox',
+      'SMALL-MAILBOX': 'mailbox'
     };
 
-    return displayNames[objectId] || objectId.toLowerCase().replace('-', ' ');
+    return displayNames[objectId] || objectId.toLowerCase().replace(/-/g, ' ');
   }
 
   /**

@@ -2250,7 +2250,41 @@ describe('DropAllAction', () => {
     const result = dropAllAction.execute(state);
 
     expect(result.success).toBe(false);
-    expect(result.message).toContain('empty-handed');
+    // Z-Machine returns "You don't have the [first object in scope]." when inventory is empty
+    // If no objects in scope, falls back to "You are empty-handed."
+    expect(result.message).toMatch(/You don't have the|You are empty-handed/);
+  });
+
+  it('should return "You don\'t have the [object]" matching Z-Machine behavior', async () => {
+    const { DropAllAction } = await import('./actions.js');
+    const dropAllAction = new DropAllAction();
+
+    // Create a room with globalObjects (like FOREST)
+    const forestRoom = new RoomImpl({
+      id: 'FOREST',
+      name: 'Forest',
+      description: 'A dense forest',
+      longDescription: 'You are in a dense forest.',
+      exits: [],
+      flags: [],
+      globalObjects: ['FOREST', 'TREE']
+    });
+
+    // Create a state with the forest room
+    const forestState = new GameState({
+      currentRoom: 'FOREST',
+      objects: new Map(),
+      rooms: new Map([['FOREST', forestRoom]]),
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    const result = dropAllAction.execute(forestState);
+
+    expect(result.success).toBe(false);
+    // Z-Machine returns "You don't have the forest." (first globalObject)
+    expect(result.message).toBe("You don't have the forest.");
   });
 
   it('should drop items in reverse inventory order (last acquired first)', async () => {
