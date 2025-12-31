@@ -6,6 +6,7 @@
 import { createInitialGameState, validateRoomConnections, validateObjectLocations } from './gameFactory.js';
 import { ALL_ROOMS } from '../data/rooms-complete.js';
 import { ALL_OBJECTS } from '../data/objects-complete.js';
+import { Direction } from '../rooms.js';
 
 interface VerificationReport {
   success: boolean;
@@ -224,10 +225,8 @@ export function verifyContent(): VerificationReport {
     for (const [direction, exit] of room.exits.entries()) {
       if (exit.condition) {
         conditionalExitCount++;
-        // Check if the condition flag exists in the game state
-        if (!(exit.condition in state.flags)) {
-          warnings.push(`Room ${roomId} exit ${direction} has condition ${exit.condition} which is not a known flag`);
-        }
+        // Note: exit.condition is a function, not a flag name
+        // We can't easily validate the condition without executing it
       }
     }
   }
@@ -235,17 +234,17 @@ export function verifyContent(): VerificationReport {
 
   // Check bidirectional connections
   console.log(`\n=== Checking Bidirectional Connections ===`);
-  const oppositeDirections: Record<string, string> = {
-    'NORTH': 'SOUTH',
-    'SOUTH': 'NORTH',
-    'EAST': 'WEST',
-    'WEST': 'EAST',
-    'NORTHEAST': 'SOUTHWEST',
-    'SOUTHWEST': 'NORTHEAST',
-    'NORTHWEST': 'SOUTHEAST',
-    'SOUTHEAST': 'NORTHWEST',
-    'UP': 'DOWN',
-    'DOWN': 'UP',
+  const oppositeDirections: Partial<Record<Direction, Direction>> = {
+    [Direction.NORTH]: Direction.SOUTH,
+    [Direction.SOUTH]: Direction.NORTH,
+    [Direction.EAST]: Direction.WEST,
+    [Direction.WEST]: Direction.EAST,
+    [Direction.NE]: Direction.SW,
+    [Direction.SW]: Direction.NE,
+    [Direction.NW]: Direction.SE,
+    [Direction.SE]: Direction.NW,
+    [Direction.UP]: Direction.DOWN,
+    [Direction.DOWN]: Direction.UP,
   };
 
   let bidirectionalCount = 0;

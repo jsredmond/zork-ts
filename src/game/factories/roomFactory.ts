@@ -5,7 +5,7 @@
 
 import { RoomImpl, Direction, Exit } from '../rooms.js';
 import { RoomData } from '../data/rooms.js';
-import { RoomFlag } from '../data/flags.js';
+import { RoomFlag, GlobalFlags } from '../data/flags.js';
 import { GameState } from '../state.js';
 
 /**
@@ -91,7 +91,7 @@ function createConditionFunction(condition: string, state: GameState): (() => bo
       }
       // Fallback: check for a flag with the same name
       const flagName = objectId.replace(/-/g, '_') + '_OPEN';
-      return state.getFlag(flagName);
+      return state.getFlag(flagName as keyof GlobalFlags);
     }
     
     // Default to false for unknown conditions

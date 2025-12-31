@@ -130,7 +130,7 @@ const boardHandler: SceneryHandler = {
  */
 const graniteWallHandler: SceneryHandler = {
   objectId: 'GRANITE-WALL',
-  actions: new Map([
+  actions: new Map<string, SceneryActionHandler>([
     ['TAKE', (state) => {
       if (state.currentRoom === 'SLIDE-ROOM') {
         return "The wall isn't granite.";
@@ -531,13 +531,13 @@ const stairsHandler: SceneryHandler = {
  */
 const rainbowHandler: SceneryHandler = {
   objectId: 'RAINBOW',
-  actions: new Map([
+  actions: new Map<string, SceneryActionHandler>([
     ['CROSS', (state) => {
       if (state.currentRoom === 'CANYON-VIEW') {
         return 'From here?!?';
       }
-      // Check if rainbow is solid (RAINBOW-FLAG)
-      const rainbowSolid = state.getFlag('RAINBOW-FLAG');
+      // Check if rainbow is solid (RAINBOW_FLAG)
+      const rainbowSolid = state.getFlag('RAINBOW_FLAG');
       if (rainbowSolid) {
         // This would trigger movement logic
         return "You'll have to say which way...";
@@ -548,7 +548,7 @@ const rainbowHandler: SceneryHandler = {
       if (state.currentRoom === 'CANYON-VIEW') {
         return 'From here?!?';
       }
-      const rainbowSolid = state.getFlag('RAINBOW-FLAG');
+      const rainbowSolid = state.getFlag('RAINBOW_FLAG');
       if (rainbowSolid) {
         return "You'll have to say which way...";
       }
@@ -604,7 +604,7 @@ const pathHandler: SceneryHandler = {
  */
 const kitchenWindowHandler: SceneryHandler = {
   objectId: 'KITCHEN-WINDOW',
-  actions: new Map([
+  actions: new Map<string, SceneryActionHandler>([
     ['OPEN', (state) => {
       const window = state.getObject('KITCHEN-WINDOW');
       if (!window) {
