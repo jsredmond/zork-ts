@@ -105,6 +105,46 @@ export const JUMPLOSS_POOL = [
 ];
 
 /**
+ * Atmospheric messages that appear randomly
+ * These are RNG-based and should be treated as acceptable variations
+ */
+export const ATMOSPHERIC_POOL = [
+  "You hear in the distance the chirping of a song bird.",
+  "A grue sound echoes in the distance."
+];
+
+/**
+ * Room description patterns that indicate state divergence
+ * When one output shows a room description and the other shows darkness,
+ * this indicates the game states have diverged (different lighting conditions)
+ */
+export const DARKNESS_PATTERNS = [
+  /It is pitch black/i,
+  /It's too dark to see/i,
+  /You can't see anything/i,
+  /You have moved into a dark place/i
+];
+
+/**
+ * Check if a message indicates darkness
+ */
+export function isDarknessMessage(message: string): boolean {
+  return DARKNESS_PATTERNS.some(pattern => pattern.test(message));
+}
+
+/**
+ * Check if the difference is due to lighting state divergence
+ * Returns true if one output shows a room description and the other shows darkness
+ */
+export function isLightingStateDivergence(output1: string, output2: string): boolean {
+  const isDark1 = isDarknessMessage(output1);
+  const isDark2 = isDarknessMessage(output2);
+  
+  // If one is dark and the other isn't, it's lighting state divergence
+  return isDark1 !== isDark2;
+}
+
+/**
  * Check if a message is from the YUKS pool
  * Requirements: 5.1
  */
@@ -148,6 +188,48 @@ export function isJumplossPoolMessage(message: string): boolean {
 }
 
 /**
+ * Check if a message contains atmospheric content
+ * Atmospheric messages appear randomly and should be treated as RNG differences
+ */
+export function isAtmosphericMessage(message: string): boolean {
+  const normalizedMessage = message.trim();
+  return ATMOSPHERIC_POOL.some(msg => normalizedMessage.includes(msg));
+}
+
+/**
+ * Check if the difference is only due to atmospheric message presence/absence
+ * Returns true if one output has an atmospheric message appended and the other doesn't
+ */
+export function isAtmosphericDifference(output1: string, output2: string): boolean {
+  // Check if one output contains an atmospheric message and the other doesn't
+  const has1 = isAtmosphericMessage(output1);
+  const has2 = isAtmosphericMessage(output2);
+  
+  // If both have or both don't have atmospheric messages, not an atmospheric difference
+  if (has1 === has2) {
+    return false;
+  }
+  
+  // Remove atmospheric messages from both and compare
+  const stripped1 = stripAtmosphericMessages(output1);
+  const stripped2 = stripAtmosphericMessages(output2);
+  
+  // If the stripped versions are equivalent, it's an atmospheric difference
+  return areSemanticallyEquivalent(stripped1, stripped2);
+}
+
+/**
+ * Strip atmospheric messages from output for comparison
+ */
+export function stripAtmosphericMessages(output: string): string {
+  let result = output;
+  for (const msg of ATMOSPHERIC_POOL) {
+    result = result.replace(msg, '').replace(new RegExp('\\n?' + msg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\n?', 'g'), '\n');
+  }
+  return result.trim();
+}
+
+/**
  * Check if a message is from any RNG pool
  */
 export function isRngPoolMessage(message: string): boolean {
@@ -156,7 +238,8 @@ export function isRngPoolMessage(message: string): boolean {
     isHoHumPoolMessage(message) ||
     isHellosPoolMessage(message) ||
     isWheeeePoolMessage(message) ||
-    isJumplossPoolMessage(message)
+    isJumplossPoolMessage(message) ||
+    isAtmosphericMessage(message)
   );
 }
 
@@ -324,6 +407,7 @@ export function getRngPoolName(message: string): string | null {
   if (isHellosPoolMessage(message)) return 'HELLOS';
   if (isWheeeePoolMessage(message)) return 'WHEEEEE';
   if (isJumplossPoolMessage(message)) return 'JUMPLOSS';
+  if (isAtmosphericMessage(message)) return 'ATMOSPHERIC';
   return null;
 }
 
@@ -347,6 +431,26 @@ export function classify(
     tsOutput,
     zmOutput
   };
+  
+  // Check if the difference is only due to atmospheric message presence/absence
+  // This is the most common RNG difference
+  if (isAtmosphericDifference(tsOutput, zmOutput)) {
+    return {
+      ...baseResult,
+      classification: 'RNG_DIFFERENCE',
+      reason: 'Difference is only due to atmospheric message timing (RNG-based)'
+    };
+  }
+  
+  // Check if the difference is due to lighting state divergence
+  // (one output shows room description, other shows darkness)
+  if (isLightingStateDivergence(tsOutput, zmOutput)) {
+    return {
+      ...baseResult,
+      classification: 'STATE_DIVERGENCE',
+      reason: 'Lighting state divergence - one output shows darkness, other shows room description'
+    };
+  }
   
   // Check if both outputs are from the same RNG pool
   // Requirements: 5.1, 5.2, 5.3
@@ -436,6 +540,34 @@ export function classifyExtracted(
       ...baseResult,
       classification: 'RNG_DIFFERENCE', // Treat as non-issue
       reason: 'Responses are identical after normalization'
+    };
+  }
+  
+  // Check if the difference is only due to atmospheric message presence/absence
+  // This is the most common RNG difference
+  if (isAtmosphericDifference(tsNormalized, zmNormalized)) {
+    return {
+      ...baseResult,
+      classification: 'RNG_DIFFERENCE',
+      reason: 'Difference is only due to atmospheric message timing (RNG-based)'
+    };
+  }
+  
+  // Also check original (non-normalized) responses for atmospheric differences
+  if (isAtmosphericDifference(tsExtracted.response, zmExtracted.response)) {
+    return {
+      ...baseResult,
+      classification: 'RNG_DIFFERENCE',
+      reason: 'Difference is only due to atmospheric message timing (RNG-based)'
+    };
+  }
+  
+  // Check if the difference is due to lighting state divergence
+  if (isLightingStateDivergence(tsNormalized, zmNormalized)) {
+    return {
+      ...baseResult,
+      classification: 'STATE_DIVERGENCE',
+      reason: 'Lighting state divergence - one output shows darkness, other shows room description'
     };
   }
   
@@ -639,6 +771,20 @@ export class DifferenceClassifier {
    */
   isHellosPoolMessage(message: string): boolean {
     return isHellosPoolMessage(message);
+  }
+  
+  /**
+   * Check if a message contains atmospheric content
+   */
+  isAtmosphericMessage(message: string): boolean {
+    return isAtmosphericMessage(message);
+  }
+  
+  /**
+   * Check if the difference is only due to atmospheric message presence/absence
+   */
+  isAtmosphericDifference(output1: string, output2: string): boolean {
+    return isAtmosphericDifference(output1, output2);
   }
   
   /**

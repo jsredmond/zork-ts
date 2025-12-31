@@ -196,7 +196,7 @@ export class Vocabulary {
       'WIND',
       'YELL', 'SCREAM', 'SHOUT',
       'SAY', 'ECHO', 'DANCE', 'SLEEP', 'WAKE',
-      'ULYSSES',  // Magic word that can be spoken by itself
+      'ULYSSES', 'ODYSSEUS',  // Magic words for cyclops puzzle
       'XYZZY', 'PLUGH', 'PLOVER',  // Magic words from Adventure
       'JUMP', 'LEAP', 'DIVE',
       'CURSE', 'SHIT', 'FUCK', 'DAMN',
@@ -304,7 +304,7 @@ export class Vocabulary {
       'CEILING',
       'SKY',
       'HOUSE', 'BUILDING',
-      'TREE', 'TREES',
+      'TREE', 'TREES', 'TRUNK',
       'FOREST',
       'WATER', 'STREAM', 'RIVER',
       'MAILBOX', 'BOX',
@@ -325,9 +325,9 @@ export class Vocabulary {
       'BOTTLE', 'FLASK',
       'FOOD', 'LUNCH', 'DINNER',
       'GARLIC', 'CLOVE',
-      'BOOK', 'BOOKS',
+      'BOOK', 'BOOKS', 'GUIDEBOOK',
       'CANDLES', 'CANDLE',
-      'MATCH', 'MATCHES',
+      'MATCH', 'MATCHES', 'MATCHBOOK',
       'WRENCH',
       'SCREWDRIVER',
       'HANDS', 'HAND',

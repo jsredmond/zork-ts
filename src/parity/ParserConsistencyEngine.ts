@@ -107,6 +107,7 @@ export class ParserConsistencyEngine {
     'HOUSE',
     'FOREST',
     'TREE',
+    'TRUNK',
     'DOOR',
     'WINDOW',
     'MAILBOX',
@@ -119,8 +120,10 @@ export class ParserConsistencyEngine {
     'FOOD',
     'GARLIC',
     'BOOK',
+    'GUIDEBOOK',
     'CANDLE',
     'MATCH',
+    'MATCHBOOK',
     'BELL',
     'SHOVEL',
     'COAL',
@@ -141,6 +144,8 @@ export class ParserConsistencyEngine {
     'THIEF',
     'TROLL',
     'CYCLOPS',
+    'ODYSSEUS',
+    'ULYSSES',
   ]);
 
   /**
