@@ -1,0 +1,40 @@
+{
+  "history": [
+    {
+      "parityPercentage": 85,
+      "differenceCount": 30,
+      "categoryBreakdown": {
+        "timing": 20,
+        "objectBehavior": 8,
+        "parser": 2,
+        "other": 0
+      },
+      "seed": 12345,
+      "timestamp": "2025-12-31T21:51:46.975Z"
+    }
+  ],
+  "milestones": [
+    {
+      "name": "80% Parity",
+      "targetParity": 80,
+      "achieved": true,
+      "achievedAt": "2025-12-31T21:51:46.975Z"
+    },
+    {
+      "name": "85% Parity",
+      "targetParity": 85,
+      "achieved": true,
+      "achievedAt": "2025-12-31T21:51:46.975Z"
+    },
+    {
+      "name": "90% Parity",
+      "targetParity": 90,
+      "achieved": false
+    },
+    {
+      "name": "95% Target",
+      "targetParity": 95,
+      "achieved": false
+    }
+  ]
+}
