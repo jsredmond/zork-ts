@@ -35,6 +35,8 @@ import { TrapDoorPuzzle, GratingPuzzle, CoffinPuzzle, MagicWordPuzzle, BellPuzzl
 import { executePlayerAttack, executeVillainAttack } from '../engine/combat.js';
 import { getVillainData } from '../engine/villainData.js';
 import { ZMachineObjectInteraction } from '../parity/ObjectInteractionManager.js';
+import { Vocabulary } from '../parser/vocabulary.js';
+import { TokenType } from '../parser/lexer.js';
 
 export interface StateChange {
   type: string;
@@ -3358,8 +3360,22 @@ export class DeflateAction implements ActionHandler {
 /**
  * SAY action handler
  * Player says a word or phrase
+ * 
+ * Z-Machine behavior:
+ * - "say" alone → "Say what?"
+ * - "say <known-verb/direction>" → "You used the word "X" in a way that I don't understand."
+ * - "say <unknown-word>" → "I don't know the word "X"."
+ * - "say <noun>" → "That sentence isn't one I recognize."
+ * - "say <article>" → "Say what?"
+ * - Magic words (like ULYSSES in cyclops room) are handled by MagicWordPuzzle
  */
 export class SayAction implements ActionHandler {
+  private vocabulary: Vocabulary;
+
+  constructor() {
+    this.vocabulary = new Vocabulary();
+  }
+
   execute(state: GameState, word?: string, indirectObjectId?: string, preposition?: string, rawInput?: string): ActionResult {
     if (!word && !rawInput) {
       return {
@@ -3369,18 +3385,70 @@ export class SayAction implements ActionHandler {
       };
     }
 
-    // If we have raw input, handle easter egg case (echo what was said)
+    // If we have raw input, parse the word after "say"
     if (rawInput) {
       const sayIndex = rawInput.toLowerCase().indexOf('say');
       if (sayIndex !== -1) {
         const textToSay = rawInput.substring(sayIndex + 3).trim();
-        if (textToSay) {
+        
+        // If nothing after "say", return "Say what?"
+        if (!textToSay) {
           return {
-            success: true,
-            message: `Okay.\n"${textToSay.charAt(0).toUpperCase() + textToSay.slice(1)}"`,
+            success: false,
+            message: "Say what?",
             stateChanges: []
           };
         }
+
+        // Get the first word after "say"
+        const firstWord = textToSay.split(/\s+/)[0].toUpperCase();
+        
+        // Check if it's the magic word ULYSSES in the cyclops room
+        if (firstWord === 'ULYSSES') {
+          const magicResult = MagicWordPuzzle.sayMagicWord(state, firstWord);
+          // Only use magic result if it actually did something (cyclops fled)
+          if (magicResult.message !== "Nothing happens.") {
+            return magicResult;
+          }
+          // Otherwise, fall through to return "You used the word in a way I don't understand"
+        }
+
+        // Look up the word type in vocabulary
+        const wordType = this.vocabulary.lookupWord(firstWord);
+
+        // If word is unknown, return "I don't know the word"
+        if (wordType === TokenType.UNKNOWN) {
+          return {
+            success: false,
+            message: `I don't know the word "${firstWord.toLowerCase()}".`,
+            stateChanges: []
+          };
+        }
+
+        // If word is an article, treat as no argument
+        if (wordType === TokenType.ARTICLE) {
+          return {
+            success: false,
+            message: "Say what?",
+            stateChanges: []
+          };
+        }
+
+        // If word is a noun, return "That sentence isn't one I recognize."
+        if (wordType === TokenType.NOUN || wordType === TokenType.ADJECTIVE) {
+          return {
+            success: false,
+            message: "That sentence isn't one I recognize.",
+            stateChanges: []
+          };
+        }
+
+        // For known words (verbs, directions, prepositions, etc.), return "You used the word in a way I don't understand"
+        return {
+          success: false,
+          message: `You used the word "${firstWord.toLowerCase()}" in a way that I don't understand.`,
+          stateChanges: []
+        };
       }
     }
 

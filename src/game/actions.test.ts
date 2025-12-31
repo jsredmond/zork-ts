@@ -2890,3 +2890,87 @@ describe('Property Test: Perfect Minor Sequence Parity Achievement', () => {
     );
   });
 });
+
+// Import SayAction for testing
+import { SayAction } from './actions.js';
+
+describe('SayAction', () => {
+  let state: GameState;
+  let sayAction: SayAction;
+
+  beforeEach(() => {
+    // Create a simple test state
+    const rooms = new Map([
+      ['TEST-ROOM', new RoomImpl({
+        id: 'TEST-ROOM',
+        name: 'Test Room',
+        description: 'A test room',
+        exits: new Map(),
+        flags: [RoomFlag.ONBIT]
+      })]
+    ]);
+
+    const objects = new Map();
+    state = new GameState({
+      currentRoom: 'TEST-ROOM',
+      objects,
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    sayAction = new SayAction();
+  });
+
+  describe('Z-Machine parity for "say" command', () => {
+    it('should return "Say what?" when no argument is provided', () => {
+      const result = sayAction.execute(state, undefined, undefined, undefined, 'say');
+      expect(result.success).toBe(false);
+      expect(result.message).toBe('Say what?');
+    });
+
+    it('should return "You used the word X in a way that I don\'t understand" for known verbs', () => {
+      const result = sayAction.execute(state, undefined, undefined, undefined, 'say hello');
+      expect(result.success).toBe(false);
+      expect(result.message).toBe('You used the word "hello" in a way that I don\'t understand.');
+    });
+
+    it('should return "You used the word X in a way that I don\'t understand" for "say hi"', () => {
+      const result = sayAction.execute(state, undefined, undefined, undefined, 'say hi');
+      expect(result.success).toBe(false);
+      expect(result.message).toBe('You used the word "hi" in a way that I don\'t understand.');
+    });
+
+    it('should return "You used the word X in a way that I don\'t understand" for directions', () => {
+      const result = sayAction.execute(state, undefined, undefined, undefined, 'say north');
+      expect(result.success).toBe(false);
+      expect(result.message).toBe('You used the word "north" in a way that I don\'t understand.');
+    });
+
+    it('should return "I don\'t know the word X" for unknown words', () => {
+      const result = sayAction.execute(state, undefined, undefined, undefined, 'say xyzzy123');
+      expect(result.success).toBe(false);
+      expect(result.message).toBe('I don\'t know the word "xyzzy123".');
+    });
+
+    it('should return "That sentence isn\'t one I recognize" for nouns', () => {
+      const result = sayAction.execute(state, undefined, undefined, undefined, 'say lamp');
+      expect(result.success).toBe(false);
+      expect(result.message).toBe("That sentence isn't one I recognize.");
+    });
+
+    it('should return "Say what?" for articles only', () => {
+      const result = sayAction.execute(state, undefined, undefined, undefined, 'say the');
+      expect(result.success).toBe(false);
+      expect(result.message).toBe('Say what?');
+    });
+
+    it('should return "You used the word X in a way that I don\'t understand" for "say ulysses" outside cyclops room', () => {
+      // Outside cyclops room, ulysses should be treated as a known word used incorrectly
+      const result = sayAction.execute(state, undefined, undefined, undefined, 'say ulysses');
+      expect(result.success).toBe(false);
+      expect(result.message).toBe('You used the word "ulysses" in a way that I don\'t understand.');
+    });
+  });
+});
