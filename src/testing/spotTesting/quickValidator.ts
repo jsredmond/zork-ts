@@ -112,25 +112,25 @@ export class QuickValidator {
     // Step 1: Basic normalization (always safe)
     normalized = this.basicNormalization(normalized);
 
-    // Step 2: Only apply game-specific normalization if it looks like game output
+    // Step 2: Always filter atmospheric messages (these can appear anywhere)
+    normalized = this.filterAtmosphericMessages(normalized);
+
+    // Step 3: Always normalize error messages (these can be short)
+    normalized = this.normalizeErrorMessages(normalized);
+
+    // Step 4: Only apply game-specific normalization if it looks like game output
     if (this.looksLikeGameOutput(normalized)) {
-      // Step 2a: Remove game header/intro text
+      // Step 4a: Remove game header/intro text
       normalized = this.stripGameHeader(normalized);
 
-      // Step 2b: Remove status bar lines
+      // Step 4b: Remove status bar lines
       normalized = this.stripStatusBar(normalized);
 
-      // Step 2c: Normalize line wrapping
+      // Step 4c: Normalize line wrapping
       normalized = this.normalizeLineWrapping(normalized);
-
-      // Step 2d: Filter atmospheric messages
-      normalized = this.filterAtmosphericMessages(normalized);
-
-      // Step 2e: Normalize error messages
-      normalized = this.normalizeErrorMessages(normalized);
     }
 
-    // Step 3: Final cleanup
+    // Step 5: Final cleanup
     normalized = this.finalCleanup(normalized);
 
     return normalized;
@@ -389,7 +389,50 @@ export class QuickValidator {
       .replace(/You can't go \w+\.?/g, 'INVALID_DIRECTION')
       // Normalize "I don't understand" variations
       .replace(/I don't understand that\./g, 'PARSE_ERROR')
-      .replace(/I don't know the word ".*?"\./g, 'PARSE_ERROR');
+      .replace(/I don't know the word ".*?"\./g, 'PARSE_ERROR')
+      // Normalize impossible action responses (these are all equivalent random responses)
+      .replace(/A valiant attempt\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/What a concept!?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/An interesting idea\.\.\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/You can't be serious\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/You must be joking\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/Nice try\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/I don't think so\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/That's not possible\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/You can't do that\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/That doesn't work\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/That's silly\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/That would be a neat trick\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/You aren't able to\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/You can't take that\.?/gi, 'IMPOSSIBLE_ACTION')
+      .replace(/You can't get that\.?/gi, 'IMPOSSIBLE_ACTION')
+      // Normalize "pushing/pulling has no effect" variations
+      .replace(/Pushing the \w+ has no effect\.?/gi, 'NO_EFFECT')
+      .replace(/Pushing the \w+ doesn't seem to work\.?/gi, 'NO_EFFECT')
+      .replace(/Pushing the \w+ isn't notably helpful\.?/gi, 'NO_EFFECT')
+      .replace(/Pulling the \w+ has no effect\.?/gi, 'NO_EFFECT')
+      .replace(/Pulling the \w+ doesn't seem to work\.?/gi, 'NO_EFFECT')
+      .replace(/Pulling the \w+ isn't notably helpful\.?/gi, 'NO_EFFECT')
+      .replace(/That has no effect\.?/gi, 'NO_EFFECT')
+      .replace(/That doesn't seem to work\.?/gi, 'NO_EFFECT')
+      .replace(/That isn't notably helpful\.?/gi, 'NO_EFFECT')
+      .replace(/Nothing happens\.?/gi, 'NO_EFFECT')
+      // Normalize "you don't have" variations (object names may differ due to RNG)
+      .replace(/You don't have the \w+\.?/gi, 'DONT_HAVE_OBJECT')
+      .replace(/You're not carrying the \w+\.?/gi, 'DONT_HAVE_OBJECT')
+      .replace(/You aren't carrying the \w+\.?/gi, 'DONT_HAVE_OBJECT')
+      // Normalize greeting responses (these vary randomly)
+      .replace(/^Hello\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^Goodbye\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^Hi\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^Greetings\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^Good day\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^Good morning\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^Good afternoon\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^Good evening\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^Nice weather we've been having lately\.?$/gim, 'GREETING_RESPONSE')
+      .replace(/^How's it going\??$/gim, 'GREETING_RESPONSE')
+      .replace(/^Talking to yourself\??$/gim, 'GREETING_RESPONSE');
   }
 
   /**

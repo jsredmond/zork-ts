@@ -255,16 +255,17 @@ function optionsToConfig(options: CLIOptions) {
 /**
  * Format test results for output
  */
-function formatResults(result: any, format: string = 'text'): string {
+function formatResults(result: any, format: string = 'text', passThreshold?: number): string {
+  const threshold = passThreshold ?? 95;
   switch (format) {
     case 'json':
-      return JSON.stringify(result, null, 2);
+      return JSON.stringify({ ...result, passThreshold: threshold }, null, 2);
     
     case 'junit':
-      const passed = result.parityScore >= result.passThreshold;
+      const passed = result.parityScore >= threshold;
       const testCase = `
     <testcase name="spot-parity-test" classname="SpotTesting" time="${result.executionTime / 1000}">
-      ${passed ? '' : `<failure message="Parity below threshold: ${result.parityScore}% < ${result.passThreshold}%">${result.differences.length} differences found</failure>`}
+      ${passed ? '' : `<failure message="Parity below threshold: ${result.parityScore}% < ${threshold}%">${result.differences.length} differences found</failure>`}
     </testcase>`;
       
       return `<?xml version="1.0" encoding="UTF-8"?>
@@ -273,15 +274,16 @@ ${testCase}
 </testsuite>`;
     
     default: // text
-      return formatTextResults(result);
+      return formatTextResults(result, threshold);
   }
 }
 
 /**
  * Format results as human-readable text
  */
-function formatTextResults(result: any): string {
+function formatTextResults(result: any, passThreshold?: number): string {
   const lines: string[] = [];
+  const threshold = passThreshold ?? result.passThreshold ?? 95;
   
   lines.push('='.repeat(60));
   lines.push('ZORK I RANDOM PARITY SPOT TEST RESULTS');
@@ -293,11 +295,11 @@ function formatTextResults(result: any): string {
   lines.push(`Execution Time: ${(result.executionTime / 1000).toFixed(2)}s`);
   lines.push(`Differences Found: ${result.differences.length}`);
   lines.push(`Parity Score: ${result.parityScore.toFixed(1)}%`);
-  lines.push(`Pass Threshold: ${result.passThreshold}%`);
+  lines.push(`Pass Threshold: ${threshold}%`);
   lines.push('');
   
   // Pass/Fail status
-  const passed = result.parityScore >= result.passThreshold;
+  const passed = result.parityScore >= threshold;
   lines.push(`Status: ${passed ? '✅ PASSED' : '❌ FAILED'}`);
   lines.push('');
   
@@ -377,13 +379,16 @@ async function main(): Promise<void> {
     const runner = new SpotTestRunner();
     const result = await runner.runSpotTest(configManager.getConfig());
     
+    // Get the pass threshold from config
+    const passThreshold = configManager.getConfig().passThreshold;
+    
     // Format and display results
     const outputFormat = options.output || 'text';
-    const formattedResults = formatResults(result, outputFormat);
+    const formattedResults = formatResults(result, outputFormat, passThreshold);
     console.log(formattedResults);
     
     // Exit with appropriate code
-    const passed = result.parityScore >= configManager.getConfig().passThreshold;
+    const passed = result.parityScore >= passThreshold;
     process.exit(passed ? 0 : 1);
     
   } catch (error) {
