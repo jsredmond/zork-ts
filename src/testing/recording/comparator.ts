@@ -19,6 +19,61 @@ import {
   DiffSummary,
 } from './types';
 
+import {
+  MessageExtractor,
+  ExtractedMessage,
+  extractActionResponse,
+  createMessageExtractor,
+} from './messageExtractor';
+
+import {
+  DifferenceClassifier,
+  ClassifiedDifference,
+  DifferenceType,
+  createDifferenceClassifier,
+  areSemanticallyEquivalent,
+  normalizeResponse,
+  areBothFromSameRngPool,
+} from '../differenceClassifier';
+
+/**
+ * Known equivalent message pairs
+ * These are messages that have different wording but the same semantic meaning
+ * Requirements: 3.4
+ */
+const KNOWN_EQUIVALENT_PAIRS: Array<[RegExp, RegExp]> = [
+  // "You can't see X here" variations
+  [/You can't see any \w+ here[.!]?/i, /I don't see any \w+ here[.!]?/i],
+  [/You can't see any \w+ here[.!]?/i, /There is no \w+ here[.!]?/i],
+  [/I don't see any \w+ here[.!]?/i, /There is no \w+ here[.!]?/i],
+  
+  // "You can't go that way" variations
+  [/You can't go that way[.!]?/i, /You cannot go that way[.!]?/i],
+  [/You can't go that way[.!]?/i, /There is no way to go in that direction[.!]?/i],
+  
+  // "I don't understand" variations
+  [/I don't understand that[.!]?/i, /I don't know what you mean[.!]?/i],
+  [/I don't understand that[.!]?/i, /That sentence isn't one I recognize[.!]?/i],
+  
+  // "You are empty-handed" variations
+  [/You are empty-handed[.!]?/i, /You aren't carrying anything[.!]?/i],
+  [/You are empty-handed[.!]?/i, /You have nothing[.!]?/i],
+  
+  // "Taken" variations
+  [/^Taken[.!]?$/i, /^OK[.!]?$/i],
+  
+  // "Dropped" variations
+  [/^Dropped[.!]?$/i, /^OK[.!]?$/i],
+  
+  // "It's too dark" variations
+  [/It is pitch black[.!]?/i, /It's too dark to see[.!]?/i],
+  [/It is pitch black[.!]?/i, /You can't see anything[.!]?/i],
+  
+  // "Nothing happens" variations
+  [/Nothing happens[.!]?/i, /Nothing special happens[.!]?/i],
+  [/Nothing happens[.!]?/i, /That doesn't seem to do anything[.!]?/i],
+];
+
 /**
  * Default comparison options
  */
@@ -45,13 +100,56 @@ const DEFAULT_ENHANCED_OPTIONS: Required<EnhancedComparisonOptions> = {
 };
 
 /**
+ * Extended comparison options with message extraction support
+ */
+export interface ExtendedComparisonOptions extends EnhancedComparisonOptions {
+  /** Use message extraction to isolate action responses before comparison */
+  useMessageExtraction?: boolean;
+  /** Track structural vs behavioral differences separately */
+  trackDifferenceTypes?: boolean;
+}
+
+/**
+ * Default extended comparison options
+ */
+const DEFAULT_EXTENDED_OPTIONS: Required<ExtendedComparisonOptions> = {
+  ...DEFAULT_ENHANCED_OPTIONS,
+  useMessageExtraction: false,
+  trackDifferenceTypes: false,
+};
+
+/**
+ * Extended diff report with structural vs behavioral breakdown
+ */
+export interface ExtendedDiffReport extends DiffReport {
+  /** Number of structural differences (formatting, whitespace, headers) */
+  structuralDifferences: number;
+  /** Number of behavioral differences (actual logic) */
+  behavioralDifferences: number;
+  /** Number of RNG differences */
+  rngDifferences: number;
+  /** Breakdown by difference type */
+  differenceBreakdown: {
+    rng: number;
+    structural: number;
+    behavioral: number;
+  };
+  /** Classified differences with type information */
+  classifiedDifferences?: ClassifiedDifference[];
+}
+
+/**
  * Compares two transcripts and produces diff reports
  */
 export class TranscriptComparator {
-  private options: Required<EnhancedComparisonOptions>;
+  private options: Required<ExtendedComparisonOptions>;
+  private messageExtractor: MessageExtractor;
+  private differenceClassifier: DifferenceClassifier;
 
-  constructor(options?: ComparisonOptions | EnhancedComparisonOptions) {
-    this.options = { ...DEFAULT_ENHANCED_OPTIONS, ...options };
+  constructor(options?: ComparisonOptions | EnhancedComparisonOptions | ExtendedComparisonOptions) {
+    this.options = { ...DEFAULT_EXTENDED_OPTIONS, ...options };
+    this.messageExtractor = createMessageExtractor();
+    this.differenceClassifier = createDifferenceClassifier();
   }
 
   /**
@@ -189,6 +287,205 @@ export class TranscriptComparator {
       parityScore,
       summary: this.summarizeDifferences(differences),
     };
+  }
+
+  /**
+   * Compare two transcripts using message extraction and classification
+   * This method extracts action responses before comparison and classifies
+   * differences as RNG, structural, or behavioral.
+   * 
+   * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5
+   * 
+   * @param transcriptA - First transcript (typically TypeScript implementation)
+   * @param transcriptB - Second transcript (typically Z-Machine implementation)
+   * @param options - Comparison options
+   * @returns Extended diff report with classification breakdown
+   */
+  compareAndClassify(
+    transcriptA: Transcript,
+    transcriptB: Transcript,
+    options?: ExtendedComparisonOptions
+  ): ExtendedDiffReport {
+    const opts = { ...this.options, ...options, useMessageExtraction: true, trackDifferenceTypes: true };
+    
+    // Reset the classifier for a fresh comparison
+    this.differenceClassifier.reset();
+    
+    const differences: DiffEntry[] = [];
+    const classifiedDifferences: ClassifiedDifference[] = [];
+    let exactMatches = 0;
+    let closeMatches = 0;
+    let structuralDifferences = 0;
+    let behavioralDifferences = 0;
+    let rngDifferences = 0;
+
+    // Get the maximum length to compare
+    const maxLength = Math.max(
+      transcriptA.entries.length,
+      transcriptB.entries.length
+    );
+
+    for (let i = 0; i < maxLength; i++) {
+      const entryA = transcriptA.entries[i];
+      const entryB = transcriptB.entries[i];
+
+      if (!entryA || !entryB) {
+        // One transcript is shorter - this is a critical difference
+        differences.push(this.createMissingEntryDiff(i, entryA, entryB));
+        behavioralDifferences++;
+        continue;
+      }
+
+      // Extract action responses using MessageExtractor
+      const extractedA = this.messageExtractor.extractActionResponse(entryA.output, entryA.command);
+      const extractedB = this.messageExtractor.extractActionResponse(entryB.output, entryB.command);
+
+      // Normalize the extracted responses
+      let responseA = extractedA.response;
+      let responseB = extractedB.response;
+
+      // Apply additional normalization if needed
+      if (opts.normalizeWhitespace) {
+        responseA = this.normalizeOutput(responseA);
+        responseB = this.normalizeOutput(responseB);
+      }
+
+      // Check for exact match after extraction
+      if (responseA === responseB) {
+        exactMatches++;
+        continue;
+      }
+
+      // Check for semantic equivalence
+      if (this.areSemanticallyEquivalent(responseA, responseB)) {
+        exactMatches++;
+        continue;
+      }
+
+      // Calculate similarity
+      const similarity = this.calculateSimilarity(responseA, responseB);
+
+      // Check if it's a close match (above tolerance)
+      if (similarity >= opts.toleranceThreshold) {
+        closeMatches++;
+        structuralDifferences++;
+        continue;
+      }
+
+      // Classify the difference using the classifier
+      const classified = this.differenceClassifier.classifyExtracted(
+        extractedA,
+        extractedB,
+        entryA.command,
+        i
+      );
+
+      classifiedDifferences.push(classified);
+
+      // Track difference types
+      switch (classified.classification) {
+        case 'RNG_DIFFERENCE':
+          rngDifferences++;
+          // RNG differences are acceptable, count as close match
+          closeMatches++;
+          break;
+        case 'STATE_DIVERGENCE':
+          // State divergence is a consequence of RNG, count as close match
+          closeMatches++;
+          rngDifferences++;
+          break;
+        case 'LOGIC_DIFFERENCE':
+          behavioralDifferences++;
+          // Record the difference
+          const diff = this.createDiffEntry(
+            i,
+            entryA.command,
+            responseA,
+            responseB,
+            similarity,
+            opts
+          );
+          differences.push(diff);
+          break;
+      }
+    }
+
+    const totalCommands = maxLength;
+    const parityScore = this.calculateParityScore(
+      exactMatches,
+      closeMatches,
+      totalCommands
+    );
+
+    return {
+      transcriptA: transcriptA.id,
+      transcriptB: transcriptB.id,
+      totalCommands,
+      exactMatches,
+      closeMatches,
+      differences,
+      parityScore,
+      summary: this.summarizeDifferences(differences),
+      structuralDifferences,
+      behavioralDifferences,
+      rngDifferences,
+      differenceBreakdown: {
+        rng: rngDifferences,
+        structural: structuralDifferences,
+        behavioral: behavioralDifferences,
+      },
+      classifiedDifferences,
+    };
+  }
+
+  /**
+   * Check if two responses are semantically equivalent
+   * Handles common variations in message formatting and known equivalent pairs
+   * Requirements: 3.4
+   * 
+   * @param response1 - First response
+   * @param response2 - Second response
+   * @returns true if responses are semantically equivalent
+   */
+  areSemanticallyEquivalent(response1: string, response2: string): boolean {
+    // First check using the base implementation
+    if (areSemanticallyEquivalent(response1, response2)) {
+      return true;
+    }
+    
+    // Check if both are from the same RNG pool
+    if (areBothFromSameRngPool(response1, response2)) {
+      return true;
+    }
+    
+    // Check known equivalent pairs
+    return this.areKnownEquivalentPair(response1, response2);
+  }
+
+  /**
+   * Check if two responses match any known equivalent pair patterns
+   * Requirements: 3.4
+   * 
+   * @param response1 - First response
+   * @param response2 - Second response
+   * @returns true if responses match a known equivalent pair
+   */
+  private areKnownEquivalentPair(response1: string, response2: string): boolean {
+    const norm1 = response1.trim();
+    const norm2 = response2.trim();
+    
+    for (const [pattern1, pattern2] of KNOWN_EQUIVALENT_PAIRS) {
+      // Check if response1 matches pattern1 and response2 matches pattern2
+      if (pattern1.test(norm1) && pattern2.test(norm2)) {
+        return true;
+      }
+      // Check the reverse
+      if (pattern2.test(norm1) && pattern1.test(norm2)) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
 
@@ -613,21 +910,46 @@ export class TranscriptComparator {
   /**
    * Get the current options
    */
-  getOptions(): Required<EnhancedComparisonOptions> {
+  getOptions(): Required<ExtendedComparisonOptions> {
     return { ...this.options };
   }
 
   /**
    * Update options
    */
-  setOptions(options: ComparisonOptions | EnhancedComparisonOptions): void {
+  setOptions(options: ComparisonOptions | EnhancedComparisonOptions | ExtendedComparisonOptions): void {
     this.options = { ...this.options, ...options };
+  }
+
+  /**
+   * Get the message extractor instance
+   */
+  getMessageExtractor(): MessageExtractor {
+    return this.messageExtractor;
+  }
+
+  /**
+   * Get the difference classifier instance
+   */
+  getDifferenceClassifier(): DifferenceClassifier {
+    return this.differenceClassifier;
   }
 }
 
 /**
  * Factory function to create a comparator with default options
  */
-export function createComparator(options?: ComparisonOptions | EnhancedComparisonOptions): TranscriptComparator {
+export function createComparator(options?: ComparisonOptions | EnhancedComparisonOptions | ExtendedComparisonOptions): TranscriptComparator {
   return new TranscriptComparator(options);
+}
+
+/**
+ * Factory function to create a comparator with message extraction enabled
+ */
+export function createExtractingComparator(options?: ExtendedComparisonOptions): TranscriptComparator {
+  return new TranscriptComparator({
+    ...options,
+    useMessageExtraction: true,
+    trackDifferenceTypes: true,
+  });
 }

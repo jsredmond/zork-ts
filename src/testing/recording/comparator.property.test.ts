@@ -371,3 +371,391 @@ describe('TranscriptComparator Parity Score Property Tests', () => {
     }
   });
 });
+
+
+describe('TranscriptComparator Structural Difference Property Tests', () => {
+  /**
+   * Feature: fix-parity-validation, Property 6: Structural Differences Ignored
+   * 
+   * For any pair of outputs that differ only in headers, whitespace, line wrapping,
+   * or prompt formatting, the comparator SHALL consider them matching.
+   * 
+   * **Validates: Requirements 3.1, 3.2, 3.3, 3.4**
+   */
+  describe('Property 6: Structural Differences Ignored', () => {
+    /**
+     * Generator for game headers
+     */
+    const gameHeaderArb = fc.constantFrom(
+      'ZORK I: The Great Underground Empire\nCopyright (c) 1981, 1982, 1983 Infocom, Inc.\n',
+      'ZORK I: The Great Underground Empire\n',
+      'Copyright (c) 1981, 1982, 1983 Infocom, Inc.\nAll rights reserved.\n',
+      'Release 88 / Serial number 840726\n',
+      ''
+    );
+
+    /**
+     * Generator for status bars
+     */
+    const statusBarArb = fc.constantFrom(
+      'West of House                                    Score: 0        Moves: 1\n',
+      'North of House                                   Score: 10       Moves: 5\n',
+      'Living Room                                      Score: 25       Moves: 100\n',
+      ''
+    );
+
+    /**
+     * Generator for prompts
+     */
+    const promptArb = fc.constantFrom(
+      '\n>',
+      '\n> ',
+      '>\n',
+      ''
+    );
+
+    /**
+     * Generator for core action responses
+     */
+    const actionResponseArb = fc.constantFrom(
+      'Taken.',
+      'Dropped.',
+      'You are empty-handed.',
+      'It is pitch black. You are likely to be eaten by a grue.',
+      'You are standing in an open field west of a white house.',
+      'The door is locked.',
+      'Nothing happens.',
+      'OK.'
+    );
+
+    /**
+     * Generator for whitespace variations
+     */
+    const whitespaceVariationArb = fc.constantFrom(
+      '',
+      ' ',
+      '  ',
+      '\n',
+      '\n\n',
+      '   \n'
+    );
+
+    it('should match outputs that differ only in game headers', async () => {
+      const comparator = new TranscriptComparator();
+
+      await fc.assert(
+        fc.asyncProperty(
+          gameHeaderArb,
+          actionResponseArb,
+          async (header, response) => {
+            // Create output with header
+            const outputWithHeader = header + response;
+            // Create output without header
+            const outputWithoutHeader = response;
+
+            const transcriptA = {
+              id: 'zm-test',
+              source: 'z-machine' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithHeader,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const transcriptB = {
+              id: 'ts-test',
+              source: 'typescript' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithoutHeader,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+            // Property: Outputs differing only in headers should match
+            // Either exact match or no behavioral differences
+            return report.exactMatches === 1 || report.behavioralDifferences === 0;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('should match outputs that differ only in status bars', async () => {
+      const comparator = new TranscriptComparator();
+
+      await fc.assert(
+        fc.asyncProperty(
+          statusBarArb,
+          actionResponseArb,
+          async (statusBar, response) => {
+            // Create output with status bar
+            const outputWithStatusBar = statusBar + response;
+            // Create output without status bar
+            const outputWithoutStatusBar = response;
+
+            const transcriptA = {
+              id: 'zm-test',
+              source: 'z-machine' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithStatusBar,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const transcriptB = {
+              id: 'ts-test',
+              source: 'typescript' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithoutStatusBar,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+            // Property: Outputs differing only in status bars should match
+            return report.exactMatches === 1 || report.behavioralDifferences === 0;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('should match outputs that differ only in prompts', async () => {
+      const comparator = new TranscriptComparator();
+
+      await fc.assert(
+        fc.asyncProperty(
+          promptArb,
+          actionResponseArb,
+          async (prompt, response) => {
+            // Create output with prompt
+            const outputWithPrompt = response + prompt;
+            // Create output without prompt
+            const outputWithoutPrompt = response;
+
+            const transcriptA = {
+              id: 'zm-test',
+              source: 'z-machine' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithPrompt,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const transcriptB = {
+              id: 'ts-test',
+              source: 'typescript' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithoutPrompt,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+            // Property: Outputs differing only in prompts should match
+            return report.exactMatches === 1 || report.behavioralDifferences === 0;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('should match outputs that differ only in whitespace', async () => {
+      const comparator = new TranscriptComparator();
+
+      await fc.assert(
+        fc.asyncProperty(
+          whitespaceVariationArb,
+          whitespaceVariationArb,
+          actionResponseArb,
+          async (leadingWs, trailingWs, response) => {
+            // Create output with extra whitespace
+            const outputWithWhitespace = leadingWs + response + trailingWs;
+            // Create output without extra whitespace
+            const outputWithoutWhitespace = response;
+
+            const transcriptA = {
+              id: 'zm-test',
+              source: 'z-machine' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithWhitespace,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const transcriptB = {
+              id: 'ts-test',
+              source: 'typescript' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithoutWhitespace,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+            // Property: Outputs differing only in whitespace should match
+            return report.exactMatches === 1 || report.behavioralDifferences === 0;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('should match outputs that differ in multiple structural elements', async () => {
+      const comparator = new TranscriptComparator();
+
+      await fc.assert(
+        fc.asyncProperty(
+          gameHeaderArb,
+          statusBarArb,
+          promptArb,
+          whitespaceVariationArb,
+          actionResponseArb,
+          async (header, statusBar, prompt, ws, response) => {
+            // Create output with all structural elements
+            const outputWithStructure = header + statusBar + ws + response + prompt;
+            // Create output without structural elements
+            const outputWithoutStructure = response;
+
+            const transcriptA = {
+              id: 'zm-test',
+              source: 'z-machine' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithStructure,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const transcriptB = {
+              id: 'ts-test',
+              source: 'typescript' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputWithoutStructure,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+            // Property: Outputs differing only in structural elements should match
+            return report.exactMatches === 1 || report.behavioralDifferences === 0;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+
+    it('should still detect real behavioral differences', async () => {
+      const comparator = new TranscriptComparator();
+
+      // Generator for pairs of different responses
+      const differentResponsePairArb = fc.tuple(
+        fc.constantFrom('Taken.', 'Dropped.', 'OK.'),
+        fc.constantFrom('The door is locked.', 'Nothing happens.', 'You are empty-handed.')
+      ).filter(([a, b]) => a !== b);
+
+      await fc.assert(
+        fc.asyncProperty(
+          gameHeaderArb,
+          statusBarArb,
+          differentResponsePairArb,
+          async (header, statusBar, [responseA, responseB]) => {
+            // Create outputs with different core responses
+            const outputA = header + statusBar + responseA;
+            const outputB = responseB;
+
+            const transcriptA = {
+              id: 'zm-test',
+              source: 'z-machine' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputA,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const transcriptB = {
+              id: 'ts-test',
+              source: 'typescript' as const,
+              startTime: new Date(),
+              endTime: new Date(),
+              entries: [{
+                index: 0,
+                command: 'test',
+                output: outputB,
+                turnNumber: 0,
+              }],
+              metadata: {},
+            };
+
+            const report = comparator.compareAndClassify(transcriptA, transcriptB);
+
+            // Property: Different core responses should be detected as differences
+            // (not exact matches)
+            return report.exactMatches === 0;
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+});

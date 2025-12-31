@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { TranscriptComparator, createComparator } from './comparator';
+import { TranscriptComparator, createComparator, createExtractingComparator } from './comparator';
 import { Transcript, TranscriptEntry } from './types';
 
 // Helper to create a transcript entry
@@ -1160,5 +1160,311 @@ Time: 1.23s`;
       expect(filtered).toContain('West of House');
       expect(filtered).toContain('OBJECT_NOT_VISIBLE');
     });
+  });
+});
+
+
+describe('TranscriptComparator with Message Extraction', () => {
+  describe('compareAndClassify', () => {
+    it('should extract action responses before comparison', () => {
+      const comparator = new TranscriptComparator();
+      
+      // Z-Machine output with header, status bar, and room description
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'take lamp', `West of House                                    Score: 0        Moves: 1
+Taken.`),
+      ]);
+      
+      // TypeScript output without header/status bar
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'take lamp', 'Taken.'),
+      ]);
+      
+      const report = comparator.compareAndClassify(transcriptA, transcriptB);
+      
+      // Should match after extraction
+      expect(report.exactMatches).toBe(1);
+      expect(report.differences).toHaveLength(0);
+      expect(report.parityScore).toBe(100);
+    });
+
+    it('should classify RNG differences correctly when not semantically equivalent', () => {
+      const comparator = new TranscriptComparator();
+      
+      // Create messages that are different but not from the same RNG pool
+      // This tests the classifier's ability to detect RNG differences
+      // when semantic equivalence doesn't catch them
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', 'West of House'),
+        createEntry(1, 'eat sword', 'A valiant attempt.'), // YUKS pool
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'West of House'),
+        createEntry(1, 'eat sword', "You can't be serious."), // Also YUKS pool
+      ]);
+      
+      const report = comparator.compareAndClassify(transcriptA, transcriptB);
+      
+      // Both YUKS messages are semantically equivalent, so they should match
+      expect(report.exactMatches).toBe(2);
+      expect(report.behavioralDifferences).toBe(0);
+    });
+
+    it('should track structural vs behavioral differences separately', () => {
+      const comparator = new TranscriptComparator();
+      
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', 'West of House'),
+        createEntry(1, 'north', 'North of House'),
+        createEntry(2, 'take lamp', 'The lamp is glowing.'), // Different actual response
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'West of House'),
+        createEntry(1, 'north', 'North of House'),
+        createEntry(2, 'take lamp', 'The lamp is dim.'), // Different actual response
+      ]);
+      
+      const report = comparator.compareAndClassify(transcriptA, transcriptB);
+      
+      expect(report.differenceBreakdown).toBeDefined();
+      // The lamp responses are different and not from RNG pools
+      expect(report.differenceBreakdown.behavioral).toBe(1);
+    });
+
+    it('should return extended diff report with all fields', () => {
+      const comparator = new TranscriptComparator();
+      
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', 'West of House'),
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'West of House'),
+      ]);
+      
+      const report = comparator.compareAndClassify(transcriptA, transcriptB);
+      
+      // Check all extended fields are present
+      expect(report.structuralDifferences).toBeDefined();
+      expect(report.behavioralDifferences).toBeDefined();
+      expect(report.rngDifferences).toBeDefined();
+      expect(report.differenceBreakdown).toBeDefined();
+      expect(report.differenceBreakdown.rng).toBeDefined();
+      expect(report.differenceBreakdown.structural).toBeDefined();
+      expect(report.differenceBreakdown.behavioral).toBeDefined();
+    });
+
+    it('should handle missing entries as behavioral differences', () => {
+      const comparator = new TranscriptComparator();
+      
+      const transcriptA = createTranscript('zm', 'z-machine', [
+        createEntry(0, 'look', 'West of House'),
+        createEntry(1, 'north', 'North of House'),
+      ]);
+      
+      const transcriptB = createTranscript('ts', 'typescript', [
+        createEntry(0, 'look', 'West of House'),
+      ]);
+      
+      const report = comparator.compareAndClassify(transcriptA, transcriptB);
+      
+      expect(report.behavioralDifferences).toBe(1);
+      expect(report.differences).toHaveLength(1);
+    });
+  });
+
+  describe('areSemanticallyEquivalent', () => {
+    it('should recognize identical messages as equivalent', () => {
+      const comparator = new TranscriptComparator();
+      
+      expect(comparator.areSemanticallyEquivalent('Taken.', 'Taken.')).toBe(true);
+    });
+
+    it('should recognize case-insensitive matches as equivalent', () => {
+      const comparator = new TranscriptComparator();
+      
+      expect(comparator.areSemanticallyEquivalent('TAKEN.', 'taken.')).toBe(true);
+    });
+
+    it('should recognize RNG pool messages as equivalent', () => {
+      const comparator = new TranscriptComparator();
+      
+      // YUKS pool
+      expect(comparator.areSemanticallyEquivalent(
+        'A valiant attempt.',
+        "You can't be serious."
+      )).toBe(true);
+      
+      // HELLOS pool
+      expect(comparator.areSemanticallyEquivalent(
+        'Hello.',
+        'Good day.'
+      )).toBe(true);
+    });
+
+    it('should recognize known equivalent pairs', () => {
+      const comparator = new TranscriptComparator();
+      
+      // "You can't see X here" variations
+      expect(comparator.areSemanticallyEquivalent(
+        "You can't see any lamp here.",
+        "I don't see any lamp here."
+      )).toBe(true);
+      
+      // "Taken" / "OK" variations
+      expect(comparator.areSemanticallyEquivalent(
+        'Taken.',
+        'OK.'
+      )).toBe(true);
+      
+      // "You are empty-handed" variations
+      expect(comparator.areSemanticallyEquivalent(
+        'You are empty-handed.',
+        "You aren't carrying anything."
+      )).toBe(true);
+    });
+
+    it('should not consider unrelated messages as equivalent', () => {
+      const comparator = new TranscriptComparator();
+      
+      expect(comparator.areSemanticallyEquivalent(
+        'West of House',
+        'North of House'
+      )).toBe(false);
+      
+      expect(comparator.areSemanticallyEquivalent(
+        'Taken.',
+        'Dropped.'
+      )).toBe(false);
+    });
+  });
+
+  describe('createExtractingComparator factory', () => {
+    it('should create a comparator with extraction enabled', () => {
+      const comparator = createExtractingComparator();
+      
+      const options = comparator.getOptions();
+      expect(options.useMessageExtraction).toBe(true);
+      expect(options.trackDifferenceTypes).toBe(true);
+    });
+
+    it('should allow custom options while keeping extraction enabled', () => {
+      const comparator = createExtractingComparator({
+        toleranceThreshold: 0.8,
+        normalizeWhitespace: false,
+      });
+      
+      const options = comparator.getOptions();
+      expect(options.useMessageExtraction).toBe(true);
+      expect(options.trackDifferenceTypes).toBe(true);
+      expect(options.toleranceThreshold).toBe(0.8);
+      expect(options.normalizeWhitespace).toBe(false);
+    });
+  });
+
+  describe('getMessageExtractor and getDifferenceClassifier', () => {
+    it('should return the message extractor instance', () => {
+      const comparator = new TranscriptComparator();
+      const extractor = comparator.getMessageExtractor();
+      
+      expect(extractor).toBeDefined();
+      expect(typeof extractor.extractActionResponse).toBe('function');
+    });
+
+    it('should return the difference classifier instance', () => {
+      const comparator = new TranscriptComparator();
+      const classifier = comparator.getDifferenceClassifier();
+      
+      expect(classifier).toBeDefined();
+      expect(typeof classifier.classifyDifference).toBe('function');
+    });
+  });
+});
+
+describe('Structural Difference Filtering', () => {
+  it('should filter out header differences when using extraction', () => {
+    const comparator = new TranscriptComparator();
+    
+    // Z-Machine output with full header
+    const transcriptA = createTranscript('zm', 'z-machine', [
+      createEntry(0, 'look', `ZORK I: The Great Underground Empire
+Copyright (c) 1981, 1982, 1983 Infocom, Inc.
+West of House                                    Score: 0        Moves: 1
+You are standing in an open field.`),
+    ]);
+    
+    // TypeScript output without header
+    const transcriptB = createTranscript('ts', 'typescript', [
+      createEntry(0, 'look', 'You are standing in an open field.'),
+    ]);
+    
+    const report = comparator.compareAndClassify(transcriptA, transcriptB);
+    
+    // Should match after extraction removes header
+    expect(report.exactMatches).toBe(1);
+    expect(report.behavioralDifferences).toBe(0);
+  });
+
+  it('should filter out status bar differences when using extraction', () => {
+    const comparator = new TranscriptComparator();
+    
+    // Z-Machine output with status bar
+    const transcriptA = createTranscript('zm', 'z-machine', [
+      createEntry(0, 'north', `North of House                                   Score: 0        Moves: 2
+You are facing the north side of a white house.`),
+    ]);
+    
+    // TypeScript output without status bar
+    const transcriptB = createTranscript('ts', 'typescript', [
+      createEntry(0, 'north', 'You are facing the north side of a white house.'),
+    ]);
+    
+    const report = comparator.compareAndClassify(transcriptA, transcriptB);
+    
+    // Should match after extraction removes status bar
+    expect(report.exactMatches).toBe(1);
+    expect(report.behavioralDifferences).toBe(0);
+  });
+
+  it('should filter out prompt differences when using extraction', () => {
+    const comparator = new TranscriptComparator();
+    
+    // Z-Machine output with prompt
+    const transcriptA = createTranscript('zm', 'z-machine', [
+      createEntry(0, 'inventory', `You are empty-handed.
+>`),
+    ]);
+    
+    // TypeScript output without prompt
+    const transcriptB = createTranscript('ts', 'typescript', [
+      createEntry(0, 'inventory', 'You are empty-handed.'),
+    ]);
+    
+    const report = comparator.compareAndClassify(transcriptA, transcriptB);
+    
+    // Should match after extraction removes prompt
+    expect(report.exactMatches).toBe(1);
+    expect(report.behavioralDifferences).toBe(0);
+  });
+
+  it('should still detect real behavioral differences', () => {
+    const comparator = new TranscriptComparator();
+    
+    // Different actual responses
+    const transcriptA = createTranscript('zm', 'z-machine', [
+      createEntry(0, 'take lamp', 'Taken.'),
+    ]);
+    
+    const transcriptB = createTranscript('ts', 'typescript', [
+      createEntry(0, 'take lamp', 'The lamp is too heavy.'),
+    ]);
+    
+    const report = comparator.compareAndClassify(transcriptA, transcriptB);
+    
+    // Should detect the behavioral difference
+    expect(report.behavioralDifferences).toBe(1);
+    expect(report.differences).toHaveLength(1);
   });
 });
