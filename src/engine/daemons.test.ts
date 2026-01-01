@@ -11,8 +11,6 @@ import {
   disableLampTimer,
   initializeCandleTimer,
   disableCandleTimer,
-  resetLampTimer,
-  resetCandleTimer,
   forestRoomDaemon,
   isForestRoom,
   enableForestRoomDaemon
@@ -20,6 +18,33 @@ import {
 import { GameState } from '../game/state.js';
 import { GameObjectImpl } from '../game/objects.js';
 import { ObjectFlag } from '../game/data/flags.js';
+import type { Room } from '../game/rooms.js';
+
+// Helper to create mock rooms for testing
+function createMockRoom(overrides: Partial<Room> & { id: string }): Room {
+  return {
+    name: 'Test Room',
+    description: 'A test room',
+    exits: new Map(),
+    objects: [],
+    flags: new Set(),
+    globalObjects: [],
+    visited: false,
+    getExit: () => undefined,
+    setExit: () => {},
+    removeExit: () => {},
+    isExitAvailable: () => false,
+    getAvailableExits: () => [],
+    hasFlag: () => false,
+    addFlag: () => {},
+    removeFlag: () => {},
+    addObject: () => {},
+    removeObject: () => {},
+    isLit: () => true,
+    markVisited: () => {},
+    ...overrides
+  };
+}
 
 describe('Lamp Timer Daemon', () => {
   let state: GameState;
@@ -153,7 +178,7 @@ describe('Candle Timer Daemon', () => {
     
     candleTimerInterrupt(state);
     
-    expect(candles.flags.has('TOUCHBIT' as any)).toBe(true);
+    expect(candles.flags.has('TOUCHBIT' as ObjectFlag)).toBe(true);
   });
 
   it('should disable candle timer when requested', () => {
@@ -241,43 +266,20 @@ describe('Forest Room Daemon', () => {
     // Create forest rooms with all required methods
     const forestRooms = ['FOREST-1', 'FOREST-2', 'FOREST-3', 'PATH', 'UP-A-TREE'];
     for (const roomId of forestRooms) {
-      state.rooms.set(roomId, {
+      state.rooms.set(roomId, createMockRoom({
         id: roomId,
         name: 'Forest',
         description: 'A forest room',
-        longDescription: 'This is a forest room.',
-        exits: new Map(),
-        objects: [],
-        flags: new Set(),
-        globalObjects: ['SONGBIRD'],
-        getExit: () => undefined,
-        isExitAvailable: () => false,
-        hasFlag: () => false,
-        addFlag: () => {},
-        removeFlag: () => {},
-        markVisited: () => {},
-        visited: false
-      } as any);
+        globalObjects: ['SONGBIRD']
+      }));
     }
     
     // Create a non-forest room
-    state.rooms.set('WEST-OF-HOUSE', {
+    state.rooms.set('WEST-OF-HOUSE', createMockRoom({
       id: 'WEST-OF-HOUSE',
       name: 'West of House',
-      description: 'West of House',
-      longDescription: 'You are standing in an open field west of a white house.',
-      exits: new Map(),
-      objects: [],
-      flags: new Set(),
-      globalObjects: [],
-      getExit: () => undefined,
-      isExitAvailable: () => false,
-      hasFlag: () => false,
-      addFlag: () => {},
-      removeFlag: () => {},
-      markVisited: () => {},
-      visited: false
-    } as any);
+      description: 'You are standing in an open field west of a white house.'
+    }));
     
     // Register the forest room daemon
     state.eventSystem.registerDaemon('I-FOREST-ROOM', (s) => forestRoomDaemon(s), false);
@@ -596,41 +598,17 @@ describe('Property 4: Daemon Message Synchronization', () => {
     const state = new GameState();
     
     // Create a room for the lamp
-    state.rooms.set('TEST-ROOM', {
+    state.rooms.set('TEST-ROOM', createMockRoom({
       id: 'TEST-ROOM',
       name: 'Test Room',
-      description: 'A test room',
-      longDescription: 'This is a test room.',
-      exits: new Map(),
-      objects: [],
-      flags: new Set(),
-      globalObjects: [],
-      getExit: () => undefined,
-      isExitAvailable: () => false,
-      hasFlag: () => false,
-      addFlag: () => {},
-      removeFlag: () => {},
-      markVisited: () => {},
-      visited: false
-    } as any);
+      description: 'A test room'
+    }));
     
-    state.rooms.set('OTHER-ROOM', {
+    state.rooms.set('OTHER-ROOM', createMockRoom({
       id: 'OTHER-ROOM',
       name: 'Other Room',
-      description: 'Another room',
-      longDescription: 'This is another room.',
-      exits: new Map(),
-      objects: [],
-      flags: new Set(),
-      globalObjects: [],
-      getExit: () => undefined,
-      isExitAvailable: () => false,
-      hasFlag: () => false,
-      addFlag: () => {},
-      removeFlag: () => {},
-      markVisited: () => {},
-      visited: false
-    } as any);
+      description: 'Another room'
+    }));
     
     // Create lamp in a different room
     const lamp = new GameObjectImpl({
