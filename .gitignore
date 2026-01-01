@@ -46,3 +46,6 @@ docs/
 # Development scripts
 scripts/
 
+# Test progress data
+test-progress.json
+
