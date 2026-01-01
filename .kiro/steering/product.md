@@ -1,11 +1,11 @@
 # Product Overview
 
-This repository contains both the **original ZIL source code** and a **modern TypeScript rewrite** of **Zork I: The Great Underground Empire**, a 1980 interactive fiction game by Infocom.
+This repository contains both the **original ZIL source code** and a **modern TypeScript source port** of **Zork I: The Great Underground Empire**, a 1980 interactive fiction game by Infocom.
 
 ## Dual Codebase
 
-1. **Original ZIL Source** - Historical reference files (*.zil) from Infocom
-2. **TypeScript Rewrite** - Modern implementation in `src/` aiming for 100% parity with the original
+1. **Original ZIL Source** - Historical reference files (*.zil) from Infocom in `reference/zil/`
+2. **TypeScript Source Port** - Modern implementation in `src/` achieving 100% logic parity with the original
 
 ## Purpose
 
@@ -13,11 +13,17 @@ This repository contains both the **original ZIL source code** and a **modern Ty
 - Provide a playable, maintainable TypeScript version
 - Enable testing and verification against original game behavior
 
-## TypeScript Rewrite Goals
+## TypeScript Source Port Goals
 
-The TypeScript implementation aims for complete behavioral parity with the original:
+The TypeScript implementation achieves complete behavioral parity with the original:
 - Same room descriptions and object interactions
 - Same puzzle solutions and game mechanics
 - Same NPC behaviors (troll, thief, cyclops)
 - Same timing systems (lamp fuel, candle burning, daemons)
-- Same scoring and win conditions
+- Same scoring and win conditions (all 350 points achievable)
+
+## Repository
+
+- **GitHub**: https://github.com/jsredmond/zork-ts
+- **Author**: [@jsredmond](https://github.com/jsredmond)
+- **License**: MIT

@@ -88,7 +88,7 @@ npm run dev
 ## Credits
 
 - **Original Game**: Marc Blank, Dave Lebling, Bruce Daniels, Tim Anderson (Infocom, 1980)
-- **TypeScript Port**: <a href="https://github.com/jsredmond"><img src="https://github.com/jsredmond.png" width="20" height="20" style="border-radius: 50%; vertical-align: middle;"> @jsredmond</a>
+- **TypeScript Port**: <a href="https://github.com/jsredmond"><img src="https://github.com/jsredmond.png" width="20" height="20" alt="jsredmond avatar" style="border-radius: 50%; vertical-align: middle;"> @jsredmond</a>
 
 ## Learn More
 

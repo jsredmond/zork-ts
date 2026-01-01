@@ -5,14 +5,18 @@
 The project has a comprehensive testing system for verifying parity between the TypeScript Zork I implementation and the original Z-Machine. Testing is divided into:
 
 1. **Unit Tests** - Standard Vitest tests for individual components
-2. **Exhaustive Testing** - Systematic testing of rooms, objects, and interactions
-3. **Parity Validation** - Comparison testing against the original Z-Machine
+2. **Property-Based Tests** - fast-check tests for invariants
+3. **Exhaustive Testing** - Systematic testing of rooms, objects, and interactions
+4. **Parity Validation** - Comparison testing against the original Z-Machine
 
 ## Common Commands
 
 ```bash
-# Run unit tests
+# Run all unit tests
 npm test
+
+# Run tests in watch mode
+npm run test:watch
 
 # Run specific test file
 npx vitest run src/game/actions.test.ts
@@ -109,26 +113,10 @@ npm run test:bug-export -- --json
 - **Test infrastructure**: `src/testing/`
 - **Test scripts**: `scripts/`
 - **Command sequences**: `scripts/sequences/`
-- **Test progress**: `.kiro/testing/test-progress.json`
-- **Bug reports**: `.kiro/testing/bug-reports.json`
-- **Parity baseline**: `src/testing/parity-baseline.json`
-
-## Parity Analysis Scripts
-
-```bash
-# Analyze parity differences in detail
-npx tsx scripts/analyze-parity-differences-detailed.ts
-
-# Analyze status bar differences
-npx tsx scripts/analyze-status-bar.ts
-
-# Generate parity certification report
-npx tsx scripts/generate-parity-certification.ts
-```
 
 ## Property-Based Testing
 
-Uses `fast-check` for property-based tests. Property tests verify invariants like:
+Uses `fast-check` ^4.5.3 for property-based tests. Property tests verify invariants like:
 - Monotonic parity improvement (fixes never decrease parity)
 - Message equivalence after normalization
 - Zero logic differences at 100% parity
@@ -136,7 +124,7 @@ Uses `fast-check` for property-based tests. Property tests verify invariants lik
 
 Run property tests:
 ```bash
-npx vitest run src/testing/*.property.test.ts
+npx vitest run src/**/*.property.test.ts
 ```
 
 ## Transcript Recording
@@ -155,9 +143,15 @@ npm run compare
 npm run compare:batch
 ```
 
-## CI/CD Integration
+## Verification Scripts
 
-The `quickParityValidation()` function provides fast validation for CI:
-- Uses 5 seeds instead of 10
-- 100 commands per seed instead of 250
-- Returns boolean for pass/fail
+```bash
+# Verify transcripts
+npm run verify:transcripts
+
+# Verify puzzle solutions
+npm run verify:puzzles
+
+# Generate verification report
+npm run verify:report
+```

@@ -1,10 +1,11 @@
 # Technology Stack
 
-## TypeScript Rewrite
+## TypeScript Source Port
 
 ### Runtime
-- **Node.js** with TypeScript (tsx for execution)
-- **Vitest** for testing
+- **Node.js >=25.0.3** with TypeScript
+- **tsx** for TypeScript execution
+- **Vitest 4.x** for testing
 
 ### Common Commands
 
@@ -17,12 +18,34 @@ npm test
 
 # Run specific test file
 npx vitest run src/game/actions.test.ts
+
+# Build for distribution
+npm run build
 ```
 
 ### Key Dependencies
-- `tsx` - TypeScript execution
-- `vitest` - Test framework
-- `readline` - Terminal input handling
+- `tsx` ^4.7.0 - TypeScript execution
+- `vitest` ^4.0.16 - Test framework
+- `fast-check` ^4.5.3 - Property-based testing
+- `zod` ^4.3.4 - Schema validation
+- `typescript` ^5.3.0 - TypeScript compiler
+
+### Dev Dependencies
+- `@types/node` ^25.0.3 - Node.js type definitions
+- `pkg` ^5.8.1 - Binary packaging
+
+## CI/CD
+
+### GitHub Actions Workflows
+- **lint.yml** - Super-Linter v8 for TypeScript, JSON, YAML, Markdown
+- **release.yml** - Automated npm publish and binary builds on release
+
+### Linting
+Uses Super-Linter with:
+- TypeScript ES linting
+- JSON validation
+- YAML validation
+- Markdown linting
 
 ## Original ZIL Source (Reference Only)
 
@@ -34,10 +57,10 @@ npx vitest run src/game/actions.test.ts
 - **ZILF** (http://zilf.io): Modern open-source alternative
 
 ### File Types
-- `.zil` - ZIL source code (reference)
-- `.z3` - Compiled Z-machine game file
+- `.zil` - ZIL source code (in `reference/zil/`)
+- `.z3` - Compiled Z-machine game file (in `reference/COMPILED/`)
 
 ## Playing Options
 
 1. **TypeScript version**: `npm run dev`
-2. **Original compiled**: Use COMPILED/zork1.z3 with Frotz, Gargoyle, or other Z-machine interpreters
+2. **Original compiled**: Use `reference/COMPILED/zork1.z3` with Frotz, Gargoyle, or other Z-machine interpreters
