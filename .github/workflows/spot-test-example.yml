@@ -2,17 +2,24 @@ name: Spot Test Parity Example
 
 # This is an example workflow for integrating Random Parity Spot Testing
 # into your CI/CD pipeline. Customize as needed for your project.
+#
+# NOTE: This workflow is disabled by default because it requires:
+# 1. A working Z-Machine interpreter (dfrotz) on the CI runner
+# 2. The original Zork I game file
+# 3. Consistent behavior between local and CI environments
+#
+# To enable, change the 'on' trigger below.
 
 on:
-  # Run on pushes to main branches
-  push:
-    branches: [ main, develop, master ]
+  # Disabled for regular pushes - enable manually if needed
+  # push:
+  #   branches: [ main, develop, master ]
   
-  # Run on pull requests
-  pull_request:
-    branches: [ main, develop, master ]
+  # Disabled for pull requests - enable manually if needed
+  # pull_request:
+  #   branches: [ main, develop, master ]
   
-  # Allow manual triggering
+  # Allow manual triggering only
   workflow_dispatch:
     inputs:
       test_mode:
@@ -43,6 +50,7 @@ jobs:
     timeout-minutes: 10
     
     strategy:
+      fail-fast: false
       matrix:
         # Test with different Node.js versions if needed
         node-version: [18, 20]
