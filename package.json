@@ -19,32 +19,7 @@
     "start": "node dist/main.js",
     "dev": "tsx src/main.ts",
     "test": "vitest --run",
-    "test:watch": "vitest",
-    "test:run": "tsx src/testing/cli-test.ts",
-    "test:status": "tsx src/testing/cli-status.ts",
-    "test:bugs": "tsx src/testing/cli-bugs.ts",
-    "test:bug-update": "tsx src/testing/cli-bugs.ts update",
-    "test:bug-export": "tsx src/testing/cli-bugs.ts export",
-    "package": "npm run build && pkg dist/main.js --targets node20-macos-x64,node20-macos-arm64,node20-win-x64 --output releases/zork",
-    "verify:transcripts": "tsx scripts/verify-all-transcripts.ts --report",
-    "verify:puzzles": "vitest --run src/testing/puzzleSolutionVerification.test.ts",
-    "verify:report": "tsx scripts/generate-verification-report.ts --run-and-generate",
-    "record:ts": "tsx scripts/record-and-compare.ts --mode ts",
-    "record:zm": "tsx scripts/record-and-compare.ts --mode zm",
-    "compare": "tsx scripts/record-and-compare.ts --mode both",
-    "compare:batch": "tsx scripts/record-and-compare.ts --mode both --batch",
-    "parity:validate": "tsx src/testing/cli-parity-validate.ts",
-    "parity:baseline": "tsx src/testing/cli-parity-validate.ts --establish-baseline",
-    "parity:quick": "tsx src/testing/cli-parity-validate.ts --quick"
-  },
-  "pkg": {
-    "targets": [
-      "node20-macos-x64",
-      "node20-macos-arm64",
-      "node20-win-x64"
-    ],
-    "outputPath": "releases",
-    "_securityNote": "pkg has GHSA-22r3-9w55-cj54 (moderate, local privilege escalation). Risk accepted: dev-only, local access required, no fix available. See dev-artifacts/docs/PACKAGING.md"
+    "test:watch": "vitest"
   },
   "engines": {
     "node": ">=25.0.3"
@@ -70,7 +45,6 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^25.0.3",
-    "pkg": "^5.8.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.0",
     "vitest": "^4.0.16"

@@ -43,3 +43,6 @@ dev-artifacts/
 # Documentation (internal)
 docs/
 
+# Development scripts
+scripts/
+
