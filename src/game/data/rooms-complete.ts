@@ -332,7 +332,7 @@ export const ALL_ROOMS: Record<string, RoomData> = {
     longDescription: 'This appears to have been an artist\'s studio. The walls and floors are splattered with paints of 69 different colors. Strangely enough, nothing of value is hanging here. At the south end of the room is an open door (also covered with paint). A dark and narrow chimney leads up from a fireplace; although you might be able to get up it, it seems unlikely you could get back down.',
     exits: [
       { direction: 'SOUTH', destination: 'GALLERY' },
-      { direction: 'UP', destination: 'KITCHEN', condition: 'UP-CHIMNEY-ALLOWED' }
+      { direction: 'UP', destination: 'KITCHEN' }
     ],
     flags: ['RLANDBIT'],
     globalObjects: ['CHIMNEY']
