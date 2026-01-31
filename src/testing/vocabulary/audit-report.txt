@@ -1,0 +1,395 @@
+============================================================
+VOCABULARY COMPARISON REPORT
+============================================================
+
+SUMMARY
+----------------------------------------
+Total ZIL words:        640
+Total TypeScript words: 438
+Missing in TypeScript:  323
+Extra in TypeScript:    121
+
+MISSING WORDS (in ZIL but not TypeScript)
+----------------------------------------
+Nouns (137):
+  adventurer, advertisement, air, air-pump, altar, art, aviator, ax, bar, barrow, bat, bauble, beetle, blessings, boat, bodies, body, bones, branch, breath, bug, cage, canary, canvas, carpet, chests, chute, cliff, cliffs, coil, container, cover, crack, cretin, dam, dirt, drip, driver, dryer, dumbwaiter, engravings, enormous, eye, fcd#3, fiends, fineprint, footpad, force, gate, gates, ghosts, glamdring, gold, graces, grate, group, grue, guide, guidebooks, gunk, h2o, heap, hemlocks, hemp, her, him, inscription, intnum, it, ivory, key, knives, label, ladder, leak, ledge, lettering, lid, liquid, mail, man, manual, map, material, mountain, mouth, nut, orcrist, overboard, page, pair, panel, paper, parchment, paste, path, pdp10, pedestal, person, piece, pines, pipe, plastic, platinum, prayer, print, quantity, raft, rainbow, ramp, range, reflection, remains, sailor, sandwich, sapphire, scarab, silver, skeleton, slag, songbird, spirits, steps, stiletto, table, them, timbers, tomb, toolchests, trail, trap-door, tube, valve, vampire, writing, zorkmid, zzmgck
+
+Adjectives (91):
+  antique, bare, beauti, birds, bloody, blue, boarded, brown, burned, burning, clear, clockwork, coloni, control, deranged, egyptian, elongated, elvish, enameled, encrusted, engravings, evil, exquisite, fine, flaming, flathead, forbidding, forest, frigid, front, giant, glass, gothic, green, guide, hand-held, hungry, impassable, inflat, invisible, jewel, kitchen, long, lowered, lurking, mangled, massive, match, metal, narrow, nasty, oriental, own, owners, pepper, plastic, poseidon, puncture, red, rickety, sapphire, screw, seaworthy, seedy, shady, sheer, sinister, skeleton, solid, song, steep, storm, surrounding, suspicious, tan, thiefs, tool, tour, trap, trophy, twisting, unrusty, useless, vampire, vicious, viscous, vitreous, west, winding, yellow, zork
+
+Verbs (95):
+  activate, apply, attach, awake, back, banish, barf, bathe, begone, blast, block, blow, brandish, brush, bug, cast, chant, chase, chomp, clean, come, command, count, cross, disenchant, dispatch, drive, enchant, exorcise, fix, follow, ford, free, frobozz, gaze, glue, hand, hatch, hop, imbibe, incant, inflat, launch, lean, liquify, lose, molest, mumble, pat, patch, peal, pet, pick, plug, poke, pump, puncture, pursue, rape, release, repair, repent, script, secure, see, send, shut, sigh, skim, skip, slide, spin, spray, stab, stare, startle, stay, super, surprise, swallow, talk, taunt, temple, thrust, treasure, unattach, unhook, unscript, what, whats, where, win, winnage, wish, zork
+
+EXTRA WORDS (in TypeScript but not ZIL)
+----------------------------------------
+Nouns (39):
+  bubbles, bucket, building, burglar, candle, ceiling, coin, doors, eggs, fireplace, flask, giant, glass, guidebook, hatchet, jewelry, lever, mat, necklace, pail, pamphlet, picture, plank, pole, rock, rocks, sky, spade, stone, stones, stream, test, timber, trap, treasures, trophy, up, weapon, windows
+
+Adjectives (54):
+  beautiful, big, bitter, bland, brass lantern, bright, bronze, clean, cloth, cold, cool, copper, delicious, dirty, disgusting, dry, dull, empty, engraved, fragrant, fresh, full, grassy, heavy, iron, leafy, light, light lantern, little, living, locked, loud, magical, moldy, muddy, new, noisy, normal, painted, quiet, rotten, salty, sandy, shiny, sour, spicy, stale, steel, sweet, tiny, ugly, unlocked, warm, wet
+
+Verbs (15):
+  again, bye, dance, empty, g, goodbye, inflate, no, plover, sing, sleep, thank, x, y, yes
+
+Prepositions (13):
+  about, across, against, around, at, behind, between, for, from, off, out, over, to
+
+OBJECT VOCABULARY ISSUES
+----------------------------------------
+Object: ADVERTISEMENT
+  Missing synonyms: advertisement, mail
+
+Object: ALTAR
+  Missing synonyms: altar
+
+Object: ATTIC-TABLE
+  Missing synonyms: table
+
+Object: AXE
+  Missing synonyms: ax
+  Missing adjectives: bloody
+
+Object: BAR
+  Missing synonyms: bar, platinum
+
+Object: BARROW
+  Missing synonyms: barrow, tomb
+  Missing adjectives: massive
+
+Object: BAT
+  Missing synonyms: bat, vampire
+  Missing adjectives: deranged, vampire
+
+Object: BAUBLE
+  Missing synonyms: bauble
+  Missing adjectives: beauti
+
+Object: BLUE-BUTTON
+  Missing adjectives: blue
+
+Object: BOARDED-WINDOW
+  Missing adjectives: boarded
+
+Object: BOAT-LABEL
+  Missing synonyms: fineprint, label, print
+  Missing adjectives: fine, tan
+
+Object: BODIES
+  Missing synonyms: bodies, body, remains
+  Missing adjectives: mangled
+
+Object: BOLT
+  Missing synonyms: nut
+  Missing adjectives: metal
+
+Object: BONES
+  Missing synonyms: body, bones, skeleton
+
+Object: BOOK
+  Missing synonyms: page, prayer
+
+Object: BOTTLE
+  Missing synonyms: container
+  Missing adjectives: clear, glass
+
+Object: BRACELET
+  Missing synonyms: sapphire
+  Missing adjectives: sapphire
+
+Object: BROKEN-CANARY
+  Missing synonyms: canary
+  Missing adjectives: clockwork
+
+Object: BROKEN-EGG
+  Missing adjectives: birds, encrusted, jewel
+
+Object: BROWN-BUTTON
+  Missing adjectives: brown
+
+Object: BUBBLE
+  Missing adjectives: green, plastic
+
+Object: BUOY
+  Missing adjectives: red
+
+Object: BURNED-OUT-LANTERN
+  Missing adjectives: burned, useless
+
+Object: CANARY
+  Missing synonyms: canary
+  Missing adjectives: clockwork
+
+Object: CANDLES
+  Missing synonyms: pair
+  Missing adjectives: burning
+
+Object: CHALICE
+  Missing synonyms: silver
+  Missing adjectives: engravings
+
+Object: CHIMNEY
+  Missing adjectives: narrow
+
+Object: CLIMBABLE-CLIFF
+  Missing synonyms: cliff, ledge
+  Missing adjectives: sheer
+
+Object: COAL
+  Missing synonyms: heap
+
+Object: COFFIN
+  Missing adjectives: solid
+
+Object: CONTROL-PANEL
+  Missing synonyms: panel
+  Missing adjectives: control
+
+Object: CRACK
+  Missing synonyms: crack
+  Missing adjectives: narrow
+
+Object: CYCLOPS
+  Missing synonyms: eye
+  Missing adjectives: giant, hungry
+
+Object: DAM
+  Missing synonyms: dam, fcd#3, gate, gates
+
+Object: EGG
+  Missing adjectives: birds, encrusted
+
+Object: ENGRAVINGS
+  Missing synonyms: engravings, inscription
+
+Object: FOREST
+  Missing synonyms: hemlocks, pines
+
+Object: FRONT-DOOR
+  Missing adjectives: boarded, front
+
+Object: GHOSTS
+  Missing synonyms: fiends, force, ghosts, spirits
+  Missing adjectives: evil, invisible
+
+Object: GLOBAL-WATER
+  Missing synonyms: quantity
+
+Object: GRATE
+  Missing synonyms: grate
+
+Object: GUIDE
+  Missing synonyms: guide, guidebooks
+  Missing adjectives: guide, tour
+
+Object: GUNK
+  Missing synonyms: gunk, piece, slag
+  Missing adjectives: vitreous
+
+Object: HOT-BELL
+  Missing adjectives: red
+
+Object: INFLATABLE-BOAT
+  Missing synonyms: boat, plastic, valve
+  Missing adjectives: inflat, plastic
+
+Object: INFLATED-BOAT
+  Missing synonyms: boat, raft
+  Missing adjectives: inflat, plastic, seaworthy
+
+Object: JADE
+  Missing adjectives: exquisite
+
+Object: KEYS
+  Missing synonyms: key
+  Missing adjectives: skeleton
+
+Object: KITCHEN-TABLE
+  Missing synonyms: table
+  Missing adjectives: kitchen
+
+Object: KITCHEN-WINDOW
+  Missing adjectives: kitchen
+
+Object: KNIFE
+  Missing synonyms: knives
+  Missing adjectives: nasty, unrusty
+
+Object: LADDER
+  Missing synonyms: ladder
+  Missing adjectives: narrow, rickety
+
+Object: LARGE-BAG
+  Missing adjectives: thiefs
+
+Object: LEAK
+  Missing synonyms: drip, leak, pipe
+
+Object: LOWERED-BASKET
+  Missing synonyms: cage, dumbwaiter
+  Missing adjectives: lowered
+
+Object: LUNCH
+  Missing synonyms: sandwich
+  Missing adjectives: pepper
+
+Object: MACHINE
+  Missing synonyms: dryer, lid, pdp10
+
+Object: MAP
+  Missing synonyms: map, parchment
+  Missing adjectives: antique
+
+Object: MIRROR-1
+  Missing synonyms: enormous, reflection
+
+Object: MIRROR-2
+  Missing synonyms: enormous, reflection
+
+Object: MOUNTAIN-RANGE
+  Missing synonyms: mountain, range
+  Missing adjectives: flathead, impassable
+
+Object: NEST
+  Missing adjectives: bird, birds
+
+Object: OWNERS-MANUAL
+  Missing synonyms: manual, paper, piece
+  Missing adjectives: owners, zork
+
+Object: PAINTING
+  Missing synonyms: art, canvas
+  Missing adjectives: beauti
+
+Object: PEDESTAL
+  Missing synonyms: pedestal
+
+Object: POT-OF-GOLD
+  Missing synonyms: gold
+
+Object: PRAYER
+  Missing synonyms: inscription, prayer
+
+Object: PUMP
+  Missing synonyms: air-pump
+  Missing adjectives: hand-held
+
+Object: PUNCTURED-BOAT
+  Missing synonyms: boat, plastic
+  Missing adjectives: plastic, puncture
+
+Object: PUTTY
+  Missing synonyms: gunk, material
+  Missing adjectives: viscous
+
+Object: RAINBOW
+  Missing synonyms: rainbow
+
+Object: RAISED-BASKET
+  Missing synonyms: cage, dumbwaiter
+
+Object: RED-BUTTON
+  Missing adjectives: red
+
+Object: RIVER
+  Missing adjectives: frigid
+
+Object: ROPE
+  Missing synonyms: coil, hemp
+
+Object: RUG
+  Missing synonyms: carpet
+  Missing adjectives: oriental
+
+Object: RUSTY-KNIFE
+  Missing synonyms: knives
+
+Object: SANDWICH-BAG
+  Missing adjectives: brown, elongated
+
+Object: SCARAB
+  Missing synonyms: beetle, bug, scarab
+  Missing adjectives: beauti
+
+Object: SCEPTRE
+  Missing adjectives: egyptian, enameled
+
+Object: SCREWDRIVER
+  Missing synonyms: driver
+  Missing adjectives: screw
+
+Object: SLIDE
+  Missing synonyms: chute, ramp
+  Missing adjectives: metal, steep, twisting
+
+Object: SONGBIRD
+  Missing synonyms: songbird
+  Missing adjectives: song
+
+Object: STILETTO
+  Missing synonyms: stiletto
+  Missing adjectives: vicious
+
+Object: SWORD
+  Missing synonyms: glamdring, orcrist
+  Missing adjectives: antique, elvish
+
+Object: TEETH
+  Missing synonyms: overboard
+
+Object: THIEF
+  Missing synonyms: man, person
+  Missing adjectives: seedy, shady, suspicious
+
+Object: TIMBERS
+  Missing synonyms: timbers
+
+Object: TOOL-CHEST
+  Missing synonyms: chests, group, toolchests
+  Missing adjectives: tool
+
+Object: TORCH
+  Missing synonyms: ivory
+  Missing adjectives: flaming
+
+Object: TRAP-DOOR
+  Missing synonyms: cover, trap-door
+  Missing adjectives: trap
+
+Object: TREE
+  Missing synonyms: branch
+  Missing adjectives: storm
+
+Object: TRIDENT
+  Missing adjectives: own, poseidon
+
+Object: TROLL
+  Missing adjectives: nasty
+
+Object: TROPHY-CASE
+  Missing adjectives: trophy
+
+Object: TUBE
+  Missing synonyms: paste, tube
+
+Object: WALL
+  Missing adjectives: surrounding
+
+Object: WATER
+  Missing synonyms: h2o, liquid, quantity
+
+Object: WHITE-CLIFF
+  Missing synonyms: cliff, cliffs
+
+Object: WHITE-HOUSE
+  Missing adjectives: beauti, coloni
+
+Object: WOODEN-DOOR
+  Missing synonyms: lettering, writing
+  Missing adjectives: gothic, west
+
+Object: YELLOW-BUTTON
+  Missing adjectives: yellow
+
+============================================================
+END OF REPORT
+============================================================
