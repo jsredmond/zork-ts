@@ -3008,3 +3008,119 @@ describe('SayAction', () => {
     });
   });
 });
+
+describe('Studio Chimney Navigation', () => {
+  let state: GameState;
+  let moveAction: MoveAction;
+
+  beforeEach(() => {
+    // Create Studio and Kitchen rooms with chimney connection
+    const kitchenRoom = new RoomImpl({
+      id: 'KITCHEN',
+      name: 'Kitchen',
+      description: 'Kitchen',
+      exits: new Map(),
+      flags: [RoomFlag.ONBIT]
+    });
+
+    const studioRoom = new RoomImpl({
+      id: 'STUDIO',
+      name: 'Studio',
+      description: 'Studio',
+      exits: new Map([
+        [Direction.UP, { 
+          destination: 'KITCHEN',
+          condition: () => {
+            const inv = state.getInventoryObjects();
+            if (inv.length === 0) return false;
+            if (inv.length <= 2 && state.isInInventory('LAMP')) return true;
+            return false;
+          }
+        }]
+      ]),
+      flags: [RoomFlag.ONBIT]
+    });
+
+    const rooms = new Map([
+      ['STUDIO', studioRoom],
+      ['KITCHEN', kitchenRoom]
+    ]);
+
+    const lamp = new GameObjectImpl({
+      id: 'LAMP',
+      name: 'brass lantern',
+      description: 'A brass lantern',
+      flags: [ObjectFlag.TAKEBIT, ObjectFlag.ONBIT]
+    });
+
+    const sword = new GameObjectImpl({
+      id: 'SWORD',
+      name: 'elvish sword',
+      description: 'An elvish sword',
+      flags: [ObjectFlag.TAKEBIT]
+    });
+
+    const objects = new Map([
+      ['LAMP', lamp],
+      ['SWORD', sword]
+    ]);
+
+    state = new GameState({
+      currentRoom: 'STUDIO',
+      objects,
+      rooms,
+      inventory: [],
+      score: 0,
+      moves: 0
+    });
+
+    moveAction = new MoveAction();
+  });
+
+  it('should block going up empty-handed', () => {
+    const result = moveAction.execute(state, 'UP');
+    expect(result.success).toBe(false);
+    expect(result.message).toBe('Going up empty-handed is a bad idea.');
+  });
+
+  it('should allow going up with just the lamp', () => {
+    state.moveObject('LAMP', 'PLAYER');
+    const result = moveAction.execute(state, 'UP');
+    expect(result.success).toBe(true);
+    expect(state.currentRoom).toBe('KITCHEN');
+  });
+
+  it('should allow going up with lamp and one other item', () => {
+    state.moveObject('LAMP', 'PLAYER');
+    state.moveObject('SWORD', 'PLAYER');
+    const result = moveAction.execute(state, 'UP');
+    expect(result.success).toBe(true);
+    expect(state.currentRoom).toBe('KITCHEN');
+  });
+
+  it('should block going up with too many items', () => {
+    state.moveObject('LAMP', 'PLAYER');
+    state.moveObject('SWORD', 'PLAYER');
+    
+    // Add a third item
+    const bottle = new GameObjectImpl({
+      id: 'BOTTLE',
+      name: 'glass bottle',
+      description: 'A glass bottle',
+      flags: [ObjectFlag.TAKEBIT]
+    });
+    state.objects.set('BOTTLE', bottle);
+    state.moveObject('BOTTLE', 'PLAYER');
+    
+    const result = moveAction.execute(state, 'UP');
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("You can't get up there with what you're carrying.");
+  });
+
+  it('should block going up without the lamp', () => {
+    state.moveObject('SWORD', 'PLAYER');
+    const result = moveAction.execute(state, 'UP');
+    expect(result.success).toBe(false);
+    expect(result.message).toBe("You can't get up there with what you're carrying.");
+  });
+});

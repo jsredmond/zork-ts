@@ -363,6 +363,9 @@ export class Vocabulary {
       'TEETH', 'TOOTH',
       'TIMBER',
       'TOOL', 'TOOLS',
+      'CHIMNEY', 'FIREPLACE',
+      'RAILING', 'RAIL',
+      'STAIRS', 'STAIRCASE', 'STAIRWAY',
     ];
 
     nouns.forEach(noun => this.addWord(noun, TokenType.NOUN));

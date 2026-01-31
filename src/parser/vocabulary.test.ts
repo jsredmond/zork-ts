@@ -50,6 +50,15 @@ describe('Vocabulary', () => {
         expect(vocabulary.lookupWord('chalice')).toBe(TokenType.NOUN);
         expect(vocabulary.lookupWord('trident')).toBe(TokenType.NOUN);
       });
+
+      it('should recognize scenery nouns (chimney, railing, stairs)', () => {
+        expect(vocabulary.lookupWord('chimney')).toBe(TokenType.NOUN);
+        expect(vocabulary.lookupWord('fireplace')).toBe(TokenType.NOUN);
+        expect(vocabulary.lookupWord('railing')).toBe(TokenType.NOUN);
+        expect(vocabulary.lookupWord('rail')).toBe(TokenType.NOUN);
+        expect(vocabulary.lookupWord('stairs')).toBe(TokenType.NOUN);
+        expect(vocabulary.lookupWord('staircase')).toBe(TokenType.NOUN);
+      });
     });
 
     describe('Adjectives', () => {

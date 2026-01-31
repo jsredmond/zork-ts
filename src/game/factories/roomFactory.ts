@@ -81,6 +81,22 @@ function createConditionFunction(condition: string, state: GameState): (() => bo
       return state.getFlag('DOME_FLAG');
     }
     
+    // Handle UP-CHIMNEY-ALLOWED condition for Studio -> Kitchen
+    // Player can climb up if carrying 1 or 2 items AND has the lamp
+    // ZIL: <AND <OR <NOT <SET F <NEXT? .F>>> <NOT <NEXT? .F>>> <IN? ,LAMP ,WINNER>>
+    if (condition === 'UP-CHIMNEY-ALLOWED') {
+      const inventoryObjects = state.getInventoryObjects();
+      // Must have at least one item (can't go empty-handed)
+      if (inventoryObjects.length === 0) {
+        return false;
+      }
+      // Can carry at most 2 items up the chimney, and must have lamp
+      if (inventoryObjects.length <= 2 && state.isInInventory('LAMP')) {
+        return true;
+      }
+      return false;
+    }
+    
     // Handle object state conditions (e.g., "KITCHEN-WINDOW IS OPEN", "TRAP-DOOR IS OPEN")
     if (condition.includes(' IS OPEN')) {
       const objectId = condition.replace(' IS OPEN', '');
