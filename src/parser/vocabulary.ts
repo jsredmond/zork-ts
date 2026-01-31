@@ -785,6 +785,10 @@ export class Vocabulary {
       'FCD#3',        // Dam designation
       'INTNUM',       // Internal number reference
       'ZZMGCK',       // Magic word
+
+      // === Additional missing nouns from vocabulary completeness tests ===
+      'REMAINS',      // Bodies synonym (corpse remains)
+      'BAT',          // Bat creature (vampire bat)
     ];
 
     nouns.forEach(noun => this.addWord(noun, TokenType.NOUN));
@@ -984,6 +988,9 @@ export class Vocabulary {
       'SAPPHIRE',   // CONFLICT: See "SAPPHIRE (noun vs adjective)" in header - adjective is primary
       'SCREW',      // Screwdriver
       'TOUR',       // Tour guide
+
+      // === Additional missing adjectives from vocabulary completeness tests ===
+      'PEPPER',     // Lunch (hot pepper sandwich)
     ];
 
     adjectives.forEach(adj => this.addWord(adj, TokenType.ADJECTIVE));
