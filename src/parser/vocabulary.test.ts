@@ -201,22 +201,24 @@ describe('Vocabulary', () => {
 
   describe('Unknown Word Handling', () => {
     it('should return UNKNOWN for unrecognized words', () => {
-      expect(vocabulary.lookupWord('frobozz')).toBe(TokenType.UNKNOWN);
+      expect(vocabulary.lookupWord('qwerty')).toBe(TokenType.UNKNOWN);
       expect(vocabulary.lookupWord('foobar')).toBe(TokenType.UNKNOWN);
       expect(vocabulary.lookupWord('asdfgh')).toBe(TokenType.UNKNOWN);
     });
 
     it('should return false for hasWord on unknown words', () => {
-      expect(vocabulary.hasWord('frobozz')).toBe(false);
+      expect(vocabulary.hasWord('qwerty')).toBe(false);
       expect(vocabulary.hasWord('foobar')).toBe(false);
     });
 
     it('should recognize easter egg commands', () => {
-      // xyzzy and plugh are valid easter egg commands
+      // xyzzy, plugh, and frobozz are valid magic word commands from ZIL
       expect(vocabulary.lookupWord('xyzzy')).toBe(TokenType.VERB);
       expect(vocabulary.lookupWord('plugh')).toBe(TokenType.VERB);
+      expect(vocabulary.lookupWord('frobozz')).toBe(TokenType.VERB);
       expect(vocabulary.hasWord('xyzzy')).toBe(true);
       expect(vocabulary.hasWord('plugh')).toBe(true);
+      expect(vocabulary.hasWord('frobozz')).toBe(true);
     });
 
     it('should return true for hasWord on known words', () => {
